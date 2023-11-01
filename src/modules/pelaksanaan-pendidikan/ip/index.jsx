@@ -5,6 +5,7 @@ import Filter from "./filter";
 import useDatatable from "../../../hooks/useDatatable";
 import useCRUD from "../../../hooks/useCRUD";
 import SortIcon from "../../../components/SortIcon";
+import Form from "../../../components/Form";
 
 export default function IPModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/ipMhs/getDataIp`;
@@ -171,14 +172,65 @@ export default function IPModule({ baseURL }) {
             ))}
         </tbody>
       </table>
-      <Pagination
+      {/* <Pagination
         current={page}
         handler={setPage}
         max={pageCount}
-        canPrev={canPrev()}
-        canNext={canNext()}
+        canPrev={() => canPrev()}
+        canNext={() => canNext()}
         className="mt-8"
-      />
+      /> */}
+
+      <div className="flex mt-8">
+        <div className="flex gap-1 ml-auto">
+          <Button.Icon
+            type="button"
+            variant="outline-primary"
+            icon={
+              <Icon
+                icon="material-symbols:chevron-left"
+                width={20}
+                height={20}
+              />
+            }
+            onClick={() => setPage(page - 1)}
+            disabled={!canPrev}
+            pill
+          />
+          <Button
+            type="button"
+            variant="primary"
+            icon={
+              <Icon
+                icon="material-symbols:chevron-right"
+                width={20}
+                height={20}
+              />
+            }
+            iconPosition="right"
+            onClick={() => setPage(page + 1)}
+            disabled={!canNext}
+            pill
+          >
+            Next Page
+          </Button>
+        </div>
+        <div className="ml-auto whitespace-nowrap flex items-center gap-2">
+          <p className="">Page</p>
+          <Form.Input
+            type="number"
+            min="1"
+            max={pageCount}
+            className="w-20"
+            value={page}
+            onChange={(event) =>
+              event.target.valueAsNumber <= pageCount &&
+              setPage(event.target.value)
+            }
+          />
+          of {pageCount || 1}
+        </div>
+      </div>
     </>
   );
 }
