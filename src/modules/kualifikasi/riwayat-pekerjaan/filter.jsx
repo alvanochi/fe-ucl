@@ -33,13 +33,28 @@ export default function Filter({ filter, handler }) {
       <Modal title="Filter Berdasarkan" show={show} handler={toggle}>
         <Form onSubmit={submitHandler} className="grid grid-cols-2 gap-4">
           <Form.Group>
-            <Form.Label>Nama Pekerjaan</Form.Label>
-            <Form.Input
-              type="text"
+            <Form.Label>Jenis Pekerjaan</Form.Label>
+            <Form.Select
               className="flex-1"
-              name="jabatan"
-              value={form?.jabatan ?? ""}
+              name="jenis_pekerjaan"
+              value={form?.jenis_pekerjaan ?? ""}
               onChange={inputHandler}
+              options={[
+                { label: "Peneliti", value: "Peneliti" },
+                {
+                  label: "Tim Ahli / Konsultan",
+                  value: "Tim Ahli / Konsultan",
+                },
+                { label: "Magang", value: "Magang" },
+                {
+                  label: "Tenaga Pengajar / Instruktur / Fasiltator",
+                  value: "Tenaga Pengajar / Instruktur / Fasiltator",
+                },
+                {
+                  label: "Pimpinan / Manajerial",
+                  value: "Pimpinan / Manajerial",
+                },
+              ]}
             />
           </Form.Group>
           <Form.Group>
@@ -69,8 +84,8 @@ export default function Filter({ filter, handler }) {
             <Form.Input
               type="date"
               className="flex-1"
-              name="sampai_kerja"
-              value={form?.sampai_kerja ?? ""}
+              name="selesai_kerja"
+              value={form?.selesai_kerja ?? ""}
               onChange={inputHandler}
             />
           </Form.Group>

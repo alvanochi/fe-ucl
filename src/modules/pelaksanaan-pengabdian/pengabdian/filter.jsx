@@ -38,16 +38,6 @@ export default function Filter({ filter, handler }) {
 						/>
 					</Form.Group>
 					<Form.Group>
-						<Form.Label>Penyelenggara</Form.Label>
-						<Form.Input
-							type="text"
-							className="flex-1"
-							name="penyelenggara"
-							onChange={inputHandler}
-							value={form?.penyelenggara ?? ""}
-						/>
-					</Form.Group>
-					<Form.Group className="col-span-2">
 						<Form.Label>Lama Kegiatan (Tahun)</Form.Label>
 						<Form.Input
 							type="number"

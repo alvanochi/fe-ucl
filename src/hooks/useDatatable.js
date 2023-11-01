@@ -52,8 +52,6 @@ export const useDatatable = (url, options = {}) => {
       const response = await request.data;
       setLoading(false);
 
-      console.log(response);
-
       const finalData =
         options?.transformResponse &&
         typeof options.transformResponse == "function"

@@ -172,14 +172,6 @@ export default function IPModule({ baseURL }) {
             ))}
         </tbody>
       </table>
-      {/* <Pagination
-        current={page}
-        handler={setPage}
-        max={pageCount}
-        canPrev={() => canPrev()}
-        canNext={() => canNext()}
-        className="mt-8"
-      /> */}
 
       <div className="flex mt-8">
         <div className="flex gap-1 ml-auto">
