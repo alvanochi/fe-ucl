@@ -7,6 +7,7 @@ import axios from "axios";
 import useCRUD from "../../hooks/useCRUD";
 import { useRouter } from "next/router";
 import useUser from "../../hooks/useUser";
+import Router from "next/router";
 
 const CreateDataPribadi = () => {
   const router = useRouter();
@@ -57,7 +58,7 @@ const CreateDataPribadi = () => {
       { field: "no_hp", label: "Nomor Telp." },
       { field: "status_kawin", label: "Status Kawin" },
     ],
-    success: () => router.push("/"),
+    success: () => router.push(`/dashboard`),
   });
 
   const { form, inputHandler } = formdata;

@@ -14,9 +14,10 @@ export const useMenu = () => {
   useEffect(() => {
     if (user == null) return;
 
+    console.log(`/${Router.pathname.split(`/`).at(2)}`);
     const fixedUrl =
       ["/admin", "/dosen", "/mahasiswa"].includes(Router.pathname) === false
-        ? `/${Router.pathname.split("/").at(2)}`
+        ? `/${Router.pathname.split(`/`).at(2)}`
         : "/";
     let menuPrefix;
 

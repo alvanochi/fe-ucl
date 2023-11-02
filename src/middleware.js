@@ -29,7 +29,7 @@ export const middleware = async (req) => {
   // or maybe you want to destroy session:
   // await session.destroy();
 
-  const universalRoute = ["/register", "/forgot-password"];
+  const universalRoute = ["/", "/register", "/forgot-password"];
 
   // const universalRouteId = ["/resetPassword"]
   const protectedRoute = ["/login", "/auth/verify"];
