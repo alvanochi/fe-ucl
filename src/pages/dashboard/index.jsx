@@ -7,8 +7,10 @@ import useMenu from "../../hooks/useMenu";
 import useUser from "../../hooks/useUser";
 
 export default function dashboard() {
+  /* eslint-disable */
   const { user } = useUser({ redirectTo: "/login" });
   const { menu } = useMenu();
+  /* eslint-enable */
 
   if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
   return (

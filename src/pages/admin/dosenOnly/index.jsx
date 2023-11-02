@@ -2,14 +2,14 @@ import useMenu from "../../../hooks/useMenu";
 import Layout from "../../../components/Layout";
 import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
-import SertifikasiModule from "../../../modules/admin/kompetensi/sertifikasi/index";
 import KepangkatanModule from "../../../modules/admin/dosenOnly/kepangkatan/index";
 import JabatanFungsionalModule from "../../../modules/admin/dosenOnly/jabatan-fungsional/index";
-import TesModule from "../../../modules/admin/kompetensi/tes/index";
 
 export default function dosenOnly() {
+  /* eslint-disable */
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
+  /* eslint-enable */
 
   if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
   return (

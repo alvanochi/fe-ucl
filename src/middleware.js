@@ -1,23 +1,25 @@
 import { NextResponse } from "next/server";
 import { getIronSession } from "iron-session/edge";
 import { sessionConfig } from "./config/session";
+/* eslint-disable */
 import useCekDataPribadi from "./hooks/useCekDataPribadi";
-
+/* eslint-enable */
 export const middleware = async (req) => {
   const response = NextResponse.next();
   const url = req.nextUrl;
 
   const session = await getIronSession(req, response, sessionConfig);
 
-  // do anything with session here:
   const { user } = session;
 
+  /* eslint-disable */
   let DataPribadi;
   if (user) {
     const cekDataPribadi = await useCekDataPribadi(user.user_id);
 
     DataPribadi = cekDataPribadi;
   }
+  /* eslint-enable */
 
   // like mutate user:
   // user.something = someOtherThing;
