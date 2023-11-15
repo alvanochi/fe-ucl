@@ -109,6 +109,19 @@ export default function SertifikasiDetail() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
+                Nama Sertifikasi <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nama_serti"
+                value={form.nama_serti}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
                 No. SK Sertifikasi <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>

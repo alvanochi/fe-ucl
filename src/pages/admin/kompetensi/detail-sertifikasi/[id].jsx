@@ -99,12 +99,41 @@ export default function SertifikasiDetail() {
               <Form.Select
                 className="flex-1"
                 value={form.bidang_studi}
+                name="bidang_studi"
                 options={[
-                  { label: "Teknik Informatika", value: "Teknik Informatika" },
-                  { label: "Teknik Mesin", value: "Teknik Mesin" },
-                  { label: "Teknik Elektro", value: "Teknik Elektro" },
-                  { label: "Teknik Sipil", value: "Teknik Sipil" },
+                  {
+                    label: "Software Engineering",
+                    value: "Software Engineering",
+                  },
+                  {
+                    label: "Computer System and Network",
+                    value: "Computer System and Network",
+                  },
+                  {
+                    label: "Geospatial Information Technology",
+                    value: "Geospatial Information Technology",
+                  },
+                  {
+                    label:
+                      "Knowledge Engineering and Reliable Intelligent System",
+                    value:
+                      "Knowledge Engineering and Reliable Intelligent System",
+                  },
+                  { label: "Lainya...", value: "Lainya..." },
                 ]}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nama Sertifikasi <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nama_serti"
+                value={form.nama_serti}
                 disabled
               />
             </Form.Group>

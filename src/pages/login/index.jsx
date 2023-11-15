@@ -76,7 +76,7 @@ export const Login = () => {
         await setLoginSession(response.data);
         MySwal.close();
 
-        return Router.push("/");
+        return Router.push("/dashboard");
       }
 
       throw new Error(response.message);
