@@ -11,7 +11,8 @@ import styles from "./login.module.css";
 import Link from "next/link";
 import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
 
-export const Login = () => {
+export const Login = () =>{ 
+
   const API_URL = `${process.env.API_ENDPOINT}/auth/login`;
   const INITIAL_FORM = {
     email: "",
