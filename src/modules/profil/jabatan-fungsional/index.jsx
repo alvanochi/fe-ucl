@@ -91,7 +91,9 @@ export default function JabatanFungsionalModule({ baseURL }) {
                 <SortIcon sort={getSortBy("tgl_mulai")} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200"></th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -154,39 +156,43 @@ export default function JabatanFungsionalModule({ baseURL }) {
                   {date.formatToID(new Date(row.tgl_mulai))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/jabatan-fungsional/detail/${row.jabatan_id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/jabatan-fungsional/edit/${row.jabatan_id}`}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
-                    />
-                    <Button.Icon
-                      variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() =>
-                        destroy(row.jabatan_id).then(() => refresh())
-                      }
-                    />
-                  </div>
+                  {row.status == 1 ? (
+                    ""
+                  ) : (
+                    <div className="flex items-stretch gap-1">
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/jabatan-fungsional/detail/${row.jabatan_id}`}
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/jabatan-fungsional/edit/${row.jabatan_id}`}
+                        variant="secondary"
+                        icon={<Icon icon="bx:edit" width={20} height={20} />}
+                      />
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() =>
+                          destroy(row.jabatan_id).then(() => refresh())
+                        }
+                      />
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

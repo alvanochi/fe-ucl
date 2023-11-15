@@ -89,7 +89,9 @@ export default function PenelitianModule({ baseURL }) {
                 <SortIcon sort={getSortBy("lama_kegiatan")} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">Aksi</th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -148,40 +150,46 @@ export default function PenelitianModule({ baseURL }) {
                   {row.lama_kegiatan}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <CreateDokumen id={{ penelitian_id: row.penelitian_id }} />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/penelitian/detail/${row.penelitian_id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/penelitian/edit/${row.penelitian_id}`}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
-                    />
-                    <Button.Icon
-                      variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() =>
-                        destroy(row.penelitian_id).then(() => refresh())
-                      }
-                    />
-                  </div>
+                  {row.status == 1 ? (
+                    ""
+                  ) : (
+                    <div className="flex items-stretch gap-1">
+                      <CreateDokumen
+                        id={{ penelitian_id: row.penelitian_id }}
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/penelitian/detail/${row.penelitian_id}`}
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/penelitian/edit/${row.penelitian_id}`}
+                        variant="secondary"
+                        icon={<Icon icon="bx:edit" width={20} height={20} />}
+                      />
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() =>
+                          destroy(row.penelitian_id).then(() => refresh())
+                        }
+                      />
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

@@ -106,7 +106,9 @@ export default function PenghargaanModule({ baseURL }) {
                 <SortIcon sort={getSortBy("instansi_pemberi")} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200"></th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -170,39 +172,43 @@ export default function PenghargaanModule({ baseURL }) {
                   {row.instansi_pemberi}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/penghargaan/detail/${row.penghargaan_id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/penghargaan/edit/${row.penghargaan_id}`}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
-                    />
-                    <Button.Icon
-                      variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() =>
-                        destroy(row.penghargaan_id).then(() => refresh())
-                      }
-                    />
-                  </div>
+                  {row.status == 1 ? (
+                    ""
+                  ) : (
+                    <div className="flex items-stretch gap-1">
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/penghargaan/detail/${row.penghargaan_id}`}
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/penghargaan/edit/${row.penghargaan_id}`}
+                        variant="secondary"
+                        icon={<Icon icon="bx:edit" width={20} height={20} />}
+                      />
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() =>
+                          destroy(row.penghargaan_id).then(() => refresh())
+                        }
+                      />
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

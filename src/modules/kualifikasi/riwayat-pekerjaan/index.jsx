@@ -98,7 +98,9 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
                 <SortIcon sort={getSortBy("area_kerja")} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200"></th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -162,39 +164,43 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
                   {row.area_kerja}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/riwayat-pekerjaan/detail/${row.rwyt_pekerjaan_id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/riwayat-pekerjaan/edit/${row.rwyt_pekerjaan_id}`}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
-                    />
-                    <Button.Icon
-                      variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() =>
-                        destroy(row.rwyt_pekerjaan_id).then(() => refresh())
-                      }
-                    />
-                  </div>
+                  {row.status == 1 ? (
+                    ""
+                  ) : (
+                    <div className="flex items-stretch gap-1">
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/riwayat-pekerjaan/detail/${row.rwyt_pekerjaan_id}`}
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/riwayat-pekerjaan/edit/${row.rwyt_pekerjaan_id}`}
+                        variant="secondary"
+                        icon={<Icon icon="bx:edit" width={20} height={20} />}
+                      />
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() =>
+                          destroy(row.rwyt_pekerjaan_id).then(() => refresh())
+                        }
+                      />
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

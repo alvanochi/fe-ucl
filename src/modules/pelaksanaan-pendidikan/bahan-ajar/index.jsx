@@ -98,7 +98,9 @@ export default function BahanAjarModule({ baseURL }) {
                 <SortIcon sort={getSortBy("penerbit")} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200"></th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -159,40 +161,46 @@ export default function BahanAjarModule({ baseURL }) {
                   {row.penerbit}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <CreateDokumen id={{ bahan_ajar_id: row.bahan_ajar_id }} />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/bahan-ajar/detail/${row.bahan_ajar_id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/bahan-ajar/edit/${row.bahan_ajar_id}`}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
-                    />
-                    <Button.Icon
-                      variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() =>
-                        destroy(row.bahan_ajar_id).then(() => refresh())
-                      }
-                    />
-                  </div>
+                  {row.status == 1 ? (
+                    ""
+                  ) : (
+                    <div className="flex items-stretch gap-1">
+                      <CreateDokumen
+                        id={{ bahan_ajar_id: row.bahan_ajar_id }}
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/bahan-ajar/detail/${row.bahan_ajar_id}`}
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/bahan-ajar/edit/${row.bahan_ajar_id}`}
+                        variant="secondary"
+                        icon={<Icon icon="bx:edit" width={20} height={20} />}
+                      />
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() =>
+                          destroy(row.bahan_ajar_id).then(() => refresh())
+                        }
+                      />
+                    </div>
+                  )}
                 </td>
               </tr>
             ))}

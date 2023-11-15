@@ -17,7 +17,7 @@ export default function PendidikanFormalDetial() {
   const { prefix, menu, setActive } = useMenu();
 
   const API_URL = `${process.env.API_ENDPOINT}/kualifikasi/detailPend`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/file-pendidikan`;
+  const FILE_URL = `${process.env.API_ENDPOINT}/file-pendFormal`;
 
   const INITIAL_FORM = {
     pend_id: "",
@@ -51,8 +51,10 @@ export default function PendidikanFormalDetial() {
     show(router.query.id, {
       transformData: (data) => ({
         ...data,
-        tgl_lulus: date.formatToInput(data.tgl_lulus),
-        tgl_sk_penyetaraan: date.formatToInput(data.tgl_sk_penyetaraan),
+        tgl_lulus: data.tgl_lulus ? date.formatToInput(data.tgl_lulus) : "",
+        tgl_sk_penyetaraan: data.no_sk_penyetaraan
+          ? date.formatToInput(data.tgl_sk_penyetaraan)
+          : "",
       }),
     });
   }, [router, user]);
@@ -84,7 +86,6 @@ export default function PendidikanFormalDetial() {
               <Form.Select
                 className="flex-1"
                 name="jenjang_studi"
-                
                 value={form.jenjang_studi}
                 options={[
                   { label: "SD", value: "SD" },
@@ -107,7 +108,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="asal"
-                
                 value={form.asal}
                 disabled
               />
@@ -121,7 +121,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="program_studi"
-                
                 value={form.program_studi}
                 disabled
               />
@@ -135,7 +134,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="gelar_akademik"
-                
                 value={form.gelar_akademik}
                 disabled
               />
@@ -148,7 +146,6 @@ export default function PendidikanFormalDetial() {
               <Form.Select
                 className="flex-1"
                 name="tahun_masuk"
-                
                 value={form.tahun_masuk}
                 options={Array.from(
                   { length: new Date().getFullYear() - 1970 },
@@ -168,7 +165,6 @@ export default function PendidikanFormalDetial() {
               <Form.Select
                 className="flex-1"
                 name="tahun_lulus"
-                
                 value={form.tahun_lulus}
                 options={Array.from(
                   { length: new Date().getFullYear() - 1970 },
@@ -189,7 +185,6 @@ export default function PendidikanFormalDetial() {
                 type="date"
                 className="flex-1"
                 name="tgl_lulus"
-                
                 value={form.tgl_lulus}
                 disabled
               />
@@ -203,7 +198,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="nomor_induk"
-                
                 value={form.nomor_induk}
                 disabled
               />
@@ -218,7 +212,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="jmlh_semester"
-                
                 value={form.jmlh_semester}
                 disabled
               />
@@ -232,7 +225,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="jmlh_sks"
-                
                 value={form.jmlh_sks}
                 disabled
               />
@@ -246,7 +238,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="ipk_lulus"
-                
                 value={form.ipk_lulus}
                 disabled
               />
@@ -260,7 +251,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="no_sk_penyetaraan"
-                
                 value={form.no_sk_penyetaraan}
                 disabled
               />
@@ -275,7 +265,6 @@ export default function PendidikanFormalDetial() {
                 type="date"
                 className="flex-1"
                 name="tgl_sk_penyetaraan"
-                
                 value={form.tgl_sk_penyetaraan}
                 disabled
               />
@@ -289,7 +278,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="no_ijazah"
-                
                 value={form.no_ijazah}
                 disabled
               />
@@ -303,7 +291,6 @@ export default function PendidikanFormalDetial() {
                 type="text"
                 className="flex-1"
                 name="judul_tesis"
-                
                 value={form.judul_tesis}
                 disabled
               />
