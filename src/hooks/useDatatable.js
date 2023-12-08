@@ -14,7 +14,6 @@ export const useDatatable = (url, options = {}) => {
   const [loading, setLoading] = useState(true);
   const [pageCount, setPageCount] = useState(0);
   const [totalData, setTotalData] = useState(0);
-  const [totalDataAcc, setTotalDataAcc] = useState(0);
 
   const refresh = () => {
     toastAlert("info", "Mengambil Data!", 1000);
@@ -59,7 +58,6 @@ export const useDatatable = (url, options = {}) => {
           : response.data;
       setData(finalData);
       setTotalData(parseInt(response.totalData));
-      setTotalDataAcc(parseInt(response.totalDataAcc));
       setPageCount(Math.ceil(parseInt(response.totalData) / pageSize));
 
       options?.onLoad &&
@@ -88,7 +86,6 @@ export const useDatatable = (url, options = {}) => {
     page,
     loading,
     totalData,
-    totalDataAcc,
     pageCount,
     filter,
     sort,
