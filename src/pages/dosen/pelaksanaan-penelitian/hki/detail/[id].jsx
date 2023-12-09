@@ -16,7 +16,7 @@ import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
 import Accordion from "../../../../../components/Accordion";
-
+/* eslint-disable */
 export default function AnggotaProfesiEdit() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
@@ -486,3 +486,4 @@ export default function AnggotaProfesiEdit() {
     </Layout>
   );
 }
+/* eslint-enable */
