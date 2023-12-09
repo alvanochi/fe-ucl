@@ -2,14 +2,35 @@ import Head from "next/head";
 import Button from "../../components/Button";
 
 import Form from "../../components/Form";
-import useForm from "../../hooks/useForm";
-import axios from "axios";
 import useCRUD from "../../hooks/useCRUD";
 import { useRouter } from "next/router";
 import useUser from "../../hooks/useUser";
-import Router from "next/router";
+import { useEffect, useState } from "react";
 
 const CreateDataPribadi = () => {
+  const [stylesPage, setStylesPage] = useState({
+    widthCard: "w-3/5",
+    widthContent: " w-4/5",
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      setStylesPage({
+        widthCard: screenWidth <= 700 ? "w-10/12" : "w-3/5",
+        widthContent: screenWidth <= 700 ? " w-11/12" : " w-4/5",
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const router = useRouter();
 
   const { user } = useUser({ redirectTo: "/login" });
@@ -63,24 +84,6 @@ const CreateDataPribadi = () => {
 
   const { form, inputHandler } = formdata;
 
-  // const submitHandler = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const request = await axios({
-  //       url: `${process.env.API_ENDPOINT}/profile/createData`,
-  //       method: "POST",
-  //       data: form
-  //     })
-
-  //     const response = await request;
-
-  //     console.log(response)
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // }
-
   if ([user].some((item) => item == null)) return <p>Loading...</p>;
 
   return (
@@ -91,9 +94,9 @@ const CreateDataPribadi = () => {
       <div className="flex w-full min-h-screen bg-motion bg-cover bg-no-repeat bg-fixed ">
         <form
           onSubmit={submitHandler}
-          className="flex items-center justify-center w-3/5  bg-white m-auto rounded-3xl "
+          className={`flex items-center justify-center ${stylesPage.widthCard}  bg-white m-auto rounded-3xl `}
         >
-          <div className="block w-4/5 ">
+          <div className={`block ${stylesPage.widthContent}`}>
             <div className="block mb-12 mt-6">
               <h1 className="block text-2xl text-center font-bold text-primary-600">
                 Membuat Data Pribadi

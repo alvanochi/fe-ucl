@@ -5,6 +5,8 @@ import useMenu from "../../hooks/useMenu";
 import useUser from "../../hooks/useUser";
 import Layout from "../../components/Layout";
 import Card from "../../components/Card";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const AreaChart = dynamic(() => import("../../components/Chart/area"), {
   ssr: false,
@@ -47,7 +49,7 @@ export default function Home() {
     <Layout>
       <Head>
         <title>
-          {menu.label} - {process.env.APP_NAME}
+          {menu.label ?? ""} - {process.env.APP_NAME ?? ""}
         </title>
       </Head>
       <div className="flex gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">

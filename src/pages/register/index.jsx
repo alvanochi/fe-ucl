@@ -10,8 +10,41 @@ import "slick-carousel/slick/slick-theme.css";
 import styles from "./register.module.css";
 import Link from "next/link";
 import { toastAlert } from "../../lib/sweetalert";
+import { useEffect, useState } from "react";
 
 export const Register = () => {
+  const [displayValue, setDisplayValue] = useState("flex");
+  const [formWidth, setFormWidth] = useState("w-2/5");
+  const [stylesForm, setStylesForm] = useState({
+    container: "w-3/5",
+    head: "text-2xl",
+    subHead: "block",
+    footer: "mt-12",
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      setStylesForm({
+        container: screenWidth <= 880 ? "w-10/12" : "w-3/5",
+        head: screenWidth <= 880 ? "text-base" : "text-2xl",
+        subHead: screenWidth <= 880 ? "none" : "block",
+        footer: screenWidth <= 880 ? "mt-5" : "mt-12",
+      });
+
+      setDisplayValue(screenWidth <= 780 ? "block" : "flex");
+      setFormWidth(screenWidth <= 880 ? "w-4/5" : "w-2/5");
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   const INITIAL_FORM = {
     npm_nidn: "",
     email: "",
@@ -70,14 +103,19 @@ export const Register = () => {
       <Head>
         <title>{`Register - ${process.env.APP_NAME}`}</title>
       </Head>
-      <div className="flex w-full min-h-screen bg-motion bg-cover bg-no-repeat">
-        <div className="relative flex flex-col grow py-12 px-10">
+      <div
+        className={`w-full min-h-screen bg-motion bg-cover bg-no-repeat`}
+        style={{ display: displayValue }}
+      >
+        <div
+          className={`relative flex flex-col grow py-12 px-10 ${styles["slider"]}`}
+        >
           <div className="block mb-16">
             <img src="/img/app_logo.png" alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">
             {/* SLIDER HERE */}
-            <Slider {...settings} arrows={false}>
+            <Slider {...settings} arrows={false} className={styles["slider"]}>
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <h3 className="block text-3xl text-white font-bold mb-12">
@@ -121,14 +159,19 @@ export const Register = () => {
         </div>
         <form
           onSubmit={submitHandler}
-          className="flex items-center justify-center w-2/5 shrink-0 h=full bg-white ml-auto rounded-l-3xl"
+          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${formWidth}`}
         >
-          <div className="block w-3/5">
+          <div className={`block w-3/5 ${stylesForm.container}`}>
             <div className="block mb-6">
-              <h1 className="block text-2xl font-bold text-primary-600">
+              <h1
+                className={`block font-bold text-primary-600 ${stylesForm.head}`}
+              >
                 Buat Akun Pribadimu
               </h1>
-              <p className="block text-gray-600 text-sm">
+              <p
+                className=" text-gray-600 text-sm"
+                style={{ display: stylesForm.subHead }}
+              >
                 Daftarkan diri anda menjadi keluarga TIAS dengan mengisi Data
                 Pribadi anda!
               </p>
@@ -169,7 +212,7 @@ export const Register = () => {
             <Button variant="primary" className="w-full h-12">
               Buat Akun
             </Button>
-            <div className="block mt-12">
+            <div className={`block ${stylesForm.footer}`}>
               <p className="block text-sm text-center font-medium text-gray-400">
                 Sudah punya akun?{" "}
                 <Link href="/login" className="text-primary-600">

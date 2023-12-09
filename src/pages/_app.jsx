@@ -20,7 +20,8 @@ function MyApp({ Component, pageProps }) {
       path.startsWith("/register") ||
       path.startsWith("/forgot-password") ||
       path.startsWith("/verification") ||
-      path.startsWith("/createDataPribadi")
+      path.startsWith("/createDataPribadi") ||
+      path.startsWith("/resetPassword")
     ) {
       import("../../styles/tailwind.globals.css");
     } else if (path === "/") {

@@ -50,7 +50,7 @@ export default function Home() {
     <Layout>
       <Head>
         <title>
-          {menu.label} - {process.env.APP_NAME}
+          {menu.label ?? ""} - {process.env.APP_NAME ?? ""}
         </title>
       </Head>
       <div className="flex gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
