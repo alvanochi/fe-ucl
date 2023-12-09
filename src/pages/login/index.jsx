@@ -10,8 +10,33 @@ import "slick-carousel/slick/slick-theme.css";
 import styles from "./login.module.css";
 import Link from "next/link";
 import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
+import { useEffect, useState } from "react";
 
-export const Login = () =>{ 
+export const Login = () => {
+  const [stylesPage, setStylesPage] = useState({
+    displayValue: "flex",
+    formWidth: "w-2/5",
+    formContainer: "w-3/5",
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      setStylesPage({
+        displayValue: screenWidth <= 780 ? "block" : "flex",
+        formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
+        formContainer: screenWidth <= 880 ? "w-10/12" : "w-3/5",
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    handleResize();
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const API_URL = `${process.env.API_ENDPOINT}/auth/login`;
   const INITIAL_FORM = {
@@ -107,14 +132,19 @@ export const Login = () =>{
       <Head>
         <title>{`Login - ${process.env.APP_NAME}`}</title>
       </Head>
-      <div className="flex w-full min-h-screen bg-motion bg-cover bg-no-repeat">
-        <div className="relative flex flex-col grow py-12 px-10">
-          <div className="block mb-16">
+      <div
+        className={`w-full min-h-screen bg-motion bg-cover bg-no-repeat`}
+        style={{ display: stylesPage.displayValue }}
+      >
+        <div
+          className={`relative flex flex-col grow py-12 px-10 ${styles["slider"]}`}
+        >
+          <div className={`block mb-16 ${styles["logo"]}`}>
             <img src="/img/app_logo.png" alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">
             {/* SLIDER HERE */}
-            <Slider {...settings} arrows={false}>
+            <Slider {...settings} arrows={false} className={styles["slider"]}>
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <h3 className="block text-3xl text-white font-bold mb-12">
@@ -158,9 +188,9 @@ export const Login = () =>{
         </div>
         <form
           onSubmit={submitHandler}
-          className="flex items-center justify-center w-2/5 shrink-0 h=full bg-white ml-auto rounded-l-3xl"
+          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${stylesPage.formWidth}`}
         >
-          <div className="block w-3/5">
+          <div className={`block ${stylesPage.formContainer}`}>
             <div className="block mb-6">
               <h1 className="block text-2xl font-bold text-primary-600">
                 Login

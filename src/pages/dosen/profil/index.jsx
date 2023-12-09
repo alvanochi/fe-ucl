@@ -72,7 +72,7 @@ export default function Profil() {
     <Layout>
       <Head>
         <title>
-          {menu.label} - {process.env.APP_NAME}
+          {menu.label ?? ""} - {process.env.APP_NAME ?? ""}
         </title>
       </Head>
       <Card>

@@ -6,7 +6,8 @@ import useUser from "../../hooks/useUser";
 import Layout from "../../components/Layout";
 import Button from "../../components/Button";
 import Card from "../../components/Card";
-import useDatatable from "../../hooks/useDatatable";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 const AreaChart = dynamic(() => import("../../components/Chart/area"), {
   ssr: false,
@@ -16,23 +17,32 @@ export default function Home() {
   const { user, profile } = useUser({ redirectTo: "/login" });
   const { menu } = useMenu();
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/kompetensi/getCertificate`;
-  const DATA_TES = `${process.env.API_ENDPOINT}/kompetensi/getTes`;
-  const DATA_PEMBICARA = `${process.env.API_ENDPOINT}/pengabdian/pembicara/getDataPembicara`;
-  const DATA_PENGABDIAN = `${process.env.API_ENDPOINT}/pengabdian/getDataPengabdian`;
-  const DATA_PENGHARGAAN = `${process.env.API_ENDPOINT}/penunjang/getPenghargaan`;
-  const DATA_PENELITIAN = `${process.env.API_ENDPOINT}/penelitian/getDataPenelitian`;
-  const DATA_PUBLIKASI = `${process.env.API_ENDPOINT}/penelitian/publikasi-karya/getPublikasi`;
-  const DATA_HKI = `${process.env.API_ENDPOINT}/penelitian/hki/getDataHki`;
+  const [dashboardData, setDashboardData] = useState({
+    tes: 0,
+    sertifikasi: 0,
+    pembicara: 0,
+    pengabdian: 0,
+    penghargaan: 0,
+    penelitian: 0,
+    publikasi: 0,
+    hki: 0,
+  });
 
-  const sertifikasi = useDatatable(DATA_URL);
-  const tes = useDatatable(DATA_TES);
-  const pembicara = useDatatable(DATA_PEMBICARA);
-  const pengabdian = useDatatable(DATA_PENGABDIAN);
-  const penghargaan = useDatatable(DATA_PENGHARGAAN);
-  const penelitian = useDatatable(DATA_PENELITIAN);
-  const publikasiKarya = useDatatable(DATA_PUBLIKASI);
-  const hki = useDatatable(DATA_HKI);
+  const DATA_URL = `${process.env.API_ENDPOINT}/dashboard`;
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(DATA_URL);
+      const { data } = response.data;
+      setDashboardData(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   if ([user, profile, menu].some((item) => item == null))
     return <p>Loading...</p>;
@@ -40,7 +50,7 @@ export default function Home() {
     <Layout>
       <Head>
         <title>
-          {menu.label} - {process.env.APP_NAME}
+          {menu.label ?? ""} - {process.env.APP_NAME ?? ""}
         </title>
       </Head>
       <div className="flex gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
@@ -102,7 +112,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {tes.totalDataAcc}
+                  {dashboardData.tes}
                 </p>
                 <p className="block text-sm">Total Tes</p>
               </Card.Body>
@@ -118,7 +128,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {sertifikasi.totalDataAcc}
+                  {dashboardData.sertifikasi}
                 </p>
                 <p className="block text-sm">Total Sertifikat</p>
               </Card.Body>
@@ -134,7 +144,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {pembicara.totalDataAcc}
+                  {dashboardData.pembicara}
                 </p>
                 <p className="block text-sm">Total Pembicara</p>
               </Card.Body>
@@ -150,7 +160,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {pengabdian.totalDataAcc}
+                  {dashboardData.pengabdian}
                 </p>
                 <p className="block text-sm">Total Pengabdian</p>
               </Card.Body>
@@ -166,7 +176,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {penghargaan.totalDataAcc}
+                  {dashboardData.penghargaan}
                 </p>
                 <p className="block text-sm">Total Penghargaan</p>
               </Card.Body>
@@ -182,7 +192,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {penelitian.totalDataAcc}
+                  {dashboardData.penelitian}
                 </p>
                 <p className="block text-sm">Total Penelitian</p>
               </Card.Body>
@@ -198,7 +208,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {publikasiKarya.totalDataAcc}
+                  {dashboardData.publikasi}
                 </p>
                 <p className="block text-sm">Total Publikasi Karya</p>
               </Card.Body>
@@ -214,7 +224,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {hki.totalDataAcc}
+                  {dashboardData.hki}
                 </p>
                 <p className="block text-sm">Total HKI</p>
               </Card.Body>

@@ -1,6 +1,7 @@
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify-icon/react";
+import Link from "next/link";
 
 const Home = () => {
   const [isSticky, setSticky] = useState(false);
@@ -167,13 +168,12 @@ const Home = () => {
                 </li>
 
                 <li>
-                  <a
+                  <Link
                     href="/login"
-                    target="_blank"
                     className="bg-color-secondary px-9 py-3 rounded-md capitalize font-bold hover:opacity-80 ease-in duration-200"
                   >
                     Dashboard
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
@@ -247,9 +247,9 @@ const Home = () => {
                 </li>
 
                 <li>
-                  <a href="/login" target="_blank" className="btn">
+                  <Link href="/login" className="btn">
                     Dashboard
-                  </a>
+                  </Link>
                 </li>
               </ul>
             </div>
