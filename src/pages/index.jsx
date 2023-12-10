@@ -136,13 +136,13 @@ const Home = () => {
                 </li>
                 <li>
                   <a
-                    href="#testimonial"
+                    href="#about"
                     className="hover:text-color-secondary ease-in duration-200"
                   >
-                    Testimonial
+                    About
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     href="#pricing"
                     className="hover:text-color-secondary ease-in duration-200"
@@ -165,7 +165,7 @@ const Home = () => {
                   >
                     Contact
                   </a>
-                </li>
+                </li> */}
 
                 <li>
                   <Link
@@ -212,13 +212,13 @@ const Home = () => {
                 <li>
                   <a
                     id="hLink"
-                    href="#testimonial"
+                    href="#about"
                     className="hover:text-color-secondary ease-in duration-200"
                   >
-                    Testimonial
+                    About
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     id="hLink"
                     href="#pricing"
@@ -244,7 +244,7 @@ const Home = () => {
                   >
                     Contact
                   </a>
-                </li>
+                </li> */}
 
                 <li>
                   <Link href="/login" className="btn">
@@ -273,9 +273,9 @@ const Home = () => {
                     Higher Education through Gamification Approach in the
                     Academic System of Computer Science.
                   </p>
-                  <a href="/login" target="_blank" className="btn">
+                  <Link href="/login" className="btn">
                     Dashboard
-                  </a>
+                  </Link>
                 </div>
 
                 <div className="md:w-1/2">
@@ -338,7 +338,7 @@ const Home = () => {
             </div>
           </section>
 
-          <section id="saving-money">
+          <section id="about">
             <div className="container py-20 relative">
               <div className="w-80 h-80 bg-color-blob2 absolute top-0 -left-5 -z-11 blur-2xl opacity-30 overflow-hidden rounded-full"></div>
 
@@ -419,7 +419,7 @@ const Home = () => {
             </div>
           </section>
 
-          <section id="testimonial">
+          {/* <section id="testimonial">
             <div className="container py-20">
               <div className="text-center m-auto mb-20 md:w-1/2">
                 <h4 className="font-bold text-color-secondary mb-4">
@@ -527,9 +527,9 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
 
-          <section id="pricing" className="bg-color-primary-light">
+          {/* <section id="pricing" className="bg-color-primary-light">
             <div className="container py-20">
               <div className="text-center m-auto mb-20 md:w-1/2">
                 <h4 className="font-bold text-color-secondary mb-4">Pricing</h4>
@@ -833,8 +833,9 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </section>
-          <section id="blog">
+          </section> */}
+
+          {/* <section id="blog">
             <div className="container py-20">
               <div className="text-center m-auto mb-20 md:w-1/2">
                 <h4 className="font-bold text-color-secondary mb-4">
@@ -962,15 +963,14 @@ const Home = () => {
                 </div>
               </div>
             </div>
-          </section>
+          </section> */}
 
           <section id="download-app" className="bg-color-primary-light">
             <div className="container h-[80vh] grid place-items-center">
               <div className="text-center md:w-2/3 m-auto">
-                <h1 className="title">Download App Now And Save Your Money</h1>
+                <h1 className="title">Download The Application Now and Check Your Rank.</h1>
                 <p className="leading-relaxed pt-5">
-                  Serving an impressive list of long-term money with experience
-                  and expertise in multiple industries.
+                Explore the app, climb the ranks, and track your progress!
                 </p>
 
                 <div className="flex flex-col md:flex-row items-center justify-center gap-5 pt-10">
@@ -990,7 +990,7 @@ const Home = () => {
               </div>
             </div>
           </section>
-
+{/* 
           <section id="contact">
             <div className="container py-20">
               <div className="text-center m-auto mb-20 md:w-1/2">
@@ -1038,7 +1038,7 @@ const Home = () => {
                 </div>
               </form>
             </div>
-          </section>
+          </section> */}
 
           <section id="footer">
             <div className="bg-color-primary-dark relative">
@@ -1047,11 +1047,9 @@ const Home = () => {
                   <div className="space-y-6">
                     <h4 className="font-bold text-lg">About App</h4>
                     <p className="leading-relaxed">
-                      This Should Be Used To Tell A Story And Include Any
-                      Testimonials You Might Have About Your Product Or Service
-                      For Your Clients
+                    The TIAS application with the implementation of gamification based on the Tridharma of higher education is developed on two platforms: web and mobile.
                     </p>
-                    <div className="flex gap-5 items-center">
+                    {/* <div className="flex gap-5 items-center">
                       <p>Follow Us</p>
                       <Icon
                         icon="ri:facebook-fill"
@@ -1065,11 +1063,11 @@ const Home = () => {
                         icon="fa:instagram"
                         class="cursor-pointer hover:text-color-secondary"
                       />
-                      {/* <i className="fa-brands fa-facebook-f cursor-pointer hover:text-color-secondary"></i>
+                      <i className="fa-brands fa-facebook-f cursor-pointer hover:text-color-secondary"></i>
                       <i className="fa-brands fa-twitter cursor-pointer hover:text-color-secondary"></i>
                       <i className="fa-brands fa-youtube cursor-pointer hover:text-color-secondary"></i>
-                      <i className="fa-brands fa-instagram cursor-pointer hover:text-color-secondary"></i> */}
-                    </div>
+                      <i className="fa-brands fa-instagram cursor-pointer hover:text-color-secondary"></i>
+                    </div> */}
                   </div>
                   <div className="flex justify-between md:justify-around">
                     <div className="space-y-6">
@@ -1079,12 +1077,12 @@ const Home = () => {
                           <a href="#">Home</a>
                         </li>
                         <li className="underline hover:no-underline hover:text-color-secondary">
-                          <a href="#gamification">Features</a>
+                          <a href="#gamification">Gamification</a>
                         </li>
                         <li className="underline hover:no-underline hover:text-color-secondary">
-                          <a href="#testimonial">Testimonial</a>
+                          <a href="#about">ABout</a>
                         </li>
-                        <li className="underline hover:no-underline hover:text-color-secondary">
+                        {/* <li className="underline hover:no-underline hover:text-color-secondary">
                           <a href="#pricing">Pricing</a>
                         </li>
                         <li className="underline hover:no-underline hover:text-color-secondary">
@@ -1092,11 +1090,11 @@ const Home = () => {
                         </li>
                         <li className="underline hover:no-underline hover:text-color-secondary">
                           <a href="#contact">Contact</a>
-                        </li>
+                        </li> */}
                       </ul>
                     </div>
 
-                    <div className="space-y-6">
+                    {/* <div className="space-y-6">
                       <h4 className="font-bold text-lg">Help</h4>
                       <ul className="space-y-3">
                         <li className="underline hover:no-underline hover:text-color-secondary">
@@ -1118,7 +1116,7 @@ const Home = () => {
                           <a href="#contact">Help</a>
                         </li>
                       </ul>
-                    </div>
+                    </div> */}
                   </div>
                   <div className="space-y-6">
                     <h4 className="font-bold text-lg">Newsletter</h4>
@@ -1143,7 +1141,7 @@ const Home = () => {
                 </div>
 
                 <div className="flex justify-center pt-10 border-t border-color-gray">
-                  <p>2023 &copy; LightCode. All Rights Reserved.</p>
+                  <p>2023 &copy; TIAS. All Rights Reserved.</p>
                 </div>
               </div>
             </div>
