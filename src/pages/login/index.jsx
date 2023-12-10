@@ -23,7 +23,7 @@ export const Login = () => {
     const handleResize = () => {
       const screenWidth = window.innerWidth;
       setStylesPage({
-        displayValue: screenWidth <= 500 ? "block" : "flex",
+        displayValue: screenWidth <= 780 ? "block" : "flex",
         formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
         formContainer: screenWidth <= 880 ? "w-10/12" : "w-3/5",
       });
