@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 
-
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
 
@@ -44,10 +43,9 @@ function MyApp({ Component, pageProps }) {
           onError: (error) => console.error(error),
         }}
       >
-      <Component {...pageProps} />
+        <Component {...pageProps} />
       </SWRConfig>
     </>
-    
   );
 }
 
