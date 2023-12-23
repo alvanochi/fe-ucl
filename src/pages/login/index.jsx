@@ -118,12 +118,11 @@ export const Login = () => {
         }
 
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
 
-      console.error(error.message);
+      toastAlert("error", error);
     }
   }
 

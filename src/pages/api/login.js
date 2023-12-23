@@ -1,4 +1,3 @@
-import useCekDataPribadi from "../../hooks/useCekDataPribadi";
 import { withSessionRoute } from "../../lib/withSession";
 
 export default withSessionRoute(loginRoute);

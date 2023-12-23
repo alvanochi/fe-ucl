@@ -1,3 +1,4 @@
+import "../../styles/tailwind.globals.css";
 import { SWRConfig } from "swr";
 import fetcher from "../lib/fetcher";
 import { useEffect } from "react";
@@ -20,7 +21,6 @@ function MyApp({ Component, pageProps }) {
         await import("../../styles/tailwind.globals.css");
       } else if (path === "/") {
         await Promise.all([
-          import("../../styles/tailwind.globals.css"),
           import("../../styles/main.css"),
         ]);
       }

@@ -46,12 +46,11 @@ export default function AnggotaProfesiModule({ baseURL }) {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
 
-      console.error(error.message);
+      toastAlert("error", error.message);
     }
   };
 
@@ -66,8 +65,6 @@ export default function AnggotaProfesiModule({ baseURL }) {
         method: "PATCH",
       });
 
-      console.log(request);
-
       MySwal.close();
 
       const response = await request;
@@ -77,12 +74,10 @@ export default function AnggotaProfesiModule({ baseURL }) {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
-
-      console.error(error.message);
+      toastAlert("error", error.message);
     }
   };
 

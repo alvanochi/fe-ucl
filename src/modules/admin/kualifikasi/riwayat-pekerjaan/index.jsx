@@ -45,12 +45,11 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
+      toastAlert("error", error.message);
 
-      console.error(error.message);
     }
   };
 
@@ -74,12 +73,11 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
+      toastAlert("error", error.message);
 
-      console.error(error.message);
     }
   };
 

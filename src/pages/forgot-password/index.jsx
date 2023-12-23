@@ -83,12 +83,11 @@ const ForgotPassword = () => {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
 
-      console.error(error.message);
+      toastAlert("error", error.message);
     }
   };
 

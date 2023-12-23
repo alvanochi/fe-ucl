@@ -44,12 +44,12 @@ export default function BimbinganModule({ baseURL }) {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
 
-      console.error(error.message);
+      toastAlert("error", error.message);
+
     }
   };
 
@@ -67,19 +67,18 @@ export default function BimbinganModule({ baseURL }) {
       MySwal.close();
 
       const response = await request;
-      console.log(response);
 
       toastAlert("info", response.data.message);
     } catch (error) {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
 
-      console.error(error.message);
+      toastAlert("error", error.message);
+
     }
   };
 

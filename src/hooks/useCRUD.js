@@ -126,7 +126,6 @@ export const useCRUD = (API_URL, INITIAL_FORM, options = INITIAL_OPTIONS) => {
 
       return toastAlert("success", response.message, 2000);
     } catch (error) {
-      console.error(error);
       if (error.name == "AxiosError" && error?.response)
         toastAlert("error", error.response.data.message);
       else toastAlert("error", error.message || "Internal Server Error!");

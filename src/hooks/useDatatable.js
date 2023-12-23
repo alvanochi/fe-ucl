@@ -71,7 +71,6 @@ export const useDatatable = (url, options = {}) => {
       setLoading(false);
       setData([]);
       setPageCount(0);
-      console.log(error);
     }
   };
 

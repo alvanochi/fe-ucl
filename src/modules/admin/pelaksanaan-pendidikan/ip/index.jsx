@@ -45,19 +45,17 @@ export default function IPModule({ baseURL }) {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
 
-      console.error(error.message);
+      toastAlert("error", error.message);
+
     }
   };
 
   const rejectData = async (id) => {
     const UPDATE_URL = `${process.env.API_ENDPOINT}/ipMhs/rejectStatusIp/${id}`;
-
-    console.log(id);
 
     try {
       loadingAlert();
@@ -75,12 +73,12 @@ export default function IPModule({ baseURL }) {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
         toastAlert("error", message);
-        console.error(status_code, message, data);
 
         return;
       }
 
-      console.error(error.message);
+      toastAlert("error", error.message);
+
     }
   };
 

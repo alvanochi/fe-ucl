@@ -11,7 +11,6 @@ export default function Pagination({
   canNext,
   className,
 }) {
-  console.log(canPrev, canNext);
   return (
     <div className={classNames("flex", className)}>
       <div className="flex gap-1 ml-auto">
