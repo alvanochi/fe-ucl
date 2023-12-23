@@ -1,3 +1,4 @@
+import "../../styles/tailwind.globals.css";
 import { SWRConfig } from "swr";
 import fetcher from "../lib/fetcher";
 import { useEffect } from "react";
