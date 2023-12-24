@@ -94,7 +94,8 @@ export const Login = () => {
         toastAlert("warning", response.message);
         await setLoginSession(response.data);
 
-        return Router.push("/createDataPribadi");
+        await Router.reload()
+        return;
       }
 
       if (response.data) {
@@ -102,7 +103,8 @@ export const Login = () => {
         await setLoginSession(response.data);
         MySwal.close();
 
-        return Router.push("/dashboard");
+        await Router.reload()
+        return;
       }
 
       throw new Error(response.message);

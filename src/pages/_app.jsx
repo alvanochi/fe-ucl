@@ -1,14 +1,18 @@
-import "../../styles/tailwind.globals.css";
 import { SWRConfig } from "swr";
 import fetcher from "../lib/fetcher";
 import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }) {
-  useEffect(() => {
-    const path = window.location.pathname;
+  const router = useRouter();
 
-    const importCSS = async () => {
-      if (
+  useEffect(() => {
+    const loadCSSBasedOnPath = async () => {
+      const path = router.pathname;
+
+      if (path === "/") {
+        await import("../../styles/main.css");
+      } else if (
         path.startsWith("/mahasiswa") ||
         path.startsWith("/dosen") ||
         path.startsWith("/admin") ||
@@ -19,15 +23,12 @@ function MyApp({ Component, pageProps }) {
         path.startsWith("/createDataPribadi")
       ) {
         await import("../../styles/tailwind.globals.css");
-      } else if (path === "/") {
-        await Promise.all([
-          import("../../styles/main.css"),
-        ]);
       }
     };
 
-    importCSS();
-  }, []);
+    loadCSSBasedOnPath();
+  }, [router.pathname]);
+
   return (
     <SWRConfig
       value={{

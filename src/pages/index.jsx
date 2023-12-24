@@ -1124,18 +1124,9 @@ const Home = () => {
                       Subscribe With Email And Loads Of News Will Be Sent To You
                     </p>
                     <div className="flex items-center">
-                      <input
-                        type="text"
-                        className="w-3/4 text-color-gray bg-color-white p-2 lg:p-3 rounded-l-md focus:outline-none"
-                        placeholder="Enter Your Email"
-                      />
-
-                      <button
-                        type="submit"
-                        className="bg-color-secondary px-4 py-2 lg:px-5 lg:py-3 rounded-r-md hover:opacity-90"
-                      >
-                        <Icon icon="octicon:chevron-right-12" />
-                      </button>
+                      <img src="/img/landing-page/ti-logo.png" alt="" />
+                      <img src="/img/landing-page/himatekinfo-logo.png" alt="" />
+                      
                     </div>
                   </div>
                 </div>
