@@ -6,11 +6,9 @@ import PageHeader from "../../components/PageHeader";
 import useMenu from "../../hooks/useMenu";
 import useUser from "../../hooks/useUser";
 
-export default function dashboard() {
-  /* eslint-disable */
+export default function Dashboard() {
   const { user } = useUser({ redirectTo: "/login" });
   const { menu } = useMenu();
-  /* eslint-enable */
 
   if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
   return (
@@ -19,7 +17,7 @@ export default function dashboard() {
       <input
         type="text"
         className="form-input"
-        defaultValue={"fitrahsatya@gmail.com"}
+        defaultValue={"yourmail@gmail.com"}
       />
       <Card className="my-3">
         <Card.Body>
