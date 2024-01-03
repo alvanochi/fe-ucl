@@ -33,20 +33,6 @@ const Verification = () => {
 
   const router = useRouter();
 
-  const setLoginSession = async (data) => {
-    try {
-      const response = await axios({
-        url: "/api/login",
-        method: "POST",
-        data: data,
-      });
-
-      return response.data;
-    } catch (error) {
-      return await toastAlert("error", error.message);
-    }
-  };
-
   const verifyAccount = async () => {
     try {
       const request = await axios({
@@ -58,11 +44,10 @@ const Verification = () => {
 
       if (response.data) {
         loadingAlert();
-        await setLoginSession(response.data.data);
         MySwal.close();
 
         toastAlert("info", response.data.message);
-        return Router.push("/createDataPribadi");
+        return Router.push("/login");
       }
     } catch (error) {
       if (error.name === "AxiosError") {

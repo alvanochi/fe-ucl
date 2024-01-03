@@ -104,6 +104,11 @@ const Home = () => {
 
   return (
     <>
+      <Head>
+        <title>
+          Tias
+        </title>
+      </Head>
       <div className="bg-color-primary text-color-white tracking-wider">
         <header
           className={`sticky top-0 z-50 ${
@@ -1119,10 +1124,10 @@ const Home = () => {
                     </div> */}
                   </div>
                   <div className="space-y-6">
-                    <h4 className="font-bold text-lg">Newsletter</h4>
+                    {/* <h4 className="font-bold text-lg">Newsletter</h4>
                     <p className="leading-relaxed">
                       Subscribe With Email And Loads Of News Will Be Sent To You
-                    </p>
+                    </p> */}
                     <div className="flex items-center">
                       <img src="/img/landing-page/ti-logo.png" alt="" />
                       <img src="/img/landing-page/himatekinfo-logo.png" alt="" />

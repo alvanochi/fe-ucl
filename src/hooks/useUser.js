@@ -39,11 +39,11 @@ export default function useUser({ redirectTo = "", redirectIfFound = false } = {
 		}
 	}, [user, redirectIfFound, redirectTo]);
 
-	useEffect(() => {
-		if (!redirectTo || !user) return;
-		getProfile();
-		getEducations();
-	}, [user]);
+	// useEffect(() => {
+	// 	if (!redirectTo || !user) return;
+	// 	getProfile();
+	// 	getEducations();
+	// }, [user]);
 
 	return { user, profile, mutateUser, logout };
 }

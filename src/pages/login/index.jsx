@@ -88,23 +88,12 @@ export const Login = () => {
       });
       const response = await request.data;
 
-      if (
-        response.message == "Please complete the purchased personal data first."
-      ) {
-        toastAlert("warning", response.message);
-        await setLoginSession(response.data);
-
-        await Router.reload()
-        return;
-      }
-
       if (response.data) {
         loadingAlert();
         await setLoginSession(response.data);
         MySwal.close();
 
-        await Router.reload()
-        return;
+        return Router.push("/dashboard");
       }
 
       throw new Error(response.message);

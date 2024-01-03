@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getIronSession } from "iron-session/edge";
 import { sessionConfig } from "./config/session";
 /* eslint-disable */
-import useCekDataPribadi from "./hooks/useCekDataPribadi";
+// import useCekDataPribadi from "./hooks/useCekDataPribadi";
 /* eslint-enable */
 export const middleware = async (req) => {
   const response = NextResponse.next();
@@ -14,11 +14,11 @@ export const middleware = async (req) => {
 
   /* eslint-disable */
   let DataPribadi;
-  if (user) {
-    const cekDataPribadi = await useCekDataPribadi(user.user_id);
+  // if (user) {
+  //   const cekDataPribadi = await useCekDataPribadi(user.user_id);
 
-    DataPribadi = cekDataPribadi;
-  }
+  //   DataPribadi = cekDataPribadi;
+  // }
   /* eslint-enable */
 
   // like mutate user:
@@ -43,18 +43,10 @@ export const middleware = async (req) => {
   if (user == null && url.pathname.startsWith("/verification") === true)
     return response;
 
-  if (
-    user &&
-    url.pathname.startsWith("/createDataPribadi") === true &&
-    DataPribadi == false
-  )
-    return response;
 
   if (user == null && !protectedRoute.includes(url.pathname))
     return NextResponse.redirect(new URL("/login", req.url));
 
-  if (user && DataPribadi == false)
-    return NextResponse.redirect(new URL("/createDataPribadi", req.url));
 
   if (
     user?.role == "Dosen" &&
