@@ -13,7 +13,6 @@ const AreaChart = dynamic(() => import("../../components/Chart/area"), {
 });
 
 export default function Home() {
-  const { user, profile } = useUser({ redirectTo: "/login" });
   const { menu } = useMenu();
 
   const [dashboardData, setDashboardData] = useState({
@@ -25,6 +24,7 @@ export default function Home() {
     penelitian: 0,
     publikasi: 0,
     hki: 0,
+    userData: {}
   });
 
   const DATA_URL = `${process.env.API_ENDPOINT}/dashboard`;
@@ -43,7 +43,7 @@ export default function Home() {
     fetchData();
   }, []);
 
-  if ([user, profile, menu].some((item) => item == null))
+  if ([menu].some((item) => item == null))
     return <p>Loading...</p>;
   return (
     <Layout>
@@ -55,14 +55,14 @@ export default function Home() {
       <div className="flex gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
         <div className="w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
           <img
-            src={process.env.API_ENDPOINT + "/foto-profile/" + profile?.image}
+            src={process.env.API_ENDPOINT + "/foto-profile/" + dashboardData?.userData.image}
             alt="Profile"
             className="object-cover object-top h-full w-full"
           />
         </div>
         <div className="block">
           <h1 className="flex items-center text-2xl font-semibold text-primary-600 uppercase mb-4">
-            {profile?.nama_lengkap || ""}
+            {dashboardData?.userData.nama_lengkap || ""}
             <Icon
               icon="material-symbols:verified"
               width={36}
@@ -72,7 +72,7 @@ export default function Home() {
           </h1>
           <span className="block text-base text-gray-500 font-normal">
             <Icon icon="el:user" width={16} height={16} className="mr-1" />
-            NIDN : {profile?.nidn}
+            NIDN : {dashboardData?.userData.nidn}
           </span>
 
           <span className="block text-base text-gray-500 font-normal">
@@ -82,12 +82,12 @@ export default function Home() {
               height={16}
               className="mr-1"
             />
-            {profile?.educations?.at(0) != null
+            {/* {profile?.educations?.at(0) != null
               ? profile?.educations.at(0).jenjang_studi
               : ""}{" "}
             {profile?.educations?.at(0) != null
               ? profile?.educations.at(0).program_studi
-              : ""}
+              : ""} */}
           </span>
         </div>
       </div>
