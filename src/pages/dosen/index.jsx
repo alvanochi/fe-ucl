@@ -2,7 +2,6 @@ import Head from "next/head";
 import dynamic from "next/dynamic";
 import { Icon } from "@iconify-icon/react";
 import useMenu from "../../hooks/useMenu";
-import useUser from "../../hooks/useUser";
 import Layout from "../../components/Layout";
 import Card from "../../components/Card";
 import { useEffect, useState } from "react";
