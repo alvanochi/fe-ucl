@@ -20,29 +20,32 @@ export const Register = () => {
     head: "text-2xl",
     subHead: "block",
     footer: "mt-12",
+    formWidth: "w-2/5"
   });
 
   useEffect(() => {
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
-      setStylesForm({
-        container: screenWidth <= 880 ? "w-10/12" : "w-3/5",
-        head: screenWidth <= 880 ? "text-base" : "text-2xl",
-        subHead: screenWidth <= 880 ? "none" : "block",
-        footer: screenWidth <= 880 ? "mt-5" : "mt-12",
-      });
-
-      setDisplayValue(screenWidth <= 780 ? "block" : "flex");
-      setFormWidth(screenWidth <= 880 ? "w-4/5" : "w-2/5");
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    handleResize();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    if(typeof window !== 'undefined'){
+      const handleResize = () => {
+        const screenWidth = window.innerWidth;
+        setStylesForm({
+          container: screenWidth <= 880 ? "w-10/12" : "w-3/5",
+          head: screenWidth <= 880 ? "text-base" : "text-2xl",
+          subHead: screenWidth <= 880 ? "none" : "block",
+          footer: screenWidth <= 880 ? "mt-5" : "mt-12",
+          formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5"
+        });
+  
+        setDisplayValue(screenWidth <= 780 ? "block" : "flex");
+      };
+  
+      window.addEventListener("resize", handleResize);
+  
+      handleResize();
+  
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
   }, []);
 
   const INITIAL_FORM = {
@@ -110,7 +113,7 @@ export const Register = () => {
         <div
           className={`relative flex flex-col grow py-12 px-10 ${styles["slider"]}`}
         >
-          <div className="block mb-16">
+          <div className={`mb-16 ${styles["logo"]}`}>
             <img src="/img/app_logo.png" alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">
@@ -159,9 +162,9 @@ export const Register = () => {
         </div>
         <form
           onSubmit={submitHandler}
-          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${formWidth}`}
+          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${stylesForm.formWidth}`}
         >
-          <div className={`block w-3/5 ${stylesForm.container}`}>
+          <div className={`block ${stylesForm.container}`}>
             <div className="block mb-6">
               <h1
                 className={`block font-bold text-primary-600 ${stylesForm.head}`}

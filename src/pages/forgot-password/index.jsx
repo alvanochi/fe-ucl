@@ -19,22 +19,25 @@ const ForgotPassword = () => {
   });
 
   useEffect(() => {
-    const handleResize = () => {
-      const screenWidth = window.innerWidth;
-      setStylesPage({
-        displayValue: screenWidth <= 780 ? "block" : "flex",
-        formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
-        formContainer: screenWidth <= 880 ? "w-10/12" : "w-3/5",
-      });
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    handleResize();
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
+    if(typeof window !== 'undefined'){
+      const handleResize = () => {
+        const screenWidth = window.innerWidth;
+        setStylesPage({
+          displayValue: screenWidth <= 780 ? "block" : "flex",
+          formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
+          formContainer: screenWidth <= 880 ? "w-10/12" : "w-3/5",
+        });
+      };
+  
+      window.addEventListener("resize", handleResize);
+  
+      handleResize();
+  
+      return () => {
+        window.removeEventListener("resize", handleResize);
+      };
+    }
+    
   }, []);
 
   const API_URL = `${process.env.API_ENDPOINT}/auth/forgotPassword`;
@@ -103,7 +106,7 @@ const ForgotPassword = () => {
         <div
           className={`relative flex flex-col grow py-12 px-10 ${styles["slider"]}`}
         >
-          <div className="block mb-16">
+          <div className={`mb-16 ${styles["logo"]}`}>
             <img src="/img/app_logo.png" alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">

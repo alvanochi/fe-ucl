@@ -3,6 +3,8 @@ import { SWRConfig } from "swr";
 import fetcher from "../lib/fetcher";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
+import Head from "next/head";
+
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -31,14 +33,20 @@ function MyApp({ Component, pageProps }) {
   }, [router.pathname]);
 
   return (
-    <SWRConfig
-      value={{
-        fetcher: fetcher,
-        onError: (error) => console.error(error),
-      }}
-    >
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </Head>
+      <SWRConfig
+        value={{
+          fetcher: fetcher,
+          onError: (error) => console.error(error),
+        }}
+      >
       <Component {...pageProps} />
-    </SWRConfig>
+      </SWRConfig>
+    </>
+    
   );
 }
 
