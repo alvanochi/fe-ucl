@@ -46,7 +46,7 @@ const Verification = () => {
         loadingAlert();
         MySwal.close();
 
-        toastAlert("info", response.data.message);
+        toastAlert("success", response.data.message);
         return Router.push("/login");
       }
     } catch (error) {

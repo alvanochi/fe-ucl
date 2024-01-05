@@ -50,6 +50,7 @@ export const Register = () => {
 
   const INITIAL_FORM = {
     npm_nidn: "",
+    nama_lengkap: "",
     email: "",
     password: "",
   };
@@ -71,6 +72,7 @@ export const Register = () => {
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
       { field: "npm_nidn", label: "NPM/NIDN" },
+      { field: "nama_lengkap", label: "Nama Lengkap" },
       { field: "email", label: "E-Mail" },
       { field: "password", label: "Password" },
     ],
@@ -191,9 +193,20 @@ export const Register = () => {
               />
             </div>
             <div className="block mb-6">
-              <label className="block text-sm font-medium mb-1">E-Mail</label>
+              <label className="block text-sm font-medium mb-1">Nama Lengkap</label>
               <input
                 type="text"
+                className="form-input"
+                name="nama_lengkap"
+                onChange={inputHandler}
+                value={form.nama_lengkap}
+                required
+              />
+            </div>
+            <div className="block mb-6">
+              <label className="block text-sm font-medium mb-1">E-Mail</label>
+              <input
+                type="email"
                 className="form-input"
                 name="email"
                 onChange={inputHandler}

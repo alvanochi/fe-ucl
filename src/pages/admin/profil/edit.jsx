@@ -49,7 +49,7 @@ export default function ProfilEdit() {
 		show("", {
 			transformData: (data) => ({
 				...data,
-				tanggal_lahir: date.formatToInput(data.tanggal_lahir),
+				tanggal_lahir: data.tanggal_lahir ? date.formatToInput(data.tanggal_lahir) : "",
 			}),
 		});
 	}, [router, user]);

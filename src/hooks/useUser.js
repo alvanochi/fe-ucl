@@ -7,14 +7,25 @@ export default function useUser({ redirectTo = "", redirectIfFound = false } = {
 	const { data: user, mutate: mutateUser } = useSWR("/api/user");
 	if (user && user.is_logged_in) axios.defaults.headers.common["token"] = user.token;
 
-	const [profile, setProfile] = useState({});
+	// const [profile, setProfile] = useState({});
+	  const [profile, setProfile] = useState({
+    tes: 0,
+    sertifikasi: 0,
+    pembicara: 0,
+    pengabdian: 0,
+    penghargaan: 0,
+    penelitian: 0,
+    publikasi: 0,
+    hki: 0,
+    userData: {}
+  });
 
 	async function logout() {
 		return mutateUser(axios.post("/api/logout").then(() => Router.push("/login")));
 	}
 
 	async function getProfile() {
-		return axios({ url: `${process.env.API_ENDPOINT}/profile/getDataPribadi` })
+		return axios({ url: `${process.env.API_ENDPOINT}/dashboard` })
 			.then((response) => {
 				const data = response.data.data;
 				setProfile((state) => ({ ...state, ...data }));
@@ -42,7 +53,6 @@ export default function useUser({ redirectTo = "", redirectIfFound = false } = {
 	// useEffect(() => {
 	// 	if (!redirectTo || !user) return;
 	// 	getProfile();
-	// 	getEducations();
 	// }, [user]);
 
 	return { user, profile, mutateUser, logout };

@@ -23,6 +23,7 @@ function MyApp({ Component, pageProps }) {
         path.startsWith("/register") ||
         path.startsWith("/forgot-password") ||
         path.startsWith("/verification") ||
+        path.startsWith("/resetPassword") ||
         path.startsWith("/createDataPribadi")
       ) {
         await import("../../styles/tailwind.globals.css");

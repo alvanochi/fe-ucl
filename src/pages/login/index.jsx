@@ -95,7 +95,8 @@ export const Login = () => {
         await setLoginSession(response.data);
         MySwal.close();
 
-        return Router.push("/dashboard");
+        // return Router.push("/dashboard");
+        return Router.reload();
       }
 
       throw new Error(response.message);

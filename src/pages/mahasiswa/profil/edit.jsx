@@ -49,7 +49,7 @@ export default function ProfilEdit() {
 		show("", {
 			transformData: (data) => ({
 				...data,
-				tanggal_lahir: date.formatToInput(data.tanggal_lahir),
+				tanggal_lahir: data.tanggal_lahir ? date.formatToInput(data.tanggal_lahir) : "",
 			}),
 		});
 	}, [router, user]);
@@ -64,7 +64,7 @@ export default function ProfilEdit() {
 					<Card.Body className="space-y-4">
 						<Form.Group className="flex items-baseline gap-3">
 							<Form.Label className="min-w-[18rem]">
-								NIDN <span className="text-danger-600">*</span>
+								NIK <span className="text-danger-600">*</span>
 							</Form.Label>
 							<span>:</span>
 							<Form.Input type="text" className="flex-1" name="nik" onChange={inputHandler} value={form.nik} required />

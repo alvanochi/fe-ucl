@@ -20,8 +20,11 @@ export default function AlamatDanKontakEdit() {
     dp_id: "",
     email: "",
     alamat: "",
+    rt: "",
+    rw: "",
     desa_kelurahan: "",
     kota_kabupaten: "",
+    provinsi: "",
     kode_pos: "",
     no_hp: "",
   };
@@ -30,8 +33,11 @@ export default function AlamatDanKontakEdit() {
     rules: [
       { field: "email", label: "Email" },
       { field: "alamat", label: "Alamat" },
+      { field: "rw", label: "Rw" },
+      { field: "rw", label: "Rw" },
       { field: "desa_kelurahan", label: "Desa/Kelurahan" },
       { field: "kota_kabupaten", label: "Kota/Kabupaten" },
+      { field: "provinsi", label: "Provinsi" },
       { field: "kode_pos", label: "Kode POS" },
       { field: "no_hp", label: "No. HP" },
     ],
@@ -87,7 +93,36 @@ export default function AlamatDanKontakEdit() {
                 required
               ></Form.Textarea>
             </Form.Group>
-
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                RT <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="number"
+                min="0"
+                className="flex-1"
+                name="rt"
+                onChange={inputHandler}
+                value={form.rt}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                RW <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="number"
+                min="0"
+                className="flex-1"
+                name="rw"
+                onChange={inputHandler}
+                value={form.rw}
+                required
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Desa/Kelurahan <span className="text-danger-600">*</span>
@@ -113,6 +148,20 @@ export default function AlamatDanKontakEdit() {
                 name="kota_kabupaten"
                 onChange={inputHandler}
                 value={form.kota_kabupaten}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Provinsi <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="provinsi"
+                onChange={inputHandler}
+                value={form.provinsi}
                 required
               />
             </Form.Group>

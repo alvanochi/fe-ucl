@@ -55,6 +55,11 @@ export default function AlamatDanKontakModule({ baseURL }) {
             <p>{!loading && data.kota_kabupaten}</p>
           </Form.Group>
           <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[18rem]">Provinsi</Form.Label>
+            <span>:</span>
+            <p>{!loading && data.provinsi}</p>
+          </Form.Group>
+          <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[18rem]">Kode POS</Form.Label>
             <span>:</span>
             <p>{!loading && data.kode_pos}</p>

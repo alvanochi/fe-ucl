@@ -5,39 +5,17 @@ import Layout from "../../components/Layout";
 import Card from "../../components/Card";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useUser from "../../hooks/useUser";
+import useDatatable from "../../hooks/useDatatable";
 
 export default function Home() {
+	const { user } = useUser({ redirectTo: "/login" });
   const { menu } = useMenu();
 
-  const [dashboardData, setDashboardData] = useState({
-    tes: 0,
-    sertifikasi: 0,
-    pembicara: 0,
-    pengabdian: 0,
-    penghargaan: 0,
-    penelitian: 0,
-    publikasi: 0,
-    hki: 0,
-    userData: {}
-  });
-
   const DATA_URL = `${process.env.API_ENDPOINT}/dashboard`;
+  const { data } = useDatatable(DATA_URL);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.get(DATA_URL);
-      const { data } = response.data;
-      setDashboardData(data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  if ([menu].some((item) => item == null))
+  if ([menu, user].some((item) => item == null))
     return <p>Loading...</p>;
   return (
     <Layout>
@@ -49,14 +27,14 @@ export default function Home() {
       <div className="flex gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
         <div className="w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
           <img
-            src={process.env.API_ENDPOINT + "/foto-profile/" + dashboardData?.userData.image}
+            src={process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image}
             alt="Profile"
             className="object-cover object-top h-full w-full"
           />
         </div>
         <div className="block">
           <h1 className="flex items-center text-2xl font-semibold text-primary-600 uppercase mb-4">
-            {dashboardData?.userData.nama_lengkap || ""}
+            {data.userData?.nama_lengkap || ""}
             <Icon
               icon="material-symbols:verified"
               width={36}
@@ -66,11 +44,11 @@ export default function Home() {
           </h1>
           <span className="block text-base text-gray-500 font-normal">
             <Icon icon="el:user" width={16} height={16} className="mr-1" />
-            NPM : {dashboardData?.userData.npm}
+            NPM : {data.userData?.npm}
           </span>
           <span className="block text-base text-gray-500 font-normal">
             <Icon icon="ep:rank" width={16} height={16} className="mr-1" />
-            POINT : {dashboardData?.userData.total_point}
+            POINT : {data.userData?.total_point}
           </span>
           <span className="block text-base text-gray-500 font-normal">
             <Icon
@@ -105,7 +83,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {dashboardData.tes}
+                  {data.tes}
                 </p>
                 <p className="block text-sm">Total Tes</p>
               </Card.Body>
@@ -121,7 +99,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {dashboardData.sertifikasi}
+                  {data.sertifikasi}
                 </p>
                 <p className="block text-sm">Total Sertifikat</p>
               </Card.Body>
@@ -137,7 +115,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {dashboardData.pembicara}
+                  {data.pembicara}
                 </p>
                 <p className="block text-sm">Total Pembicara</p>
               </Card.Body>
@@ -153,7 +131,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {dashboardData.pengabdian}
+                  {data.pengabdian}
                 </p>
                 <p className="block text-sm">Total Pengabdian</p>
               </Card.Body>
@@ -169,7 +147,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {dashboardData.penghargaan}
+                  {data.penghargaan}
                 </p>
                 <p className="block text-sm">Total Penghargaan</p>
               </Card.Body>
@@ -185,7 +163,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {dashboardData.penelitian}
+                  {data.penelitian}
                 </p>
                 <p className="block text-sm">Total Penelitian</p>
               </Card.Body>
@@ -201,7 +179,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {dashboardData.publikasi}
+                  {data.publikasi}
                 </p>
                 <p className="block text-sm">Total Publikasi Karya</p>
               </Card.Body>
@@ -217,7 +195,7 @@ export default function Home() {
                   />
                 </div>
                 <p className="block text-2xl font-bold leading-relaxed">
-                  {dashboardData.hki}
+                  {data.hki}
                 </p>
                 <p className="block text-sm">Total HKI</p>
               </Card.Body>

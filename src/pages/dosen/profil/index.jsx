@@ -19,6 +19,7 @@ import useForm from "../../../hooks/useForm";
 import Modal from "../../../components/Modal";
 import axios from "axios";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
+import Link from "next/link";
 
 export default function Profil() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -65,6 +66,26 @@ export default function Profil() {
     }
   }
 
+  function isUserDataIncomplete(userData) {
+    return (
+      userData.nik == null ||
+      userData.jenkel == null ||
+      userData.tanggal_lahir == null ||
+      userData.tempat_lahir == null ||
+      userData.agama == null ||
+      userData.warga_negara == null ||
+      userData.email == null ||
+      userData.alamat == null ||
+      userData.rt == null ||
+      userData.rw == null ||
+      userData.desa_kelurahan == null ||
+      userData.kota_kabupaten == null ||
+      userData.provinsi == null ||
+      userData.kode_pos == null ||
+      userData.no_hp == null
+    );
+  }
+
   if ([user, menu, loading].some((item) => item == null))
     return <p>Loading...</p>;
   return (
@@ -81,6 +102,16 @@ export default function Profil() {
           <Button variant="primary" className="ml-4">
             {user?.role}
           </Button>
+          {isUserDataIncomplete(data) && (
+            <Link href="/mahasiswa/profil" type="button" className="ml-4 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-lg uppercase">
+              <div className="mr-3">
+                <svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                  <path d="M13.6086 3.247l8.1916 15.8c.0999.2.1998.5.1998.8 0 1-.7992 1.8-1.7982 1.8H3.7188c-.2997 0-.4995-.1-.7992-.2-.7992-.5-1.1988-1.5-.6993-2.4 5.3067-10.1184 8.0706-15.385 8.2915-15.8.3314-.6222.8681-.8886 1.4817-.897.6135-.008 1.273.2807 1.6151.897zM12 18.95c.718 0 1.3-.582 1.3-1.3 0-.718-.582-1.3-1.3-1.3-.718 0-1.3.582-1.3 1.3 0 .718.582 1.3 1.3 1.3zm-.8895-10.203v5.4c0 .5.4.9.9.9s.9-.4.9-.9v-5.3c0-.5-.4-.9-.9-.9s-.9.4-.9.8z"></path>
+                </svg>
+              </div>
+              LENGKAPI DATA PRIBADI TERLEBIH DAHULU!
+            </Link>
+          )}
         </Card.Header>
         <Card.Body className="flex">
           <div className="flex flex-col items-center w-1/3">
@@ -110,7 +141,7 @@ export default function Profil() {
           </div>
           <div className="flex-1 space-y-2">
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[12rem]">NIDN</Form.Label>
+              <Form.Label className="min-w-[12rem]">NIK</Form.Label>
               <span>:</span>
               <p>{data.nik}</p>
             </Form.Group>
@@ -122,7 +153,7 @@ export default function Profil() {
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[12rem]">Jenis Kelamin</Form.Label>
               <span>:</span>
-              <p>{data.jenkel == "L" ? "Laki-Laki" : "Perempuan"}</p>
+              <p>{data.jenkel === "L" ? "Laki-Laki" : data.jenkel === "P" ? "Perempuan" : ""}</p>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[12rem]">Tempat Lahir</Form.Label>
