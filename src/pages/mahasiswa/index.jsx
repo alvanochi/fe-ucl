@@ -23,23 +23,23 @@ export default function Home() {
   const { data } = useDatatable(DATA_URL);
 
 
-  function isUserDataIncomplete(userData) {
+  function isUserDataComplete(userData) {
     return (
-      userData?.nik == null ||
-      userData?.jenkel == null ||
-      userData?.tanggal_lahir == null ||
-      userData?.tempat_lahir == null ||
-      userData?.agama == null ||
-      userData?.warga_negara == null ||
-      userData?.email == null ||
-      userData?.alamat == null ||
-      userData?.rt == null ||
-      userData?.rw == null ||
-      userData?.desa_kelurahan == null ||
-      userData?.kota_kabupaten == null ||
-      userData?.provinsi == null ||
-      userData?.kode_pos == null ||
-      userData?.no_hp == null
+      userData?.nik !== null &&
+      userData?.jenkel !== null &&
+      userData?.tanggal_lahir !== null &&
+      userData?.tempat_lahir !== null &&
+      userData?.agama !== null &&
+      userData?.warga_negara !== null &&
+      userData?.email !== null &&
+      userData?.alamat !== null &&
+      userData?.rt !== null &&
+      userData?.rw !== null &&
+      userData?.desa_kelurahan !== null &&
+      userData?.kota_kabupaten !== null &&
+      userData?.provinsi !== null &&
+      userData?.kode_pos !== null &&
+      userData?.no_hp !== null
     );
   }
 
@@ -72,7 +72,7 @@ export default function Home() {
                 className="ml-1 text-info-600"
               />
             </h1>
-            {isUserDataIncomplete(data.userData) && (
+            {!isUserDataComplete(data.userData) && (
                 <Link href="/mahasiswa/profil" type="button" className="ml-4 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-lg uppercase">
                   <div class="mr-3">
                     <svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">

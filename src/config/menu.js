@@ -167,7 +167,7 @@ export const APP_MENU = [
   {
     label: "Jafung Dosen",
     url: "/dosenOnly",
-    icon: "iconoir:graduation-cap",
+    icon: "iconoir:reports-solid",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
       {
@@ -178,6 +178,57 @@ export const APP_MENU = [
       {
         label: "Jabatan Fungsional",
         url: "#jabatan-fungsional",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
+    label: "Kategori Gamify",
+    url: "/gamify",
+    icon: "iconoir:gamepad",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Sertifikasi",
+        url: "#kategori-sertifikasi",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Publikasi",
+        url: "#kategori-publikasi",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Profesi",
+        url: "#kategori-profesi",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Prestasi",
+        url: "#kategori-prestasi",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "HKI",
+        url: "#kategori-hki",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
+    label: "Users",
+    url: "/users",
+    icon: "iconoir:user",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Mahasiswa",
+        url: "#list-mhs",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Dosen",
+        url: "#list-dosen",
         allowedRoles: [ROLE_ID_ADMIN],
       },
     ],

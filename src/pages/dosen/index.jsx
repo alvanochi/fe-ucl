@@ -21,6 +21,8 @@ export default function Home() {
   const DATA_URL = `${process.env.API_ENDPOINT}/dashboard`;
   const { data } = useDatatable(DATA_URL);
 
+  console.log(data);
+
   function isUserDataIncomplete(userData) {
     return (
       userData?.nik == null ||

@@ -47,10 +47,10 @@ const VerificationPage = () => {
             <div>
               <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                 <h1 className="block text-white text-center text-lg font-semibold">
-                  Verification Email Sent!!
+                  Verification Email Sent!
                 </h1>
                 <h1 className="block text-white text-center text-lg font-semibold">
-                  Check Your Email For Verification Account.
+                  Check Your Email Or Spam Email For Verification Account.
                 </h1>
                 <img
                   src="/img/verification/verify-send-vector.png"
