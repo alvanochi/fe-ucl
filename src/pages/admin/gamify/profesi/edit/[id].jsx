@@ -9,7 +9,7 @@ import useUser from "../../../../../hooks/useUser";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
 
-export default function detailKategoriProfesi() {
+export default function DetailKategoriProfesi() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();

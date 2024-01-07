@@ -8,7 +8,7 @@ import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 
-export default function publikasiGamifyCreate() {
+export default function PublikasiGamifyCreate() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();

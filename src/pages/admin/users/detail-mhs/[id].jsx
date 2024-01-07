@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import date from "../../../../utils/date";
 import { Icon } from "@iconify-icon/react";
 
-export default function detailMhs() {
+export default function DetailMhs() {
 	const router = useRouter();
 	const { user } = useUser({ redirectTo: "/login" });
 	const { prefix, menu, setActive } = useMenu();
