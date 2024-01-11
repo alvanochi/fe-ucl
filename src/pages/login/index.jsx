@@ -20,7 +20,7 @@ export const Login = () => {
   });
 
   useEffect(() => {
-    if(typeof window !== 'undefined'){
+    if (typeof window !== "undefined") {
       const handleResize = () => {
         const screenWidth = window.innerWidth;
         setStylesPage({
@@ -29,11 +29,11 @@ export const Login = () => {
           formContainer: screenWidth <= 880 ? "w-10/12" : "w-3/5",
         });
       };
-  
+
       window.addEventListener("resize", handleResize);
-  
+
       handleResize();
-  
+
       return () => {
         window.removeEventListener("resize", handleResize);
       };

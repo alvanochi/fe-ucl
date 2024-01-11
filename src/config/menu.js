@@ -238,6 +238,17 @@ export const APP_MENU = [
     url: "/setting",
     icon: "ant-design:setting-filled",
     allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
-    submenus: [],
+    submenus: [
+      {
+        label: "Ganti Password",
+        url: "#change-password",
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+      },
+      {
+        label: "Akun",
+        url: "#akun",
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+      },
+    ],
   },
 ];

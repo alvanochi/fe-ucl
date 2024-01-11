@@ -9,7 +9,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import styles from "./register.module.css";
 import Link from "next/link";
-import { toastAlert } from "../../lib/sweetalert";
+import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
 import { useEffect, useState } from "react";
 
 export const Register = () => {
@@ -20,28 +20,28 @@ export const Register = () => {
     head: "text-2xl",
     subHead: "block",
     footer: "mt-12",
-    formWidth: "w-2/5"
+    formWidth: "w-2/5",
   });
 
   useEffect(() => {
-    if(typeof window !== 'undefined'){
+    if (typeof window !== "undefined") {
       const handleResize = () => {
         const screenWidth = window.innerWidth;
         setStylesForm({
-          container: screenWidth <= 880 ? "w-10/12" : "w-3/5",
+          container: screenWidth <= 880 ? "w-4/5" : "w-3/5",
           head: screenWidth <= 880 ? "text-base" : "text-2xl",
           subHead: screenWidth <= 880 ? "none" : "block",
           footer: screenWidth <= 880 ? "mt-5" : "mt-12",
-          formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5"
+          formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
         });
-  
+
         setDisplayValue(screenWidth <= 780 ? "block" : "flex");
       };
-  
+
       window.addEventListener("resize", handleResize);
-  
+
       handleResize();
-  
+
       return () => {
         window.removeEventListener("resize", handleResize);
       };
@@ -50,7 +50,6 @@ export const Register = () => {
 
   const INITIAL_FORM = {
     npm_nidn: "",
-    nama_lengkap: "",
     email: "",
     password: "",
   };
@@ -72,7 +71,6 @@ export const Register = () => {
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
       { field: "npm_nidn", label: "NPM/NIDN" },
-      { field: "nama_lengkap", label: "Nama Lengkap" },
       { field: "email", label: "E-Mail" },
       { field: "password", label: "Password" },
     ],
@@ -97,9 +95,10 @@ export const Register = () => {
 
         return;
       }
+      loadingAlert();
+      MySwal.close();
 
       toastAlert("error", error.message);
-
     }
   }
 
@@ -189,17 +188,6 @@ export const Register = () => {
                 name="npm_nidn"
                 onChange={inputHandler}
                 value={form.npm_nidn}
-                required
-              />
-            </div>
-            <div className="block mb-6">
-              <label className="block text-sm font-medium mb-1">Nama Lengkap</label>
-              <input
-                type="text"
-                className="form-input"
-                name="nama_lengkap"
-                onChange={inputHandler}
-                value={form.nama_lengkap}
                 required
               />
             </div>
