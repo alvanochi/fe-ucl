@@ -35,7 +35,7 @@ export default function ChangeStatus({ id, status }) {
       />
       <Modal title="Change Status" show={show} handler={toggle}>
         <p className="text-center text-sm mb-8">
-        Jika status suatu (Event / Tantangan) adalah "Active," maka informasi tersebut akan ditampilkan dalam daftar berita pada aplikasi mobile TIAS. Sebaliknya, jika statusnya "Non Active," berarti informasi tersebut tidak akan ditampilkan.
+        Jika status suatu (Event / Tantangan) adalah Active maka informasi tersebut akan ditampilkan dalam daftar berita pada aplikasi mobile TIAS. Sebaliknya, jika statusnya Non Active berarti informasi tersebut tidak akan ditampilkan.
         </p>
         <Form onSubmit={submitHandler} className="space-y-4" type="formdata">
           <Form.Group className="flex items-baseline gap-3">
