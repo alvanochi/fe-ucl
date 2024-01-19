@@ -169,12 +169,12 @@ export default function PenelitianCreate() {
                 onChange={inputHandler}
                 value={form.tahun_usulan}
                 options={Array.from(
-                  { length: new Date().getFullYear() - 1970 },
+                  { length: 6 },
                   (_, i) => new Date().getFullYear() - i
                 ).map((item) => ({
                   label: item,
                   value: item,
-                }))}
+                }))}                
                 required
               />
             </Form.Group>
@@ -189,12 +189,12 @@ export default function PenelitianCreate() {
                 onChange={inputHandler}
                 value={form.tahun_kegiatan}
                 options={Array.from(
-                  { length: new Date().getFullYear() - 1970 },
+                  { length: 6 },
                   (_, i) => new Date().getFullYear() - i
                 ).map((item) => ({
                   label: item,
                   value: item,
-                }))}
+                }))}                
                 required
               />
             </Form.Group>
@@ -209,12 +209,12 @@ export default function PenelitianCreate() {
                 onChange={inputHandler}
                 value={form.tahun_pelaksanaan}
                 options={Array.from(
-                  { length: new Date().getFullYear() - 1970 },
+                  { length: 6 },
                   (_, i) => new Date().getFullYear() - i
                 ).map((item) => ({
                   label: item,
                   value: item,
-                }))}
+                }))}                
                 required
               />
             </Form.Group>

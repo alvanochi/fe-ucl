@@ -186,12 +186,12 @@ export default function PenelitianCreate() {
                 onChange={inputHandler}
                 value={form.tahun_usulan}
                 options={Array.from(
-                  { length: new Date().getFullYear() - 1970 },
+                  { length: 6 },
                   (_, i) => new Date().getFullYear() - i
                 ).map((item) => ({
                   label: item,
                   value: item,
-                }))}
+                }))}                
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -205,12 +205,13 @@ export default function PenelitianCreate() {
                 onChange={inputHandler}
                 value={form.tahun_kegiatan}
                 options={Array.from(
-                  { length: new Date().getFullYear() - 1970 },
+                  { length: 6 },
                   (_, i) => new Date().getFullYear() - i
                 ).map((item) => ({
                   label: item,
                   value: item,
                 }))}
+                
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -224,12 +225,13 @@ export default function PenelitianCreate() {
                 onChange={inputHandler}
                 value={form.tahun_pelaksanaan}
                 options={Array.from(
-                  { length: new Date().getFullYear() - 1970 },
+                  { length: 6 },
                   (_, i) => new Date().getFullYear() - i
                 ).map((item) => ({
                   label: item,
                   value: item,
                 }))}
+                
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

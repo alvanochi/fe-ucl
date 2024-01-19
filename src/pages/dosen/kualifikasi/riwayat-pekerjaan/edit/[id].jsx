@@ -310,7 +310,7 @@ export default function RiwayatPekerjaanEdit() {
               </Form.Label>
               <span>:</span>
               <Form.Input
-                type="number"
+                type="text"
                 className="flex-1"
                 name="pendapatan"
                 onChange={inputHandler}

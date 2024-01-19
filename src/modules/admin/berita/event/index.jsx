@@ -1,13 +1,15 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
 import Filter from "./filter";
 import useDatatable from "../../../../hooks/useDatatable";
 import SortIcon from "../../../../components/SortIcon";
 import Form from "../../../../components/Form";
+import ChangeStatus from "../changeStatus";
+import useCRUD from "../../../../hooks/useCRUD";
 
-export default function MahasiswaModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/users/getMhs`;
+export default function EventModule({ baseURL }) {
+  const DATA_URL = `${process.env.API_ENDPOINT}/berita/event`;
+  const DELETE_URL = `${process.env.API_ENDPOINT}/berita`;
 
   const {
     data,
@@ -24,9 +26,22 @@ export default function MahasiswaModule({ baseURL }) {
     getSortBy,
   } = useDatatable(DATA_URL);
 
+  const { destroy } = useCRUD(DELETE_URL);
+
+
+
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-8">
+        <Button
+          as="a"
+          href={`${baseURL}/event/create`}
+          variant="primary"
+          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+          pill
+        >
+          Tambah Event
+        </Button>
         <Filter />
       </div>
       <table
@@ -46,24 +61,14 @@ export default function MahasiswaModule({ baseURL }) {
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                NPM
+                Title
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">Nama</div>
+              <div className="flex items-center gap-2 cursor-pointer">Deskripsi</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No. Telp</div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Total Point
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status MHS
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
@@ -97,42 +102,40 @@ export default function MahasiswaModule({ baseURL }) {
                   {index + 1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.npm}
-                  <span className="block font-bold">{row.role}</span>
+                  {row.title}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
+                  {row.deskripsi}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.no_hp}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.total_point}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.status_mhs}
+                  {row.status === 0 ? "Active" : "Non Active"}
                 </td>
                 
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
+                      <ChangeStatus
+                        id={{ id: row.id }}
+                        status={{ status: row.status }}
+                      />
                     <Button.Icon
                       as="a"
-                      href={`${baseURL}/detail-mhs/${row.user_id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/change-password/${row.user_id}`}
+                      href={`${baseURL}/${row.id}`}
                       variant="secondary"
                       icon={<Icon icon="bx:edit" width={20} height={20} />}
                     />
+                    <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() =>
+                          destroy(row.id).then(() => refresh())
+                        }
+                      />
                   </div>
                 </td>
               </tr>

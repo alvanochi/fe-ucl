@@ -52,7 +52,7 @@ export default function Filter({ filter, handler }) {
 							)}
 						/>
 					</Form.Group>
-					<Form.Group className="col-span-2">
+					<Form.Group>
 						<Form.Label>Lama Kegiatan (Tahun)</Form.Label>
 						<Form.Input
 							type="number"
@@ -62,6 +62,19 @@ export default function Filter({ filter, handler }) {
 							value={form?.lama_kegiatan ?? ""}
 						/>
 					</Form.Group>
+					<Form.Group>
+            <Form.Label>Status</Form.Label>
+            <Form.Select
+              name="status"
+              onChange={inputHandler}
+              value={form?.status ?? null}
+              options={[
+                { label: "Diterima", value: 1 },
+                { label: "Ditolak", value: 2 },
+                { label: "Proses", value: 0 },
+              ]}
+            />
+          </Form.Group>
 					<Form.Group className="col-span-2 flex gap-2">
 						<Button type="button" variant="secondary" onClick={close}>
 							Kosongkan

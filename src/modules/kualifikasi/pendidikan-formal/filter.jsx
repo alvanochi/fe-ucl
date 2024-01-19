@@ -88,7 +88,7 @@ export default function Filter({ filter, handler }) {
               ]}
             />
           </Form.Group>
-          <Form.Group className="col-span-2">
+          <Form.Group>
             <Form.Label>Tahun Lulus</Form.Label>
             <Form.Select
               className="flex-1"
@@ -102,6 +102,19 @@ export default function Filter({ filter, handler }) {
                 label: item,
                 value: item,
               }))}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Status</Form.Label>
+            <Form.Select
+              name="status"
+              onChange={inputHandler}
+              value={form?.status ?? null}
+              options={[
+                { label: "Diterima", value: 1 },
+                { label: "Ditolak", value: 2 },
+                { label: "Proses", value: 0 },
+              ]}
             />
           </Form.Group>
           <Form.Group className="col-span-2 flex gap-2">

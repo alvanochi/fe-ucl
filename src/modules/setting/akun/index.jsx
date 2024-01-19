@@ -80,7 +80,7 @@ export default function AkunModule({ baseURL }) {
                 name={form.npm ? "npm" : form.nidn ? "nidn" : ""}
                 onChange={inputHandler}
                 value={form.npm ? form.npm : form.nidn ? form.nidn : ""}
-                required
+                disabled
               />
             </Form.Group>
           </Card.Body>

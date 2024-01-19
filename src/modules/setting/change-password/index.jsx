@@ -7,14 +7,12 @@ import useForm from "../../../hooks/useForm";
 import { toastAlert } from "../../../lib/sweetalert";
 import axios from "axios";
 import _ from "underscore";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
 import Card from "../../../components/Card";
 
 export default function ChangePasswordModule({ baseURL }) {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const { prefix, menu } = useMenu();
 
   const INITIAL_FORM = {
     oldPassword: "",

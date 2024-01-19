@@ -65,6 +65,19 @@ export default function Filter({ filter, handler }) {
 							)}
 						/>
 					</Form.Group>
+					<Form.Group className="col-span-2">
+            <Form.Label>Status</Form.Label>
+            <Form.Select
+              name="status"
+              onChange={inputHandler}
+              value={form?.status ?? null}
+              options={[
+                { label: "Diterima", value: 1 },
+                { label: "Ditolak", value: 2 },
+                { label: "Proses", value: 0 },
+              ]}
+            />
+          </Form.Group>
 					<Form.Group className="col-span-2 flex gap-2">
 						<Button type="button" variant="secondary" onClick={close}>
 							Kosongkan

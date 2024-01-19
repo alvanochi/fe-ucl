@@ -7,25 +7,9 @@ import Pagination from "../../../../components/Pagination";
 import date from "../../../../utils/date";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function PembicaraModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/admin/pembicaraPending`;
-
-  const {
-    data,
-    loading,
-    page,
-    pageCount,
-    filter,
-    setPage,
-    setFilter,
-    canPrev,
-    canNext,
-    refresh,
-    sortBy,
-    getSortBy,
-  } = useDatatable(DATA_URL);
-
   const approveData = async (id) => {
     const UPDATE_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/approveStatusPembicara/${id}`;
 
@@ -82,19 +66,70 @@ export default function PembicaraModule({ baseURL }) {
     }
   };
 
+  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/pembicaraPending`)
+
+
+  const handleApproveClick = async () => {
+    await approveData();
+    setDataUrl(`${process.env.API_ENDPOINT}/admin/pembicaraAprove`);
+  };
+
+  const handleRejectClick = async () => {
+    await rejectData();
+    setDataUrl(`${process.env.API_ENDPOINT}/admin/pembicaraReject`);
+  };
+
+  const handlePendingClick = () => {
+    setDataUrl(`${process.env.API_ENDPOINT}/admin/pembicaraPending`);
+  };
+
+  const {
+    data,
+    loading,
+    page,
+    pageCount,
+    filter,
+    setPage,
+    setFilter,
+    canPrev,
+    canNext,
+    refresh,
+    sortBy,
+    getSortBy,
+  } = useDatatable(dataUrl);
+
+  useEffect(() => {
+    refresh();
+  }, [dataUrl]);
+
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-8">
-        <Button
-          as="a"
-          href={`${baseURL}/pembicara/create`}
-          variant="primary"
-          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-          pill
-        >
-          Tambah Pembicara
-        </Button>
         <Filter filter={filter} handler={setFilter} />
+        <Button
+          variant="info"
+          icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
+          onClick={handlePendingClick}
+          pill
+          >
+          Pending
+        </Button>
+        <Button
+          variant="success"
+          icon={<Icon icon="oi:check" width={20} height={20} />}
+          onClick={handleApproveClick}
+          pill
+          >
+          Aprove
+        </Button>
+        <Button
+          variant="danger"
+          icon={<Icon icon="oi:x" width={20} height={20} />}
+          onClick={handleRejectClick}
+          pill
+          >
+          Reject
+        </Button>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -230,23 +265,29 @@ export default function PembicaraModule({ baseURL }) {
                         />
                       }
                     />
-                    <Button.Icon
-                      variant="success"
-                      type="button"
-                      icon={<Icon icon="oi:check" width={20} height={20} />}
-                      onClick={() =>
-                        approveData(row.pembicara_id).then(() => refresh())
-                      }
-                    />
-
-                    <Button.Icon
-                      variant="danger"
-                      type="button"
-                      icon={<Icon icon="oi:x" width={20} height={20} />}
-                      onClick={() =>
-                        rejectData(row.pembicara_id).then(() => refresh())
-                      }
-                    />
+                    {
+                      row.status === 0 && (
+                        <>
+                          <Button.Icon
+                            variant="success"
+                            type="button"
+                            icon={<Icon icon="oi:check" width={20} height={20} />}
+                            onClick={() =>
+                              approveData(row.pembicara_id).then(() => refresh())
+                            }
+                          />
+                          <Button.Icon
+                            variant="danger"
+                            type="button"
+                            icon={<Icon icon="oi:x" width={20} height={20} />}
+                            onClick={() =>
+                              rejectData(row.pembicara_id).then(() => refresh())
+                            }
+                          />                        
+                        </>
+                      )
+                    }
+                    
                   </div>
                 </td>
               </tr>

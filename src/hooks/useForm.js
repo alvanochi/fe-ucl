@@ -43,6 +43,16 @@ export const useForm = (initialState, initialFormOptionState = INITIAL_FORM_OPTI
 	const inputHandler = (event, cb) => {
 		const INPUT_NAME = event.target.name;
 		let INPUT_VALUE = event.target.value;
+
+			if (INPUT_NAME === "pendapatan") {
+				INPUT_VALUE = INPUT_VALUE.replace(/\D/g, '');
+				INPUT_VALUE = new Intl.NumberFormat('id-ID', {
+					style: 'currency',
+					currency: 'IDR',
+					minimumFractionDigits: 0,
+				}).format(INPUT_VALUE);
+			}
+
 		switch (event.target.type) {
 			case "file":
 				INPUT_VALUE = event.target.files[0];

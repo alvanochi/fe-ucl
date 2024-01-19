@@ -309,7 +309,7 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-bold py-4">Research</h3>
                   <p className="leading-relaxed">
-                    Exploring Frontiers: Unraveling New Horizons through
+                    Exploring Frontiers. Unraveling New Horizons through
                     Research.
                   </p>
                 </div>
@@ -324,7 +324,7 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-bold py-4">Education</h3>
                   <p className="leading-relaxed">
-                    Empowering Minds and Shaping Futures: The Transformative
+                    Empowering Minds and Shaping Futures. The Transformative
                     Force of Education.
                   </p>
                 </div>
@@ -335,7 +335,7 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-bold py-4">Community Service</h3>
                   <p className="leading-relaxed">
-                    Serving Beyond Self: Dedicated Initiatives for Community
+                    Serving Beyond Self. Dedicated Initiatives for Community
                     Engagement.
                   </p>
                 </div>
@@ -396,7 +396,7 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-bold py-4">Create an Account</h3>
                   <p className="leading-relaxed">
-                    Start Your Journey: Create an Account Now!
+                    Start Your Journey. Create an Account Now!
                   </p>
                 </div>
 
@@ -408,7 +408,7 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-bold py-4">Setup Your Profile</h3>
                   <p className="leading-relaxed">
-                    Optimize Your Presence: Complete Profile Setup!
+                    Optimize Your Presence. Complete Profile Setup!
                   </p>
                 </div>
                 <div className="text-center cursor-pointer">
@@ -417,7 +417,7 @@ const Home = () => {
                   </div>
                   <h3 className="text-xl font-bold py-4">Enjoy The Game!</h3>
                   <p className="leading-relaxed">
-                    Level Up Your Enjoyment: Let the Games Begin!
+                    Level Up Your Enjoyment. Let the Games Begin!
                   </p>
                 </div>
               </div>

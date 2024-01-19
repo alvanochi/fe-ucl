@@ -7,25 +7,9 @@ import date from "../../../../utils/date";
 import SortIcon from "../../../../components/SortIcon";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function RiwayatPekerjaanModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/admin/rwytPekerjaanPending`;
-
-  const {
-    data,
-    loading,
-    page,
-    pageCount,
-    filter,
-    setPage,
-    setFilter,
-    canPrev,
-    canNext,
-    refresh,
-    sortBy,
-    getSortBy,
-  } = useDatatable(DATA_URL);
-
   const approveData = async (id) => {
     const UPDATE_URL = `${process.env.API_ENDPOINT}/kualifikasi/approveStatusRwyt/${id}`;
 
@@ -81,10 +65,69 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
     }
   };
 
+  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/rwytPekerjaanPending`);
+
+  const handleApproveClick = async () => {
+    await approveData();
+    setDataUrl(`${process.env.API_ENDPOINT}/admin/rwytPekerjaanAprove`);
+  };
+
+  const handleRejectClick = async () => {
+    await rejectData();
+    setDataUrl(`${process.env.API_ENDPOINT}/admin/rwytPekerjaanReject`);
+  };
+
+  const handlePendingClick = () => {
+    setDataUrl(`${process.env.API_ENDPOINT}/admin/rwytPekerjaanPending`);
+  };
+
+  const {
+    data,
+    loading,
+    page,
+    pageCount,
+    filter,
+    setPage,
+    setFilter,
+    canPrev,
+    canNext,
+    refresh,
+    sortBy,
+    getSortBy,
+  } = useDatatable(dataUrl);
+
+  useEffect(() => {
+    refresh();
+  }, [dataUrl]);
+
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-8">
         <Filter filter={filter} handler={setFilter} />
+        <Button
+          variant="info"
+          icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
+          onClick={handlePendingClick}
+          pill
+          >
+          Pending
+        </Button>
+        <Button
+          variant="success"
+          icon={<Icon icon="oi:check" width={20} height={20} />}
+          onClick={handleApproveClick}
+          pill
+          >
+          Aprove
+        </Button>
+        <Button
+          variant="danger"
+          icon={<Icon icon="oi:x" width={20} height={20} />}
+          onClick={handleRejectClick}
+          pill
+          >
+          Reject
+        </Button>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow"
@@ -234,23 +277,28 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
                         />
                       }
                     />
-                    <Button.Icon
-                      variant="success"
-                      type="button"
-                      icon={<Icon icon="oi:check" width={20} height={20} />}
-                      onClick={() =>
-                        approveData(row.rwyt_pekerjaan_id).then(() => refresh())
-                      }
-                    />
-
-                    <Button.Icon
-                      variant="danger"
-                      type="button"
-                      icon={<Icon icon="oi:x" width={20} height={20} />}
-                      onClick={() =>
-                        rejectData(row.rwyt_pekerjaan_id).then(() => refresh())
-                      }
-                    />
+                    {
+                      row.status === 0 && (
+                        <>
+                          <Button.Icon
+                            variant="success"
+                            type="button"
+                            icon={<Icon icon="oi:check" width={20} height={20} />}
+                            onClick={() =>
+                              approveData(row.rwyt_pekerjaan_id).then(() => refresh())
+                            }
+                          />
+                          <Button.Icon
+                            variant="danger"
+                            type="button"
+                            icon={<Icon icon="oi:x" width={20} height={20} />}
+                            onClick={() =>
+                              rejectData(row.rwyt_pekerjaan_id).then(() => refresh())
+                            }
+                          />
+                        </>
+                      )
+                    }
                   </div>
                 </td>
               </tr>

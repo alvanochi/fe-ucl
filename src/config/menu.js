@@ -183,6 +183,24 @@ export const APP_MENU = [
     ],
   },
   {
+    label: "Berita",
+    url: "/berita",
+    icon: "iconoir:rss-feed-tag",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Tantangan",
+        url: "#tantangan",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Event",
+        url: "#event",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
     label: "Kategori Gamify",
     url: "/gamify",
     icon: "iconoir:gamepad",

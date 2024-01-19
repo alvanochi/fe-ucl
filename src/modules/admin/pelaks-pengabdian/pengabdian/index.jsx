@@ -6,27 +6,11 @@ import Button from "../../../../components/Button";
 import Pagination from "../../../../components/Pagination";
 import date from "../../../../utils/date";
 
-import { MySwal, loadingAlert } from "../../../../lib/sweetalert";
+import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function PengabdianModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/admin/pengabdianPending`;
-
-  const {
-    data,
-    loading,
-    page,
-    pageCount,
-    filter,
-    setPage,
-    setFilter,
-    canPrev,
-    canNext,
-    refresh,
-    sortBy,
-    getSortBy,
-  } = useDatatable(DATA_URL);
-
   const approveData = async (id) => {
     const UPDATE_URL = `${process.env.API_ENDPOINT}/pengabdian/approveStatusPengabdian/${id}`;
 
@@ -82,10 +66,69 @@ export default function PengabdianModule({ baseURL }) {
     }
   };
 
+  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/pengabdianPending`);
+
+  const handleApproveClick = async () => {
+    await approveData();
+    setDataUrl(`${process.env.API_ENDPOINT}/admin/pengabdianAprove`);
+  };
+
+  const handleRejectClick = async () => {
+    await rejectData();
+    setDataUrl(`${process.env.API_ENDPOINT}/admin/pengabdianReject`);
+  };
+
+  const handlePendingClick = () => {
+    setDataUrl(`${process.env.API_ENDPOINT}/admin/pengabdianPending`);
+  };
+
+  const {
+    data,
+    loading,
+    page,
+    pageCount,
+    filter,
+    setPage,
+    setFilter,
+    canPrev,
+    canNext,
+    refresh,
+    sortBy,
+    getSortBy,
+  } = useDatatable(dataUrl);
+
+  useEffect(() => {
+    refresh();
+  }, [dataUrl]);
+
   return (
     <>
       <div className="flex items-center justify-center gap-2 mb-8">
         <Filter filter={filter} handler={setFilter} />
+        <Button
+          variant="info"
+          icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
+          onClick={handlePendingClick}
+          pill
+          >
+          Pending
+        </Button>
+        <Button
+          variant="success"
+          icon={<Icon icon="oi:check" width={20} height={20} />}
+          onClick={handleApproveClick}
+          pill
+          >
+          Aprove
+        </Button>
+        <Button
+          variant="danger"
+          icon={<Icon icon="oi:x" width={20} height={20} />}
+          onClick={handleRejectClick}
+          pill
+          >
+          Reject
+        </Button>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -221,23 +264,29 @@ export default function PengabdianModule({ baseURL }) {
                         />
                       }
                     />
-                    <Button.Icon
-                      variant="success"
-                      type="button"
-                      icon={<Icon icon="oi:check" width={20} height={20} />}
-                      onClick={() =>
-                        approveData(row.pengabdian_id).then(() => refresh())
-                      }
-                    />
-
-                    <Button.Icon
-                      variant="danger"
-                      type="button"
-                      icon={<Icon icon="oi:x" width={20} height={20} />}
-                      onClick={() =>
-                        rejectData(row.pengabdian_id).then(() => refresh())
-                      }
-                    />
+                    {
+                      row.status === 0 && (
+                        <>
+                          <Button.Icon
+                            variant="success"
+                            type="button"
+                            icon={<Icon icon="oi:check" width={20} height={20} />}
+                            onClick={() =>
+                              approveData(row.pengabdian_id).then(() => refresh())
+                            }
+                          />
+                          <Button.Icon
+                            variant="danger"
+                            type="button"
+                            icon={<Icon icon="oi:x" width={20} height={20} />}
+                            onClick={() =>
+                              rejectData(row.pengabdian_id).then(() => refresh())
+                            }
+                          />
+                        </>
+                      )
+                    }
+                    
                   </div>
                 </td>
               </tr>

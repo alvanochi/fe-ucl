@@ -86,17 +86,6 @@ export default function DetailMhs() {
 	return (
 		<Layout>
 			<PageHeader title={`Detail ${menu.label}`} icon={menu.icon} handler={setActive} />
-			<div className="flex justify-center mt-4">
-				<Button
-					as="a"
-					href={`${prefix + menu.url}/kepangkatan/edit/${form.pangkat_id}`}
-					variant="secondary"
-					icon={<Icon icon="bx:edit" width={20} height={20} />}
-					pill
-				>
-					Edit
-				</Button>
-			</div>
 			<Form>
 				<Card className="mt-4">
 					<Card.Header className="text-center">Detail Dosen</Card.Header>

@@ -45,6 +45,7 @@ export default function RiwayatPekerjaanCreate() {
 
 	const { form, inputHandler } = formdata;
 
+
 	if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
 	return (
 		<Layout>
@@ -233,7 +234,7 @@ export default function RiwayatPekerjaanCreate() {
 							</Form.Label>
 							<span>:</span>
 							<Form.Input
-								type="number"
+								type="text"
 								className="flex-1"
 								name="pendapatan"
 								onChange={inputHandler}

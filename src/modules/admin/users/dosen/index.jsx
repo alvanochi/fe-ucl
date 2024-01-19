@@ -120,6 +120,12 @@ export default function DosenModule({ baseURL }) {
                         />
                       }
                     />
+                    <Button.Icon
+                      as="a"
+                      href={`${baseURL}/change-password/${row.user_id}`}
+                      variant="secondary"
+                      icon={<Icon icon="bx:edit" width={20} height={20} />}
+                    />
                   </div>
                 </td>
               </tr>

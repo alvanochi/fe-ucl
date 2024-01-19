@@ -85,7 +85,7 @@ export default function Filter({ filter, handler }) {
               ]}
             />
           </Form.Group>
-          <Form.Group className="col-span-2">
+          <Form.Group>
             <Form.Label>Tanggal Terbit</Form.Label>
             <Form.Input
               type="date"
@@ -93,6 +93,19 @@ export default function Filter({ filter, handler }) {
               name="tgl_terbit"
               onChange={inputHandler}
               value={form?.tgl_terbit ?? ""}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Status</Form.Label>
+            <Form.Select
+              name="status"
+              onChange={inputHandler}
+              value={form?.status ?? null}
+              options={[
+                { label: "Diterima", value: 1 },
+                { label: "Ditolak", value: 2 },
+                { label: "Proses", value: 0 },
+              ]}
             />
           </Form.Group>
           <Form.Group className="col-span-2 flex gap-2">

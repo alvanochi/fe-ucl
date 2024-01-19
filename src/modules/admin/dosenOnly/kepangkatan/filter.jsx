@@ -3,9 +3,22 @@ import Button from "../../../../components/Button";
 import Modal from "../../../../components/Modal";
 import Form from "../../../../components/Form";
 import useModal from "../../../../hooks/useModal";
+import useForm from "../../../../hooks/useForm";
 
-export default function Filter() {
-  const { show, toggle } = useModal();
+export default function Filter({filter, handler}) {
+  const { form, inputHandler, setForm } = useForm(filter);
+	const { show, toggle, close } = useModal({
+		onClose: () => {
+			handler({});
+			setForm({});
+		},
+	});
+
+	const submitHandler = (event) => {
+		event.preventDefault();
+		handler(form);
+		toggle();
+	};
 
   return (
     <>
@@ -18,10 +31,13 @@ export default function Filter() {
         Filter
       </Button>
       <Modal title="Filter Berdasarkan" show={show} handler={toggle}>
-        <Form className="grid grid-cols-2 gap-4">
+        <Form onSubmit={submitHandler} className="grid grid-cols-2 gap-4">
           <Form.Group>
             <Form.Label>Pangkat</Form.Label>
             <Form.Select
+              name="pangkat"
+              onChange={inputHandler}
+              value={form?.pangkat ?? ""}
               options={[
                 { label: "I/a", value: "I/a" },
                 { label: "I/b", value: "I/b" },
@@ -42,6 +58,9 @@ export default function Filter() {
           <Form.Group>
             <Form.Label>Golongan</Form.Label>
             <Form.Select
+              name="golongan"
+              onChange={inputHandler}
+							value={form?.golongan ?? ""}
               options={[
                 { label: "Juru", value: "Juru" },
                 { label: "Juru Tingkat I", value: "Juru Tingkat I" },
@@ -64,24 +83,23 @@ export default function Filter() {
           </Form.Group>
           <Form.Group>
             <Form.Label>No. SK</Form.Label>
-            <Form.Input type="text" />
+            <Form.Input type="text" className="flex-1"
+							name="no_sk"
+							onChange={inputHandler}
+							value={form?.no_sk ?? ""} />
           </Form.Group>
           <Form.Group>
             <Form.Label>Tanggal SK</Form.Label>
-            <Form.Input type="date" />
+            <Form.Input type="date" className="flex-1" name="tgl_sk" onChange={inputHandler} value={form?.tgl_sk ?? ""} />
           </Form.Group>
-          <Form.Group>
-            <Form.Label>Terhitung Dari</Form.Label>
-            <Form.Input type="date" />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Terhitung Sampai</Form.Label>
-            <Form.Input type="date" />
+          <Form.Group className="col-span-2">
+            <Form.Label>Tanggal Mulai</Form.Label>
+            <Form.Input type="date" className="flex-1" name="tanggal_mulai" onChange={inputHandler} value={form?.tanggal_mulai ?? ""} />
           </Form.Group>
           <Form.Group className="col-span-2 flex gap-2">
-            <Button type="button" variant="secondary" onClick={toggle}>
-              Batal
-            </Button>
+            <Button type="button" variant="secondary" onClick={close}>
+							Kosongkan
+						</Button>
             <Button variant="primary" className="grow">
               Terapkan
             </Button>

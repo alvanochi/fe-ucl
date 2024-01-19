@@ -83,7 +83,7 @@ export default function DetailMhs() {
 		success: () => router.push(prefix + menu.url),
 	});
 
-	const { form, inputHandler } = formdata;
+	const { form } = formdata;
 
 	useEffect(() => {
 		if (router.isReady === false || !user) return;
@@ -99,17 +99,6 @@ export default function DetailMhs() {
 	return (
 		<Layout>
 			<PageHeader title={`Detail ${menu.label}`} icon={menu.icon} handler={setActive} />
-			<div className="flex justify-center mt-4">
-				<Button
-					as="a"
-					href={`${prefix + menu.url}/kepangkatan/edit/${form.pangkat_id}`}
-					variant="secondary"
-					icon={<Icon icon="bx:edit" width={20} height={20} />}
-					pill
-				>
-					Edit
-				</Button>
-			</div>
 			<Form>
 				<Card className="mt-4">
 					<Card.Header className="text-center">Detail Mahasiswa</Card.Header>
@@ -123,7 +112,7 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="nama_lengkap"
-								onChange={inputHandler}
+								
 								value={form.nama_lengkap}
 								disabled
 							/>
@@ -137,7 +126,7 @@ export default function DetailMhs() {
 								type="number"
 								className="flex-1"
 								name="npm"
-								onChange={inputHandler}
+								
 								value={form.npm}
 								disabled
 							/>
@@ -151,7 +140,7 @@ export default function DetailMhs() {
 								type="email"
 								className="flex-1"
 								name="email"
-								onChange={inputHandler}
+								
 								value={form.email}
 								disabled
 							/>
@@ -163,11 +152,11 @@ export default function DetailMhs() {
 							<span>:</span>
 							<div className="flex gap-4">
 								<Form.Label>
-									<Form.Radio name="jenkel" value="L" onChange={inputHandler} checked={form.jenkel == "L"} />
+									<Form.Radio name="jenkel" value="L"  checked={form.jenkel == "L"} />
 									Laki-Laki
 								</Form.Label>
 								<Form.Label>
-									<Form.Radio name="jenkel" value="P" onChange={inputHandler} checked={form.jenkel == "P"} />
+									<Form.Radio name="jenkel" value="P"  checked={form.jenkel == "P"} />
 									Perempuan
 								</Form.Label>
 							</div>
@@ -177,7 +166,7 @@ export default function DetailMhs() {
 								Tanggal Lahir <span className="text-danger-600">*</span>
 							</Form.Label>
 							<span>:</span>
-							<Form.Input type="date" className="flex-1" name="tanggal_lahir" onChange={inputHandler} value={form.tanggal_lahir} disabled />
+							<Form.Input type="date" className="flex-1" name="tanggal_lahir"  value={form.tanggal_lahir} disabled />
 						</Form.Group>
             <Form.Group className="flex items-baseline gap-3">
 							<Form.Label className="min-w-[18rem]">
@@ -188,7 +177,7 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="tempat_lahir"
-								onChange={inputHandler}
+								
 								value={form.tempat_lahir}
 								disabled
 							/>
@@ -202,7 +191,7 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="ibu_kandung"
-								onChange={inputHandler}
+								
 								value={form.ibu_kandung}
 								disabled
 							/>
@@ -216,7 +205,7 @@ export default function DetailMhs() {
 								type="number"
 								className="flex-1"
 								name="nik"
-								onChange={inputHandler}
+								
 								value={form.nik}
 								disabled
 							/>
@@ -230,7 +219,7 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="agama"
-								onChange={inputHandler}
+								
 								value={form.agama}
 								disabled
 							/>
@@ -244,7 +233,7 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="warga_negara"
-								onChange={inputHandler}
+								
 								value={form.warga_negara}
 								disabled
 							/>
@@ -257,7 +246,7 @@ export default function DetailMhs() {
               <Form.Textarea
                 rows="2"
                 name="alamat"
-                onChange={inputHandler}
+                
                 value={form.alamat}
                 disabled
               ></Form.Textarea>
@@ -271,7 +260,7 @@ export default function DetailMhs() {
 								type="number"
 								className="flex-1"
 								name="rt"
-								onChange={inputHandler}
+								
 								value={form.rt}
 								disabled
 							/>
@@ -285,7 +274,7 @@ export default function DetailMhs() {
 								type="number"
 								className="flex-1"
 								name="rw"
-								onChange={inputHandler}
+								
 								value={form.rw}
 								disabled
 							/>
@@ -299,7 +288,7 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="desa_kelurahan"
-								onChange={inputHandler}
+								
 								value={form.desa_kelurahan}
 								disabled
 							/>
@@ -313,7 +302,7 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="kota_kabupaten"
-								onChange={inputHandler}
+								
 								value={form.kota_kabupaten}
 								disabled
 							/>
@@ -327,7 +316,7 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="provinsi"
-								onChange={inputHandler}
+								
 								value={form.provinsi}
 								disabled
 							/>
@@ -341,7 +330,7 @@ export default function DetailMhs() {
 								type="number"
 								className="flex-1"
 								name="no_hp"
-								onChange={inputHandler}
+								
 								value={form.no_hp}
 								disabled
 							/>
@@ -364,7 +353,7 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="nama_pasangan"
-								onChange={inputHandler}
+								
 								value={form.nama_pasangan}
 								disabled
 							/>
@@ -378,7 +367,7 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="nip_pasangan"
-								onChange={inputHandler}
+								
 								value={form.nip_pasangan}
 								disabled
 							/>
@@ -392,7 +381,7 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_kompetensi"
-								onChange={inputHandler}
+								
 								value={form.point_kompetensi}
 								disabled
 							/>
@@ -406,7 +395,7 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_pengabdian"
-								onChange={inputHandler}
+								
 								value={form.point_pengabdian}
 								disabled
 							/>
@@ -420,7 +409,7 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_pendidikan"
-								onChange={inputHandler}
+								
 								value={form.point_pendidikan}
 								disabled
 							/>
@@ -434,7 +423,7 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_penelitian"
-								onChange={inputHandler}
+								
 								value={form.point_penelitian}
 								disabled
 							/>
@@ -448,7 +437,7 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_penunjang"
-								onChange={inputHandler}
+								
 								value={form.point_penunjang}
 								disabled
 							/>
@@ -462,7 +451,7 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_rekomendasi"
-								onChange={inputHandler}
+								
 								value={form.point_rekomendasi}
 								disabled
 							/>
@@ -476,13 +465,16 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="total_point"
-								onChange={inputHandler}
+								
 								value={form.total_point}
 								disabled
 							/>
 						</Form.Group>
 					</Card.Body>
 				</Card>
+
+			
+
 				<div className="flex gap-4 mt-4">
 					<Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
 						Kembali

@@ -300,7 +300,7 @@ export default function RiwayatPekerjaanDetail() {
               </Form.Label>
               <span>:</span>
               <Form.Input
-                type="number"
+                type="text"
                 className="flex-1"
                 name="pendapatan"
                 value={form.pendapatan}
