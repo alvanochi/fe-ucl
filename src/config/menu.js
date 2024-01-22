@@ -201,6 +201,13 @@ export const APP_MENU = [
     ],
   },
   {
+    label: "Gamify",
+    url: "/gamify-tias",
+    icon: "iconoir:gamepad",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [],
+  },
+  {
     label: "Kategori Gamify",
     url: "/gamify",
     icon: "iconoir:gamepad",

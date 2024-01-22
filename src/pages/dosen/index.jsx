@@ -93,12 +93,7 @@ export default function Home() {
               height={16}
               className="mr-1"
             />
-            {/* {profile?.educations?.at(0) != null
-              ? profile?.educations.at(0).jenjang_studi
-              : ""}{" "}
-            {profile?.educations?.at(0) != null
-              ? profile?.educations.at(0).program_studi
-              : ""} */}
+            STATUS : {data.userData?.kode_mhs}
           </span>
         </div>
       </div>

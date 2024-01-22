@@ -74,7 +74,7 @@ export default function Home() {
             </h1>
             {!isUserDataComplete(data.userData) && (
                 <Link href="/mahasiswa/profil" type="button" className="ml-4 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-lg uppercase">
-                  <div class="mr-3">
+                  <div className="mr-3">
                     <svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
                       <path d="M13.6086 3.247l8.1916 15.8c.0999.2.1998.5.1998.8 0 1-.7992 1.8-1.7982 1.8H3.7188c-.2997 0-.4995-.1-.7992-.2-.7992-.5-1.1988-1.5-.6993-2.4 5.3067-10.1184 8.0706-15.385 8.2915-15.8.3314-.6222.8681-.8886 1.4817-.897.6135-.008 1.273.2807 1.6151.897zM12 18.95c.718 0 1.3-.582 1.3-1.3 0-.718-.582-1.3-1.3-1.3-.718 0-1.3.582-1.3 1.3 0 .718.582 1.3 1.3 1.3zm-.8895-10.203v5.4c0 .5.4.9.9.9s.9-.4.9-.9v-5.3c0-.5-.4-.9-.9-.9s-.9.4-.9.8z"></path>
                     </svg>
@@ -89,22 +89,17 @@ export default function Home() {
             NPM : {data.userData?.npm}
           </span>
           <span className="block text-base text-gray-500 font-normal">
-            <Icon icon="ep:rank" width={16} height={16} className="mr-1" />
-            POINT : {data.userData?.total_point}
-          </span>
-          <span className="block text-base text-gray-500 font-normal">
             <Icon
               icon="ri:briefcase-fill"
               width={16}
               height={16}
               className="mr-1"
             />
-            {/* {profile?.educations?.at(0) != null
-              ? profile?.educations.at(0).jenjang_studi
-              : ""}{" "}
-            {profile?.educations?.at(0) != null
-              ? profile?.educations.at(0).program_studi
-              : ""} */}
+            STATUS : {data.userData?.kode_mhs}
+          </span>
+          <span className="block text-base text-gray-500 font-normal">
+            <Icon icon="ep:rank" width={16} height={16} className="mr-1" />
+            POINT : {data.userData?.total_point}
           </span>
         </div>
         

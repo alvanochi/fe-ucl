@@ -1,13 +1,30 @@
+import useMenu from "../../../hooks/useMenu";
+import Layout from "../../../components/Layout";
+import PageHeader from "../../../components/PageHeader";
+import Form from "../../../components/Form";
+import Button from "../../../components/Button";
+import useUser from "../../../hooks/useUser";
+import useForm from "../../../hooks/useForm";
+import { toastAlert } from "../../../lib/sweetalert";
+import { useRouter } from "next/router";
+import axios from "axios";
+import _ from "underscore";
+import useDatatable from "../../../hooks/useDatatable";
+import useCRUD from "../../../hooks/useCRUD";
+import SortIcon from "../../../components/SortIcon";
 import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../../hooks/useDatatable";
-import SortIcon from "../../../../components/SortIcon";
-import Form from "../../../../components/Form";
 
-export default function MahasiswaModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/users/getMhs`;
+
+export default function GamifyTias() {
+	const router = useRouter();
+	const { user } = useUser({ redirectTo: "/login" });
+	const { prefix, menu, setActive } = useMenu();
+
+
+	const DATA_URL = `${process.env.API_ENDPOINT}/achievments`;
+  const DELETE_URL = `${process.env.API_ENDPOINT}/achievments`;
+  const FILE_URL = `${process.env.API_ENDPOINT}/gamify`;
+
 
   const {
     data,
@@ -23,11 +40,23 @@ export default function MahasiswaModule({ baseURL }) {
     sortBy,
     getSortBy,
   } = useDatatable(DATA_URL);
-
-  return (
-    <>
-      <div className="flex items-center justify-center gap-2 my-8">
-        <Filter />
+  const { destroy } = useCRUD(DELETE_URL);
+	
+	if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+	return (
+		<Layout>
+			<PageHeader title="Tias Gamify" icon={menu.icon} items={menu.submenus} handler={setActive} />
+			<div className="my-8">
+			<div className="flex items-center justify-center gap-2 mb-8 mt-8">
+					<Button
+						as="a"
+						href={`${prefix + menu.url}/create`}
+						variant="primary"
+						icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+						pill
+					>
+						Tambah Gamify
+					</Button>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -38,34 +67,40 @@ export default function MahasiswaModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pangkat_id")}
+                onClick={() => sortBy("ip_id")}
               >
                 No
-                <SortIcon sort={getSortBy("pangkat_id")} />
+                <SortIcon sort={getSortBy("ip_id")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                NPM
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">Nama</div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No. Telp</div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Total Point
+                Name
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                Status MHS
+                Gamify
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200"></th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Start Point
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Point
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Image
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -96,55 +131,47 @@ export default function MahasiswaModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {index + 1}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.npm}
-                  <span className="block font-bold">{row.role}</span>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  {row.name}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  {row.gamify}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.no_hp}
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  {row.start_point}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.total_point}
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  {row.points}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.status_mhs}
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <img src={`${FILE_URL}/${row.image}`} alt="gamify" />
                 </td>
-                
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/detail-mhs/${row.user_id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/change-password/${row.user_id}`}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/achievements-mhs/${row.user_id}`}
-                      variant="primary"
-                      icon={<Icon icon="bx:bar-chart-alt-2" width={20} height={20} />}
-                    />
-                  </div>
+								<td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+									<div className="flex items-stretch gap-1">
+										<Button.Icon
+											as="a"
+											href={`${prefix + menu.url}/edit/${row.id}`}
+											variant="secondary"
+											icon={<Icon icon="bx:edit" width={20} height={20} />}
+										/>
+										{/* <Button.Icon
+											variant="danger"
+											icon={
+												<Icon
+													icon="solar:trash-bin-2-bold-duotone"
+													width={20}
+													height={20}
+												/>
+											}
+											onClick={() => destroy(row.id).then(() => refresh())}
+										/> */}
+									</div>
                 </td>
               </tr>
             ))}
         </tbody>
       </table>
+
       <div className="flex mt-8">
         <div className="flex gap-1 ml-auto">
           <Button.Icon
@@ -195,6 +222,8 @@ export default function MahasiswaModule({ baseURL }) {
           of {pageCount || 1}
         </div>
       </div>
-    </>
-  );
+			</div>
+			
+		</Layout>
+	);
 }
