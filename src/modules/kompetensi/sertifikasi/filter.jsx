@@ -49,9 +49,15 @@ export default function Filter({ filter, handler }) {
 							value={form?.jenis_serti ?? ""}
 							onChange={inputHandler}
 							options={[
-								{ label: "Test Bahasa Asing", value: "Test Bahasa Asing" },
-								{ label: "Kompentensi Profesi", value: "Kompentensi Profesi" },
-								{ label: "Lainnya", value: "Lainnya" },
+								{ label: "Sertifikasi Dosen", value: "Sertifikasi Dosen" },
+								{
+									label: "Sertifikai Keahlian",
+									value: "Sertifikai Keahlian",
+								},
+								{
+									label: "Sertifikasi Kegiatan",
+									value: "Sertifikasi Kegiatan",
+								},
 							]}
 						/>
 					</Form.Group>

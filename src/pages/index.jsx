@@ -979,12 +979,12 @@ const Home = () => {
                 </p>
 
                 <div className="flex flex-col md:flex-row items-center justify-center gap-5 pt-10">
-                  <a
+                  {/* <a
                     href="#"
                     className="bg-color-white h-16 w-44 grid place-items-center rounded-lg hover:opacity-70"
                   >
                     <img src="/img/landing-page/ios-store-dark.png" alt="" />
-                  </a>
+                  </a> */}
                   <a
                     href="#"
                     className="bg-color-white h-16 w-44 grid place-items-center rounded-lg hover:opacity-70"

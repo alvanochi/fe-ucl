@@ -267,7 +267,7 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
                       as="a"
-                      href={`${baseURL}/detail-pendidikan-formal/${row.rwyt_pekerjaan_id}`}
+                      href={`${baseURL}/detail-riwayat-pekerjaan/${row.rwyt_pekerjaan_id}`}
                       variant="info"
                       icon={
                         <Icon

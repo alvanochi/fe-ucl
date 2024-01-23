@@ -1,9 +1,9 @@
 import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import useModal from "../../../../hooks/useModal";
 import Button from "../../../../components/Button";
-import Form from "../../../../components/Form";
 import Modal from "../../../../components/Modal";
+import Form from "../../../../components/Form";
+import useModal from "../../../../hooks/useModal";
+import useForm from "../../../../hooks/useForm";
 
 export default function Filter({ filter, handler }) {
   const { form, inputHandler, setForm } = useForm(filter);
@@ -39,7 +39,7 @@ export default function Filter({ filter, handler }) {
               onChange={inputHandler}
               value={form?.semester ?? ""}
               options={[
-                { label: "Semester 1", value: "Semseter 1" },
+                { label: "Semester 1", value: "Semester 1" },
                 { label: "Semester 2", value: "Semester 2" },
                 { label: "Semester 3", value: "Semester 3" },
                 { label: "Semester 4", value: "Semester 4" },
@@ -60,7 +60,7 @@ export default function Filter({ filter, handler }) {
               value={form?.ip ?? ""}
             />
           </Form.Group>
-          <Form.Group>
+          <Form.Group className="col-span-2">
             <Form.Label>Tahun</Form.Label>
             <Form.Select
               name="tahun"

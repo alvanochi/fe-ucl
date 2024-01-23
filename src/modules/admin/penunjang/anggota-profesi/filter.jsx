@@ -2,8 +2,8 @@ import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
 import Modal from "../../../../components/Modal";
 import Form from "../../../../components/Form";
-import useForm from "../../../../hooks/useForm";
 import useModal from "../../../../hooks/useModal";
+import useForm from "../../../../hooks/useForm";
 
 export default function Filter({ filter, handler }) {
   const { form, inputHandler, setForm } = useForm(filter);
@@ -49,16 +49,6 @@ export default function Filter({ filter, handler }) {
               className="flex-1"
               name="peran"
               value={form?.peran ?? ""}
-              onChange={inputHandler}
-            />
-          </Form.Group>
-          <Form.Group className="col-span-2">
-            <Form.Label>Mulai Keanggotaan</Form.Label>
-            <Form.Input
-              type="date"
-              className="flex-1"
-              name="mulai_keanggotaan"
-              value={form?.mulai_keanggotaan ?? ""}
               onChange={inputHandler}
             />
           </Form.Group>

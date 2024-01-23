@@ -50,16 +50,6 @@ export default function Filter({ filter, handler }) {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>Gelar</Form.Label>
-            <Form.Input
-              type="text"
-              className="flex-1"
-              name="gelar_akademik"
-              onChange={inputHandler}
-              value={form.gelar_akademik ?? ""}
-            />
-          </Form.Group>
-          <Form.Group>
             <Form.Label>Asal</Form.Label>
             <Form.Select
               className="flex-1"
@@ -95,21 +85,6 @@ export default function Filter({ filter, handler }) {
                   label: "Universitas Diponegoro",
                   value: "Universitas Diponegoro",
                 },
-              ]}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Program Studi</Form.Label>
-            <Form.Select
-              className="flex-1"
-              name="program_studi"
-              onChange={inputHandler}
-              value={form.program_studi ?? ""}
-              options={[
-                { label: "Teknik Informatika", value: "Teknik Informatika" },
-                { label: "Teknik Mesin", value: "Teknik Mesin" },
-                { label: "Teknik Elektro", value: "Teknik Elektro" },
-                { label: "Teknik Sipil", value: "Teknik Sipil" },
               ]}
             />
           </Form.Group>

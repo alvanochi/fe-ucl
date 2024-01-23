@@ -6,71 +6,86 @@ import useModal from "../../../../hooks/useModal";
 import useForm from "../../../../hooks/useForm";
 
 export default function Filter({ filter, handler }) {
-	const { form, inputHandler, setForm } = useForm(filter);
-	const { show, toggle, close } = useModal({
-		onClose: () => {
-			handler({});
-			setForm({});
-		},
-	});
+  const { form, inputHandler, setForm } = useForm(filter);
+  const { show, toggle, close } = useModal({
+    onClose: () => {
+      handler({});
+      setForm({});
+    },
+  });
 
-	const submitHandler = (event) => {
-		event.preventDefault();
-		handler(form);
-		toggle();
-	};
+  const submitHandler = (event) => {
+    event.preventDefault();
+    handler(form);
+    toggle();
+  };
 
-	return (
-		<>
-			<Button variant="primary" icon={<Icon icon="clarity:filter-line" width={20} height={20} />} onClick={toggle} pill>
-				Filter
-			</Button>
-			<Modal title="Filter Berdasarkan" show={show} handler={toggle}>
-				<Form onSubmit={submitHandler} className="grid grid-cols-2 gap-4">
-					<Form.Group>
-						<Form.Label>Nama Tes</Form.Label>
-						<Form.Input type="text" className="flex-1" name="nama_tes" onChange={inputHandler} value={form?.nama_tes ?? ""} />
-					</Form.Group>
-					<Form.Group>
-						<Form.Label>Skor Tes</Form.Label>
-						<Form.Input type="number" className="flex-1" name="skor_tes" onChange={inputHandler} value={form?.skor_tes ?? ""} />
-					</Form.Group>
-					<Form.Group>
-						<Form.Label>Penyelenggara</Form.Label>
-						<Form.Input
-							type="text"
-							className="flex-1"
-							name="penyelenggara"
-							onChange={inputHandler}
-							value={form?.penyelenggara ?? ""}
-						/>
-					</Form.Group>
-					<Form.Group>
-						<Form.Label>Tanggal Tes</Form.Label>
-						<Form.Input type="date" className="flex-1" name="tgl_tes" onChange={inputHandler} value={form?.tgl_tes ?? ""} />
-					</Form.Group>
-					<Form.Group className="col-span-2">
-						<Form.Label>Status</Form.Label>
-						<Form.Select
-							name="status"
-							onChange={inputHandler}
-							value={form?.status ?? ""}
-							options={[
-								{ label: "Verified", value: "Verified" },
-								{ label: "Unverified", value: "Unverified" },
-							]}
-						/>
-					</Form.Group>
-					<Form.Group className="col-span-2 flex gap-2">
-						<Button type="button" variant="secondary" onClick={close}>
-							Kosongkan
-						</Button>
-						<Button variant="primary" className="grow">
-							Terapkan
-						</Button>
-					</Form.Group>
-				</Form>
-			</Modal>
-		</>
-	);
+  return (
+    <>
+      <Button
+        variant="primary"
+        icon={<Icon icon="clarity:filter-line" width={20} height={20} />}
+        onClick={toggle}
+        pill
+      >
+        Filter
+      </Button>
+      <Modal title="Filter Berdasarkan" show={show} handler={toggle}>
+        <Form onSubmit={submitHandler} className="grid grid-cols-2 gap-4">
+          <Form.Group>
+            <Form.Label>Nama Tes</Form.Label>
+            <Form.Input
+              type="text"
+              className="flex-1"
+              name="nama_tes"
+              onChange={inputHandler}
+              value={form?.nama_tes ?? ""}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Jenis Tes</Form.Label>
+            <Form.Select
+              className="flex-1"
+              name="jenis_tes"
+              value={form?.jenis_tes ?? ""}
+              onChange={inputHandler}
+              options={[
+                { label: "Kompetensi Provesi", value: "Kompetensi Provesi" },
+                { label: "Test Bahasa Asing", value: "Test Bahasa Asing" },
+                { label: "Lainya", value: "Lainya" },
+              ]}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Penyelenggara</Form.Label>
+            <Form.Input
+              type="text"
+              className="flex-1"
+              name="penyelenggara"
+              onChange={inputHandler}
+              value={form?.penyelenggara ?? ""}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Tanggal Tes</Form.Label>
+            <Form.Input
+              type="date"
+              className="flex-1"
+              name="tgl_tes"
+              onChange={inputHandler}
+              value={form?.tgl_tes ?? ""}
+            />
+          </Form.Group>
+          <Form.Group className="col-span-2 flex gap-2">
+            <Button type="button" variant="secondary" onClick={close}>
+              Kosongkan
+            </Button>
+            <Button variant="primary" className="grow">
+              Terapkan
+            </Button>
+          </Form.Group>
+        </Form>
+      </Modal>
+    </>
+  );
 }

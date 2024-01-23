@@ -39,7 +39,7 @@ export default function Filter({ filter, handler }) {
               onChange={inputHandler}
               value={form?.semester ?? ""}
               options={[
-                { label: "Semester 1", value: "Semseter 1" },
+                { label: "Semester 1", value: "Semester 1" },
                 { label: "Semester 2", value: "Semester 2" },
                 { label: "Semester 3", value: "Semester 3" },
                 { label: "Semester 4", value: "Semester 4" },

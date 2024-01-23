@@ -16,7 +16,7 @@ export default function RiwayatPekerjaanDetail() {
   const { prefix, menu, setActive } = useMenu();
 
   const API_URL = `${process.env.API_ENDPOINT}/kualifikasi/detailRiwayatPekerjaan`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/file-rwyt-pekerjaan`;
+  const FILE_URL = `${process.env.API_ENDPOINT}/file-riwayatPekerjaan`;
 
   const INITIAL_FORM = {
     rwyt_pekerjaan_id: "",
@@ -300,7 +300,7 @@ export default function RiwayatPekerjaanDetail() {
               </Form.Label>
               <span>:</span>
               <Form.Input
-                type="number"
+                type="text"
                 className="flex-1"
                 name="pendapatan"
                 value={form.pendapatan}

@@ -250,7 +250,7 @@ export default function PenghargaanModule({ baseURL }) {
                   {row.nama_peng}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {date.formatToID(new Date(row.tahun_peng))}
+                  {row.tahun_peng}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
