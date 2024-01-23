@@ -173,11 +173,8 @@ export default function SertifikasiModule({ baseURL }) {
                   {date.formatToID(new Date(row.tgl_serti))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
-                    <div className="flex items-stretch gap-1">
-                      <Button.Icon
+                  <div className="flex items-stretch gap-1">
+                  <Button.Icon
                         as="a"
                         href={`${baseURL}/sertifikasi/detail/${row.sertifikat_id}`}
                         variant="info"
@@ -189,27 +186,30 @@ export default function SertifikasiModule({ baseURL }) {
                           />
                         }
                       />
-                      <Button.Icon
+                  {row.status === 0 && (
+                      <>
+                        <Button.Icon
                         as="a"
                         href={`${baseURL}/sertifikasi/edit/${row.sertifikat_id}`}
                         variant="secondary"
                         icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.sertifikat_id).then(() => refresh())
-                        }
-                      />
-                    </div>
-                  )}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() =>
+                            destroy(row.sertifikat_id).then(() => refresh())
+                          }
+                        />
+                      </>
+                      )}
+                      </div>
                 </td>
               </tr>
             ))}

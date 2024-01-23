@@ -150,12 +150,8 @@ export default function HKIModule({ baseURL }) {
                   {date.formatToID(new Date(row.tgl_terbit_hki))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
-                    <div className="flex items-stretch gap-1">
-                      <CreateDokumen id={{ hki_id: row.hki_id }} />
-                      <Button.Icon
+                <div className="flex items-stretch gap-1">
+                <Button.Icon
                         as="a"
                         href={`${baseURL}/hki/detail/${row.hki_id}`}
                         variant="info"
@@ -167,6 +163,10 @@ export default function HKIModule({ baseURL }) {
                           />
                         }
                       />
+                  {row.status === 0 && (
+                    <>
+                      <CreateDokumen id={{ hki_id: row.hki_id }} />
+                      
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/hki/edit/${row.hki_id}`}
@@ -186,8 +186,9 @@ export default function HKIModule({ baseURL }) {
                           destroy(row.hki_id).then(() => refresh())
                         }
                       />
-                    </div>
+                    </>
                   )}
+                </div>
                 </td>
               </tr>
             ))}

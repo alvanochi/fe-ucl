@@ -37,6 +37,9 @@ export default function DetailPenelitianAdmin() {
     nama_dok: "",
     keterangan: "",
     tautan_dok: "",
+    point: "",
+    tingkatan: "",
+    nama_kategori: "",
     anggota_penelitian_dosen: [],
     anggota_penelitian_mahasiswa: [],
     docs: [],
@@ -105,6 +108,32 @@ export default function DetailPenelitianAdmin() {
         <Card className="mt-4">
           <Card.Header className="text-center">Penelitian</Card.Header>
           <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+							<Form.Label className="min-w-[18rem]">
+								Kategori <span className="text-danger-600">*</span>
+							</Form.Label>
+							<span>:</span>
+							<Form.Input
+								type="text"
+								className="flex-1"
+								name="nama_kategori"
+								value={`${form.nama_kategori} - ${form.tingkatan}`}
+								disabled
+							/>
+						</Form.Group>
+						<Form.Group className="flex items-baseline gap-3">
+							<Form.Label className="min-w-[18rem]">
+								Point <span className="text-danger-600">*</span>
+							</Form.Label>
+							<span>:</span>
+							<Form.Input
+								type="text"
+								className="flex-1"
+								name="point"
+								value={form.point}
+								disabled
+							/>
+						</Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Judul Kegiatan <span className="text-danger-600">*</span>

@@ -29,6 +29,7 @@ export default function PenghargaanDetail() {
 		tahun_peng: "",
 		instansi_pemberi: "",
 		file: "",
+		poitn: "",
 	};
 
 	const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
@@ -76,7 +77,7 @@ export default function PenghargaanDetail() {
 					<Card.Body className="space-y-4">
 						<Form.Group className="flex items-baseline gap-3">
 							<Form.Label className="min-w-[18rem]">
-								Kategori Sertifikasi <span className="text-danger-600">*</span>
+								Kategori <span className="text-danger-600">*</span>
 							</Form.Label>
 							<span>:</span>
 							<Form.Select
@@ -94,6 +95,19 @@ export default function PenghargaanDetail() {
 								disabled
 							/>
 						</Form.Group>
+						<Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="point"
+                value={form.point}
+                disabled
+              />
+            </Form.Group>
 						<Form.Group className="flex items-baseline gap-3">
 							<Form.Label className="min-w-[18rem]">
 								Tingkat Penghargaan <span className="text-danger-600">*</span>

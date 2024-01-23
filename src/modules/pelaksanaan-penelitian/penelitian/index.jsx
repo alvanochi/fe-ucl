@@ -150,14 +150,8 @@ export default function PenelitianModule({ baseURL }) {
                   {row.lama_kegiatan}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
-                    <div className="flex items-stretch gap-1">
-                      <CreateDokumen
-                        id={{ penelitian_id: row.penelitian_id }}
-                      />
-                      <Button.Icon
+                  <div className="flex items-stretch gap-1">
+                  <Button.Icon
                         as="a"
                         href={`${baseURL}/penelitian/detail/${row.penelitian_id}`}
                         variant="info"
@@ -168,6 +162,11 @@ export default function PenelitianModule({ baseURL }) {
                             height={20}
                           />
                         }
+                      />
+                  {row.status == 0 && (
+                      <>
+                        <CreateDokumen
+                        id={{ penelitian_id: row.penelitian_id }}
                       />
                       <Button.Icon
                         as="a"
@@ -188,8 +187,9 @@ export default function PenelitianModule({ baseURL }) {
                           destroy(row.penelitian_id).then(() => refresh())
                         }
                       />
-                    </div>
-                  )}
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

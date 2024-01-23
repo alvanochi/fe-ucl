@@ -150,44 +150,45 @@ export default function PembicaraModule({ baseURL }) {
                   {date.formatToID(new Date(row.tgl_pelaksanaan))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
-                    <div className="flex items-stretch gap-1">
-                      <CreateDokumen id={{ pembicara_id: row.pembicara_id }} />
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/pembicara/detail/${row.pembicara_id}`}
-                        variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                      />
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/pembicara/edit/${row.pembicara_id}`}
-                        variant="secondary"
-                        icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.pembicara_id).then(() => refresh())
-                        }
-                      />
-                    </div>
+                  <div className="flex items-stretch gap-1">
+                    <Button.Icon
+                      as="a"
+                      href={`${baseURL}/pembicara/detail/${row.pembicara_id}`}
+                      variant="info"
+                      icon={
+                        <Icon
+                          icon="fluent:info-24-filled"
+                          width={20}
+                          height={20}
+                        />
+                      }
+                    />
+                  {row.status === 0 && (
+                      <>
+                        <CreateDokumen id={{ pembicara_id: row.pembicara_id }} />
+                        
+                        <Button.Icon
+                          as="a"
+                          href={`${baseURL}/pembicara/edit/${row.pembicara_id}`}
+                          variant="secondary"
+                          icon={<Icon icon="bx:edit" width={20} height={20} />}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() =>
+                            destroy(row.pembicara_id).then(() => refresh())
+                          }
+                        />
+                      </>
                   )}
+                  </div>
                 </td>
               </tr>
             ))}

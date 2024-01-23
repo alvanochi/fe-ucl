@@ -150,13 +150,7 @@ export default function PengabdianModule({ baseURL }) {
                   {row.lama_kegiatan} Tahun
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
-                    <div className="flex items-stretch gap-1">
-                      <CreateDokumen
-                        id={{ pengabdian_id: row.pengabdian_id }}
-                      />
+                  <div className="flex items-stretch gap-1">
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/pengabdian/detail/${row.pengabdian_id}`}
@@ -169,6 +163,12 @@ export default function PengabdianModule({ baseURL }) {
                           />
                         }
                       />
+                  {row.status === 0 && (
+                    <>
+                      <CreateDokumen
+                        id={{ pengabdian_id: row.pengabdian_id }}
+                      />
+                      
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/pengabdian/edit/${row.pengabdian_id}`}
@@ -188,8 +188,9 @@ export default function PengabdianModule({ baseURL }) {
                           destroy(row.pengabdian_id).then(() => refresh())
                         }
                       />
-                    </div>
+                    </>
                   )}
+                  </div>
                 </td>
               </tr>
             ))}

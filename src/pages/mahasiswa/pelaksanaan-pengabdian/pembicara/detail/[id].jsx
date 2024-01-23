@@ -36,6 +36,9 @@ export default function AnggotaProfesiEdit() {
 		nama_dok: "",
 		keterangan: "",
 		tautan_dok: "",
+		nama_kategori: "",
+		tingkatan: "",
+		poitn: "",
 		docs: [],
 	};
 
@@ -57,7 +60,7 @@ export default function AnggotaProfesiEdit() {
 		success: () => router.push(prefix + menu.url),
 	});
 
-	const { form, inputHandler } = formdata;
+	const { form } = formdata;
 
 	const EDIT_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/editPembicara`;
 	const EDIT_OPTION = { url: `${EDIT_URL}/${form.pembicara_id}`, method: "PATCH" };
@@ -95,13 +98,39 @@ export default function AnggotaProfesiEdit() {
 					<Card.Body className="space-y-4">
 						<Form.Group className="flex items-baseline gap-3">
 							<Form.Label className="min-w-[18rem]">
+								Kategori <span className="text-danger-600">*</span>
+							</Form.Label>
+							<span>:</span>
+							<Form.Input
+								type="text"
+								className="flex-1"
+								name="nama_kategori"
+								value={`${form.nama_kategori} - ${form.tingkatan}`}
+								disabled
+							/>
+						</Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+							<Form.Label className="min-w-[18rem]">
+								Point <span className="text-danger-600">*</span>
+							</Form.Label>
+							<span>:</span>
+							<Form.Input
+								type="text"
+								className="flex-1"
+								name="point"
+								value={form.point} 
+								disabled
+							/>
+						</Form.Group>
+						<Form.Group className="flex items-baseline gap-3">
+							<Form.Label className="min-w-[18rem]">
 								Kategori Pembicara <span className="text-danger-600">*</span>
 							</Form.Label>
 							<span>:</span>
 							<Form.Select
 								className="flex-1"
 								name="kategori_pembicara"
-								onChange={inputHandler}
+								
 								value={form.kategori_pembicara}
 								options={[
 									{ label: "Pembicara pada pertemuan ilmiah", value: "Pembicara pada pertemuan ilmiah" },
@@ -123,7 +152,7 @@ export default function AnggotaProfesiEdit() {
 								type="text"
 								className="flex-1"
 								name="judul_makalah"
-								onChange={inputHandler}
+								
 								value={form.judul_makalah}
 								disabled
 							/>
@@ -137,7 +166,7 @@ export default function AnggotaProfesiEdit() {
 								type="text"
 								className="flex-1"
 								name="nama_pertemuan"
-								onChange={inputHandler}
+								
 								value={form.nama_pertemuan}
 								disabled
 							/>
@@ -151,7 +180,7 @@ export default function AnggotaProfesiEdit() {
 								type="text"
 								className="flex-1"
 								name="tingkat_pertemuan"
-								onChange={inputHandler}
+								
 								value={form.tingkat_pertemuan}
 								disabled
 							/>
@@ -165,7 +194,7 @@ export default function AnggotaProfesiEdit() {
 								type="text"
 								className="flex-1"
 								name="penyelenggara"
-								onChange={inputHandler}
+								
 								value={form.penyelenggara}
 								disabled
 							/>
@@ -179,7 +208,7 @@ export default function AnggotaProfesiEdit() {
 								type="date"
 								className="flex-1"
 								name="tgl_pelaksanaan"
-								onChange={inputHandler}
+								
 								value={form.tgl_pelaksanaan}
 								disabled
 							/>
@@ -189,7 +218,7 @@ export default function AnggotaProfesiEdit() {
 								Bahasa <span className="text-danger-600">*</span>
 							</Form.Label>
 							<span>:</span>
-							<Form.Input type="text" className="flex-1" name="bahasa" onChange={inputHandler} value={form.bahasa} disabled />
+							<Form.Input type="text" className="flex-1" name="bahasa"  value={form.bahasa} disabled />
 						</Form.Group>
 						<Form.Group className="flex items-baseline gap-3">
 							<Form.Label className="min-w-[18rem]">
@@ -200,7 +229,7 @@ export default function AnggotaProfesiEdit() {
 								type="text"
 								className="flex-1"
 								name="no_sk_penugasan"
-								onChange={inputHandler}
+								
 								value={form.no_sk_penugasan}
 								disabled
 							/>
@@ -214,7 +243,7 @@ export default function AnggotaProfesiEdit() {
 								type="date"
 								className="flex-1"
 								name="tgl_sk_penugasan"
-								onChange={inputHandler}
+								
 								value={form.tgl_sk_penugasan}
 								disabled
 							/>

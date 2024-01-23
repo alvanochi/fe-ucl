@@ -44,6 +44,7 @@ export default function AnggotaProfesiEdit() {
     nama_dok: "",
     keterangan_dok: "",
     tautan_dok: "",
+    point: "",
     penulis_dosen: [],
     penulis_mahasiswa: [],
     docs: [],
@@ -142,6 +143,19 @@ export default function AnggotaProfesiEdit() {
                     value: item.id,
                   }))
                 }
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="point"
+                value={form.point}
                 disabled
               />
             </Form.Group>

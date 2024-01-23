@@ -26,6 +26,8 @@ export default function TesDetail() {
     tgl_tes: "",
     skor_tes: "",
     file: "",
+    nama_kategori: "",
+    point: "",
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -59,6 +61,32 @@ export default function TesDetail() {
         <Card className="mt-4">
           <Card.Header className="text-center">Tes</Card.Header>
           <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Kategori <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nama_kategori"
+                value={form.nama_kategori}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="point"
+                value={form.point}
+                disabled
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Jenis Tes <span className="text-danger-600">*</span>

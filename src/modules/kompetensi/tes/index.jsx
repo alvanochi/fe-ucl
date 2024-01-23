@@ -152,43 +152,43 @@ export default function TesModule({ baseURL }) {
                 </td>
 
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
-                    <div className="flex items-stretch gap-1">
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/tes/detail/${row.tes_id}`}
-                        variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                      />
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/tes/edit/${row.tes_id}`}
-                        variant="secondary"
-                        icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.tes_id).then(() => refresh())
-                        }
-                      />
-                    </div>
+                  <div className="flex items-stretch gap-1">
+                    <Button.Icon
+                      as="a"
+                      href={`${baseURL}/tes/detail/${row.tes_id}`}
+                      variant="info"
+                      icon={
+                        <Icon
+                          icon="fluent:info-24-filled"
+                          width={20}
+                          height={20}
+                        />
+                      }
+                    />
+                  {row.status === 0 (
+                      <>
+                        <Button.Icon
+                          as="a"
+                          href={`${baseURL}/tes/edit/${row.tes_id}`}
+                          variant="secondary"
+                          icon={<Icon icon="bx:edit" width={20} height={20} />}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() =>
+                            destroy(row.tes_id).then(() => refresh())
+                          }
+                        />
+                      </>
                   )}
+                  </div>
                 </td>
               </tr>
             ))}

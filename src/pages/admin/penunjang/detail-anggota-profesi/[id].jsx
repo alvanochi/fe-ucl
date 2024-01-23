@@ -27,6 +27,8 @@ export default function AnggotaProfesiDetail() {
     selesai_keanggotaan: "",
     instansi_prof: "",
     file: "",
+    nama_kategori: "",
+    point: ""
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -40,7 +42,7 @@ export default function AnggotaProfesiDetail() {
     success: () => router.push(prefix + menu.url),
   });
 
-  const { form, inputHandler } = formdata;
+  const { form } = formdata;
 
   useEffect(() => {
     if (router.isReady === false || !user) return;
@@ -69,6 +71,32 @@ export default function AnggotaProfesiDetail() {
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
+                Kategori <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nama_kategori"
+                value={form.nama_kategori}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="point"
+                value={form.point}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
                 Nama Organisasi <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
@@ -76,7 +104,6 @@ export default function AnggotaProfesiDetail() {
                 type="text"
                 className="flex-1"
                 name="nama_organisasi"
-                onChange={inputHandler}
                 value={form.nama_organisasi}
                 disabled
               />
@@ -90,7 +117,6 @@ export default function AnggotaProfesiDetail() {
                 type="text"
                 className="flex-1"
                 name="peran"
-                onChange={inputHandler}
                 value={form.peran}
                 disabled
               />
@@ -104,7 +130,6 @@ export default function AnggotaProfesiDetail() {
                 type="date"
                 className="flex-1"
                 name="mulai_keanggotaan"
-                onChange={inputHandler}
                 value={form.mulai_keanggotaan}
                 disabled
               />
@@ -118,7 +143,6 @@ export default function AnggotaProfesiDetail() {
                 type="date"
                 className="flex-1"
                 name="selesai_keanggotaan"
-                onChange={inputHandler}
                 value={form.selesai_keanggotaan}
                 disabled
               />
@@ -132,7 +156,6 @@ export default function AnggotaProfesiDetail() {
                 type="text"
                 className="flex-1"
                 name="instansi_prof"
-                onChange={inputHandler}
                 value={form.instansi_prof}
                 disabled
               />

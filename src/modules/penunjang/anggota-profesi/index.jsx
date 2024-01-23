@@ -147,21 +147,21 @@ export default function AnggotaProfesiModule({ baseURL }) {
                   {date.formatToID(new Date(row.mulai_keanggotaan))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? "" :                     
-                    <div className="flex items-stretch gap-1">
-                      
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/anggota-profesi/detail/${row.prof_id}`}
-                        variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                      />
+                  <div className="flex items-stretch gap-1">
+                    <Button.Icon
+                      as="a"
+                      href={`${baseURL}/anggota-profesi/detail/${row.prof_id}`}
+                      variant="info"
+                      icon={
+                        <Icon
+                          icon="fluent:info-24-filled"
+                          width={20}
+                          height={20}
+                        />
+                      }
+                    />
+                  {row.status === 0 && (  
+                    <>                   
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/anggota-profesi/edit/${row.prof_id}`}
@@ -179,8 +179,9 @@ export default function AnggotaProfesiModule({ baseURL }) {
                         }
                         onClick={() => destroy(row.prof_id).then(() => refresh())}
                       />
-                    </div>
-                  }
+                      </>
+                      )}
+                      </div>
                 </td>
               </tr>
             ))}

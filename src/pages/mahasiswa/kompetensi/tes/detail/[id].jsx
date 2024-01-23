@@ -30,6 +30,7 @@ export default function TesDetail() {
     skor_tes: "",
     file: "",
     kategori_id: "",
+    point: "",
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -103,6 +104,19 @@ export default function TesDetail() {
                     value: item.id,
                   }))
                 }
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="point"
+                value={form.point}
                 disabled
               />
             </Form.Group>

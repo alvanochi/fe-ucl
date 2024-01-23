@@ -150,12 +150,8 @@ export default function PublikasiKaryaModule({ baseURL }) {
                   {date.formatToID(new Date(row.tgl_terbit))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
-                    <div className="flex items-stretch gap-1">
-                      <CreateDokumen id={{ publikasi_id: row.publikasi_id }} />
-                      <Button.Icon
+                  <div className="flex items-stretch gap-1">
+                    <Button.Icon
                         as="a"
                         href={`${baseURL}/publikasi-karya/detail/${row.publikasi_id}`}
                         variant="info"
@@ -167,6 +163,10 @@ export default function PublikasiKaryaModule({ baseURL }) {
                           />
                         }
                       />
+                  {row.status === 0 && (
+                    <>
+                      <CreateDokumen id={{ publikasi_id: row.publikasi_id }} />
+                      
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/publikasi-karya/edit/${row.publikasi_id}`}
@@ -186,8 +186,9 @@ export default function PublikasiKaryaModule({ baseURL }) {
                           destroy(row.publikasi_id).then(() => refresh())
                         }
                       />
-                    </div>
+                    </>
                   )}
+                  </div>
                 </td>
               </tr>
             ))}
