@@ -163,7 +163,7 @@ export default function HKIModule({ baseURL }) {
                           />
                         }
                       />
-                  {row.status === 0 && (
+                  {(row.status === 0 || row.status === 2) && (
                     <>
                       <CreateDokumen id={{ hki_id: row.hki_id }} />
                       

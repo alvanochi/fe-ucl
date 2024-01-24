@@ -163,7 +163,7 @@ export default function PembicaraModule({ baseURL }) {
                         />
                       }
                     />
-                  {row.status === 0 && (
+                  {(row.status === 0 || row.status === 2) && (
                       <>
                         <CreateDokumen id={{ pembicara_id: row.pembicara_id }} />
                         

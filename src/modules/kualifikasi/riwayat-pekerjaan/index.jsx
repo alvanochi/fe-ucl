@@ -164,10 +164,7 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
                   {row.area_kerja}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
-                    <div className="flex items-stretch gap-1">
+                <div className="flex items-stretch gap-1">
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/riwayat-pekerjaan/detail/${row.rwyt_pekerjaan_id}`}
@@ -180,27 +177,31 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
                           />
                         }
                       />
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/riwayat-pekerjaan/edit/${row.rwyt_pekerjaan_id}`}
-                        variant="secondary"
-                        icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.rwyt_pekerjaan_id).then(() => refresh())
-                        }
-                      />
+                  {(row.status === 0 || row.status === 2) && (
+                    <>
+                    <Button.Icon
+                      as="a"
+                      href={`${baseURL}/riwayat-pekerjaan/edit/${row.rwyt_pekerjaan_id}`}
+                      variant="secondary"
+                      icon={<Icon icon="bx:edit" width={20} height={20} />}
+                    />
+                    <Button.Icon
+                      variant="danger"
+                      icon={
+                        <Icon
+                          icon="solar:trash-bin-2-bold-duotone"
+                          width={20}
+                          height={20}
+                        />
+                      }
+                      onClick={() =>
+                        destroy(row.rwyt_pekerjaan_id).then(() => refresh())
+                      }
+                    />
+                    </>
+                    
+                    )}
                     </div>
-                  )}
                 </td>
               </tr>
             ))}

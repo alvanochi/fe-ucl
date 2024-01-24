@@ -163,7 +163,7 @@ export default function PenelitianModule({ baseURL }) {
                           />
                         }
                       />
-                  {row.status == 0 && (
+                  {(row.status === 0 || row.status === 2) && (
                       <>
                         <CreateDokumen
                         id={{ penelitian_id: row.penelitian_id }}

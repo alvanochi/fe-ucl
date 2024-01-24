@@ -163,7 +163,7 @@ export default function PublikasiKaryaModule({ baseURL }) {
                           />
                         }
                       />
-                  {row.status === 0 && (
+                  {(row.status === 0 || row.status === 2) && (
                     <>
                       <CreateDokumen id={{ publikasi_id: row.publikasi_id }} />
                       

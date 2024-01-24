@@ -163,7 +163,7 @@ export default function PengabdianModule({ baseURL }) {
                           />
                         }
                       />
-                  {row.status === 0 && (
+                  {(row.status === 0 || row.status === 2) && (
                     <>
                       <CreateDokumen
                         id={{ pengabdian_id: row.pengabdian_id }}

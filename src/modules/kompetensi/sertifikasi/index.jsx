@@ -186,7 +186,7 @@ export default function SertifikasiModule({ baseURL }) {
                           />
                         }
                       />
-                  {row.status === 0 && (
+                  {(row.status === 0 || row.status === 2) && (
                       <>
                         <Button.Icon
                         as="a"

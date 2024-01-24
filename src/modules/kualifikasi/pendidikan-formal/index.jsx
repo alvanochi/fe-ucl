@@ -163,9 +163,6 @@ export default function PendidikanFormalModule({ baseURL }) {
                   {row.gelar_akademik}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
                         as="a"
@@ -179,6 +176,8 @@ export default function PendidikanFormalModule({ baseURL }) {
                           />
                         }
                       />
+                  {(row.status === 0 || row.status === 2) && ( 
+                      <>
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/pendidikan-formal/edit/${row.pend_id}`}
@@ -198,8 +197,9 @@ export default function PendidikanFormalModule({ baseURL }) {
                           destroy(row.pend_id).then(() => refresh())
                         }
                       />
-                    </div>
+                      </>
                   )}
+                  </div>
                 </td>
               </tr>
             ))}
