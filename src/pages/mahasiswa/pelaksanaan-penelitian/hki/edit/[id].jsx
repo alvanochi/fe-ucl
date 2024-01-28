@@ -141,7 +141,7 @@ export default function HkiEdit() {
                     value: item.id,
                   }))
                 }
-                disabled
+                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

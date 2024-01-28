@@ -1,30 +1,57 @@
+// ChangeStatus.js
+import axios from "axios";
 import Button from "../../../components/Button";
 import Modal from "../../../components/Modal";
 import Form from "../../../components/Form";
 import useModal from "../../../hooks/useModal";
 import { Icon } from "@iconify-icon/react";
-import useCRUD from "../../../hooks/useCRUD";
+import { useState } from "react";
+import { toastAlert } from "../../../lib/sweetalert";
 
-export default function ChangeStatus({ id, status }) {
-  const API_URL = `${process.env.API_ENDPOINT}/berita/change-status`;
+export default function ChangeStatus({ id, status, onStatusChange }) {
   const INITIAL_FORM = {
     ...id,
     ...status,
   };
 
   const { show, toggle, close } = useModal();
-  const { formdata, isSubmit, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
-    rules: [
-      { field: "id", label: "ID" },
-      { field: "status", label: "Status" },
-    ],
-    success: () => {
+  const [form, setForm] = useState(INITIAL_FORM);
+  const [isSubmit, setIsSubmit] = useState(false);
+
+  const inputHandler = (e) => {
+    const { name, value } = e.target;
+    setForm((prevForm) => ({
+      ...prevForm,
+      [name]: value,
+    }));
+  };
+
+  const reset = () => {
+    setForm(INITIAL_FORM);
+  };
+
+  const submitHandler = async (event) => {
+    event.preventDefault();
+    setIsSubmit(true);
+
+    try {
+      const EDIT_URL = `${process.env.API_ENDPOINT}/berita/change-status/${form.id}`;
+      const response = await axios.patch(EDIT_URL, { status: form.status });
+
+      toastAlert('success', response.data.message);
+
       close();
       reset();
-    },
-  });
 
-  const { form, inputHandler, reset } = formdata;
+      if (onStatusChange) {
+        onStatusChange();
+      }
+    } catch (error) {
+      toastAlert('error', error);
+    } finally {
+      setIsSubmit(false);
+    }
+  };
 
   return (
     <>
@@ -35,7 +62,7 @@ export default function ChangeStatus({ id, status }) {
       />
       <Modal title="Change Status" show={show} handler={toggle}>
         <p className="text-center text-sm mb-8">
-        Jika status suatu (Event / Tantangan) adalah Active maka informasi tersebut akan ditampilkan dalam daftar berita pada aplikasi mobile TIAS. Sebaliknya, jika statusnya Non Active berarti informasi tersebut tidak akan ditampilkan.
+          Jika status suatu (Event / Tantangan) adalah Active maka informasi tersebut akan ditampilkan dalam daftar berita pada aplikasi mobile TIAS. Sebaliknya, jika statusnya Non Active berarti informasi tersebut tidak akan ditampilkan.
         </p>
         <Form onSubmit={submitHandler} className="space-y-4" type="formdata">
           <Form.Group className="flex items-baseline gap-3">
@@ -54,7 +81,6 @@ export default function ChangeStatus({ id, status }) {
                   label: "Non Active",
                   value: 1,
                 },
-                
               ]}
               required
             />

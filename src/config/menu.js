@@ -47,6 +47,13 @@ export const APP_MENU = [
     ],
   },
   {
+    label: "Absensi",
+    url: "/absen",
+    icon: "mdi:account-card-details",
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN],
+    submenus: [],
+  },
+  {
     label: "Pelaksanaan Pendidikan",
     url: "/pelaksanaan-pendidikan",
     icon: "mdi:bookshelf",
@@ -55,12 +62,12 @@ export const APP_MENU = [
       {
         label: "Bimbingan Mahasiswa",
         url: "#bimbingan",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_DOSEN],
       },
       {
         label: "Bahan Ajar",
         url: "#bahan-ajar",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN],
+        allowedRoles: [ROLE_ID_ADMIN],
       },
       {
         label: "IP",
@@ -73,22 +80,22 @@ export const APP_MENU = [
     label: "Pelaksanaan Penelitian",
     url: "/pelaksanaan-penelitian",
     icon: "fa:flask",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
     submenus: [
       {
         label: "Penelitian",
         url: "#penelitian",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
       {
         label: "Publikasi Karya",
         url: "#publikasi-karya",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
       {
         label: "HKI",
         url: "#hki",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
     ],
   },
@@ -96,17 +103,17 @@ export const APP_MENU = [
     label: "Pelaksanaan Pengabdian",
     url: "/pelaksanaan-pengabdian",
     icon: "fa6-solid:hand-holding-hand",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
     submenus: [
       {
         label: "Pengabdian",
         url: "#pengabdian",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
       {
         label: "Pembicara",
         url: "#pembicara",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
     ],
   },
@@ -114,17 +121,17 @@ export const APP_MENU = [
     label: "Penunjang",
     url: "/penunjang",
     icon: "solar:users-group-two-rounded-bold-duotone",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
     submenus: [
       {
         label: "Anggota Profesi",
         url: "#anggota-profesi",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
       {
         label: "Penghargaan",
         url: "#penghargaan",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
     ],
   },
@@ -132,17 +139,17 @@ export const APP_MENU = [
     label: "Kompetensi",
     url: "/kompetensi",
     icon: "icon-park-outline:certificate",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
     submenus: [
       {
         label: "Sertifikasi",
         url: "#sertifikasi",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
       {
         label: "Test",
         url: "#test",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
     ],
   },
@@ -150,17 +157,17 @@ export const APP_MENU = [
     label: "Kualifikasi",
     url: "/kualifikasi",
     icon: "iconoir:graduation-cap",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
     submenus: [
       {
         label: "Pendidikan Formal",
         url: "#pendidikan-formal",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
       {
         label: "Riwayat Pekerjaan",
         url: "#riwayat-pekerjaan",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
     ],
   },
@@ -214,7 +221,7 @@ export const APP_MENU = [
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
       {
-        label: "Sertifikasi",
+        label: "Kompetensi",
         url: "#kategori-sertifikasi",
         allowedRoles: [ROLE_ID_ADMIN],
       },
@@ -236,6 +243,16 @@ export const APP_MENU = [
       {
         label: "HKI",
         url: "#kategori-hki",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "IP",
+        url: "#kategori-ip",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Rekomendasi",
+        url: "#kategori-rekomendasi",
         allowedRoles: [ROLE_ID_ADMIN],
       },
     ],

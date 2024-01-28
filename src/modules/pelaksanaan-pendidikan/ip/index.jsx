@@ -30,7 +30,7 @@ export default function IPModule({ baseURL }) {
   return (
     <>
       <div className="flex items-center justify-center gap-2 mb-8">
-        <Button
+        {/* <Button
           as="a"
           href={`${baseURL}/ip/create`}
           variant="primary"
@@ -38,7 +38,7 @@ export default function IPModule({ baseURL }) {
           pill
         >
           Tambah
-        </Button>
+        </Button> */}
         <Filter filter={filter} handler={setFilter} />
       </div>
       <table
@@ -50,47 +50,37 @@ export default function IPModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("ip_id")}
               >
                 No
-                <SortIcon sort={getSortBy("ip_id")} />
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("semester")}
               >
                 Semester
-                <SortIcon sort={getSortBy("semester")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tahun")}
               >
                 Tahun
-                <SortIcon sort={getSortBy("tahun")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("ip")}
               >
-                Indeks Prestasi PerSemester [IPS]
-                <SortIcon sort={getSortBy("ip")} />
+                [IPS]
               </div>
             </th>
-
             <th className="text-sm border-2 border-white bg-gray-200">
-              Action
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+              >
+                Point
+              </div>
             </th>
           </tr>
         </thead>
@@ -123,56 +113,16 @@ export default function IPModule({ baseURL }) {
                   {index + 1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
-                  {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
-                  )}
-                  {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
-                  )}
-                  {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
-                  )}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
                   <p className="truncate">{row.semester}</p>
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
                   {row.tahun}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[4rem] truncate mx-auto">
                   {row.ip}
                 </td>
-
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status == 1 ? (
-                    ""
-                  ) : (
-                    <div className="flex items-stretch gap-1">
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/ip/edit/${row.ip_id}`}
-                        variant="secondary"
-                        icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() => destroy(row.ip_id).then(() => refresh())}
-                      />
-                    </div>
-                  )}
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[4rem] truncate mx-auto">
+                  {row.point}
                 </td>
               </tr>
             ))}

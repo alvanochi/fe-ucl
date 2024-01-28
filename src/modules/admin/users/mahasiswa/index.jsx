@@ -57,11 +57,6 @@ export default function MahasiswaModule({ baseURL }) {
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                Total Point
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
                 Status MHS
               </div>
             </th>
@@ -107,10 +102,7 @@ export default function MahasiswaModule({ baseURL }) {
                   {row.no_hp}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.total_point}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.status_mhs}
+                  {row.kode_mhs}
                 </td>
                 
                 <td className="text-sm border-2 border-white bg-gray-50">

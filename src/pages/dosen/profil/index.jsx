@@ -82,7 +82,8 @@ export default function Profil() {
       userData.kota_kabupaten == null ||
       userData.provinsi == null ||
       userData.kode_pos == null ||
-      userData.no_hp == null
+      userData.no_hp == null ||
+      userData.singkat_name == null
     );
   }
 
@@ -149,6 +150,11 @@ export default function Profil() {
               <Form.Label className="min-w-[12rem]">Nama</Form.Label>
               <span>:</span>
               <p>{data.nama_lengkap}</p>
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[12rem]">Nama Singkatan</Form.Label>
+              <span>:</span>
+              <p>{data.singkat_name}</p>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[12rem]">Jenis Kelamin</Form.Label>

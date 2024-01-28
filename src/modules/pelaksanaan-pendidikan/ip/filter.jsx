@@ -39,14 +39,8 @@ export default function Filter({ filter, handler }) {
               onChange={inputHandler}
               value={form?.semester ?? ""}
               options={[
-                { label: "Semester 1", value: "Semester 1" },
-                { label: "Semester 2", value: "Semester 2" },
-                { label: "Semester 3", value: "Semester 3" },
-                { label: "Semester 4", value: "Semester 4" },
-                { label: "Semester 5", value: "Semester 5" },
-                { label: "Semester 6", value: "Semester 6" },
-                { label: "Semester 7", value: "Semester 7" },
-                { label: "Semester 8", value: "Semester 8" },
+                { label: "GENAP", value: "GENAP" },
+                { label: "GASAL", value: "GASAL" },
               ]}
             />
           </Form.Group>
@@ -62,30 +56,12 @@ export default function Filter({ filter, handler }) {
           </Form.Group>
           <Form.Group>
             <Form.Label>Tahun</Form.Label>
-            <Form.Select
+            <Form.Input
+              type="text"
+              className="flex-1"
               name="tahun"
               onChange={inputHandler}
               value={form?.tahun ?? ""}
-              options={Array.from(
-                { length: new Date().getFullYear() - 1970 },
-                (_, i) => new Date().getFullYear() - i
-              ).map((item) => ({
-                label: item,
-                value: item,
-              }))}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Status</Form.Label>
-            <Form.Select
-              name="status"
-              onChange={inputHandler}
-              value={form?.status ?? null}
-              options={[
-                { label: "Diterima", value: 1 },
-                { label: "Ditolak", value: 2 },
-                { label: "Proses", value: 0 },
-              ]}
             />
           </Form.Group>
           <Form.Group className="col-span-2 flex gap-2">

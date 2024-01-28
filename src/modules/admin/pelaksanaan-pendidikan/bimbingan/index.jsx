@@ -125,28 +125,23 @@ export default function BimbinganModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("judul_bimbingan")}
               >
                 Judul Kegiatan
-                <SortIcon sort={getSortBy("judul_bimbingan")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jenis_bimbingan")}
               >
                 Jenis Bimbingan
-                <SortIcon sort={getSortBy("jenis_bimbingan")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("program_studi")}
+               
               >
                 Program Studi
-                <SortIcon sort={getSortBy("program_studi")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>

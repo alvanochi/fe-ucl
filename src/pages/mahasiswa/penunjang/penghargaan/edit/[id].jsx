@@ -8,6 +8,7 @@ import useMenu from "../../../../../hooks/useMenu";
 import useUser from "../../../../../hooks/useUser";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
+import useKategoriPrestasi from "../../../../../repo/kategori-prestasi";
 
 export default function PenghargaanEdit() {
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function PenghargaanEdit() {
   const FILE_URL = `${process.env.API_ENDPOINT}/file-penghargaan`;
 
   const INITIAL_FORM = {
+    kategori_id: "",
     penghargaan_id: "",
     tingkat_peng: "",
     jenis_peng: "",
@@ -29,6 +31,7 @@ export default function PenghargaanEdit() {
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
+      { field: "kategori_id", label: "Kategori Penghargaan" },
       { field: "tingkat_peng", label: "tingkat Penghargaan" },
       { field: "jenis_peng", label: "Jenis Penghargaan" },
       { field: "nama_peng", label: "Nama Penghargaan" },
@@ -39,6 +42,9 @@ export default function PenghargaanEdit() {
   });
 
   const { form, inputHandler } = formdata;
+
+	const { data: kategoriPrestasi, isLoading: isLoadingKategoriPrestasi } = useKategoriPrestasi([user]);
+
 
   const EDIT_URL = `${process.env.API_ENDPOINT}/penunjang/editPenghargaan`;
   const EDIT_OPTION = {
@@ -51,7 +57,7 @@ export default function PenghargaanEdit() {
     show(router.query.id);
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu, isLoadingKategoriPrestasi].some((item) => item == null)) return <p>Loading...</p>;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -62,6 +68,25 @@ export default function PenghargaanEdit() {
         <Card className="mt-4">
           <Card.Header className="text-center">Penghargaan</Card.Header>
           <Card.Body className="space-y-4">
+          <Form.Group className="flex items-baseline gap-3">
+							<Form.Label className="min-w-[18rem]">
+								Kategori <span className="text-danger-600">*</span>
+							</Form.Label>
+							<span>:</span>
+							<Form.Select
+								className="flex-1"
+								name="kategori_id"
+								value={form.kategori_id}
+								onChange={inputHandler}
+								options={
+									kategoriPrestasi &&
+									kategoriPrestasi.map((item) => ({
+										label: `${item.nama_kategori} - Juara ${item.juara}`,
+										value: item.id,
+									}))
+								}
+							/>
+						</Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Tingkat Penghargaan <span className="text-danger-600">*</span>
@@ -79,7 +104,6 @@ export default function PenghargaanEdit() {
                   { label: "Internasional", value: "Internasional" },
                   { label: "Lainnya", value: "Lainnya" },
                 ]}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

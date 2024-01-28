@@ -25,6 +25,7 @@ export default function ProfilEdit() {
 		tempat_lahir: "",
 		tanggal_lahir: "",
 		ibu_kandung: "",
+		singkat_name: "",
 	};
 
 	const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
@@ -35,6 +36,7 @@ export default function ProfilEdit() {
 			{ field: "tempat_lahir", label: "Tempat Lahir" },
 			{ field: "tanggal_lahir", label: "Tanggal Lahir" },
 			{ field: "ibu_kandung", label: "Nama Ibu Kandung" },
+			{ field: "singkat_name", label: "Nama Singkatan" },
 		],
 		success: () => router.push(prefix + menu.url),
 	});
@@ -80,6 +82,20 @@ export default function ProfilEdit() {
 								name="nama_lengkap"
 								onChange={inputHandler}
 								value={form.nama_lengkap}
+								required
+							/>
+						</Form.Group>
+						<Form.Group className="flex items-baseline gap-3">
+							<Form.Label className="min-w-[18rem]">
+								Nama Singkatan <span className="text-danger-600">*</span>
+							</Form.Label>
+							<span>:</span>
+							<Form.Input
+								type="text"
+								className="flex-1"
+								name="singkat_name"
+								onChange={inputHandler}
+								value={form.singkat_name}
 								required
 							/>
 						</Form.Group>

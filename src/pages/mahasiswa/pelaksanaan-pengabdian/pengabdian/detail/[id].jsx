@@ -169,10 +169,15 @@ export default function PengabdianDetail() {
 								onChange={inputHandler}
 								value={form.kelompok_bidang}
 								options={[
-									{ label: "Teknik Informatika", value: "Teknik Informatika" },
-									{ label: "Teknik Mesin", value: "Teknik Mesin" },
-									{ label: "Teknik Elektro", value: "Teknik Elektro" },
-									{ label: "Teknik Sipil", value: "Teknik Sipil" },
+									{ label: "Pendidikan", value: "Pendidikan" },
+                  { label: "Kesehatan", value: "Kesehatan" },
+                  { label: "Lingkungan", value: "Lingkungan" },
+                  { label: "Sosial", value: "Sosial" },
+                  { label: "Teknologi dan Inovasi", value: "Teknologi dan Inovasi" },
+                  { label: "Seni dan Budaya", value: "Seni dan Budaya" },
+                  { label: "Keagamaan dan Etika", value: "Keagamaan dan Etika" },
+                  { label: "Pertanian dan Ketahanan Pangan", value: "Pertanian dan Ketahanan Pangan" },
+                  { label: "Pengembangan Wilayah", value: "Pengembangan Wilayah" },
 								]}
 								disabled
 							/>

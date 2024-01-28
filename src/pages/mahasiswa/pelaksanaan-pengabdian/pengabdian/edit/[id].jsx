@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
 import Accordion from "../../../../../components/Accordion";
+import useKategoriPublikasi from "../../../../../repo/kategori-publikasi";
 
 export default function PengabdianEdit() {
   const router = useRouter();
@@ -35,6 +36,7 @@ export default function PengabdianEdit() {
 
   const INITIAL_FORM = {
     pengabdian_id: "",
+    kategori_id: "",
     judul_kegiatan: "",
     kelompok_bidang: "",
     lokasi_kegiatan: "",
@@ -52,6 +54,7 @@ export default function PengabdianEdit() {
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
       { field: "judul_kegiatan", label: "Judul Kegiatan" },
+      { field: "kategori_id", label: "kategori publikasi" },
       { field: "kelompok_bidang", label: "Kelompok Bidang" },
       { field: "lokasi_kegiatan", label: "Lokasi Kegiatan" },
       { field: "lama_kegiatan", label: "Lama Kegiatan" },
@@ -81,6 +84,8 @@ export default function PengabdianEdit() {
 
   const { form, inputHandler, setForm } = formdata;
 
+  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } =
+  useKategoriPublikasi([user]);
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
     user,
@@ -127,7 +132,7 @@ export default function PengabdianEdit() {
   const { destroy } = useCRUD(DELETE_FILE_URL);
 
   if (
-    [user, menu, isDosenLoading, isMahasiswaLoading].some(
+    [user, menu, isDosenLoading, isMahasiswaLoading, isLoadingKategoriPublikasi].some(
       (item) => item == null
     )
   )
@@ -142,6 +147,26 @@ export default function PengabdianEdit() {
         <Card className="mt-4">
           <Card.Header className="text-center">Pengabdian</Card.Header>
           <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Kategori Publikasi <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
+                className="flex-1"
+                name="kategori_id"
+                value={form.kategori_id}
+                onChange={inputHandler}
+                options={
+                  kategoriPublikasi &&
+                  kategoriPublikasi.map((item) => ({
+                    label: `${item.nama_kategori} - ${item.tingkatan}`,
+                    value: item.id,
+                  }))
+                }
+                required
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Judul Pengabdian <span className="text-danger-600">*</span>
@@ -166,10 +191,15 @@ export default function PengabdianEdit() {
                 onChange={inputHandler}
                 value={form.kelompok_bidang}
                 options={[
-                  { label: "Teknik Informatika", value: "Teknik Informatika" },
-                  { label: "Teknik Mesin", value: "Teknik Mesin" },
-                  { label: "Teknik Elektro", value: "Teknik Elektro" },
-                  { label: "Teknik Sipil", value: "Teknik Sipil" },
+                  { label: "Pendidikan", value: "Pendidikan" },
+                  { label: "Kesehatan", value: "Kesehatan" },
+                  { label: "Lingkungan", value: "Lingkungan" },
+                  { label: "Sosial", value: "Sosial" },
+                  { label: "Teknologi dan Inovasi", value: "Teknologi dan Inovasi" },
+                  { label: "Seni dan Budaya", value: "Seni dan Budaya" },
+                  { label: "Keagamaan dan Etika", value: "Keagamaan dan Etika" },
+                  { label: "Pertanian dan Ketahanan Pangan", value: "Pertanian dan Ketahanan Pangan" },
+                  { label: "Pengembangan Wilayah", value: "Pengembangan Wilayah" },
                 ]}
               />
             </Form.Group>

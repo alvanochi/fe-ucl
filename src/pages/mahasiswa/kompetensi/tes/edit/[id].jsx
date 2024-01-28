@@ -92,7 +92,6 @@ export default function TesEdit() {
                     value: item.id,
                   }))
                 }
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import useCRUD from "../../../../../hooks/useCRUD";
 import date from "../../../../../utils/date";
 import { useEffect } from "react";
+import useKategoriProfesi from "../../../../../repo/kategori-profesi";
 
 export default function AnggotaProfesiEdit() {
 	const router = useRouter();
@@ -21,6 +22,7 @@ export default function AnggotaProfesiEdit() {
 
 	const INITIAL_FORM = {
 		prof_id: "",
+		kategori_id: "",
 		nama_organisasi: "",
 		peran: "",
 		mulai_keanggotaan: "",
@@ -32,6 +34,7 @@ export default function AnggotaProfesiEdit() {
 	const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
 		rules: [
 			{ field: "nama_organisasi", label: "Nama Organisasi" },
+			{ field: "kategori_id", label: "Kategori" },
 			{ field: "peran", label: "Peran" },
 			{ field: "mulai_keanggotaan", label: "Mulai Keanggotaan" },
 			{ field: "selesai_keanggotaan", label: "Selesai Keanggotaan" },
@@ -41,6 +44,9 @@ export default function AnggotaProfesiEdit() {
 	});
 
 	const { form, inputHandler } = formdata;
+
+	const { data: kategoriProfesi, isLoading: isLoadingKategoriProfesi } =
+	useKategoriProfesi([user]);
 
 	const EDIT_URL = `${process.env.API_ENDPOINT}/penunjang/editProfesi`;
 	const EDIT_OPTION = { url: `${EDIT_URL}/${form.prof_id}`, method: "PATCH" };
@@ -64,6 +70,26 @@ export default function AnggotaProfesiEdit() {
 				<Card className="mt-4">
 					<Card.Header className="text-center">Anggota Profesi</Card.Header>
 					<Card.Body className="space-y-4">
+						<Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Kategori Profesi <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
+                className="flex-1"
+                name="kategori_id"
+                value={form.kategori_id}
+                onChange={inputHandler}
+                options={
+                  kategoriProfesi &&
+                  kategoriProfesi.map((item) => ({
+                    label: `${item.nama_kategori}`,
+                    value: item.id,
+                  }))
+                }
+                required
+              />
+            </Form.Group>
 						<Form.Group className="flex items-baseline gap-3">
 							<Form.Label className="min-w-[18rem]">
 								Nama Organisasi <span className="text-danger-600">*</span>

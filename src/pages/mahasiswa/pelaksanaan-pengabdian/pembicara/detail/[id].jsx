@@ -38,7 +38,7 @@ export default function AnggotaProfesiEdit() {
 		tautan_dok: "",
 		nama_kategori: "",
 		tingkatan: "",
-		poitn: "",
+		point: "",
 		docs: [],
 	};
 
@@ -98,7 +98,7 @@ export default function AnggotaProfesiEdit() {
 					<Card.Body className="space-y-4">
 						<Form.Group className="flex items-baseline gap-3">
 							<Form.Label className="min-w-[18rem]">
-								Kategori <span className="text-danger-600">*</span>
+								Kategori Publikasi<span className="text-danger-600">*</span>
 							</Form.Label>
 							<span>:</span>
 							<Form.Input

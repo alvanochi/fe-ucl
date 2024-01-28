@@ -85,7 +85,6 @@ export default function SertifikasiCreate() {
                 value={form.jenis_serti}
                 onChange={inputHandler}
                 options={[
-                  { label: "Sertifikasi Dosen", value: "Sertifikasi Dosen" },
                   {
                     label: "Sertifikai Keahlian",
                     value: "Sertifikai Keahlian",

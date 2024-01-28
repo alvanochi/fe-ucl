@@ -10,6 +10,8 @@ import useCRUD from "../../../../hooks/useCRUD";
 export default function EventModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/berita/event`;
   const DELETE_URL = `${process.env.API_ENDPOINT}/berita`;
+  const FILE_URL = `${process.env.API_ENDPOINT}/berita/pamflet`;
+
 
   const {
     data,
@@ -28,7 +30,9 @@ export default function EventModule({ baseURL }) {
 
   const { destroy } = useCRUD(DELETE_URL);
 
-
+  const handleStatusChange = () => {
+    refresh();
+  };
 
   return (
     <>
@@ -70,6 +74,9 @@ export default function EventModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Pamflet</div>
+            </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
         </thead>
@@ -105,10 +112,21 @@ export default function EventModule({ baseURL }) {
                   {row.title}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.deskripsi}
+                  {`${row.deskripsi.split(' ').slice(0, 5).join(' ')}${row.deskripsi.split(' ').length > 5 ? '...' : ''}`}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  {row.status === 0 ? (
+                    <h5 className="text-green-500 font-bold">
+                      ACTIVE
+                    </h5>
+                  ) : (
+                    <h5 className="text-red-500 font-bold">
+                      NON ACTIVE
+                    </h5>
+                  )}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.status === 0 ? "Active" : "Non Active"}
+                  <img src={`${FILE_URL}/${row.pamflet}`} alt="pamflet" className="w-2/3 h-[140px]" />
                 </td>
                 
                 <td className="text-sm border-2 border-white bg-gray-50">
@@ -116,6 +134,7 @@ export default function EventModule({ baseURL }) {
                       <ChangeStatus
                         id={{ id: row.id }}
                         status={{ status: row.status }}
+                        onStatusChange={handleStatusChange}
                       />
                     <Button.Icon
                       as="a"

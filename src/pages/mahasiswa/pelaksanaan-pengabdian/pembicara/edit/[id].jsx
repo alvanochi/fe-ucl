@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import Accordion from "../../../../../components/Accordion";
 import _ from "underscore";
+import useKategoriPublikasi from "../../../../../repo/kategori-publikasi";
 
 export default function PembicaraEdit() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function PembicaraEdit() {
 
   const INITIAL_FORM = {
     pembicara_id: "",
+    kategori_id: "",
     kategori_pembicara: "",
     judul_makalah: "",
     nama_pertemuan: "",
@@ -41,6 +43,7 @@ export default function PembicaraEdit() {
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
       { field: "kategori_pembicara", label: "Kategori Pembicara" },
+      { field: "kategori_id", label: "Kategori" },
       { field: "judul_makalah", label: "Judul Makalah" },
       { field: "nama_pertemuan", label: "Nama Pertemuan" },
       { field: "penyelenggara", label: "Penyelenggara" },
@@ -58,6 +61,9 @@ export default function PembicaraEdit() {
   });
 
   const { form, inputHandler } = formdata;
+
+  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } =
+  useKategoriPublikasi([user]);
 
   const EDIT_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/editPembicara`;
   const EDIT_OPTION = {
@@ -100,6 +106,26 @@ export default function PembicaraEdit() {
         <Card className="mt-4">
           <Card.Header className="text-center">Pembicara</Card.Header>
           <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Kategori Publikasi <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
+                className="flex-1"
+                name="kategori_id"
+                value={form.kategori_id}
+                onChange={inputHandler}
+                options={
+                  kategoriPublikasi &&
+                  kategoriPublikasi.map((item) => ({
+                    label: `${item.nama_kategori} - ${item.tingkatan}`,
+                    value: item.id,
+                  }))
+                }
+                required
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Kategori Pembicara <span className="text-danger-600">*</span>

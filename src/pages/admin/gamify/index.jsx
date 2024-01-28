@@ -7,6 +7,8 @@ import PublikasiGamifyModule from "../../../modules/admin/gamify/publikasi";
 import ProfesiGamifyModule from "../../../modules/admin/gamify/profesi";
 import PrestasiGamifyModule from "../../../modules/admin/gamify/prestasi";
 import HkiGamifyModule from "../../../modules/admin/gamify/hki";
+import IpGamifyModule from "../../../modules/admin/gamify/ip";
+import RekomendasiGamifyModule from "../../../modules/admin/gamify/rekomendasi";
 
 
 export default function Users() {
@@ -38,6 +40,12 @@ export default function Users() {
         )}
         {active.url === "#kategori-hki" && (
           <HkiGamifyModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#kategori-ip" && (
+          <IpGamifyModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#kategori-rekomendasi" && (
+          <RekomendasiGamifyModule baseURL={prefix + menu.url} />
         )}
       </div>
     </Layout>

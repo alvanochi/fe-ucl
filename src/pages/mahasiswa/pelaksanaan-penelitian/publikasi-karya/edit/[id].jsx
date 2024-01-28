@@ -153,7 +153,7 @@ export default function PublikasiKaryaEdit() {
                     value: item.id,
                   }))
                 }
-                disabled
+                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

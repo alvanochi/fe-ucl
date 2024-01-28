@@ -101,7 +101,6 @@ export default function SertifikasiEdit() {
                     value: item.id,
                   }))
                 }
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

@@ -29,7 +29,7 @@ export default function PenghargaanDetail() {
 		tahun_peng: "",
 		instansi_pemberi: "",
 		file: "",
-		poitn: "",
+		point: "",
 	};
 
 	const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {

@@ -112,7 +112,6 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="nama_lengkap"
-								
 								value={form.nama_lengkap}
 								disabled
 							/>
@@ -123,10 +122,9 @@ export default function DetailMhs() {
 							</Form.Label>
 							<span>:</span>
 							<Form.Input
-								type="number"
+								type="text"
 								className="flex-1"
 								name="npm"
-								
 								value={form.npm}
 								disabled
 							/>
@@ -140,7 +138,6 @@ export default function DetailMhs() {
 								type="email"
 								className="flex-1"
 								name="email"
-								
 								value={form.email}
 								disabled
 							/>
@@ -177,7 +174,6 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="tempat_lahir"
-								
 								value={form.tempat_lahir}
 								disabled
 							/>
@@ -191,7 +187,6 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="ibu_kandung"
-								
 								value={form.ibu_kandung}
 								disabled
 							/>
@@ -202,10 +197,9 @@ export default function DetailMhs() {
 							</Form.Label>
 							<span>:</span>
 							<Form.Input
-								type="number"
+								type="text"
 								className="flex-1"
 								name="nik"
-								
 								value={form.nik}
 								disabled
 							/>
@@ -219,7 +213,6 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="agama"
-								
 								value={form.agama}
 								disabled
 							/>
@@ -233,7 +226,6 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="warga_negara"
-								
 								value={form.warga_negara}
 								disabled
 							/>
@@ -246,7 +238,6 @@ export default function DetailMhs() {
               <Form.Textarea
                 rows="2"
                 name="alamat"
-                
                 value={form.alamat}
                 disabled
               ></Form.Textarea>
@@ -260,7 +251,6 @@ export default function DetailMhs() {
 								type="number"
 								className="flex-1"
 								name="rt"
-								
 								value={form.rt}
 								disabled
 							/>
@@ -274,7 +264,6 @@ export default function DetailMhs() {
 								type="number"
 								className="flex-1"
 								name="rw"
-								
 								value={form.rw}
 								disabled
 							/>
@@ -288,7 +277,6 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="desa_kelurahan"
-								
 								value={form.desa_kelurahan}
 								disabled
 							/>
@@ -302,7 +290,6 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="kota_kabupaten"
-								
 								value={form.kota_kabupaten}
 								disabled
 							/>
@@ -316,7 +303,6 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="provinsi"
-								
 								value={form.provinsi}
 								disabled
 							/>
@@ -330,7 +316,6 @@ export default function DetailMhs() {
 								type="number"
 								className="flex-1"
 								name="no_hp"
-								
 								value={form.no_hp}
 								disabled
 							/>
@@ -353,7 +338,6 @@ export default function DetailMhs() {
 								type="text"
 								className="flex-1"
 								name="nama_pasangan"
-								
 								value={form.nama_pasangan}
 								disabled
 							/>
@@ -367,7 +351,6 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="nip_pasangan"
-								
 								value={form.nip_pasangan}
 								disabled
 							/>
@@ -381,7 +364,6 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_kompetensi"
-								
 								value={form.point_kompetensi}
 								disabled
 							/>
@@ -395,7 +377,6 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_pengabdian"
-								
 								value={form.point_pengabdian}
 								disabled
 							/>
@@ -409,7 +390,6 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_pendidikan"
-								
 								value={form.point_pendidikan}
 								disabled
 							/>
@@ -423,7 +403,6 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_penelitian"
-								
 								value={form.point_penelitian}
 								disabled
 							/>
@@ -437,7 +416,6 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_penunjang"
-								
 								value={form.point_penunjang}
 								disabled
 							/>
@@ -451,7 +429,6 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="point_rekomendasi"
-								
 								value={form.point_rekomendasi}
 								disabled
 							/>
@@ -465,7 +442,6 @@ export default function DetailMhs() {
 								type="Number"
 								className="flex-1"
 								name="total_point"
-								
 								value={form.total_point}
 								disabled
 							/>

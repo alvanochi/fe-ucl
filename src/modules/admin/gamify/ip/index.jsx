@@ -1,17 +1,14 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
-import Filter from "./filter";
+import Pagination from "../../../../components/Pagination";
 import useDatatable from "../../../../hooks/useDatatable";
 import SortIcon from "../../../../components/SortIcon";
 import Form from "../../../../components/Form";
-import ChangeStatus from "../changeStatus";
 import useCRUD from "../../../../hooks/useCRUD";
 
-export default function TantanganModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/berita/tantangan`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/berita`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/berita/pamflet`;
 
+export default function IpGamifyModule({ baseURL }) {
+  const API_URL = `${process.env.API_ENDPOINT}/kategori/ip`;
 
   const {
     data,
@@ -26,30 +23,26 @@ export default function TantanganModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(DATA_URL);
+  } = useDatatable(API_URL);
+  const { destroy } = useCRUD(API_URL);
 
-  const { destroy } = useCRUD(DELETE_URL);
 
-  const handleStatusChange = () => {
-    refresh();
-  };
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 my-8">
-        <Button
+      <div className="flex justify-center gap-2 mb-8">
+      <Button
           as="a"
-          href={`${baseURL}/tantangan/create`}
+          href={`${baseURL}/ip/create`}
           variant="primary"
           icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
           pill
         >
-          Tambah Tantangan
+          Tambah Kategori IP
         </Button>
-        <Filter />
       </div>
       <table
-        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
+        className="w-full border-collapse rounded-2xl overflow-hidden shadow"
         cellPadding={10}
       >
         <thead>
@@ -57,26 +50,28 @@ export default function TantanganModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pangkat_id")}
+                onClick={() => sortBy("kategori_id")}
               >
                 No
-                <SortIcon sort={getSortBy("pangkat_id")} />
+                <SortIcon sort={getSortBy("kategori_id")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                Title
+                Kode
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">Deskripsi</div>
+              <div className="flex items-center gap-2 cursor-pointer">
+                Kategori
+              </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">Status</div>
+              <div className="flex items-center gap-2 cursor-pointer">
+                Point
+              </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">Pamflet</div>
-            </th>
+            
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
         </thead>
@@ -109,39 +104,23 @@ export default function TantanganModule({ baseURL }) {
                   {index + 1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.title}
+                  {row.kode}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {`${row.deskripsi.split(' ').slice(0, 5).join(' ')}${row.deskripsi.split(' ').length > 5 ? '...' : ''}`}
+                  {row.kategori}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status === 0 ? (
-                    <h5 className="text-green-500 font-bold">
-                      ACTIVE
-                    </h5>
-                  ) : (
-                    <h5 className="text-red-500 font-bold">
-                      NON ACTIVE
-                    </h5>
-                  )}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  <img src={`${FILE_URL}/${row.pamflet}`} alt="pamflet" className="w-2/3 h-[140px]" />
+                  {row.point}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
-                      <ChangeStatus
-                        id={{ id: row.id }}
-                        status={{ status: row.status }}
-                        onStatusChange={handleStatusChange}
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/ip/edit/${row.id}`}
+                        variant="secondary"
+                        icon={<Icon icon="bx:edit" width={20} height={20} />}
                       />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/${row.id}`}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
-                    />
-                    <Button.Icon
+                      <Button.Icon
                         variant="danger"
                         icon={
                           <Icon
