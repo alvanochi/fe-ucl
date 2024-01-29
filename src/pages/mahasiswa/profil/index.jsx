@@ -140,7 +140,7 @@ export default function Profil() {
               Edit Profil
             </Button>
           </div>
-          <div className="flex-1 space-y-2">
+          <div className="flex-1 ml-8 space-y-3">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[12rem]">NIK</Form.Label>
               <span>:</span>
@@ -206,12 +206,6 @@ export default function Profil() {
         )}
         {active.url === "#keluarga" && (
           <KeluargaModule baseURL={prefix + menu.url} />
-        )}
-        {active.url === "#kepangkatan" && (
-          <KepangkatanModule baseURL={prefix + menu.url} />
-        )}
-        {active.url === "#jabatan-fungsional" && (
-          <JabatanFungsionalModule baseURL={prefix + menu.url} />
         )}
       </div>
       <Modal title="Ganti Foto Profil" show={show} handler={toggle}>

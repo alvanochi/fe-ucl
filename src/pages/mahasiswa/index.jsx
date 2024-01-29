@@ -54,7 +54,7 @@ export default function Home() {
         </title>
       </Head>
       <div className="flex flex-col sm:flex-row gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
-      <div className="w-full sm:w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
+        <div className="w-full sm:w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
           <img
             src={process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image}
             alt="Profile"
@@ -113,8 +113,8 @@ export default function Home() {
           Summary
         </Card.Header>
         <Card.Body className="mx-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4">
-            <Card className="w-full sm:w-1/2 md:w-1/2 lg:w-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+            <Card>
               <Card.Body>
                 <Link href={`${prefix}/kompetensi`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
@@ -132,7 +132,7 @@ export default function Home() {
                 </Link>
               </Card.Body>
             </Card>
-            <Card className="w-full sm:w-1/2 md:w-1/2 lg:w-auto">
+            <Card>
               <Card.Body>
                 <Link href={`${prefix}/kompetensi`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
@@ -150,7 +150,7 @@ export default function Home() {
                 </Link>
               </Card.Body>
             </Card>
-            <Card className="w-full sm:w-1/2 md:w-1/2 lg:w-auto">
+            <Card>
               <Card.Body>
                 <Link href={`${prefix}/pelaksanaan-pengabdian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
@@ -168,7 +168,7 @@ export default function Home() {
                 </Link>
               </Card.Body>
             </Card>
-            <Card className="w-full sm:w-1/2 md:w-1/2 lg:w-auto">
+            <Card>
               <Card.Body>
                 <Link href={`${prefix}/pelaksanaan-pengabdian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
@@ -186,7 +186,7 @@ export default function Home() {
                 </Link>
               </Card.Body>
             </Card>
-            <Card className="w-full sm:w-1/2 md:w-1/2 lg:w-auto">
+            <Card>
               <Card.Body>
                 <Link href={`${prefix}/penunjang`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
@@ -204,7 +204,7 @@ export default function Home() {
                 </Link>
               </Card.Body>
             </Card>
-            <Card className="w-full sm:w-1/2 md:w-1/2 lg:w-auto">
+            <Card>
               <Card.Body>
                 <Link href={`${prefix}/pelaksanaan-penelitian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
@@ -222,7 +222,7 @@ export default function Home() {
                 </Link>
               </Card.Body>
             </Card>
-            <Card className="w-full sm:w-1/2 md:w-1/2 lg:w-auto">
+            <Card>
               <Card.Body>
                 <Link href={`${prefix}/pelaksanaan-penelitian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
@@ -240,7 +240,7 @@ export default function Home() {
                 </Link>
               </Card.Body>
             </Card>
-            <Card className="w-full sm:w-1/2 md:w-1/2 lg:w-auto">
+            <Card>
               <Card.Body>
                 <Link href={`${prefix}/pelaksanaan-penelitian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">

@@ -55,28 +55,34 @@ export default function Home() {
           <img
             src={process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image}
             alt="Profile"
-            className="object-cover object-top h-full w-full"
+            className="object-cover object-top w-full h-auto"
           />
         </div>
         <div className="flex-1">
-          <div className="flex items-center justify-between sm:justify-start">
-            <h1 className="text-2xl font-semibold text-primary-600 uppercase mb-2 sm:mb-0">
+          <div className="flex items-center flex-col sm:flex-row">
+            <h1 className="text-xl sm:text-2xl font-semibold text-primary-600 uppercase mb-2 sm:mb-4">
               {data.userData?.nama_lengkap || ""}
               <Icon
                 icon="material-symbols:verified"
                 width={36}
                 height={36}
-                className="ml-1 text-info-600"
+                className="ml-0 sm:ml-1 text-info-600"
               />
             </h1>
-            {isUserDataIncomplete(data.userData) && (
+            {!isUserDataIncomplete(data.userData) && (
               <Link
-                href="/mahasiswa/profil"
+                href="/dosen/profil"
                 type="button"
-                className="ml-4 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-lg uppercase"
+                className="mt-2 mb-2 sm:mt-0 ml-0 sm:ml-4 inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 sm:px-4 py-1.5 sm:py-2 bg-red-600 text-sm sm:text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto uppercase"
               >
-                <div class="mr-3">
-                  <svg width="26" height="26" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor">
+                <div className="mr-2">
+                  <svg
+                    width="26"
+                    height="26"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                  >
                     <path d="M13.6086 3.247l8.1916 15.8c.0999.2.1998.5.1998.8 0 1-.7992 1.8-1.7982 1.8H3.7188c-.2997 0-.4995-.1-.7992-.2-.7992-.5-1.1988-1.5-.6993-2.4 5.3067-10.1184 8.0706-15.385 8.2915-15.8.3314-.6222.8681-.8886 1.4817-.897.6135-.008 1.273.2807 1.6151.897zM12 18.95c.718 0 1.3-.582 1.3-1.3 0-.718-.582-1.3-1.3-1.3-.718 0-1.3.582-1.3 1.3 0 .718.582 1.3 1.3 1.3zm-.8895-10.203v5.4c0 .5.4.9.9.9s.9-.4.9-.9v-5.3c0-.5-.4-.9-.9-.9s-.9.4-.9.8z"></path>
                   </svg>
                 </div>
@@ -113,10 +119,10 @@ export default function Home() {
           Summary
         </Card.Header>
         <Card.Body className="mx-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
             <Card>
               <Card.Body>
-                <Link href={`${prefix}/kompetensi`} >
+                <Link href="#">
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="icon-park-outline:certificate"
@@ -134,7 +140,7 @@ export default function Home() {
             </Card>
             <Card>
               <Card.Body>
-                <Link href={`${prefix}/kompetensi`}>
+                <Link href="#">
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="icon-park-outline:certificate"
@@ -152,7 +158,7 @@ export default function Home() {
             </Card>
             <Card>
               <Card.Body>
-                <Link href={`${prefix}/pelaksanaan-pengabdian`}>
+                <Link href="#">
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="fa6-solid:hand-holding-hand"
@@ -170,7 +176,7 @@ export default function Home() {
             </Card>
             <Card>
               <Card.Body>
-              <Link href={`${prefix}/pelaksanaan-pengabdian`}>
+              <Link href="#">
                 <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="fa6-solid:hand-holding-hand"
@@ -188,7 +194,7 @@ export default function Home() {
             </Card>
             <Card>
               <Card.Body>
-              <Link href={`${prefix}/penunjang`}>
+              <Link href="#">
                 <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="solar:users-group-two-rounded-bold-duotone"
@@ -206,7 +212,7 @@ export default function Home() {
             </Card>
             <Card>
               <Card.Body>
-              <Link href={`${prefix}/pelaksanaan-penelitian`}>
+              <Link href="#">
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="fa:flask"
@@ -218,7 +224,43 @@ export default function Home() {
                   <p className="block text-2xl font-bold leading-relaxed">
                     {data.kp_selesai}
                   </p>
-                  <p className="block text-sm">Jumlah Mahasiswa Kp Selesai</p>
+                  <p className="block text-sm">Jumlah Mahasiswa Kp Belum Selesai</p>
+                </Link>
+              </Card.Body>
+            </Card>
+            <Card>
+              <Card.Body>
+              <Link href="#">
+                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                    <Icon
+                      icon="fa:flask"
+                      width={24}
+                      height={24}
+                      className="text-white"
+                    />
+                  </div>
+                  <p className="block text-2xl font-bold leading-relaxed">
+                    {data.kp_selesai}
+                  </p>
+                  <p className="block text-sm">Jumlah Mahasiswa Kp Sudah Selesai</p>
+                </Link>
+              </Card.Body>
+            </Card>
+            <Card>
+              <Card.Body>
+              <Link href="#">
+                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                    <Icon
+                      icon="fa:flask"
+                      width={24}
+                      height={24}
+                      className="text-white"
+                    />
+                  </div>
+                  <p className="block text-2xl font-bold leading-relaxed">
+                    {data.kp_selesai}
+                  </p>
+                  <p className="block text-sm">Jumlah Mahasiswa Bimbingan Kademik</p>
                 </Link>
               </Card.Body>
             </Card>

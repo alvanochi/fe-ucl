@@ -18,23 +18,11 @@ export default function GamifyCreate() {
     return <p>Loading...</p>;
   return (
     <Layout>
-      <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+      <PageHeader title='Edit Pembelajaran' icon={menu.icon} handler={setActive} />
       <Form type="formdata">
         <Card className="mt-4">
-          <Card.Header className="text-center">Generate QRCODE</Card.Header>
+          <Card.Header className="text-center">Edit Pembelajaran</Card.Header>
           <Card.Body className="space-y-4">
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[14rem]">
-                NIP <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="nip"
-                required
-              />
-            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
                 Matakuliah <span className="text-danger-600">*</span>
@@ -60,6 +48,7 @@ export default function GamifyCreate() {
                 type="number"
                 className="flex-1"
                 name="pertemuan"
+                value={1}
                 required
               />
             </Form.Group>
@@ -72,6 +61,7 @@ export default function GamifyCreate() {
                 type="text"
                 className="flex-1"
                 name="kelas"
+                value="REGULES_D"
                 required
               />
             </Form.Group>
@@ -82,7 +72,7 @@ export default function GamifyCreate() {
 							<span>:</span>
 							<div className="flex gap-4">
 								<Form.Label>
-									<Form.Radio name="status" value={1} />
+									<Form.Radio name="status" value={1} checked />
 									Offline
 								</Form.Label>
 								<Form.Label>
