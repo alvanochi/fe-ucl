@@ -6,7 +6,11 @@ import Layout from "../../../components/Layout";
 import PageHeader from "../../../components/PageHeader";
 import useMenu from "../../../hooks/useMenu";
 import useUser from "../../../hooks/useUser";
-import useCRUD from "../../../hooks/useCRUD";
+import useDatatable from "../../../hooks/useDatatable";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import useForm from "../../../hooks/useForm";
+import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 
 export default function GamifyCreate() {
   const router = useRouter();
@@ -14,12 +18,99 @@ export default function GamifyCreate() {
   const { prefix, menu, setActive } = useMenu();
 
 
-  if ([user, menu].some((item) => item == null))
+  const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
+  const { data, loading, refresh } = useDatatable(DATA_URL);
+
+
+  const [courseOptions, setCourseOptions] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(""); 
+
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        if (data.nip) {
+          const response = await axios.post(
+            `${process.env.API_ENDPOINT}/help/get-matkul`,
+            {
+              year: "2023/2024",
+              semester: "GASAL",
+              nip: data.nip,
+            },
+            {
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            }
+          );
+  
+          const courses = response.data.data;
+  
+          const options = courses.map((course) => ({
+            label: course.name,
+            value: course.course_code,
+          }));
+  
+          setCourseOptions(options);
+        }
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+      }
+    };
+  
+    fetchCourses();
+  }, [data.nip]); 
+
+  const INITIAL_FORM = {
+    pertemuan: "",
+    kelas: "",
+    status_kelas: ""
+  }
+
+  const {form, inputHandler} = useForm(INITIAL_FORM, {
+    rules: [
+      { field: "pertemuan", label: "pertemuan" },
+      { field: "kelas", label: "kelas" },
+      { field: "status_kelas", label: "status_kelas" },
+    ],
+  });
+
+  async function submitHandler(event) {
+    event.preventDefault();
+    try {
+      const requestData = {
+        ...form,
+        nik_dosen: data.nip,
+        id_matkul: selectedCourse
+      }
+      const request = await axios({
+        url: `http://103.158.196.71/fts-absen/public/api/pembelajaran/store`,
+        method: "POST",
+        data: requestData,
+      });
+      const response = await request.data;
+
+      toastAlert("success", "QRCODE created successfully");
+      router.push(prefix + menu.url);
+    } catch (error) {
+      if (error.name === "AxiosError") {
+        const { status_code, message, data } = error.response.data;
+        toastAlert("error", message);
+
+        return;
+      }
+      loadingAlert();
+      MySwal.close();
+
+      toastAlert("error", error.message);
+    }
+  }
+
+  if ([user, menu, loading].some((item) => item == null))
     return <p>Loading...</p>;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form type="formdata">
+      <Form onSubmit={submitHandler}>
         <Card className="mt-4">
           <Card.Header className="text-center">Generate QRCODE</Card.Header>
           <Card.Body className="space-y-4">
@@ -31,25 +122,25 @@ export default function GamifyCreate() {
               <Form.Input
                 type="text"
                 className="flex-1"
-                name="nip"
-                required
+                onChange={inputHandler}
+                name="nik_dosen"
+                value={data.nip}
+                readOnly
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[14rem]">
-                Matakuliah <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="id_matkul"
-                options={[
-                  { label: "Kecakapan Intrapersonal", value: "TIF105" },
-                  { label: "Interaksi Manusia dan Komputer", value: "TIF223"},
-                  { label: "Verifikasi dan Validasi Perangkat Lunak", value: "IFK332"},
-                ]}
-                required
-              />
+            <Form.Label className="min-w-[14rem]">
+              Matakuliah <span className="text-danger-600">*</span>
+            </Form.Label>
+            <span>:</span>
+            <Form.Select
+              className="flex-1"
+              name="id_matkul"
+              onChange={(e) => setSelectedCourse(e.target.value)}
+              value={selectedCourse}
+              options={courseOptions}
+              required
+            />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
@@ -60,6 +151,10 @@ export default function GamifyCreate() {
                 type="number"
                 className="flex-1"
                 name="pertemuan"
+                onChange={inputHandler}
+                value={form.pertemuan}
+                min={1}
+                max={8}
                 required
               />
             </Form.Group>
@@ -72,25 +167,27 @@ export default function GamifyCreate() {
                 type="text"
                 className="flex-1"
                 name="kelas"
+                onChange={inputHandler}
+                value={form.kelas}
                 required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-							<Form.Label className="min-w-[14rem]">
-								Status <span className="text-danger-600">*</span>
-							</Form.Label>
-							<span>:</span>
-							<div className="flex gap-4">
-								<Form.Label>
-									<Form.Radio name="status" value={1} />
-									Offline
-								</Form.Label>
-								<Form.Label>
-									<Form.Radio name="status" value={0} />
-									Online
-								</Form.Label>
-							</div>
-						</Form.Group>
+              <Form.Label className="min-w-[14rem]">
+                Status <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <div className="flex gap-4">
+                <Form.Label>
+                  <Form.Radio name="status_kelas" onChange={inputHandler}value={1} />
+                  Offline
+                </Form.Label>
+                <Form.Label>
+                  <Form.Radio name="status_kelas" onChange={inputHandler} value={0} />
+                  Online
+                </Form.Label>
+              </div>
+            </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
@@ -105,7 +202,7 @@ export default function GamifyCreate() {
           <Button type="submit" variant="primary" className="w-full h-12">
             Konfirmasi
           </Button>
-        </div>
+        </div>   
       </Form>
     </Layout>
   );
