@@ -25,6 +25,9 @@ export default function GamifyCreate() {
   const [courseOptions, setCourseOptions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(""); 
 
+  const [classOptions, setClassOptions] = useState([]);
+  const [selectedClass, setSelectedClass] = useState(""); 
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -51,6 +54,33 @@ export default function GamifyCreate() {
           }));
 
           setCourseOptions(options);
+
+          async function getClass(){
+            try {
+              const response = await axios.get(
+                `${process.env.API_ENDPOINT}/help/get-class`,{
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                }
+              );
+        
+              const dataCLass = response.data.data;
+
+              const options = dataCLass.map((classs) => ({
+                label: classs.feeder_class_name,
+                value: classs.feeder_class_name,
+              }));
+
+              setClassOptions(options)
+        
+              
+            } catch (error) {
+              console.log(error)
+            }
+          }
+        
+          getClass();
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
