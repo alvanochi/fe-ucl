@@ -12,16 +12,15 @@ import { Icon } from "@iconify-icon/react";
 import ShowQr from "./show-qr";
 import ModalAbsen from "../../../components/ModalAbsen";
 import useDataTableAbsensi from "../../../hooks/useDataTableAbsensi";
+import axios from "axios";
 
 
 export default function Absen() {
 	const { user } = useUser({ redirectTo: "/login" });
 	const { prefix, menu, setActive } = useMenu();
 
-  const DATA_URL = `http://103.158.196.71/fts-absen/public/api/pembelajaran`;
-  const DELETE_URL = `http://103.158.196.71/fts-absen/public/api/pembelajaran/delete`;
-
-
+  const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran`;
+  const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/delete`;
   const {
     dataAbsensi,
     loadingAbsensi,
@@ -36,15 +35,13 @@ export default function Absen() {
     sortBy,
     getSortBy,
   } = useDataTableAbsensi(DATA_URL, {
-    filter: ["nik_dosen"],
-    filterValue: ["410100382"],
+    filter: ['nik_dosen'],
+    filterValue: [user && user.nip],
   });
 
   const { destroy } = useCRUD(DELETE_URL);
 
-  
-
-	if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user,  menu].some((item) => item == null)) return <p>Loading...</p>;
 	return (
 		<Layout>
 			<PageHeader title="Tias Absensi" icon={menu.icon} items={menu.submenus} handler={setActive} />

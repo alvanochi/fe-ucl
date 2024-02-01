@@ -33,7 +33,7 @@ const TambahMhs = ({ data, onTambahMhs }) => {
         ...form,
       }
       const request = await axios({
-        url: `http://103.158.196.71/fts-absen/public/api/absensi/store`,
+        url: `${process.env.API_ENDPOINT_ABSEN}/absensi/store`,
         method: "POST",
         data: requestData,
       });

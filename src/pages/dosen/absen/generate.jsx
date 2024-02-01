@@ -25,6 +25,9 @@ export default function GamifyCreate() {
   const [courseOptions, setCourseOptions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(""); 
 
+  const [classOptions, setClassOptions] = useState([]);
+  const [selectedClass, setSelectedClass] = useState(""); 
+
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -51,6 +54,33 @@ export default function GamifyCreate() {
           }));
   
           setCourseOptions(options);
+
+          async function getClass(){
+            try {
+              const response = await axios.get(
+                `${process.env.API_ENDPOINT}/help/get-class`,{
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                }
+              );
+        
+              const dataCLass = response.data.data;
+
+              const options = dataCLass.map((classs) => ({
+                label: classs.feeder_class_name,
+                value: classs.feeder_class_name,
+              }));
+
+              setClassOptions(options)
+        
+              
+            } catch (error) {
+              console.log(error)
+            }
+          }
+        
+          getClass();
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -61,14 +91,12 @@ export default function GamifyCreate() {
   }, [data.nip]); 
 
   const INITIAL_FORM = {
-    pertemuan: "",
     kelas: "",
     status_kelas: ""
   }
 
   const {form, inputHandler} = useForm(INITIAL_FORM, {
     rules: [
-      { field: "pertemuan", label: "pertemuan" },
       { field: "kelas", label: "kelas" },
       { field: "status_kelas", label: "status_kelas" },
     ],
@@ -80,10 +108,11 @@ export default function GamifyCreate() {
       const requestData = {
         ...form,
         nik_dosen: data.nip,
-        id_matkul: selectedCourse
+        id_matkul: selectedCourse,
+        kelas: selectedClass
       }
       const request = await axios({
-        url: `http://103.158.196.71/fts-absen/public/api/pembelajaran/store`,
+        url: `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/store`,
         method: "POST",
         data: requestData,
       });
@@ -116,7 +145,7 @@ export default function GamifyCreate() {
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
-                NIP <span className="text-danger-600">*</span>
+                NIK <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -142,7 +171,7 @@ export default function GamifyCreate() {
               required
             />
             </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
+            {/* <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
                 Pertemuan <span className="text-danger-600">*</span>
               </Form.Label>
@@ -157,18 +186,18 @@ export default function GamifyCreate() {
                 max={8}
                 required
               />
-            </Form.Group>
+            </Form.Group> */}
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
                 Kelas <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
+              <Form.Select
                 className="flex-1"
                 name="kelas"
-                onChange={inputHandler}
-                value={form.kelas}
+                onChange={(e) => setSelectedClass(e.target.value)}
+                value={selectedClass}
+                options={classOptions}
                 required
               />
             </Form.Group>

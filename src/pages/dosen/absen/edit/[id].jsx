@@ -25,6 +25,9 @@ export default function EditPembelajran() {
   const [courseOptions, setCourseOptions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(""); 
 
+  const [classOptions, setClassOptions] = useState([]);
+  const [selectedClass, setSelectedClass] = useState("");
+
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -52,6 +55,33 @@ export default function EditPembelajran() {
           }));
   
           setCourseOptions(options);
+
+          async function getClass(){
+            try {
+              const response = await axios.get(
+                `${process.env.API_ENDPOINT}/help/get-class`,{
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                }
+              );
+        
+              const dataCLass = response.data.data;
+
+              const options = dataCLass.map((classs) => ({
+                label: classs.feeder_class_name,
+                value: classs.feeder_class_name,
+              }));
+
+              setClassOptions(options)
+        
+              
+            } catch (error) {
+              console.log(error)
+            }
+          }
+        
+          getClass();
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -61,7 +91,7 @@ export default function EditPembelajran() {
     fetchCourses();
   }, [data.nip]); 
 
-  const DATA_URL_ABSENSI = `http://103.158.196.71/fts-absen/public/api/pembelajaran`
+  const DATA_URL_ABSENSI = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran`
   const id = router.query.id;
   const { dataAbsensi, loadingAbsensi } = useDatatableAbsensi(DATA_URL_ABSENSI, {
     filter: ["id"],
@@ -71,7 +101,6 @@ export default function EditPembelajran() {
 
   const [formData, setFormData] = useState({
     id_matkul: dataAbsensi?.[0]?.id_matkul,
-    pertemuan: dataAbsensi?.[0]?.pertemuan,
     kelas: dataAbsensi?.[0]?.kelas,
     status_kelas: dataAbsensi?.[0]?.status_kelas,
   });
@@ -84,11 +113,10 @@ export default function EditPembelajran() {
 
   async function submitEditHandler(event) {
     event.preventDefault();
-    const EDIT_URL = `http://103.158.196.71/fts-absen/public/api/pembelajaran/update/${id}`;
+    const EDIT_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/update/${id}`;
 
     try {
       const response = await axios.post(EDIT_URL, formData);
-      console.log(response.data); 
 
       toastAlert("success", "Updated Successfuly");
       router.push(prefix + menu.url)
@@ -101,7 +129,6 @@ export default function EditPembelajran() {
     if (dataAbsensi?.length > 0) {
       setFormData({
         id_matkul: dataAbsensi[0].id_matkul || "",
-        pertemuan: dataAbsensi[0].pertemuan || "",
         kelas: dataAbsensi[0].kelas || "",
         status_kelas: parseInt(dataAbsensi[0].status_kelas) || 0,
       });
@@ -134,29 +161,15 @@ export default function EditPembelajran() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
-                Pertemuan <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-                <Form.Input
-                  type="text"
-                  className="flex-1"
-                  name="pertemuan"
-                  value={formData.pertemuan}
-                  onChange={inputHandler}
-                  required
-                />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[14rem]">
                 Kelas <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
+              <Form.Select
                 className="flex-1"
                 name="kelas"
+                onChange={(e) => inputHandler(e)}
                 value={formData.kelas}
-                onChange={inputHandler}
+                options={classOptions}
                 required
               />
             </Form.Group>

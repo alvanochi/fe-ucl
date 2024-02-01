@@ -20,8 +20,8 @@ export default function ListMhs() {
 
   const router = useRouter();
 
-  const DATA_URL = `http://103.158.196.71/fts-absen/public/api/absensi`;
-  const DELETE_URL = `http://103.158.196.71/fts-absen/public/api/absensi/delete`
+  const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi`;
+  const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi/delete`
   const id = router.query.id;
 
   const {

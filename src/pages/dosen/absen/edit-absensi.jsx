@@ -12,12 +12,12 @@ const EditAbsensi = ({ data, onTambahMhs }) => {
 
   const [formData, setFormData] = useState({
     npm: "",
-    status_absen: 0,
+    status_absen: null,
   });
 
   const fetchAbsensiData = async (id) => {
     try {
-      const response = await axios.get(`http://103.158.196.71/fts-absen/public/api/absensi`, {
+      const response = await axios.get(`${process.env.API_ENDPOINT_ABSEN}/absensi`, {
         params: {
           filter: ["id"],
           filterValue: [id],
@@ -47,16 +47,18 @@ const EditAbsensi = ({ data, onTambahMhs }) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "status_absen" ? parseInt(value) : value,
+      [name]: name === "status_absen" ? (value !== "" ? parseInt(value) : 0) : value,
     }));
   };
+
+  console.log(formData);
 
   const submitHandler = async (event) => {
     event.preventDefault();
 
     try {
       const response = await axios.post(
-        `http://103.158.196.71/fts-absen/public/api/absensi/update/${data?.id || ""}`,
+        `${process.env.API_ENDPOINT_ABSEN}/absensi/update/${data?.id || ""}`,
         formData
       );
 

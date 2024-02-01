@@ -14,7 +14,7 @@ export default function ShowQr({ data }) {
         setLoading(true);
 
         const response = await axios.get(
-          `http://103.158.196.71/fts-absen/public/api/absensi/show-qr?token=${data.token}`
+          `${process.env.API_ENDPOINT_ABSEN}/absensi/show-qr?token=${data.token}`
         );
 
         const svgContent = response.data;
