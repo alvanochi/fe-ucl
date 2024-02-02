@@ -91,12 +91,14 @@ export default function GamifyCreate() {
   }, [data.nip]); 
 
   const INITIAL_FORM = {
-    status_kelas: ""
+    status_kelas: "",
+    pertemuan: "",
   }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
       { field: "status_kelas", label: "status_kelas" },
+      { field: "pertemuan", label: "pertemuan" },
     ],
   });
 
@@ -177,6 +179,20 @@ export default function GamifyCreate() {
               options={courseOptions}
               required
             />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">
+                Pertemuan <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                onChange={inputHandler}
+                name="pertemuan"
+                value={data.pertemuan}
+                required
+              />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
