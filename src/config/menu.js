@@ -50,7 +50,7 @@ export const APP_MENU = [
     label: "Absensi",
     url: "/absen",
     icon: "mdi:account-card-details",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN],
+    allowedRoles: [ROLE_ID_DOSEN],
     submenus: [],
   },
   {
@@ -274,6 +274,13 @@ export const APP_MENU = [
         allowedRoles: [ROLE_ID_ADMIN],
       },
     ],
+  },
+  {
+    label: "Rekomendasi Mahasiswa",
+    url: "/rek-mhs",
+    icon: "mdi-certificate",
+    allowedRoles: [ROLE_ID_DOSEN],
+    submenus: [],
   },
   {
     label: "Setting",

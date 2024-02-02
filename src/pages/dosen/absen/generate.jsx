@@ -25,9 +25,6 @@ export default function GamifyCreate() {
   const [courseOptions, setCourseOptions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(""); 
 
-  const [classOptions, setClassOptions] = useState([]);
-  const [selectedClass, setSelectedClass] = useState(""); 
-
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -45,59 +42,30 @@ export default function GamifyCreate() {
               },
             }
           );
-  
+
           const courses = response.data.data;
-  
+
           const options = courses.map((course) => ({
-            label: course.name,
+            label: `${course.name} | ${course.class}`,
             value: course.course_code,
           }));
-  
+
           setCourseOptions(options);
-
-          async function getClass(){
-            try {
-              const response = await axios.get(
-                `${process.env.API_ENDPOINT}/help/get-class`,{
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                }
-              );
-        
-              const dataCLass = response.data.data;
-
-              const options = dataCLass.map((classs) => ({
-                label: classs.feeder_class_name,
-                value: classs.feeder_class_name,
-              }));
-
-              setClassOptions(options)
-        
-              
-            } catch (error) {
-              console.log(error)
-            }
-          }
-        
-          getClass();
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
     };
-  
+
     fetchCourses();
   }, [data.nip]); 
 
   const INITIAL_FORM = {
-    kelas: "",
     status_kelas: ""
   }
 
-  const {form, inputHandler} = useForm(INITIAL_FORM, {
+  const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
-      { field: "kelas", label: "kelas" },
       { field: "status_kelas", label: "status_kelas" },
     ],
   });
@@ -105,17 +73,26 @@ export default function GamifyCreate() {
   async function submitHandler(event) {
     event.preventDefault();
     try {
+      const selectedOption = courseOptions.find(option => option.value === selectedCourse);
+
+      if (!selectedOption) {
+        console.error("Selected course not found in options");
+        return;
+      }
+
       const requestData = {
         ...form,
         nik_dosen: data.nip,
         id_matkul: selectedCourse,
-        kelas: selectedClass
+        kelas: selectedOption.label.split('|')[1].trim(),
       }
+
       const request = await axios({
         url: `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/store`,
         method: "POST",
         data: requestData,
       });
+
       const response = await request.data;
 
       toastAlert("success", "QRCODE created successfully");
@@ -170,36 +147,6 @@ export default function GamifyCreate() {
               options={courseOptions}
               required
             />
-            </Form.Group>
-            {/* <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[14rem]">
-                Pertemuan <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="number"
-                className="flex-1"
-                name="pertemuan"
-                onChange={inputHandler}
-                value={form.pertemuan}
-                min={1}
-                max={8}
-                required
-              />
-            </Form.Group> */}
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[14rem]">
-                Kelas <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="kelas"
-                onChange={(e) => setSelectedClass(e.target.value)}
-                value={selectedClass}
-                options={classOptions}
-                required
-              />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">

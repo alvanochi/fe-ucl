@@ -69,8 +69,8 @@ export default function EditPembelajran() {
               const dataCLass = response.data.data;
 
               const options = dataCLass.map((classs) => ({
-                label: classs.feeder_class_name,
-                value: classs.feeder_class_name,
+                label: classs.name,
+                value: classs.name,
               }));
 
               setClassOptions(options)
