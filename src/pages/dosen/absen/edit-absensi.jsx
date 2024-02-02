@@ -51,7 +51,6 @@ const EditAbsensi = ({ data, onTambahMhs }) => {
     }));
   };
 
-  console.log(formData);
 
   const submitHandler = async (event) => {
     event.preventDefault();
@@ -63,7 +62,6 @@ const EditAbsensi = ({ data, onTambahMhs }) => {
       );
 
       const responseData = response.data;
-      console.log(responseData);
       toastAlert("success", "Updated Successfully");
       close();
       onTambahMhs();

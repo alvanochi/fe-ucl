@@ -32,6 +32,12 @@ const TambahMhs = ({ data, onTambahMhs }) => {
       const requestData = {
         ...form,
       }
+
+      if(!requestData.status_absen || !requestData.npm){
+        toastAlert("error", "Pleas fill in all the required fields.");
+
+        return;
+      }
       const request = await axios({
         url: `${process.env.API_ENDPOINT_ABSEN}/absensi/store`,
         method: "POST",
