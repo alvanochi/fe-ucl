@@ -94,105 +94,600 @@ export default function RekapKehadiran({ baseURL, user }) {
             </tr>
           </thead>
           <tbody>
-                <tr>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    1
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    RPL
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    Reguler A
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
+              <tr>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  1
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  RPL
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  Reguler A
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                  Y
+                    
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
                     Y
-                     
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     Y
-                    </div>
-                  </td> 
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> 
 
-                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      
-                     90%
-                    </div>
-                  </td>
-                </tr>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    90%
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  1
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  RPL
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  Reguler A
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                  Y
+                    
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> 
+
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    90%
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  1
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  RPL
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  Reguler A
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                  Y
+                    
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> 
+
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    90%
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  1
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  RPL
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  Reguler A
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                  Y
+                    
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> 
+
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    90%
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  1
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  RPL
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  Reguler A
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                  Y
+                    
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> 
+
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    90%
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  1
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  RPL
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  Reguler A
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                  Y
+                    
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    Y
+                  </div>
+                </td> 
+
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    
+                    90%
+                  </div>
+                </td>
+              </tr>
           </tbody>
         </table>
 
