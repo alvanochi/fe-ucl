@@ -181,6 +181,13 @@ export default function Profil() {
               <span>:</span>
               <p>{data.ibu_kandung}</p>
             </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[12rem]">
+                NIP/NIK
+              </Form.Label>
+              <span>:</span>
+              <p>{data.nip}</p>
+            </Form.Group>
           </div>
         </Card.Body>
         <Card.Body className="flex border-t">
