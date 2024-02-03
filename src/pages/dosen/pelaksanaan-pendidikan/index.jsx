@@ -13,7 +13,7 @@ export default function PelaksanaanPendidikan() {
   if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
   return (
     <Layout>
-      {/* <PageHeader
+      <PageHeader
         title={menu.label}
         icon={menu.icon}
         items={menu.submenus}
@@ -27,9 +27,9 @@ export default function PelaksanaanPendidikan() {
         {active.url === "#bahan-ajar" && (
           <BahanAjarModule baseURL={prefix + menu.url} />
         )}
-      </div> */}
+      </div>
 
-      <DevelopmentPage />
+      {/* <DevelopmentPage /> */}
     </Layout>
   );
 }

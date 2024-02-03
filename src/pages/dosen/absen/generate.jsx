@@ -24,20 +24,17 @@ export default function GamifyCreate() {
 
   const [courseOptions, setCourseOptions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState(""); 
+  const [pertemuanData, setPertemuanData] = useState(null);
 
-  const [classOptions, setClassOptions] = useState([]);
-  const [selectedClass, setSelectedClass] = useState(""); 
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         if (data.nip) {
-          const response = await axios.post(
-            `${process.env.API_ENDPOINT}/help/get-matkul`,
+          const response = await axios.get(
+            `${process.env.API_ENDPOINT_ABSEN}/dosen-for-mk`,
             {
-              year: "2023/2024",
-              semester: "GASAL",
-              nip: data.nip,
+              code: data.nip,
             },
             {
               headers: {
@@ -46,7 +43,7 @@ export default function GamifyCreate() {
             }
           );
 
-          const courses = response.data.data;
+          const courses = response.data.Data;
 
           const options = courses.map((course) => ({
             label: `${course.name} | ${course.class}`,
@@ -54,33 +51,6 @@ export default function GamifyCreate() {
           }));
 
           setCourseOptions(options);
-
-          async function getClass(){
-            try {
-              const response = await axios.get(
-                `${process.env.API_ENDPOINT}/help/get-class`,{
-                  headers: {
-                    'Content-Type': 'application/json',
-                  },
-                }
-              );
-        
-              const dataCLass = response.data.data;
-
-              const options = dataCLass.map((classs) => ({
-                label: classs.feeder_class_name,
-                value: classs.feeder_class_name,
-              }));
-
-              setClassOptions(options)
-        
-              
-            } catch (error) {
-              console.log(error)
-            }
-          }
-        
-          getClass();
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -92,15 +62,46 @@ export default function GamifyCreate() {
 
   const INITIAL_FORM = {
     status_kelas: "",
-    pertemuan: "",
   }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
       { field: "status_kelas", label: "status_kelas" },
-      { field: "pertemuan", label: "pertemuan" },
     ],
   });
+
+
+  useEffect(() => {
+    const fetchPertemuan = async () => {
+      try {
+        if (selectedCourse) {
+          const selectedOption = courseOptions.find(option => option.value === selectedCourse);
+  
+          if (data.nip) {
+            const response = await axios.get(
+              `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/cek-pertemuan`,
+              {
+                params: {
+                  nik_dosen: data.nip,
+                  id_matkul: selectedCourse,
+                  kelas: selectedOption.label.split('|')[1].trim()
+                }
+              }
+            );
+  
+            const pertemuanData = response.data.data.pertemuan_ke; 
+            setPertemuanData(pertemuanData);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching pertemuan:", error);
+      }
+    };
+  
+    fetchPertemuan();
+  }, [selectedCourse, courseOptions, data.nip]);
+
+
 
   async function submitHandler(event) {
     event.preventDefault();
@@ -117,6 +118,7 @@ export default function GamifyCreate() {
         nik_dosen: data.nip,
         id_matkul: selectedCourse,
         kelas: selectedOption.label.split('|')[1].trim(),
+        pertemuan: pertemuanData
       }
 
       const request = await axios({
@@ -188,10 +190,9 @@ export default function GamifyCreate() {
               <Form.Input
                 type="text"
                 className="flex-1"
-                onChange={inputHandler}
                 name="pertemuan"
-                value={data.pertemuan}
-                required
+                value={pertemuanData}
+                readOnly
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

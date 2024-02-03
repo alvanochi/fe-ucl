@@ -49,7 +49,7 @@ export default function ListMhs() {
 	if ([user, menu, loadingAbsensi].some((item) => item == null)) return <p>Loading...</p>;
 	return (
 		<Layout>
-			<PageHeader title="Interaksi Manusia dan Komputer" icon={menu.icon} items={menu.submenus} handler={setActive} />
+			<PageHeader title="Interaksi Manusia dan Komputer | pertemuan ke" icon={menu.icon} items={menu.submenus} handler={setActive} />
 
 			<div className="my-8">
 			<div className="flex items-center justify-center gap-2 mb-8 mt-8">

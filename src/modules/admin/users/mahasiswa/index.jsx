@@ -38,10 +38,8 @@ export default function MahasiswaModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pangkat_id")}
               >
                 No
-                <SortIcon sort={getSortBy("pangkat_id")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -51,6 +49,9 @@ export default function MahasiswaModule({ baseURL }) {
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Email</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">No. Telp</div>
@@ -93,10 +94,12 @@ export default function MahasiswaModule({ baseURL }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.npm}
-                  <span className="block font-bold">{row.role}</span>
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.nama_lengkap}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">
+                  {row.email}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.no_hp}

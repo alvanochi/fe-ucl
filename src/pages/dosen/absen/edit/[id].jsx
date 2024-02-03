@@ -34,11 +34,9 @@ export default function EditPembelajran() {
       try {
         if (data.nip) {
           const response = await axios.post(
-            `${process.env.API_ENDPOINT}/help/get-matkul`,
+            `${process.env.API_ENDPOINT_ABSEN}/dosen-for-mk`,
             {
-              year: "2023/2024",
-              semester: "GASAL",
-              nip: data.nip,
+              code: data.nip,
             },
             {
               headers: {
@@ -47,7 +45,7 @@ export default function EditPembelajran() {
             }
           );
   
-          const courses = response.data.data;
+          const courses = response.data.Data;
 
           const options = courses.map((course) => ({
             label: course.name,
@@ -147,59 +145,31 @@ export default function EditPembelajran() {
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
-                Matakuliah <span className="text-danger-600">*</span>
+                Status <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="id_matkul"
-                onChange={(e) => inputHandler(e)}
-                value={formData.id_matkul}
-                options={courseOptions}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[14rem]">
-                Kelas <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="kelas"
-                onChange={(e) => inputHandler(e)}
-                value={formData.kelas}
-                options={classOptions}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-          <Form.Label className="min-w-[14rem]">
-            Status <span className="text-danger-600">*</span>
-          </Form.Label>
-          <span>:</span>
-          <div className="flex gap-4">
-            <Form.Label>
-              <Form.Radio
-                name="status_kelas"
-                value={1}
-                checked={formData.status_kelas === 1}
-                onChange={inputHandler}
-              />
+              <div className="flex gap-4">
+                <Form.Label>
+                  <Form.Radio
+                    name="status_kelas"
+                    value={1}
+                    checked={formData.status_kelas === 1}
+                    onChange={inputHandler}
+                  />
 
-              Offline
-            </Form.Label>
-            <Form.Label>
-              <Form.Radio
-                name="status_kelas"
-                value={0}
-                checked={formData.status_kelas === 0}
-                onChange={inputHandler}
-              />
-              Online
-            </Form.Label>
-          </div>
-        </Form.Group>
+                  Offline
+                </Form.Label>
+                <Form.Label>
+                  <Form.Radio
+                    name="status_kelas"
+                    value={0}
+                    checked={formData.status_kelas === 0}
+                    onChange={inputHandler}
+                  />
+                  Online
+                </Form.Label>
+              </div>
+            </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">

@@ -154,12 +154,12 @@ export default function Absen() {
                         variant="primary"
                         icon={<Icon icon="bx:group" width={20} height={20} />}
                       />
-                      <Button.Icon
+                      {/* <Button.Icon
                         as="a"
                         href={`${prefix + menu.url}/edit/${row.id}`}
                         variant="secondary"
                         icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
+                      /> */}
                       <Button.Icon
                         variant="danger"
                         icon={

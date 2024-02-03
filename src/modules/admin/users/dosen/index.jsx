@@ -54,12 +54,10 @@ export default function DosenModule({ baseURL }) {
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No. Telp</div>
+              <div className="flex items-center gap-2 cursor-pointer">Email</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Jafung
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">No. Telp</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
@@ -94,16 +92,15 @@ export default function DosenModule({ baseURL }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.nidn}
-                  <span className="block font-bold">{row.role}</span>
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.nama_lengkap}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.no_hp}
+                  {row.email}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.jabatan_fungsi}
+                  {row.no_hp}
                 </td>
                 
                 <td className="text-sm border-2 border-white bg-gray-50">
