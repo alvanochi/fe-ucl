@@ -153,7 +153,7 @@ export default function EditPembelajran() {
                   <Form.Radio
                     name="status_kelas"
                     value={1}
-                    checked={formData.status_kelas === 1}
+                    checked={formData.status_kelas === 0}
                     onChange={inputHandler}
                   />
 
@@ -163,7 +163,7 @@ export default function EditPembelajran() {
                   <Form.Radio
                     name="status_kelas"
                     value={0}
-                    checked={formData.status_kelas === 0}
+                    checked={formData.status_kelas === 1}
                     onChange={inputHandler}
                   />
                   Online

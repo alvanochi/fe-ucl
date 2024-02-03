@@ -204,11 +204,11 @@ export default function GamifyCreate() {
               <span>:</span>
               <div className="flex gap-4">
                 <Form.Label>
-                  <Form.Radio name="status_kelas" onChange={inputHandler}value={1} />
+                  <Form.Radio name="status_kelas" onChange={inputHandler}value={0} />
                   Offline
                 </Form.Label>
                 <Form.Label>
-                  <Form.Radio name="status_kelas" onChange={inputHandler} value={0} />
+                  <Form.Radio name="status_kelas" onChange={inputHandler} value={1} />
                   Online
                 </Form.Label>
               </div>
