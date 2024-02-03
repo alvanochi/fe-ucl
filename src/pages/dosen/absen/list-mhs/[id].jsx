@@ -11,6 +11,8 @@ import { useRouter } from "next/router";
 import useDatatableAbsensi from "../../../../hooks/useDataTableAbsensi";
 import useCRUD from "../../../../hooks/useCRUD";
 import EditAbsensi from "../edit-absensi";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 export default function ListMhs() {
@@ -23,6 +25,39 @@ export default function ListMhs() {
   const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi`;
   const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi/delete`
   const id = router.query.id;
+
+  const [matkulData, setMatkulData] = useState({});
+
+
+
+
+  useEffect(() => {
+    const fetchDataMatkul = async () => {
+      try {
+          if (id) {
+            const response = await axios.get(
+              `${process.env.API_ENDPOINT_ABSEN}/pembelajaran`,
+              {
+                params: {
+                  filter: ['id'],
+                  filterValue: [id]
+                }
+              }
+            );
+  
+            const dataMatkul = response.data.data; 
+
+            setMatkulData(dataMatkul);
+         }
+      } catch (error) {
+        console.error("Error fetching pertemuan:", error);
+      }
+    };
+  
+    fetchDataMatkul();
+  }, [id]);
+
+
 
   const {
     dataAbsensi,
@@ -44,12 +79,11 @@ export default function ListMhs() {
     refreshAbsensi();
   };
 
-
 	
 	if ([user, menu, loadingAbsensi].some((item) => item == null)) return <p>Loading...</p>;
 	return (
 		<Layout>
-			<PageHeader title="Interaksi Manusia dan Komputer | pertemuan ke" icon={menu.icon} items={menu.submenus} handler={setActive} />
+			<PageHeader title={`${matkulData[0]?.matkul.name} | Pertemuan ke-${matkulData[0]?.pertemuan}`} icon={menu.icon} items={menu.submenus} handler={setActive} />
 
 			<div className="my-8">
 			<div className="flex items-center justify-center gap-2 mb-8 mt-8">
