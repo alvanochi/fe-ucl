@@ -167,15 +167,7 @@ export default function MahasiswaModule({ baseURL }) {
             ))}
         </tbody>
       </table>
-      <Pagination
-        current={page}
-        handler={setPage}
-        max={pageCount}
-        canPrev={canPrev()}
-        canNext={canNext()}
-        className="mt-8"
-      />
-      {/* <div className="flex mt-8">
+      <div className="flex mt-8">
         <div className="flex gap-1 ml-auto">
           <Button.Icon
             type="button"
@@ -222,9 +214,9 @@ export default function MahasiswaModule({ baseURL }) {
               setPage(event.target.value)
             }
           />
-          of {pageCount || 1}
+          of {pageCount || pageCount + 1}
         </div>
-      </div> */}
+      </div>
     </>
   );
 }
