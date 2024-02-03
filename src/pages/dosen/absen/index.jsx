@@ -140,7 +140,7 @@ export default function Absen() {
                     {row.kelas}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.status_kelas === 1 ? "OFFLINE" : "ONLINE" }
+                    {row.status_kelas === 1 ? "ONLINE" : "OFFLINE" }
                   </td>
 
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
