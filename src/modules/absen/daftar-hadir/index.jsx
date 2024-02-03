@@ -135,7 +135,7 @@ export default function DaftarHadirModule({ baseURL, user }) {
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                     <div className="flex items-stretch gap-1">
                       <ShowQr
-                        data={{ token: row.token, matkul: row.matkul?.name }}
+                        data={{ token: row.token, matkul: row.matkul?.name, kelas: row.kelas, pertemuan: row.pertemuan }}
                       />
                       <Button.Icon
                         as="a"

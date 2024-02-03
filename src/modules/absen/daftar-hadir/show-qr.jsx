@@ -34,7 +34,7 @@ export default function ShowQr({ data }) {
         icon={<Icon icon="bx:qr-scan" width={20} height={20} />}
         onClick={handleShowQr}
       />
-      <Modal title={`${data && data.matkul ? data.matkul : ""}`} show={qrCode !== null} handler={() => setQrCode(null)}>
+      <Modal title={`${data && data.matkul ? data.matkul : ""} ${data && data.pertemuan ? data.pertemuan : ""} | ${data && data.kelas ? data.kelas : ""}`} show={qrCode !== null} handler={() => setQrCode(null)}>
         {loading ? (
           <p>Loading QR code...</p>
         ) : qrCode ? (
