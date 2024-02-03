@@ -34,7 +34,9 @@ export default function GamifyCreate() {
           const response = await axios.get(
             `${process.env.API_ENDPOINT_ABSEN}/dosen-for-mk`,
             {
-              code: data.nip,
+              params: {
+                code: data.nip,
+              }
             },
             {
               headers: {
