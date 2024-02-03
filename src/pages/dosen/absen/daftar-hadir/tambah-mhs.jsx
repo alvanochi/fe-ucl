@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import Form from "../../../components/Form";
-import useModal from "../../../hooks/useModal";
+import Button from "../../../../components/Button";
+import Modal from "../../../../components/Modal";
+import Form from "../../../../components/Form";
+import useModal from "../../../../hooks/useModal";
 import { Icon } from "@iconify-icon/react";
-import useForm from "../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
+import useForm from "../../../../hooks/useForm";
+import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 
 const TambahMhs = ({ data, onTambahMhs }) => {
   const { show, toggle, close } = useModal();

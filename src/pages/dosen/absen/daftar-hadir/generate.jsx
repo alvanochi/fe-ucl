@@ -1,18 +1,18 @@
 import { useRouter } from "next/router";
-import Button from "../../../components/Button";
-import Card from "../../../components/Card";
-import Form from "../../../components/Form";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
-import useMenu from "../../../hooks/useMenu";
-import useUser from "../../../hooks/useUser";
-import useDatatable from "../../../hooks/useDatatable";
+import Button from "../../../../components/Button";
+import Card from "../../../../components/Card";
+import Form from "../../../../components/Form";
+import Layout from "../../../../components/Layout";
+import PageHeader from "../../../../components/PageHeader";
+import useMenu from "../../../../hooks/useMenu";
+import useUser from "../../../../hooks/useUser";
+import useDatatable from "../../../../hooks/useDatatable";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import useForm from "../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
+import useForm from "../../../../hooks/useForm";
+import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 
-export default function GamifyCreate() {
+export default function GenerateQrCode() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();

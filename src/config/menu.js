@@ -51,7 +51,18 @@ export const APP_MENU = [
     url: "/absen",
     icon: "mdi:account-card-details",
     allowedRoles: [ROLE_ID_DOSEN],
-    submenus: [],
+    submenus: [
+      {
+        label: "Daftar Hadir",
+        url: "#daftar-hadir",
+        allowedRoles: [ROLE_ID_DOSEN],
+      },
+      {
+        label: "Rekap Kehadiran",
+        url: "#rekap-kehadiran",
+        allowedRoles: [ROLE_ID_DOSEN],
+      },
+    ],
   },
   {
     label: "Pelaksanaan Pendidikan",

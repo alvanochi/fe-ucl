@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import Form from "../../../components/Form";
-import useModal from "../../../hooks/useModal";
+import Button from "../../../../components/Button";
+import Modal from "../../../../components/Modal";
+import Form from "../../../../components/Form";
+import useModal from "../../../../hooks/useModal";
 import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
+import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 
 const EditAbsensi = ({ data, onTambahMhs }) => {
   const { show, toggle, close } = useModal();

@@ -1,15 +1,15 @@
-import useMenu from "../../../../hooks/useMenu";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import Form from "../../../../components/Form";
-import Button from "../../../../components/Button";
-import useUser from "../../../../hooks/useUser";
+import useMenu from "../../../../../hooks/useMenu";
+import Layout from "../../../../../components/Layout";
+import PageHeader from "../../../../../components/PageHeader";
+import Form from "../../../../../components/Form";
+import Button from "../../../../../components/Button";
+import useUser from "../../../../../hooks/useUser";
 import _ from "underscore";
 import { Icon } from "@iconify-icon/react";
 import TambahMhs from "../tambah-mhs";
 import { useRouter } from "next/router";
-import useDatatableAbsensi from "../../../../hooks/useDataTableAbsensi";
-import useCRUD from "../../../../hooks/useCRUD";
+import useDatatableAbsensi from "../../../../../hooks/useDataTableAbsensi";
+import useCRUD from "../../../../../hooks/useCRUD";
 import EditAbsensi from "../edit-absensi";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -83,7 +83,7 @@ export default function ListMhs() {
 	if ([user, menu, loadingAbsensi].some((item) => item == null)) return <p>Loading...</p>;
 	return (
 		<Layout>
-			<PageHeader title={`${matkulData[0]?.matkul.name} | Pertemuan ke-${matkulData[0]?.pertemuan}`} icon={menu.icon} items={menu.submenus} handler={setActive} />
+			<PageHeader title={`${matkulData[0]?.matkul.name} | Pertemuan ke-${matkulData[0]?.pertemuan}`} icon={menu.icon} handler={setActive} />
 
 			<div className="my-8">
 			<div className="flex items-center justify-center gap-2 mb-8 mt-8">
