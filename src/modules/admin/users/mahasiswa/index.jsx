@@ -5,6 +5,8 @@ import Filter from "./filter";
 import useDatatable from "../../../../hooks/useDatatable";
 import SortIcon from "../../../../components/SortIcon";
 import Form from "../../../../components/Form";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function MahasiswaModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/users/getMhs`;
@@ -24,10 +26,35 @@ export default function MahasiswaModule({ baseURL }) {
     getSortBy,
   } = useDatatable(DATA_URL);
 
+  const [totalDataMhs, setTotalDataMhs] = useState('');
+  const [totalDataDosen, setTotalDataDosen] = useState('');
+
+
+  
+  useEffect(() => {
+    const fetchTotalData = async () => {
+      try {
+        const response = await axios.get(`${process.env.API_ENDPOINT}/users/total-data`);
+
+        const res = response.data;
+
+        setTotalDataMhs(res.total_mahasiswa);
+        setTotalDataDosen(res.total_dosen)
+      } catch (error) {
+        console.error("Error fetching pertemuan:", error);
+      }
+    };
+  
+    fetchTotalData();
+  }, []);
+
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-8">
         <Filter />
+      </div>
+      <div className="flex items-start">
+        <span>Total Data Mahasiswa: <b>{totalDataMhs}</b></span>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -140,7 +167,15 @@ export default function MahasiswaModule({ baseURL }) {
             ))}
         </tbody>
       </table>
-      <div className="flex mt-8">
+      <Pagination
+        current={page}
+        handler={setPage}
+        max={pageCount}
+        canPrev={canPrev()}
+        canNext={canNext()}
+        className="mt-8"
+      />
+      {/* <div className="flex mt-8">
         <div className="flex gap-1 ml-auto">
           <Button.Icon
             type="button"
@@ -189,7 +224,7 @@ export default function MahasiswaModule({ baseURL }) {
           />
           of {pageCount || 1}
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

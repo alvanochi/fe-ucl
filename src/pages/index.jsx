@@ -276,7 +276,7 @@ const Home = () => {
                   <p className="leading-relaxed mb-10">
                     Enhancing Productivity and Quality of the Three Pillars of
                     Higher Education through Gamification Approach in the
-                    Academic System of Computer Science.
+                    Academic System of Informatics Engineering.
                   </p>
                   <Link href="/login" className="btn">
                     Dashboard
@@ -1137,7 +1137,7 @@ const Home = () => {
                 </div>
 
                 <div className="flex justify-center pt-10 border-t border-color-gray">
-                  <p>2023 &copy; TIAS. All Rights Reserved.</p>
+                  <p>2024 &copy; TIAS. All Rights Reserved.</p> 
                 </div>
               </div>
             </div>
