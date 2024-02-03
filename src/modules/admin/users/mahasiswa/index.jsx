@@ -214,7 +214,7 @@ export default function MahasiswaModule({ baseURL }) {
               setPage(event.target.value)
             }
           />
-          of {pageCount || pageCount + 1}
+          of {pageCount || 1}
         </div>
       </div>
     </>
