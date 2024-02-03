@@ -165,12 +165,12 @@ export default function ProfilEdit() {
 							</Form.Label>
 							<span>:</span>
 							<Form.Input
-								type="number"
+								type="text"
 								className="flex-1"
 								name="nip"
 								onChange={inputHandler}
 								value={form.nip}
-								required
+								readOnly
 							/>
 						</Form.Group>
 					</Card.Body>
