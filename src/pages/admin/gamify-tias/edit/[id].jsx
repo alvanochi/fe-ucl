@@ -19,6 +19,7 @@ export default function GamifyEdit() {
 
   const INITIAL_FORM = {
     id: "",
+    kode: "",
     name: "",
     gamify: "",
     start_point: "",
@@ -29,6 +30,7 @@ export default function GamifyEdit() {
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
       { field: "name", label: "Name" },
+      { field: "kode", label: "Kode" },
       { field: "gamify", label: "Gamify" },
       { field: "start_point", label: "Start Point" },
       { field: "points", label: "Point" }
@@ -60,6 +62,19 @@ export default function GamifyEdit() {
         <Card className="mt-4">
           <Card.Header className="text-center">Edit Gamify</Card.Header>
           <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Kode <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="kode"
+                onChange={inputHandler}
+                value={form.kode}
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Name <span className="text-danger-600">*</span>

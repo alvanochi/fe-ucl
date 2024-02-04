@@ -75,6 +75,11 @@ export default function GamifyTias() {
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
+                Kode
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
                 Name
               </div>
             </th>
@@ -130,6 +135,9 @@ export default function GamifyTias() {
               <tr key={`row-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {index + 1}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  {row.kode}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                   {row.name}
