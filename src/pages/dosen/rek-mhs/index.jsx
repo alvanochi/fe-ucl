@@ -64,20 +64,23 @@ export default function Absen() {
           {!loading &&
             data &&
             data.map((row, index) => (
-              <Link href={`${prefix + menu.url}/detail-mhs/${row.user_id}`}>
-              <div key={`row-${index}`} className={`max-w-md mx-auto cursor-pointer bg-white rounded-xl shadow-md overflow-hidden md:max-w-4xl m-5 relative ${styles.card}`}>
-                <div className="md:flex relative">
-                  <div className="md:flex-shrink-0">
-                    <img className="h-20 w-full object-cover md:w-20" src={process.env.API_ENDPOINT + "/foto-profile/" + row.image} alt="Event image" />
+              <div key={`row-${index}`}>
+                <Link href={`${prefix + menu.url}/detail-mhs/${row.user_id}`}>
+                  <div className={`max-w-md mx-auto cursor-pointer bg-white rounded-xl shadow-md overflow-hidden md:max-w-4xl m-5 relative ${styles.card}`}>
+                    <div className="md:flex relative">
+                      <div className="md:flex-shrink-0">
+                        <img className="h-20 w-full object-cover md:w-20" src={process.env.API_ENDPOINT + "/foto-profile/" + row.image} alt="Event image" />
+                      </div>
+                      <div className="pl-8 pt-2 pb-2 md:flex-grow relative">
+                        <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{row.nama_lengkap}</div>
+                        <p className="block mt-1 text-lg leading-tight font-medium text-black">{row.npm}</p>
+                        <h1 className="absolute text-right top-1/2 transform -translate-y-1/2 right-8 text-lg font-bold text-blue-900">{row.rank} | {row.total_point}</h1>
+                      </div>
+                    </div>
                   </div>
-                  <div className="pl-8 pt-2 pb-2 md:flex-grow relative">
-                    <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">{row.nama_lengkap}</div>
-                    <p className="block mt-1 text-lg leading-tight font-medium text-black">{row.npm}</p>
-                    <h1 className="absolute text-right top-1/2 transform -translate-y-1/2 right-8 text-lg font-bold text-blue-900">{row.rank} | {row.total_point}</h1>
-                  </div>
-                </div>
+                </Link>
               </div>
-              </Link>
+              
             ))}
         </div>
 
