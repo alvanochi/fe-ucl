@@ -52,7 +52,7 @@ export default function DosenModule({ baseURL }) {
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-8">
-        <Filter />
+        <Filter filter={filter} handler={setFilter} />
       </div>
       <div className="flex items-start">
         <span>Total Data Dosen: <b>{totalDataDosen}</b></span>
@@ -82,9 +82,6 @@ export default function DosenModule({ baseURL }) {
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Email</div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No. Telp</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
@@ -125,9 +122,6 @@ export default function DosenModule({ baseURL }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.email}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.no_hp}
                 </td>
                 
                 <td className="text-sm border-2 border-white bg-gray-50">

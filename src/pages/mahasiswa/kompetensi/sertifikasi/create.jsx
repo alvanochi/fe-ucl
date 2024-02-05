@@ -179,7 +179,7 @@ export default function SertifikasiCreate() {
               </Form.Label>
               <span>:</span>
               <Form.Input
-                type="number"
+                type="text"
                 className="flex-1"
                 name="nomor_peserta"
                 value={form.nomor_peserta}
@@ -193,7 +193,7 @@ export default function SertifikasiCreate() {
               </Form.Label>
               <span>:</span>
               <Form.Input
-                type="number"
+                type="text"
                 className="flex-1"
                 name="nomor_regist"
                 value={form.nomor_regist}

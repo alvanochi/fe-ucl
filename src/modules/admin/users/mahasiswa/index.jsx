@@ -51,7 +51,7 @@ export default function MahasiswaModule({ baseURL }) {
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-8">
-        <Filter />
+        <Filter filter={filter} handler={setFilter} />
       </div>
       <div className="flex items-start">
         <span>Total Data Mahasiswa: <b>{totalDataMhs}</b></span>
