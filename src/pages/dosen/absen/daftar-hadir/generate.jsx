@@ -145,8 +145,6 @@ export default function GenerateQrCode() {
         id_lecture: selectedOption.dataId
       };
 
-      console.log(requestData);
-
       const request = await axios({
         url: `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/store`,
         method: "POST",
@@ -238,6 +236,10 @@ export default function GenerateQrCode() {
                 <Form.Label>
                   <Form.Radio name="status_kelas" onChange={inputHandler} value={1} />
                   Online
+                </Form.Label>
+                <Form.Label>
+                  <Form.Radio name="status_kelas" onChange={inputHandler} value={2} />
+                  Hybird
                 </Form.Label>
               </div>
             </Form.Group>

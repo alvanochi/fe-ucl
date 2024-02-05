@@ -129,7 +129,8 @@ export default function DaftarHadirModule({ baseURL, user }) {
                     {row.kelas}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.status_kelas === 1 ? "ONLINE" : "OFFLINE" }
+                  {row.status_kelas === 1 ? "ONLINE" : (row.status_kelas === 0 ? "OFFLINE" : "HYBRID")}
+
                   </td>
 
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">

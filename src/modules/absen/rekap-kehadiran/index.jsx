@@ -110,13 +110,14 @@ export default function RekapKehadiran({ baseURL, user }) {
                     className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
                       row.pertemuan_statusKelas[columnIndex] === "Offline" ? "bg-green-400" :
                       row.pertemuan_statusKelas[columnIndex] === "Online" ? "bg-blue-400" :
+                      row.pertemuan_statusKelas[columnIndex] === "Hybrid" ? "bg-purple-400" :
                       "bg-gray-400"
                     }`}
                   >
                     <div className="flex items-stretch gap-1"></div>
                   </td>
                 ))}
-                <td className="text-sm border-2 border-white bg-purple-400 max-w-[8rem] truncate mx-auto">
+                <td className="text-sm border-2 border-white bg-gray-400 max-w-[8rem] truncate mx-auto">
                   {row.uts} 
                 </td>
                 {[...Array(7)].map((_, columnIndex) => (
@@ -125,13 +126,15 @@ export default function RekapKehadiran({ baseURL, user }) {
                     className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
                       row.pertemuan_statusKelas[columnIndex + 7] === "Offline" ? "bg-green-400" :
                       row.pertemuan_statusKelas[columnIndex + 7] === "Online" ? "bg-blue-400" :
+                      row.pertemuan_statusKelas[columnIndex] === "Hybrid" ? "bg-purple-400" :
+
                       "bg-gray-400"
                     }`}
                   >
                     <div className="flex items-stretch gap-1"></div>
                   </td>
                 ))}
-                <td className="text-sm border-2 border-white bg-purple-400 max-w-[8rem] truncate mx-auto">
+                <td className="text-sm border-2 border-white bg-gray-400 max-w-[8rem] truncate mx-auto">
                   {row.uas}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-200 max-w-[8rem] truncate mx-auto">
