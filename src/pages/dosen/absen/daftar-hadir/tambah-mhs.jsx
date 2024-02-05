@@ -96,12 +96,12 @@ const TambahMhs = ({ data, onTambahMhs }) => {
             />
 
           </Form.Group>
-          <Form.Group className="flex items-baseline gap-3">
-            <Form.Label className="min-w-[14rem]">
+          <Form.Group className="flex items-baseline gap-2">
+            <Form.Label className="min-w-[8rem] text-sm">
               Status Absen <span className="text-danger-600">*</span>
             </Form.Label>
             <span>:</span>
-            <div className="flex gap-4">
+            <div className="flex gap-6">
             <Form.Label>
               <Form.Radio
                 name="status_absen"

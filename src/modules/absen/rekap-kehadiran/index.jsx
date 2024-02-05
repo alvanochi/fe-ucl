@@ -46,6 +46,11 @@ export default function RekapKehadiran({ baseURL, user }) {
           </li>
 
           <li className="w-6 h-6 mr-4 inline-block">
+            <div className="w-full h-full rounded-full bg-purple-400"></div>
+            <span className="text-xs text-purple-400">HYBIRD</span>
+          </li>
+
+          <li className="w-6 h-6 mr-4 inline-block">
             <div className="w-full h-full rounded-full bg-gray-400"></div>
             <span className="text-xs text-gray-400">BELUM</span>
           </li>
