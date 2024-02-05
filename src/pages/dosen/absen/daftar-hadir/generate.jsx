@@ -52,12 +52,11 @@ export default function GenerateQrCode() {
           const options = courses.map((course) => ({
             label: `${course.name} | ${course.class}`,
             value: `${course.course_code}-${course.class}`,
-            dataId: course.id
+            dataId: course.id,
+            kelas: course.class
           }));
           
           setCourseOptions(options);          
-
-          // setCourseOptions(options);
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -83,7 +82,7 @@ export default function GenerateQrCode() {
       try {
         if (selectedCourse) {
           const selectedOption = courseOptions.find(option => option.value === selectedCourse);
-  
+
           if (data.nip) {
             const response = await axios.get(
               `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/cek-pertemuan`,
@@ -91,9 +90,8 @@ export default function GenerateQrCode() {
                 params: {
                   nik_dosen: data.nip,
                   id_matkul: selectedCourse,
-                  kelas: selectedOption.label.split('|')[1].trim(),
+                  kelas: selectedOption.kelas,
                   id_lecture: selectedOption.dataId
-
                 }
               }
             );
@@ -140,7 +138,7 @@ export default function GenerateQrCode() {
         ...form,
         nik_dosen: data.nip,
         id_matkul: selectedCourseCode,
-        kelas: selectedOption.label.split('|')[1].trim(),
+        kelas: selectedOption.kelas,
         pertemuan: pertemuanData,
         id_lecture: selectedOption.dataId
       };

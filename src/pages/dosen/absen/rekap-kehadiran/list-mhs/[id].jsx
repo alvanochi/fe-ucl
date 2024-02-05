@@ -34,7 +34,6 @@ export default function ListMhs() {
               kelas: kelas,
             },
           });
-          console.log(response.data.matkul);
           setData(response.data.data);
           setHeader(response.data.matkul);
         }
