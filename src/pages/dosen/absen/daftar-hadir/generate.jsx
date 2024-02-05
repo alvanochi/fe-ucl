@@ -26,6 +26,8 @@ export default function GenerateQrCode() {
   const [selectedCourse, setSelectedCourse] = useState(""); 
   const [pertemuanData, setPertemuanData] = useState(null);
 
+  const [idLecture, setIdLecture] = useState();
+
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -50,6 +52,7 @@ export default function GenerateQrCode() {
           const options = courses.map((course) => ({
             label: `${course.name} | ${course.class}`,
             value: `${course.course_code}-${course.class}`,
+            dataId: course.id
           }));
           
           setCourseOptions(options);          
@@ -88,7 +91,9 @@ export default function GenerateQrCode() {
                 params: {
                   nik_dosen: data.nip,
                   id_matkul: selectedCourse,
-                  kelas: selectedOption.label.split('|')[1].trim()
+                  kelas: selectedOption.label.split('|')[1].trim(),
+                  id_lecture: selectedOption.dataId
+
                 }
               }
             );
@@ -136,8 +141,11 @@ export default function GenerateQrCode() {
         nik_dosen: data.nip,
         id_matkul: selectedCourseCode,
         kelas: selectedOption.label.split('|')[1].trim(),
-        pertemuan: pertemuanData
-      }
+        pertemuan: pertemuanData,
+        id_lecture: selectedOption.dataId
+      };
+
+      console.log(requestData);
 
       const request = await axios({
         url: `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/store`,
@@ -194,7 +202,11 @@ export default function GenerateQrCode() {
             <Form.Select
                 className="flex-1"
                 name="id_matkul"
-                onChange={(e) => setSelectedCourse(e.target.value)}
+                onChange={(e) => {
+                  setSelectedCourse(e.target.value);
+                  // setIdLecture(e.target.idLecture);
+                  // console.log(e.target);
+                }}
                 value={selectedCourse}
                 options={courseOptions}
                 required
