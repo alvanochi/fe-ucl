@@ -124,7 +124,7 @@ const TambahMhs = ({ data, onTambahMhs }) => {
                 value={2}
                 onChange={inputHandler}
               />
-              Sakit
+              Sakit / Izin
             </Form.Label>
             </div>
           </Form.Group>
