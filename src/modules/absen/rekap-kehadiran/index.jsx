@@ -126,7 +126,7 @@ export default function RekapKehadiran({ baseURL, user }) {
                     className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
                       row.pertemuan_statusKelas[columnIndex + 7] === "Offline" ? "bg-green-400" :
                       row.pertemuan_statusKelas[columnIndex + 7] === "Online" ? "bg-blue-400" :
-                      row.pertemuan_statusKelas[columnIndex] === "Hybrid" ? "bg-purple-400" :
+                      row.pertemuan_statusKelas[columnIndex + 7] === "Hybrid" ? "bg-purple-400" :
 
                       "bg-gray-400"
                     }`}
