@@ -81,9 +81,6 @@ export default function MahasiswaModule({ baseURL }) {
               <div className="flex items-center gap-2 cursor-pointer">Email</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No. Telp</div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
                 Status MHS
               </div>
@@ -127,9 +124,6 @@ export default function MahasiswaModule({ baseURL }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.email}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.no_hp}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.kode_mhs}
