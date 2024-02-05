@@ -49,10 +49,12 @@ export default function GenerateQrCode() {
 
           const options = courses.map((course) => ({
             label: `${course.name} | ${course.class}`,
-            value: course.course_code,
+            value: `${course.course_code}-${course.class}`,
           }));
+          
+          setCourseOptions(options);          
 
-          setCourseOptions(options);
+          // setCourseOptions(options);
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -115,10 +117,24 @@ export default function GenerateQrCode() {
         return;
       }
 
+      const [selectedCourseCode, selectedClass] = selectedCourse.split('-');
+      const [optionCourseCode, optionClass] = selectedOption.value.split('-');
+
+      // Pemeriksaan course_code dan class
+      if (selectedCourseCode !== optionCourseCode || selectedClass !== optionClass) {
+        console.error("Selected course and class don't match with options");
+        return;
+      }
+      if(!form.status_kelas){
+        toastAlert("error", "Pleas fill in all the required fields.");
+
+        return;
+      }
+
       const requestData = {
         ...form,
         nik_dosen: data.nip,
-        id_matkul: selectedCourse,
+        id_matkul: selectedCourseCode,
         kelas: selectedOption.label.split('|')[1].trim(),
         pertemuan: pertemuanData
       }
@@ -176,13 +192,13 @@ export default function GenerateQrCode() {
             </Form.Label>
             <span>:</span>
             <Form.Select
-              className="flex-1"
-              name="id_matkul"
-              onChange={(e) => setSelectedCourse(e.target.value)}
-              value={selectedCourse}
-              options={courseOptions}
-              required
-            />
+                className="flex-1"
+                name="id_matkul"
+                onChange={(e) => setSelectedCourse(e.target.value)}
+                value={selectedCourse}
+                options={courseOptions}
+                required
+              />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
