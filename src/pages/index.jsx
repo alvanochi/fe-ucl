@@ -147,6 +147,15 @@ const Home = () => {
                     About
                   </a>
                 </li>
+                <li>
+                  <a
+                    id="hLink"
+                    href="#help"
+                    className="hover:text-color-secondary ease-in duration-200"
+                  >
+                    Help
+                  </a>
+                </li>
                 {/* <li>
                   <a
                     href="#pricing"
@@ -223,16 +232,16 @@ const Home = () => {
                     About
                   </a>
                 </li>
-                {/* <li>
+                <li>
                   <a
                     id="hLink"
-                    href="#pricing"
+                    href="#help"
                     className="hover:text-color-secondary ease-in duration-200"
                   >
-                    Pricing
+                    Help
                   </a>
                 </li>
-                <li>
+                {/* <li>
                   <a
                     id="hLink"
                     href="#blog"
@@ -534,24 +543,11 @@ const Home = () => {
             </div>
           </section> */}
 
-          {/* <section id="pricing" className="bg-color-primary-light">
+          <section id="help" className="bg-color-primary-light">
             <div className="container py-20">
               <div className="text-center m-auto mb-20 md:w-1/2">
-                <h4 className="font-bold text-color-secondary mb-4">Pricing</h4>
-                <h1 className="title">Get In Reasonable Price</h1>
-
-                <div className="mt-5 flex items-center justify-center gap-4">
-                  <p>Bill Monthly</p>
-                  <label className="cursor-pointer relative inline-block w-20 h-8 rounded-full">
-                    <input
-                      type="checkbox"
-                      id="toggleBtn"
-                      className="peer opacity-0 w-0 h-0"
-                    />
-                    <span className="absolute top-0 left-0 right-0 bottom-0 bg-color-primary-light border border-solid border-color-gray rounded-full duration-300 before:content-[''] before:absolute before:w-6 before:h-6 before:bottom-1 before:left-1 before:rounded-full before:bg-color-white before:duration-300 peer-checked:before:translate-x-12 peer-checked:bg-color-secondary"></span>
-                  </label>
-                  <p>Bill Anually</p>
-                </div>
+                <h4 className="font-bold text-color-secondary mb-4">Support</h4>
+                <h1 className="title">need help? Or do you have suggestions for improving the app? Please share your feedback!</h1>
               </div>
 
               <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -560,285 +556,62 @@ const Home = () => {
                     id="card_1_front"
                     className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
                   >
-                    <div className="relative">
-                      <p className="text-6xl pl-2 font-bold before:content-['$'] before:absolute before:text-sm before:top-0 before:left-0">
-                        20
-                        <span className="text-sm font-normal tracking-widest">
-                          /per month
-                        </span>
-                      </p>
-                    </div>
+                    
+                      <div className="md:w-80">
+                        <img src="/img/wahyu.jpeg" alt="" className="rounded-2xl" />
+                      </div>
 
-                    <div className="py-10">
-                      <h3 className="text-xl font-bold pb-3">Basic</h3>
-                      <p className="leading-relaxed">
-                        For Beginner Who Want To Scale Business Globaly
-                      </p>
-                    </div>
-
-                    <ul className="space-y-4 pb-10">
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Expense Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Card Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Instant Statistics</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Bookmark Function</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Accounting System</span>
-                      </li>
-                    </ul>
-
-                    <button className="card_btn">Get Started</button>
-                  </div>
-
-                  <div
-                    id="card_1_back"
-                    className="back rotate-y-180 px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full absolute top-0 left-0"
-                  >
-                    <div className="relative">
-                      <p className="text-6xl pl-2 font-bold before:content-['$'] before:absolute before:text-sm before:top-0 before:left-0">
-                        120
-                        <span className="text-sm font-normal tracking-widest">
-                          /per month
-                        </span>
-                      </p>
-                    </div>
-
-                    <div className="py-10">
-                      <h3 className="text-xl font-bold pb-3">Basic</h3>
-                      <p className="leading-relaxed">
-                        For Beginner Who Want To Scale Business Globaly
-                      </p>
-                    </div>
-
-                    <ul className="space-y-4 pb-10">
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Expense Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Card Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Instant Statistics</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Bookmark Function</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Accounting System</span>
-                      </li>
-                    </ul>
-
-                    <button className="card_btn">Get Started</button>
+                      <div className="py-10 text-center">
+                        <h3 className="text-xl font-bold pb-3">Mobile Developer</h3>
+                        <span className="text-md pb-3">Wahyu Ramadhan</span> <br />
+                        <span className="text-md pb-3">+62 812-9894-8302</span>
+                      </div>
+                      
+                      <button className="card_btn" onClick={() => { window.location.href = "https://api.whatsapp.com/send?phone=6281298948302"; }}>Contact Here</button>
                   </div>
                 </div>
 
                 <div className="card relative h-auto w-auto">
                   <div
-                    id="card_2_front"
-                    className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
-                  >
-                    <div className="relative">
-                      <p className="text-6xl pl-2 font-bold before:content-['$'] before:absolute before:text-sm before:top-0 before:left-0">
-                        50
-                        <span className="text-sm font-normal tracking-widest">
-                          /per month
-                        </span>
-                      </p>
+                      id="card_1_front"
+                      className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
+                    >
+                      
+                        <div className="md:w-80">
+                          <img src="/img/azis.jpg" alt="" className="rounded-2xl" />
+                        </div>
+
+                        <div className="py-10 text-center">
+                          <h3 className="text-xl font-bold pb-3">Back-End Engineer</h3>
+                          <span className="text-md pb-3">Muhammad Azis Pratama</span> <br />
+                          <span className="text-md pb-3">+62 895-3491-39240</span>
+                        </div>
+                        
+                        <button className="card_btn" onClick={() => { window.location.href = "https://api.whatsapp.com/send?phone=62895349139240"; }}>Contact Here</button>
                     </div>
-
-                    <div className="py-10">
-                      <h3 className="text-xl font-bold pb-3">Standard</h3>
-                      <p className="leading-relaxed">
-                        For Beginner Who Want To Scale Business Globaly
-                      </p>
-                    </div>
-
-                    <ul className="space-y-4 pb-10">
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Expense Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Card Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Instant Statistics</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Bookmark Function</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Accounting System</span>
-                      </li>
-                    </ul>
-
-                    <button className="card_btn">Get Started</button>
-                  </div>
-
-                  <div
-                    id="card_2_back"
-                    className="back rotate-y-180 px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full absolute top-0 left-0"
-                  >
-                    <div className="relative">
-                      <p className="text-6xl pl-2 font-bold before:content-['$'] before:absolute before:text-sm before:top-0 before:left-0">
-                        150
-                        <span className="text-sm font-normal tracking-widest">
-                          /per month
-                        </span>
-                      </p>
-                    </div>
-
-                    <div className="py-10">
-                      <h3 className="text-xl font-bold pb-3">Standard</h3>
-                      <p className="leading-relaxed">
-                        For Beginner Who Want To Scale Business Globaly
-                      </p>
-                    </div>
-
-                    <ul className="space-y-4 pb-10">
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Expense Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Card Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Instant Statistics</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Bookmark Function</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Accounting System</span>
-                      </li>
-                    </ul>
-
-                    <button className="card_btn">Get Started</button>
-                  </div>
                 </div>
 
                 <div className="card relative h-auto w-auto">
-                  <div
-                    id="card_3_front"
+                <div
+                    id="card_1_front"
                     className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
                   >
-                    <div className="relative">
-                      <p className="text-6xl pl-2 font-bold before:content-['$'] before:absolute before:text-sm before:top-0 before:left-0">
-                        100
-                        <span className="text-sm font-normal tracking-widest">
-                          /per month
-                        </span>
-                      </p>
-                    </div>
+                    
+                      <div className="md:w-80">
+                        <img src="/img/tamam.jpeg" alt="" className="rounded-2xl" />
+                      </div>
 
-                    <div className="py-10">
-                      <h3 className="text-xl font-bold pb-3">Basic</h3>
-                      <p className="leading-relaxed">
-                        For Beginner Who Want To Scale Business Globaly
-                      </p>
-                    </div>
-
-                    <ul className="space-y-4 pb-10">
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Expense Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Card Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Instant Statistics</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Bookmark Function</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Accounting System</span>
-                      </li>
-                    </ul>
-
-                    <button className="card_btn">Get Started</button>
-                  </div>
-
-                  <div
-                    id="card_3_back"
-                    className="back rotate-y-180 px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full absolute top-0 left-0"
-                  >
-                    <div className="relative">
-                      <p className="text-6xl pl-2 font-bold before:content-['$'] before:absolute before:text-sm before:top-0 before:left-0">
-                        500
-                        <span className="text-sm font-normal tracking-widest">
-                          /per month
-                        </span>
-                      </p>
-                    </div>
-
-                    <div className="py-10">
-                      <h3 className="text-xl font-bold pb-3">Premium</h3>
-                      <p className="leading-relaxed">
-                        For Beginner Who Want To Scale Business Globaly
-                      </p>
-                    </div>
-
-                    <ul className="space-y-4 pb-10">
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Expense Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-secondary"></i>
-                        <span className="pl-4">Card Management</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Instant Statistics</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Bookmark Function</span>
-                      </li>
-                      <li>
-                        <i className="fa-solid fa-bookmark text-color-gray"></i>
-                        <span className="pl-4">Accounting System</span>
-                      </li>
-                    </ul>
-
-                    <button className="card_btn">Get Started</button>
+                      <div className="py-10 text-center">
+                        <h3 className="text-xl font-bold pb-3">Web Developer</h3>
+                        <span className="text-md pb-3">Mochammad Tamam Mulya</span> <br />
+                        <span className="text-md pb-3">+62 896-3818-7480</span>
+                      </div>
+                      <button className="card_btn" onClick={() => { window.location.href = "https://api.whatsapp.com/send?phone=6289638187480"; }}>Contact Here</button>
                   </div>
                 </div>
               </div>
             </div>
-          </section> */}
+          </section>
 
           {/* <section id="blog">
             <div className="container py-20">
@@ -1086,6 +859,9 @@ const Home = () => {
                         </li>
                         <li className="underline hover:no-underline hover:text-color-secondary">
                           <a href="#about">ABout</a>
+                        </li>
+                        <li className="underline hover:no-underline hover:text-color-secondary">
+                          <a href="#help">Help</a>
                         </li>
                         {/* <li className="underline hover:no-underline hover:text-color-secondary">
                           <a href="#pricing">Pricing</a>

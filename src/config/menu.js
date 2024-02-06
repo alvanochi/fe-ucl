@@ -50,7 +50,7 @@ export const APP_MENU = [
     label: "Absensi",
     url: "/absen",
     icon: "mdi:account-card-details",
-    allowedRoles: [ROLE_ID_DOSEN],
+    allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_ADMIN],
     submenus: [
       {
         label: "Daftar Hadir",
@@ -61,6 +61,11 @@ export const APP_MENU = [
         label: "Rekap Kehadiran",
         url: "#rekap-kehadiran",
         allowedRoles: [ROLE_ID_DOSEN],
+      },
+      {
+        label: "Rekap Absensi",
+        url: "#rekap-absensi",
+        allowedRoles: [ROLE_ID_ADMIN],
       },
     ],
   },
