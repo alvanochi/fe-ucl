@@ -267,7 +267,7 @@ export default function Home() {
           </div>
         </Card.Body>
       </Card>
-      <div className="flex gap-4 mb-4">
+      {/* <div className="flex gap-4 mb-4">
         <Card className="grow">
           <Card.Header className="bg-primary-600 text-white text-center text-sm">
             Detail Publikasi per Tahun
@@ -276,7 +276,7 @@ export default function Home() {
             <AreaChart />
           </Card.Body>
         </Card>
-      </div>
+      </div> */}
     </Layout>
   );
 }
