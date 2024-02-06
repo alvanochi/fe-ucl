@@ -150,10 +150,10 @@ const Home = () => {
                 <li>
                   <a
                     id="hLink"
-                    href="#help"
+                    href="#support"
                     className="hover:text-color-secondary ease-in duration-200"
                   >
-                    Help
+                    Support
                   </a>
                 </li>
                 {/* <li>
@@ -235,10 +235,10 @@ const Home = () => {
                 <li>
                   <a
                     id="hLink"
-                    href="#help"
+                    href="#support"
                     className="hover:text-color-secondary ease-in duration-200"
                   >
-                    Help
+                    Support
                   </a>
                 </li>
                 {/* <li>
@@ -543,7 +543,7 @@ const Home = () => {
             </div>
           </section> */}
 
-          <section id="help" className="bg-color-primary-light">
+          <section id="support" className="bg-color-primary-light">
             <div className="container py-20">
               <div className="text-center m-auto mb-20 md:w-1/2">
                 <h4 className="font-bold text-color-secondary mb-4">Support</h4>
@@ -861,7 +861,7 @@ const Home = () => {
                           <a href="#about">ABout</a>
                         </li>
                         <li className="underline hover:no-underline hover:text-color-secondary">
-                          <a href="#help">Help</a>
+                          <a href="#support">Support</a>
                         </li>
                         {/* <li className="underline hover:no-underline hover:text-color-secondary">
                           <a href="#pricing">Pricing</a>
