@@ -10,6 +10,8 @@ import axios from "axios";
 import useUser from "../../hooks/useUser";
 import useDatatable from "../../hooks/useDatatable";
 import Link from "next/link";
+import resolveConfig from "tailwindcss/resolveConfig";
+import twConfig from "../../../tailwind.config.js";
 
 const AreaChart = dynamic(() => import("../../components/Chart/area"), {
   ssr: false,
@@ -42,6 +44,53 @@ export default function Home() {
       userData?.no_hp !== null
     );
   }
+
+  const [valueChart, setValueChart] = useState([]);
+  const [labelsChart, setLabelsChart] = useState([]);
+
+const config = resolveConfig(twConfig);
+
+
+  const {
+    theme: { colors },
+  } = config;
+
+  const dataUse = {
+    labels: labelsChart,
+    datasets: [
+      {
+        fill: true,
+        label: "IPS",
+        data: valueChart,
+        borderColor: colors.primary[600],
+        backgroundColor: (context) => {
+          const bgColor = [colors.primary[400], "rgba(255, 255, 255, 0.1)"];
+  
+          if (!context.chart.chartArea) return;
+  
+          const {
+            ctx,
+            chartArea: { top, bottom },
+          } = context.chart;
+          const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
+          gradientBg.addColorStop(0, bgColor[0]);
+          gradientBg.addColorStop(1, bgColor[1]);
+  
+          return gradientBg;
+        },
+      },
+    ],
+  };
+
+  useEffect(() => {
+    if(data && data.dataChart){
+      const datas = data.dataChart.data;
+      const labels = data.dataChart.label;
+
+      setValueChart(datas);
+      setLabelsChart(labels)
+    }
+  }, [data])
 
 
   if ([menu, user,].some((item) => item == null))
@@ -262,15 +311,16 @@ export default function Home() {
         </Card.Body>
       </Card>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mb-4">
-        <Card className="col-span-2 sm:col-span-8 lg:col-span-8">
+         <Card className="col-span-2 sm:col-span-8 lg:col-span-8">
           <Card.Header className="bg-primary-600 text-white text-center text-sm">
-            Detail Grafik
+            Detail Grafik IPS
           </Card.Header>
-          <Card.Body className="-mx-4">
-            <AreaChart />
+          <Card.Body className="">
+            <AreaChart data={dataUse} />
           </Card.Body>
         </Card>
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 mb-4">
+        
         <Card className="col-span-2 sm:col-span-4 lg:col-span-4">
           <Card.Header className="bg-primary-600 text-white text-center text-sm">
             Cetak Dokumen Riwayat Hidup
@@ -310,7 +360,7 @@ export default function Home() {
             </div>
           </Card.Body>
         </Card>
-      </div>
+      </div> */}
     </Layout>
   );
 }
