@@ -57,17 +57,26 @@ export default function KepangkatanCreate() {
 								value={form.gol_pangkat}
 								required
 								options={[
-									{ label: "I/a - Juru", value: "I/a - Juru" },
-									{ label: "I/b - Juru Tingkat I", value: "I/b - Juru Tingkat I" },
-									{ label: "I/c - Pengatur", value: "I/c - Pengatur" },
-									{ label: "II/a - Pengatur Tingkat I", value: "II/a - Pengatur Tingkat I" },
-									{ label: "II/b - Penata Muda", value: "II/b - Penata Muda" },
-									{ label: "II/c - Penata Muda Tingkat I", value: "II/c - Penata Muda Tingkat I" },
-									{ label: "III/a - Penata", value: "III/a - Penata" },
-									{ label: "III/b - Penata Tingkat I", value: "III/b - Penata Tingkat I" },
-									{ label: "IV/a - Pembina Utama Muda", value: "IV/a - Pembina Utama Muda" },
-									{ label: "IV/b - Pembina Utama Madya", value: "IV/b - Pembina Utama Madya" },
-									{ label: "IV/c - Pembina Utama", value: "IV/c - Pembina Utama" },
+									{ label: "IA - Juru Muda", value: "IA - Juru Muda" },
+									{ label: "IB - Juru Muda Tingkat 1", value: "IB - Juru Muda Tingkat 1" },
+									{ label: "IC - Juru", value: "IC - Juru" },
+									{ label: "ID - Juru Tingkat 1", value: "ID - Juru Tingkat 1" },
+
+									{ label: "IIA - Pengatur Muda", value: "IIA Pengatur Muda" },
+									{ label: "IIB - Pengatur Muda Tingkat 1", value: "IIB - Pengatur Muda Tingkat 1" },
+									{ label: "IIC - Pengatur", value: "IIB - Pengatur" },
+									{ label: "IID - Pengatur Tingkat 1", value: "IIB - Pengatur Tingkat 1" },
+
+									{ label: "IIIA - Penata Muda", value: "IIIA - Penata Muda" },
+									{ label: "IIIB - Penata Muda Tingkat I", value: "IIIB - Penata Muda Tingkat I" },
+									{ label: "IIIC - Penata", value: "IIIC - Penata" },
+									{ label: "IIID - Penata Tingkat 1", value: "IIID - Penata Tingkat 1" },
+
+									{ label: "IVA - Pembina", value: "IVA - Pembina" },
+									{ label: "IVB - Pembina Tingkat 1", value: "IVB - Pembina Tingkat 1" },
+									{ label: "IVC - Pembina Utama Muda", value: "IVC - Pembina Utama Muda" },
+									{ label: "IVD - Pembina Utama Madya", value: "IVD - Pembina Utama Madya" },
+									{ label: "IVE - Pembina Utama", value: "IVE - Pembina Utama" },
 								]}
 							/>
 						</Form.Group>

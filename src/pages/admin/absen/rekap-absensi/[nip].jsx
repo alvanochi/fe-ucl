@@ -1,0 +1,162 @@
+import { Icon } from "@iconify-icon/react";
+import Button from "../../../../components/Button";
+import Form from "../../../../components/Form";
+import Link from "next/link";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import Layout from "../../../../components/Layout";
+import { useRouter } from "next/router";
+import useUser from "../../../../hooks/useUser";
+import useMenu from "../../../../hooks/useMenu";
+import PageHeader from "../../../../components/PageHeader";
+
+export default function RekapKehadiran() {
+  const router = useRouter();
+  const { user } = useUser({ redirectTo: "/login" });
+  const { prefix, menu, setActive } = useMenu();
+
+  const [nip, setNip] = useState("");
+
+  console.log(nip);
+
+
+  useEffect(() => {
+    if (router.isReady === false || !user) return;
+    if(router.query.nip){
+      setNip(router.query.nip)
+    }
+  }, [router, user])
+  
+  if (
+    [user, menu].some(
+      (item) => item == null
+    )
+  )
+    return <p>Loading...</p>;
+
+  return (
+    <Layout>
+      <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+      <div className="flex justify-center mt-4"></div>
+
+      <div className="flex justify-center gap-2 mb-12">
+        <ul className="flex items-center gap-4 list-none p-0">
+          <li className="w-6 h-6 mr-4 inline-block">
+            <div className="w-full h-full rounded-full bg-blue-400"></div>
+            <span className="text-xs text-blue-400">ONLINE</span>
+          </li>
+
+          <li className="w-6 h-6 mr-4 inline-block">
+            <div className="w-full h-full rounded-full bg-green-400"></div>
+            <span className="text-xs text-green-400">OFFLINE</span>
+          </li>
+
+          <li className="w-6 h-6 mr-4 inline-block">
+            <div className="w-full h-full rounded-full bg-purple-400"></div>
+            <span className="text-xs text-purple-400">HYBIRD</span>
+          </li>
+
+          <li className="w-6 h-6 mr-4 inline-block">
+            <div className="w-full h-full rounded-full bg-gray-400"></div>
+            <span className="text-xs text-gray-400">BELUM</span>
+          </li>
+        </ul>
+      </div>
+
+
+      <table className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto" cellPadding={10}>
+        <thead>
+          <tr>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">No</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Kurikulum</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Matakuliah</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Kelas</div>
+            </th>
+            {[...Array(7)].map((_, index) => (
+              <th key={index} className="text-sm border-2 border-white bg-gray-200">
+                {index + 1}
+              </th>
+            ))}
+            <th className="text-sm border-2 border-white bg-gray-200">UTS</th>
+            {[...Array(7)].map((_, index) => (
+              <th key={index + 7} className="text-sm border-2 border-white bg-gray-200">
+                {index + 8}
+              </th>
+            ))}
+            <th className="text-sm border-2 border-white bg-gray-200">UAS</th>
+            <th className="text-sm border-2 border-white bg-gray-200">%</th>
+          </tr>
+        </thead>
+        {/* <tbody>
+          {loading && (
+            <tr>
+              <td colSpan="20" className="text-sm border-2 border-white bg-gray-50 text-center">
+                Loading...
+              </td>
+            </tr>
+          )}
+          {!loading &&
+            data &&
+            data.map((row, index) => (
+              <tr key={index}>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.curr_code}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  <Link href={`${baseURL}/rekap-kehadiran/list-mhs/${row.course_code}-${row.class}`} className="text-blue-500">
+                    {row.name_matkul}
+                  </Link>
+
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.class}</td>
+                {[...Array(7)].map((_, columnIndex) => (
+                  <td
+                    key={columnIndex}
+                    className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
+                      row.pertemuan_statusKelas[columnIndex] === "Offline" ? "bg-green-400" :
+                      row.pertemuan_statusKelas[columnIndex] === "Online" ? "bg-blue-400" :
+                      row.pertemuan_statusKelas[columnIndex] === "Hybrid" ? "bg-purple-400" :
+                      "bg-gray-400"
+                    }`}
+                  >
+                    <div className="flex items-stretch gap-1"></div>
+                  </td>
+                ))}
+                <td className="text-sm border-2 border-white bg-gray-400 max-w-[8rem] truncate mx-auto">
+                  {row.uts} 
+                </td>
+                {[...Array(7)].map((_, columnIndex) => (
+                  <td
+                    key={columnIndex + 7}
+                    className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
+                      row.pertemuan_statusKelas[columnIndex + 7] === "Offline" ? "bg-green-400" :
+                      row.pertemuan_statusKelas[columnIndex + 7] === "Online" ? "bg-blue-400" :
+                      row.pertemuan_statusKelas[columnIndex + 7] === "Hybrid" ? "bg-purple-400" :
+
+                      "bg-gray-400"
+                    }`}
+                  >
+                    <div className="flex items-stretch gap-1"></div>
+                  </td>
+                ))}
+                <td className="text-sm border-2 border-white bg-gray-400 max-w-[8rem] truncate mx-auto">
+                  {row.uas}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-200 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">{row.persentase}</div>
+                </td>
+              </tr>
+            ))}
+        </tbody> */}
+      </table>
+
+      
+    </Layout>
+  );
+}

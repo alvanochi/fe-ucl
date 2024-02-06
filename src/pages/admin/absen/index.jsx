@@ -15,7 +15,7 @@ export default function Absen() {
 		<Layout>
 			<PageHeader title={menu.label} icon={menu.icon} items={menu.submenus} active={active.url} handler={setActive} />
 			<div className="my-8">
-				{active.url === "#rekap-abseni" && <RekapAbsensi baseURL={prefix + menu.url} user={user} />}
+				{active.url === "#rekap-absensi" && <RekapAbsensi baseURL={prefix + menu.url} user={user} />}
 			</div>
 			
 		</Layout>
