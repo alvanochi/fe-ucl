@@ -15,15 +15,32 @@ export default function RekapKehadiran() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const [nip, setNip] = useState("");
-
-  console.log(nip);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
 
   useEffect(() => {
     if (router.isReady === false || !user) return;
     if(router.query.nip){
-      setNip(router.query.nip)
+      const fetchData = async () => {
+        try {
+          const DATA_URL = `https://absen.ft.uika-bogor.ac.id/api/pembelajaran/list-pertemuan`;
+          const response = await axios.get(DATA_URL, {
+            params: {
+              dataTable: true,
+              code: router.query.nip,
+            },
+          });
+          setData(response.data.data);
+        } catch (error) {
+          setError(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
     }
   }, [router, user])
   
@@ -36,7 +53,7 @@ export default function RekapKehadiran() {
 
   return (
     <Layout>
-      <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+      <PageHeader title={"Rekap Perkuliahan"} icon={menu.icon} handler={setActive} />
       <div className="flex justify-center mt-4"></div>
 
       <div className="flex justify-center gap-2 mb-12">
@@ -94,7 +111,7 @@ export default function RekapKehadiran() {
             <th className="text-sm border-2 border-white bg-gray-200">%</th>
           </tr>
         </thead>
-        {/* <tbody>
+        <tbody>
           {loading && (
             <tr>
               <td colSpan="20" className="text-sm border-2 border-white bg-gray-50 text-center">
@@ -109,7 +126,7 @@ export default function RekapKehadiran() {
                 <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">{row.curr_code}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Link href={`${baseURL}/rekap-kehadiran/list-mhs/${row.course_code}-${row.class}`} className="text-blue-500">
+                  <Link href={`${prefix + menu.url}/rekap-kehadiran/${row.course_code}-${row.class}`} className="text-blue-500">
                     {row.name_matkul}
                   </Link>
 
@@ -153,8 +170,21 @@ export default function RekapKehadiran() {
                 </td>
               </tr>
             ))}
-        </tbody> */}
+        </tbody>
       </table>
+
+      <div className="flex mt-8">
+            <Button
+              as="a"
+              href={`${prefix + menu.url}`}
+              variant="danger"
+              icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
+              iconPosition="left"
+              pill
+            >
+              Kembali
+            </Button>
+        </div>
 
       
     </Layout>
