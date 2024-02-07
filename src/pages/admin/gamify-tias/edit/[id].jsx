@@ -16,15 +16,19 @@ export default function GamifyEdit() {
 
 	const API_URL = `${process.env.API_ENDPOINT}/achievments/detail`;
 	const IMG_URL = `${process.env.API_ENDPOINT}/gamify`;
+	const IMG_URL_LENCANA = `${process.env.API_ENDPOINT}/gamify/lencana`;
 
   const INITIAL_FORM = {
     id: "",
     kode: "",
     name: "",
+    sub_judul: "",
     gamify: "",
     start_point: "",
     points: "",
+    deskripsi: "",
     image: "",
+    lencana: "",
   };
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
@@ -33,7 +37,9 @@ export default function GamifyEdit() {
       { field: "kode", label: "Kode" },
       { field: "gamify", label: "Gamify" },
       { field: "start_point", label: "Start Point" },
-      { field: "points", label: "Point" }
+      { field: "points", label: "Point" },
+      { field: "deskripsi", label: "Deskripsi" },
+      { field: "sub_judul", label: "Sub Judul" },
     ],
     success: () => router.push(prefix + menu.url),
   });
@@ -90,6 +96,19 @@ export default function GamifyEdit() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
+                Sub Judul <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="sub_judul"
+                onChange={inputHandler}
+                value={form.sub_judul}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
                 Gamify <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
@@ -127,7 +146,35 @@ export default function GamifyEdit() {
                 value={form.points}
               />
             </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Deskripsi <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Textarea
+                className="flex-1"
+                rows="5"
+                name="deskripsi"
+                value={form.deskripsi}
+                onChange={inputHandler}
+              />
+            </Form.Group>
             
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Lencana <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <div className="block flex-1 space-y-2">
+                <Form.Input
+                  type="file"
+                  className="flex-1"
+                  name="lencana"
+                  onChange={inputHandler}
+                />
+                <img src={`${IMG_URL_LENCANA}/${form.lencana}`} alt="img-edit" width={80} height={80} />
+              </div>
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Image <span className="text-danger-600">*</span>

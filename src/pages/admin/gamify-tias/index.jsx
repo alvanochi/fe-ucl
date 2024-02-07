@@ -24,6 +24,7 @@ export default function GamifyTias() {
 	const DATA_URL = `${process.env.API_ENDPOINT}/achievments`;
   const DELETE_URL = `${process.env.API_ENDPOINT}/achievments`;
   const FILE_URL = `${process.env.API_ENDPOINT}/gamify`;
+  const FILE_URL_LENCANA = `${process.env.API_ENDPOINT}/gamify/lencana`;
 
 
   const {
@@ -67,10 +68,8 @@ export default function GamifyTias() {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("ip_id")}
               >
                 No
-                <SortIcon sort={getSortBy("ip_id")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -90,12 +89,12 @@ export default function GamifyTias() {
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                Start Point
+                Point
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                Point
+                Lencana
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -146,13 +145,13 @@ export default function GamifyTias() {
                   {row.gamify}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                  {row.start_point}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                   {row.points}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                  <img src={`${FILE_URL}/${row.image}`} alt="gamify" />
+                  <img src={`${FILE_URL_LENCANA}/${row.lencana}`} alt="gamify" width={80} height={80} />
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <img src={`${FILE_URL}/${row.image}`} alt="gamify" width={80} height={80} />
                 </td>
 								<td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
 									<div className="flex items-stretch gap-1">
