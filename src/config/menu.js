@@ -76,19 +76,24 @@ export const APP_MENU = [
     allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
     submenus: [
       {
-        label: "Bimbingan Mahasiswa",
-        url: "#bimbingan",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_DOSEN],
-      },
-      {
-        label: "Bahan Ajar",
-        url: "#bahan-ajar",
-        allowedRoles: [ROLE_ID_ADMIN],
-      },
-      {
         label: "IP",
         url: "#ip",
         allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+      },
+      {
+        label: "B-Akademik",
+        url: "#akademik",
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
+      },
+      {
+        label: "B-Skripsi",
+        url: "#skripsi",
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
+      },
+      {
+        label: "B-Kerja Praktikum",
+        url: "#kp",
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
       },
     ],
   },
@@ -290,6 +295,13 @@ export const APP_MENU = [
         allowedRoles: [ROLE_ID_ADMIN],
       },
     ],
+  },
+  {
+    label: "Jadwal Rapat",
+    url: "/jadwal-rapat",
+    icon: "mdi-clock-fast",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [],
   },
   {
     label: "Rekomendasi Mahasiswa",
