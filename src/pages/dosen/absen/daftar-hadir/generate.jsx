@@ -51,7 +51,7 @@ export default function GenerateQrCode() {
 
           const options = courses.map((course) => ({
             label: `${course.name} | ${course.class}`,
-            value: `${course.course_code}-${course.class}`,
+            value: `${course.course_code}`,
             dataId: course.id,
             kelas: course.class
           }));
