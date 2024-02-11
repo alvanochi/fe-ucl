@@ -21,7 +21,7 @@ export default function useUser({ redirectTo = "", redirectIfFound = false } = {
   });
 
 	async function logout() {
-		return mutateUser(axios.post("/api/logout").then(() => Router.push("/login")));
+		return mutateUser(axios.post("/api/logout").then(() => Router.reload()));
 	}
 
 	async function getProfile() {

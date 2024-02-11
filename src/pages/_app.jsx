@@ -1,9 +1,8 @@
-import "../../styles/tailwind.globals.css";
-import { SWRConfig } from "swr";
-import fetcher from "../lib/fetcher";
 import { useEffect } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
+import { SWRConfig } from "swr";
+import fetcher from "../lib/fetcher";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -30,7 +29,7 @@ function MyApp({ Component, pageProps }) {
     };
 
     loadCSSBasedOnPath();
-  }, [router.pathname]);
+  }, [router.pathname, Component]); // Update useEffect dependencies
 
   return (
     <>
