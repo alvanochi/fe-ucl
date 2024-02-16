@@ -168,55 +168,55 @@ export default function MahasiswaModule({ baseURL }) {
         </tbody>
       </table>
       <div className="flex mt-8">
-  <div className="flex gap-1 ml-auto">
-    <Button.Icon
-      type="button"
-      variant="outline-primary"
-      icon={
-        <Icon
-          icon="material-symbols:chevron-left"
-          width={20}
-          height={20}
-        />
-      }
-      onClick={() => setPage(page - 1)}
-      disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
-      pill
-    />
-    <Button
-      type="button"
-      variant="primary"
-      icon={
-        <Icon
-          icon="material-symbols:chevron-right"
-          width={20}
-          height={20}
-        />
-      }
-      iconPosition="right"
-      onClick={() => setPage(page + 1)}
-      disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
-      pill
-    >
-      Next Page
-    </Button>
-  </div>
-  <div className="ml-auto whitespace-nowrap flex items-center gap-2">
-    <p className="">Page</p>
-    <Form.Input
-      type="number"
-      min="1"
-      max={pageCount}
-      className="w-20"
-      value={page}
-      onChange={(event) =>
-        event.target.valueAsNumber <= pageCount &&
-        setPage(event.target.value)
-      }
-    />
-    of {pageCount || 1}
-  </div>
-</div>
+        <div className="flex gap-1 ml-auto">
+          <Button.Icon
+            type="button"
+            variant="outline-primary"
+            icon={
+              <Icon
+                icon="material-symbols:chevron-left"
+                width={20}
+                height={20}
+              />
+            }
+            onClick={() => setPage(page - 1)}
+            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
+            pill
+          />
+          <Button
+            type="button"
+            variant="primary"
+            icon={
+              <Icon
+                icon="material-symbols:chevron-right"
+                width={20}
+                height={20}
+              />
+            }
+            iconPosition="right"
+            onClick={() => setPage(page + 1)}
+            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
+            pill
+          >
+            Next Page
+          </Button>
+        </div>
+        <div className="ml-auto whitespace-nowrap flex items-center gap-2">
+          <p className="">Page</p>
+          <Form.Input
+            type="number"
+            min="1"
+            max={pageCount}
+            className="w-20"
+            value={page}
+            onChange={(event) =>
+              event.target.valueAsNumber <= pageCount &&
+              setPage(event.target.value)
+            }
+          />
+          of {pageCount || 1}
+        </div>
+      </div>
 
     </>
   );

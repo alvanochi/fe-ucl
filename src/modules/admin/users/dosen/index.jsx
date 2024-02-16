@@ -109,10 +109,14 @@ export default function DosenModule({ baseURL }) {
           )}
           {!loading &&
             data &&
-            data.map((row, index) => (
+            data.map((row, index) => {
+            const startNumber = (page - 1) * 10 + 1;
+
+            const rowNumber = startNumber + index;
+            return (
               <tr key={`row-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
+                  {rowNumber}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.nidn}
@@ -147,7 +151,8 @@ export default function DosenModule({ baseURL }) {
                   </div>
                 </td>
               </tr>
-            ))}
+            );
+          })}
         </tbody>
       </table>
       <div className="flex mt-8">
@@ -163,7 +168,7 @@ export default function DosenModule({ baseURL }) {
               />
             }
             onClick={() => setPage(page - 1)}
-            disabled={!canPrev}
+            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
             pill
           />
           <Button
@@ -178,7 +183,7 @@ export default function DosenModule({ baseURL }) {
             }
             iconPosition="right"
             onClick={() => setPage(page + 1)}
-            disabled={!canNext}
+            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
             pill
           >
             Next Page
