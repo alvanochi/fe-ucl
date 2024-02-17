@@ -9,6 +9,7 @@ import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 import axios from "axios";
 import { Icon } from "@iconify-icon/react";
 import { useEffect, useState } from "react";
+import Form from "../../../../components/Form";
 
 export default function PenghargaanModule({ baseURL }) {
   const approveData = async (id) => {
@@ -213,96 +214,143 @@ export default function PenghargaanModule({ baseURL }) {
           )}
           {!loading &&
             data &&
-            data.map((row, index) => (
-              <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
-                  {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
-                  )}
-                  {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
-                  )}
-                  {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
-                  )}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.npm ? row.npm : row.nidn}
-                  <span className="block font-bold">{row.role}</span>
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.tingkat_peng}
-                </td>
+            data.map((row, index) => {
+              const startNumber = (page - 1) * 10 + 1;
 
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.nama_peng}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.tahun_peng}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/detail-penghargaan/${row.penghargaan_id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
+              const rowNumber = startNumber + index;
+              return (
+                <tr key={`row-${index}`}>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {rowNumber}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
+                    {row.status == 0 && (
+                      <span className="text-base font-bold text-yellow-400">
+                        Proses
+                      </span>
+                    )}
+                    {row.status == 1 && (
+                      <span className="text-base font-bold text-green-400">
+                        Diterima
+                      </span>
+                    )}
+                    {row.status == 2 && (
+                      <span className="text-base font-bold text-red-400">
+                        Ditolak
+                      </span>
+                    )}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.nama_lengkap}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.npm ? row.npm : row.nidn}
+                    <span className="block font-bold">{row.role}</span>
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.tingkat_peng}
+                  </td>
+
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.nama_peng}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.tahun_peng}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    <div className="flex items-stretch gap-1">
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/detail-penghargaan/${row.penghargaan_id}`}
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                      {
+                        row.status === 0 && (
+                          <>
+                            <Button.Icon
+                              variant="success"
+                              type="button"
+                              icon={<Icon icon="oi:check" width={20} height={20} />}
+                              onClick={() =>
+                                approveData(row.penghargaan_id).then(() => refresh())
+                              }
+                            />
+                            <Button.Icon
+                              variant="danger"
+                              type="button"
+                              icon={<Icon icon="oi:x" width={20} height={20} />}
+                              onClick={() =>
+                                rejectData(row.penghargaan_id).then(() => refresh())
+                              }
+                            />
+                          </>
+                        )
                       }
-                    />
-                    {
-                      row.status === 0 && (
-                        <>
-                          <Button.Icon
-                            variant="success"
-                            type="button"
-                            icon={<Icon icon="oi:check" width={20} height={20} />}
-                            onClick={() =>
-                              approveData(row.penghargaan_id).then(() => refresh())
-                            }
-                          />
-                          <Button.Icon
-                            variant="danger"
-                            type="button"
-                            icon={<Icon icon="oi:x" width={20} height={20} />}
-                            onClick={() =>
-                              rejectData(row.penghargaan_id).then(() => refresh())
-                            }
-                          />
-                        </>
-                      )
-                    }
-                    
-                  </div>
-                </td>
-              </tr>
-            ))}
+                      
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
         </tbody>
       </table>
-      <Pagination
-        current={page}
-        handler={setPage}
-        max={pageCount}
-        canPrev={canPrev()}
-        canNext={canNext()}
-        className="mt-8"
-      />
+      <div className="flex mt-8">
+        <div className="flex gap-1 ml-auto">
+          <Button.Icon
+            type="button"
+            variant="outline-primary"
+            icon={
+              <Icon
+                icon="material-symbols:chevron-left"
+                width={20}
+                height={20}
+              />
+            }
+            onClick={() => setPage(page - 1)}
+            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
+            pill
+          />
+          <Button
+            type="button"
+            variant="primary"
+            icon={
+              <Icon
+                icon="material-symbols:chevron-right"
+                width={20}
+                height={20}
+              />
+            }
+            iconPosition="right"
+            onClick={() => setPage(page + 1)}
+            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
+            pill
+          >
+            Next Page
+          </Button>
+        </div>
+        <div className="ml-auto whitespace-nowrap flex items-center gap-2">
+          <p className="">Page</p>
+          <Form.Input
+            type="number"
+            min="1"
+            max={pageCount}
+            className="w-20"
+            value={page}
+            onChange={(event) =>
+              event.target.valueAsNumber <= pageCount &&
+              setPage(event.target.value)
+            }
+          />
+          of {pageCount || 1}
+        </div>
+      </div>
     </>
   );
 }

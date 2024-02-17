@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import Head from "next/head";
 import { SWRConfig } from "swr";
 import fetcher from "../lib/fetcher";
+import "swiper/css/bundle";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
