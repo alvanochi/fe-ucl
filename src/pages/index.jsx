@@ -3,16 +3,10 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify-icon/react";
 import Link from "next/link";
 
-import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css'; // Import Swiper styles
-import 'swiper/css/effect-coverflow'; // Import coverflow effect styles
-import 'swiper/css/pagination'; // Import pagination styles
+import { Swiper, SwiperSlide } from "swiper/react";
 
-// Import Swiper core and required modules
-import SwiperCore, { EffectCoverflow, Pagination } from 'swiper';
+import "swiper/css";
 
-// Install Swiper modules
-SwiperCore.use([EffectCoverflow, Pagination]);
 
 const Home = () => {
   const [isSticky, setSticky] = useState(false);
