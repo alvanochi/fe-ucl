@@ -119,79 +119,84 @@ export default function TesModule({ baseURL }) {
           )}
           {!loading &&
             data &&
-            data.map((row, index) => (
-              <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
-                  {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
-                  )}
-                  {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
-                  )}
-                  {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
-                  )}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.nama_tes}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {date.formatToID(new Date(row.tgl_tes))}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.skor_tes}
-                </td>
+            data.map((row, index) => {
+              const startNumber = (page - 1) * 10 + 1;
 
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/tes/detail/${row.tes_id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                  {(row.status === 0 || row.status === 2) &&  (
-                      <>
-                        <Button.Icon
-                          as="a"
-                          href={`${baseURL}/tes/edit/${row.tes_id}`}
-                          variant="secondary"
-                          icon={<Icon icon="bx:edit" width={20} height={20} />}
-                        />
-                        <Button.Icon
-                          variant="danger"
-                          icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
-                          }
-                          onClick={() =>
-                            destroy(row.tes_id).then(() => refresh())
-                          }
-                        />
-                      </>
-                  )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+              const rowNumber = startNumber + index;
+              return (
+                <tr key={`row-${index}`}>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {rowNumber}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
+                    {row.status == 0 && (
+                      <span className="text-base font-bold text-yellow-400">
+                        Proses
+                      </span>
+                    )}
+                    {row.status == 1 && (
+                      <span className="text-base font-bold text-green-400">
+                        Diterima
+                      </span>
+                    )}
+                    {row.status == 2 && (
+                      <span className="text-base font-bold text-red-400">
+                        Ditolak
+                      </span>
+                    )}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.nama_tes}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {date.formatToID(new Date(row.tgl_tes))}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.skor_tes}
+                  </td>
+
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    <div className="flex items-stretch gap-1">
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/tes/detail/${row.tes_id}`}
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                    {(row.status === 0 || row.status === 2) &&  (
+                        <>
+                          <Button.Icon
+                            as="a"
+                            href={`${baseURL}/tes/edit/${row.tes_id}`}
+                            variant="secondary"
+                            icon={<Icon icon="bx:edit" width={20} height={20} />}
+                          />
+                          <Button.Icon
+                            variant="danger"
+                            icon={
+                              <Icon
+                                icon="solar:trash-bin-2-bold-duotone"
+                                width={20}
+                                height={20}
+                              />
+                            }
+                            onClick={() =>
+                              destroy(row.tes_id).then(() => refresh())
+                            }
+                          />
+                        </>
+                    )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
       <div className="flex mt-8">
@@ -207,7 +212,7 @@ export default function TesModule({ baseURL }) {
               />
             }
             onClick={() => setPage(page - 1)}
-            disabled={!canPrev}
+            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
             pill
           />
           <Button
@@ -222,7 +227,7 @@ export default function TesModule({ baseURL }) {
             }
             iconPosition="right"
             onClick={() => setPage(page + 1)}
-            disabled={!canNext}
+            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
             pill
           >
             Next Page

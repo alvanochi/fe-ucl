@@ -39,6 +39,8 @@ export const useDatatable = (url, options = {}) => {
       limit: pageSize,
       sort: Object.entries(sort).at(0)?.join(":"),
       ...filter,
+      id_matkul: options.id_matkul || '',
+      kelas: options.kelas || '',
     };
 
     try {

@@ -27,6 +27,7 @@ export default function ShowQr({ data }) {
     }
   };
 
+
   return (
     <>
       <Button.Icon
@@ -38,22 +39,25 @@ export default function ShowQr({ data }) {
         {loading ? (
           <p>Loading QR code...</p>
         ) : qrCode ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
+          <>
             <div
-              dangerouslySetInnerHTML={{ __html: qrCode }}
               style={{
-                maxWidth: "100%",
-                maxHeight: "80vh",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100%",
               }}
-            />
-          </div>
+            >
+              <div
+                dangerouslySetInnerHTML={{ __html: qrCode }}
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "80vh",
+                }}
+              />
+            </div>
+            <h1 className="text-center font-bold text-4xl pt-4">{data.token}</h1>
+          </>
         ) : (
           <p>No QR code available.</p>
         )}

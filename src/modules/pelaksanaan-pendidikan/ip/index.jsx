@@ -107,7 +107,11 @@ export default function IPModule({ baseURL }) {
           )}
           {!loading &&
             data &&
-            data.map((row, index) => (
+            data.map((row, index) => {
+              const startNumber = (page - 1) * 10 + 1;
+
+              const rowNumber = startNumber + index;
+            return (
               <tr key={`row-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {index + 1}
@@ -125,7 +129,8 @@ export default function IPModule({ baseURL }) {
                   {row.point}
                 </td>
               </tr>
-            ))}
+            );
+            })}
         </tbody>
       </table>
 

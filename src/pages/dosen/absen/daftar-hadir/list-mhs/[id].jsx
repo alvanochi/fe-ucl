@@ -13,6 +13,7 @@ import useCRUD from "../../../../../hooks/useCRUD";
 import EditAbsensi from "../edit-absensi";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import UploadTugas from "../uploadTugas";
 
 
 export default function ListMhs() {
@@ -118,6 +119,11 @@ export default function ListMhs() {
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
+                Tugas
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
                 Action
               </div>
             </th>
@@ -165,6 +171,9 @@ export default function ListMhs() {
                     : row.status_absen === 0
                     ? "ALFA"
                     : ""}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  <UploadTugas data={{ id: row.id }} onTambahMhs={handleTambahMhs} />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                   <div className="flex items-stretch gap-1">
