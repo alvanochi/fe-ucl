@@ -87,6 +87,8 @@ export default function Profil() {
     );
   }
 
+  console.log(data);
+
   if ([user, menu, loading].some((item) => item == null))
     return <p>Loading...</p>;
   return (
@@ -118,7 +120,7 @@ export default function Profil() {
           <div className="flex flex-col items-center w-1/3">
             <div className="w-32 h-32 rounded-full overflow-hidden mx-auto mb-2">
               <img
-                src={process.env.API_ENDPOINT + "/foto-profile/" + data.image}
+                src={data.image}
                 alt="Profile"
                 className="w-full h-full object-cover border-2 border-primary-600"
               />
