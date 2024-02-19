@@ -2,7 +2,7 @@ import { Fragment, useRef } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import classnames from "classnames";
 
-export const ModalAbsen = ({ children, title, show, handler, size = "base" }) => {
+export const ModalWidth = ({ children, title, show, handler, size = "base" }) => {
 	const cancelButtonRef = useRef(null);
 
 	return (
@@ -60,4 +60,4 @@ export const ModalAbsen = ({ children, title, show, handler, size = "base" }) =>
 	);
 };
 
-export default ModalAbsen;
+export default ModalWidth;

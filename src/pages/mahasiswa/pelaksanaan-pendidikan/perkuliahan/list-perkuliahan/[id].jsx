@@ -88,6 +88,9 @@ export default function ListPerkuliahan() {
               <th className="text-sm border-2 border-white bg-gray-200">
                 Tugas
               </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                Nilai
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -141,6 +144,9 @@ export default function ListPerkuliahan() {
                       <UploadTugas data={{ id: row.id }} onEditAbsensi={handleEditDok} />
                      
                     </div>
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.nilai ? row.nilai : "-"}
                   </td>
                 </tr>
               ))}

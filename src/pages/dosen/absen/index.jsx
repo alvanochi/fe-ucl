@@ -9,7 +9,6 @@ import useDatatable from "../../../hooks/useDatatable";
 import useCRUD from "../../../hooks/useCRUD";
 import SortIcon from "../../../components/SortIcon";
 import { Icon } from "@iconify-icon/react";
-import ModalAbsen from "../../../components/ModalAbsen";
 import useDataTableAbsensi from "../../../hooks/useDataTableAbsensi";
 import axios from "axios";
 import DaftarHadirModule from "../../../modules/absen/daftar-hadir";

@@ -52,6 +52,13 @@ const UploadTugas = ({ data, onTambahMhs }) => {
 
   const inputHandler = (e) => {
     const { name, value, files } = e.target; 
+
+    if (name === "nilai") {
+      if (value !== "" && (value < 0 || value > 100 || isNaN(value))) {
+        toastAlert("error", "Nilai harus antara 0 sampai 100");
+        return;
+      }
+    }
   
     if (files && files.length > 0) {
       const file = files[0];
@@ -119,13 +126,13 @@ const UploadTugas = ({ data, onTambahMhs }) => {
     <>
       <Button.Icon variant="primary" icon={<Icon icon="solar:upload-square-bold" width={20} height={20} />} onClick={toggle} />
 
-      <Modal title="Tugas" show={show} handler={toggle}>
+      <Modal title="Tugas" show={show} handler={toggle} size="xl">
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group>
             <Form.Label>
               Nilai <span className="text-danger-600">*</span>
             </Form.Label>
-            <Form.Input type="number" name="nilai" value={formData.nilai} onChange={inputHandler} />
+            <Form.Input type="number" min={0} max={100} name="nilai" value={formData.nilai} onChange={inputHandler} />
           </Form.Group>
           <Form.Group>
             <Form.Label>
@@ -133,7 +140,7 @@ const UploadTugas = ({ data, onTambahMhs }) => {
             </Form.Label>
             <Form.Input type="file" name="upload_dok" onChange={inputHandler} />
             {formData.upload_dok ? (
-              <embed src={`${dokumenPreview === null ? FILE_URL : dokumenPreview}`} className="w-full h-[256px] mt-4" />
+              <embed src={`${dokumenPreview === null ? FILE_URL : dokumenPreview}`} className="w-full h-[400px] mt-4" />
             ) : (
               <span className="text-danger-600 text-center mt-4">Tidak ada tugas terupload</span>
             )}

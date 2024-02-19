@@ -112,7 +112,7 @@ const UploadTugas = ({ data, onEditAbsensi }) => {
     <>
       <Button.Icon variant="primary" icon={<Icon icon="solar:upload-square-bold" width={20} height={20} />} onClick={toggle} />
 
-      <Modal title="Tugas" show={show} handler={toggle}>
+      <Modal title="Tugas" show={show} handler={toggle} size="xl">
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group>
             <Form.Label>
@@ -126,7 +126,7 @@ const UploadTugas = ({ data, onEditAbsensi }) => {
             </Form.Label>
             <Form.Input type="file" name="upload_dok" onChange={inputHandler} />
             {formData.upload_dok ? (
-              <embed src={`${dokumenPreview === null ? FILE_URL : dokumenPreview}`} className="w-full h-[256px] mt-4" />
+              <embed src={`${dokumenPreview === null ? FILE_URL : dokumenPreview}`} className="w-full h-[400px] mt-4" />
             ) : (
               <span className="text-danger-600 text-center mt-4">Tidak ada tugas terupload</span>
             )}
