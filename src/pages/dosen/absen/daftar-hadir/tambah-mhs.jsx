@@ -14,7 +14,7 @@ const TambahMhs = ({ data, onTambahMhs }) => {
   const INITIAL_FORM = {
     id_pembelajaran: data && data.id ? data.id : "",
     npm: "",
-    status_absen: 0,
+    status_absen: "1",
   }
 
   const {form, inputHandler} = useForm(INITIAL_FORM, {
@@ -47,7 +47,7 @@ const TambahMhs = ({ data, onTambahMhs }) => {
 
       form.id_pembelajaran = data && data.id ? data.id : "";
       form.npm = "";
-      form.status_absen = 0;
+      form.status_absen = "1";
 
       toastAlert("success", "QRCODE created successfully");
       close();
@@ -105,16 +105,9 @@ const TambahMhs = ({ data, onTambahMhs }) => {
             <Form.Label>
               <Form.Radio
                 name="status_absen"
-                value={0}
-                onChange={inputHandler}
-              />
-              Alfa
-            </Form.Label>
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
                 value={1}
                 onChange={inputHandler}
+                checked={form.status_absen == 1}
               />
               Masuk
             </Form.Label>
@@ -123,8 +116,18 @@ const TambahMhs = ({ data, onTambahMhs }) => {
                 name="status_absen"
                 value={2}
                 onChange={inputHandler}
+                checked={form.status_absen == 2}
               />
               Sakit / Izin
+            </Form.Label>
+            <Form.Label>
+              <Form.Radio
+                name="status_absen"
+                value={0}
+                onChange={inputHandler}
+                checked={form.status_absen == 0}
+              />
+              Alfa
             </Form.Label>
             </div>
           </Form.Group>

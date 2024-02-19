@@ -92,23 +92,23 @@ const EditAbsensi = ({ data, onTambahMhs }) => {
             <Form.Input type="number" name="npm" value={formData.npm} onChange={inputHandler} required />
           </Form.Group>
 
-          <Form.Group className="flex items-baseline gap-3">
-            <Form.Label className="min-w-[14rem]">
+          <Form.Group className="flex items-baseline gap-2">
+            <Form.Label className="min-w-[8rem] text-sm">
               Status Absen <span className="text-danger-600">*</span>
             </Form.Label>
             <span>:</span>
-            <div className="flex gap-4">
-              <Form.Label>
-                <Form.Radio name="status_absen" value={0} onChange={inputHandler} checked={formData.status_absen === 0} />
-                Alfa
-              </Form.Label>
+            <div className="flex gap-6">
               <Form.Label>
                 <Form.Radio name="status_absen" value={1} onChange={inputHandler} checked={formData.status_absen === 1} />
                 Masuk
               </Form.Label>
               <Form.Label>
                 <Form.Radio name="status_absen" value={2} onChange={inputHandler} checked={formData.status_absen === 2} />
-                Sakit
+                Sakit/ Izin
+              </Form.Label>
+              <Form.Label>
+                <Form.Radio name="status_absen" value={0} onChange={inputHandler} checked={formData.status_absen === 0} />
+                Alfa
               </Form.Label>
             </div>
           </Form.Group>

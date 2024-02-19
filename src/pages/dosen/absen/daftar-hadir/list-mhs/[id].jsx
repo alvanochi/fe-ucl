@@ -172,7 +172,7 @@ export default function ListMhs() {
                   {row.status_absen === 1
                     ? "MASUK"
                     : row.status_absen === 2
-                    ? "SAKIT"
+                    ? "SAKIT/IZIN"
                     : row.status_absen === 0
                     ? "ALFA"
                     : ""}
