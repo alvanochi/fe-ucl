@@ -85,6 +85,11 @@ export default function MahasiswaModule({ baseURL }) {
                 Status MHS
               </div>
             </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                FRS
+              </div>
+            </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
         </thead>
@@ -133,6 +138,10 @@ export default function MahasiswaModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.kode_mhs}
                 </td>
+                <td className={`text-sm border-2 border-white bg-gray-50 ${row.status_frs === 1 ? 'text-green-500' : row.status_frs === 0 ? 'text-red-500' : 'text-gray-500'}`}>
+                  {row.status_frs === 1 ? "Already" : row.status_frs === 0 ? "Not yet" : "-"}
+                </td>
+
                 
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">

@@ -24,6 +24,7 @@ export default function IPModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
+    totalData
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
@@ -40,6 +41,9 @@ export default function IPModule({ baseURL }) {
           Tambah
         </Button> */}
         <Filter filter={filter} handler={setFilter} />
+      </div>
+      <div className="flex items-start">
+        <span>Total Data: <b>{totalData}</b></span>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
