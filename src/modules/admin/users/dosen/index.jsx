@@ -24,30 +24,8 @@ export default function DosenModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
+    totalData
   } = useDatatable(DATA_URL);
-
-  const [totalDataMhs, setTotalDataMhs] = useState('');
-  const [totalDataDosen, setTotalDataDosen] = useState('');
-
-
-  
-  useEffect(() => {
-    const fetchTotalData = async () => {
-      try {
-        const response = await axios.get(`${process.env.API_ENDPOINT}/users/total-data`);
-
-        const res = response.data;
-
-        setTotalDataMhs(res.total_mahasiswa);
-        setTotalDataDosen(res.total_dosen)
-      } catch (error) {
-        console.error("Error fetching pertemuan:", error);
-      }
-    };
-  
-    fetchTotalData();
-  }, []);
-
 
   return (
     <>
@@ -55,7 +33,7 @@ export default function DosenModule({ baseURL }) {
         <Filter filter={filter} handler={setFilter} />
       </div>
       <div className="flex items-start">
-        <span>Total Data Dosen: <b>{totalDataDosen}</b></span>
+        <span>Total Data: <b>{totalData}</b></span>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"

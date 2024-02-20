@@ -83,7 +83,7 @@ export const APP_MENU = [
       {
         label: "Perkuliahan",
         url: "#perkuliahan",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_MAHASISWA],
       },
       {
         label: "B-Akademik",
