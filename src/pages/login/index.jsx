@@ -189,7 +189,7 @@ export const Login = () => {
                 Login
               </h1>
               <p className="block text-gray-600 text-sm">
-                Selamat datang di TIAS
+              Selamat datang di TIAS. Kami merekomendasikan untuk login menggunakan perangkat dengan layar berukuran desktop.
               </p>
             </div>
             <div className="block mb-6">
