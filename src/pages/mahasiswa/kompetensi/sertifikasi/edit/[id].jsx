@@ -258,7 +258,7 @@ export default function SertifikasiEdit() {
                   onChange={inputHandler}
                 />
                 <embed
-                src={`${FILE_URL}/${form.file}`}
+                src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
                 className="w-full h-[256px]"
               />
               </div>
