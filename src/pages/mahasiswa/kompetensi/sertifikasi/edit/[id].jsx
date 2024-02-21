@@ -20,6 +20,7 @@ export default function SertifikasiEdit() {
   const API_URL = `${process.env.API_ENDPOINT}/kompetensi/detailCertif`;
   const FILE_URL = `${process.env.API_ENDPOINT}/file-sertifikasi`;
 
+
   const INITIAL_FORM = {
     sertifikat_id: "",
     jenis_serti: "",
@@ -30,7 +31,8 @@ export default function SertifikasiEdit() {
     kategori_id: "",
     nomor_peserta: "",
     nomor_regist: "",
-    file: "",
+    penyelenggara: "",
+    file: ""
   };
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
@@ -43,6 +45,7 @@ export default function SertifikasiEdit() {
       { field: "tgl_serti", label: "Tanggal Sertifikasi" },
       { field: "nomor_peserta", label: "Nomor Peserta" },
       { field: "nomor_regist", label: "Nomor Registrasi" },
+      { field: "penyelenggara", label: "penyelenggara" },
     ],
     success: () => router.push(prefix + menu.url),
   });
@@ -177,14 +180,14 @@ export default function SertifikasiEdit() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                No. SK Sertifikasi <span className="text-danger-600">*</span>
+                Penyelenggara <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
                 className="flex-1"
-                name="nomor_sk"
-                value={form.nomor_sk}
+                name="penyelenggara"
+                value={form.penyelenggara}
                 onChange={inputHandler}
                 required
               />
@@ -205,30 +208,41 @@ export default function SertifikasiEdit() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Nomor Peserta <span className="text-danger-600">*</span>
+                No. SK Sertifikasi 
               </Form.Label>
               <span>:</span>
               <Form.Input
-                type="number"
+                type="text"
                 className="flex-1"
-                name="nomor_peserta"
-                value={form.nomor_peserta}
+                name="nomor_sk"
+                value={form.nomor_sk}
                 onChange={inputHandler}
-                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Nomor Registrasi <span className="text-danger-600">*</span>
+                Nomor Peserta 
               </Form.Label>
               <span>:</span>
               <Form.Input
-                type="number"
+                type="text"
+                className="flex-1"
+                name="nomor_peserta"
+                value={form.nomor_peserta}
+                onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nomor Registrasi 
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
                 className="flex-1"
                 name="nomor_regist"
                 value={form.nomor_regist}
                 onChange={inputHandler}
-                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -244,9 +258,9 @@ export default function SertifikasiEdit() {
                   onChange={inputHandler}
                 />
                 <embed
-                  src={`${FILE_URL}/${form.file}`}
-                  className="w-full h-[256px]"
-                />
+                src={`${FILE_URL}/${form.file}`}
+                className="w-full h-[256px]"
+              />
               </div>
             </Form.Group>
           </Card.Body>

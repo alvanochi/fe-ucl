@@ -24,6 +24,7 @@ export default function SertifikasiCreate() {
     kategori_id: "",
     nomor_peserta: "",
     nomor_regist: "",
+    penyelenggara: "",
   };
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
@@ -36,6 +37,7 @@ export default function SertifikasiCreate() {
       { field: "tgl_serti", label: "Tanggal Sertifikasi" },
       { field: "nomor_peserta", label: "Nomor Peserta" },
       { field: "nomor_regist", label: "Nomor Registrasi" },
+      { field: "penyelenggara", label: "Penyelenggara" },
     ],
     success: () => router.push(prefix + menu.url),
   });
@@ -147,14 +149,14 @@ export default function SertifikasiCreate() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                No. SK Sertifikasi <span className="text-danger-600">*</span>
+                Penyelenggara <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
                 className="flex-1"
-                name="nomor_sk"
-                value={form.nomor_sk}
+                name="penyelenggara"
+                value={form.penyelenggara}
                 onChange={inputHandler}
                 required
               />
@@ -175,7 +177,20 @@ export default function SertifikasiCreate() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Nomor Peserta <span className="text-danger-600">*</span>
+                No. SK Sertifikasi
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nomor_sk"
+                value={form.nomor_sk}
+                onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nomor Peserta 
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -184,12 +199,11 @@ export default function SertifikasiCreate() {
                 name="nomor_peserta"
                 value={form.nomor_peserta}
                 onChange={inputHandler}
-                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Nomor Registrasi <span className="text-danger-600">*</span>
+                Nomor Registrasi
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -198,7 +212,6 @@ export default function SertifikasiCreate() {
                 name="nomor_regist"
                 value={form.nomor_regist}
                 onChange={inputHandler}
-                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

@@ -152,13 +152,14 @@ export default function SertifikasiDetail() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                No. SK Sertifikasi <span className="text-danger-600">*</span>
+                Penyelenggara <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
                 className="flex-1"
-                value={form.nomor_sk}
+                name="penyelenggara"
+                value={form.penyelenggara}
                 disabled
               />
             </Form.Group>
@@ -177,7 +178,19 @@ export default function SertifikasiDetail() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Nomor Peserta <span className="text-danger-600">*</span>
+                No. SK Sertifikasi 
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                value={form.nomor_sk}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nomor Peserta 
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -189,7 +202,7 @@ export default function SertifikasiDetail() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Nomor Registrasi <span className="text-danger-600">*</span>
+                Nomor Registrasi 
               </Form.Label>
               <span>:</span>
               <Form.Input

@@ -92,6 +92,7 @@ export default function SertifikasiModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
+    totalData
   } = useDatatable(dataUrl);
 
   useEffect(() => {
@@ -126,6 +127,9 @@ export default function SertifikasiModule({ baseURL }) {
           Reject
         </Button>
       </div>
+      <div className="flex items-start">
+        <span>Total Data: <b>{totalData}</b></span>
+      </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow"
         cellPadding={10}
@@ -159,19 +163,15 @@ export default function SertifikasiModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("nama_serti")}
               >
                 Nama Sertifikasi
-                <SortIcon sort={getSortBy("nama_serti")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jenis_serti")}
               >
                 Jenis Sertifikasi
-                <SortIcon sort={getSortBy("jenis_serti")} />
               </div>
             </th>
 
