@@ -9,6 +9,8 @@ import useCRUD from "../../../hooks/useCRUD";
 import date from "../../../utils/date";
 import SortIcon from "../../../components/SortIcon";
 import Form from "../../../components/Form";
+import axios from "axios";
+import { toastAlert } from "../../../lib/sweetalert";
 
 export default function TesModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/kompetensi/getTes`;
@@ -27,22 +29,55 @@ export default function TesModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
+    totalData
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
+  const GENERATE_URL = `${process.env.API_ENDPOINT}/skpi/bahasa`;
+
+  async function generate(){
+    try {
+      const response = await axios.get(GENERATE_URL);
+      refresh();
+
+      toastAlert("success", response.data.message);
+
+
+    } catch (error) {
+      if (error.name === "AxiosError") {
+        toastAlert("warning", error.response.data);
+
+        return;
+      }
+
+      toastAlert("error", error);
+    }
+  }
+
   return (
     <>
-      <div className="flex justify-center gap-2 mb-8">
-        <Button
-          as="a"
-          href={`${baseURL}/tes/create`}
-          variant="primary"
-          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-          pill
-        >
-          Tambah Tes
-        </Button>
-        <Filter filter={filter} handler={setFilter} />
+      <div>
+        <div className="flex justify-center gap-2 mb-8">
+          <Button
+            as="a"
+            href={`${baseURL}/tes/create`}
+            variant="primary"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
+            Tambah Tes
+          </Button>
+          <Filter filter={filter} handler={setFilter} />
+        </div>
+        <div className="flex justify-between items-start">
+          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+          <Button.Icon
+            className="mb-4"
+            variant="secondary"
+            icon={<Icon icon="mdi:ballot-recount" width={40} height={40} />}
+            onClick={() => generate()}
+          />
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow"

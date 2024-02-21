@@ -192,7 +192,7 @@ export default function TesDetail() {
               <span>:</span>
               <div className="block flex-1 space-y-2">
                 <embed
-                  src={`${FILE_URL}/${form.file}`}
+                  src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
                   className="w-full h-[256px]"
                 />
               </div>

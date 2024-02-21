@@ -166,7 +166,7 @@ export default function TesDetail() {
               </Form.Label>
               <span>:</span>
               <embed
-                src={`${FILE_URL}/${form.file}`}
+                src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
                 className="w-full h-[256px]"
               />
             </Form.Group>
