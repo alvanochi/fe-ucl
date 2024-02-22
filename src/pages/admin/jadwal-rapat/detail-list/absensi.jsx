@@ -8,19 +8,21 @@ import { Icon } from "@iconify-icon/react";
 import useForm from "../../../../hooks/useForm";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 
-const TambahMhs = ({ data, onTambahMhs }) => {
+const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
   const { show, toggle, close } = useModal();
 
   const INITIAL_FORM = {
-    id_pembelajaran: data && data.id ? data.id : "",
-    npm: "",
+    id_meeting: data && data.id ? data.id : "",
+    code: "",
+    name_absen: "",
     status_absen: "1",
   }
 
   const {form, inputHandler} = useForm(INITIAL_FORM, {
     rules: [
-      { field: "id", label: "id" },
-      { field: "npm", label: "npm" },
+      { field: "id_meeting", label: "ID Meeting" },
+      { field: "code", label: "code" },
+      { field: "name_absen", label: "Nama" },
       { field: "status_absen", label: "status_absen" },
     ],
   });
@@ -33,25 +35,26 @@ const TambahMhs = ({ data, onTambahMhs }) => {
         ...form,
       }
 
-      if(!requestData.status_absen || !requestData.npm){
+      if(!requestData.status_absen || !requestData.code){
         toastAlert("error", "Pleas fill in all the required fields.");
 
         return;
       }
       const request = await axios({
-        url: `${process.env.API_ENDPOINT_ABSEN}/absensi/store`,
+        url: `${process.env.API_ENDPOINT_ABSEN}/absensi-meeting/store`,
         method: "POST",
         data: requestData,
       });
       const response = await request.data;
 
-      form.id_pembelajaran = data && data.id ? data.id : "";
-      form.npm = "";
+      form.id_meeting = data && data.id ? data.id : "";
+      form.code = "";
+      form.name_absen = "";
       form.status_absen = "1";
 
       toastAlert("success", "Successfully");
       close();
-      onTambahMhs();
+      onAddAbsensi();
     } catch (error) {
       if (error.name === "AxiosError") {
         toastAlert("error", error.message);
@@ -79,22 +82,33 @@ const TambahMhs = ({ data, onTambahMhs }) => {
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Input
             type="hidden"
-            name="id_pembelajaran"
+            name="id_meeting"
             onChange={inputHandler}
-            value={form.id_pembelajaran}
+            value={form.id_meeting}
           />
           <Form.Group>
             <Form.Label>
-              NPM <span className="text-danger-600">*</span>
+              Nama <span className="text-danger-600">*</span>
             </Form.Label>
             <Form.Input
-              type="number"
-              name="npm"
-              value={form.npm}
+              type="text"
+              name="name_absen"
+              value={form.name_absen}
               onChange={inputHandler}
               required
             />
-
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>
+              NPM/NIK <span className="text-danger-600">*</span>
+            </Form.Label>
+            <Form.Input
+              type="number"
+              name="code"
+              value={form.code}
+              onChange={inputHandler}
+              required
+            />
           </Form.Group>
           <Form.Group className="flex items-baseline gap-2">
             <Form.Label className="min-w-[8rem] text-sm">
@@ -145,4 +159,4 @@ const TambahMhs = ({ data, onTambahMhs }) => {
   );
 };
 
-export default TambahMhs;
+export default AddAbsensiRapat;
