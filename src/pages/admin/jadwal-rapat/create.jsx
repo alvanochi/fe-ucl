@@ -12,7 +12,7 @@ import axios from "axios";
 import useForm from "../../../hooks/useForm";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 
-export default function createJadwal() {
+export default function CreateJadwal() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
