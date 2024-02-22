@@ -11,7 +11,8 @@ import useDatatableAbsensi from "../../../../hooks/useDataTableAbsensi";
 import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import InvitePeserta from "./invite";
+import InvitePesertaDosen from "./invite";
+import InvitePesertaMhs from "./inviteMhs";
 
 
 export default function Invite() {
@@ -78,11 +79,12 @@ export default function Invite() {
 	if ([user, menu, loadingAbsensi].some((item) => item == null)) return <p>Loading...</p>;
 	return (
 		<Layout>
-			<PageHeader title={`${dataMeet[0]?.nm_kegiatan} | Pertemuan ke-${dataMeet[0]?.pertemuan}`} icon={menu.icon} handler={setActive} />
+			<PageHeader title={`Peserta Rapat yang Diundang`} icon={menu.icon} handler={setActive} />
 
 			<div className="my-8">
 			<div className="flex items-center justify-center gap-2 mb-8 mt-8">
-        <InvitePeserta data={{ id: id }} onInvite={handleInvite} />
+        <InvitePesertaDosen data={{ id: id }} onInvite={handleInvite} />
+        <InvitePesertaMhs data={{ id: id }} onInvite={handleInvite} />
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"

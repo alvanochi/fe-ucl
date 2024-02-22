@@ -70,6 +70,13 @@ export const APP_MENU = [
     ],
   },
   {
+    label: "Jadwal Rapat",
+    url: "/jadwal-rapat",
+    icon: "mdi-clock-fast",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [],
+  },
+  {
     label: "Pelaksanaan Pendidikan",
     url: "/pelaksanaan-pendidikan",
     icon: "mdi:bookshelf",
@@ -300,13 +307,6 @@ export const APP_MENU = [
         allowedRoles: [ROLE_ID_ADMIN],
       },
     ],
-  },
-  {
-    label: "Jadwal Rapat",
-    url: "/jadwal-rapat",
-    icon: "mdi-clock-fast",
-    allowedRoles: [ROLE_ID_ADMIN],
-    submenus: [],
   },
   {
     label: "Rekomendasi Mahasiswa",

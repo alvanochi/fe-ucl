@@ -78,7 +78,7 @@ const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
       >
         Tambah
       </Button>
-      <Modal title="Tambah Mahasiswa" show={show} handler={toggle}>
+      <Modal title="Tambah Absensi" show={show} handler={toggle}>
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Input
             type="hidden"

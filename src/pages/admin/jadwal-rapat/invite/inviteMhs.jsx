@@ -10,10 +10,10 @@ import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 import useDosen from "../../../../repo/dosen";
 import useMahasiswa from "../../../../repo/mahasiswa";
 
-const InvitePesertaDosen = ({ data, onInvite }) => {
+const InvitePesertaMhs = ({ data, onInvite }) => {
   const { show, toggle, close } = useModal();
 
-  const [selectedDosen, setSelectedDosen] = useState(""); 
+  const [selectedMhs, setSelectedMhs] = useState(""); 
 
   const INITIAL_FORM = {
     id_meeting: data?.id || "",
@@ -25,17 +25,24 @@ const InvitePesertaDosen = ({ data, onInvite }) => {
     ],
   });
 
-  const handleDosenChange = (selected) => {
-    setSelectedDosen(selected?.value);
+  const handleMhsChange = (selected) => {
+    setSelectedMhs(selected?.value);
   };
+
 
   async function submitHandler(event) {
     event.preventDefault();
     try {
       const requestData = {
         ...form,
-        nip_dosen: selectedDosen
+        npm: selectedMhs,
       };
+
+      if(!requestData.npm){
+        toastAlert("error", "Pleas fill in all the required fields.");
+
+        return;
+      }
       await axios.post(`${process.env.API_ENDPOINT_ABSEN}/meeting-invite/store`, requestData);
       toastAlert("success", "Invite successfully");
       close()
@@ -51,7 +58,7 @@ const InvitePesertaDosen = ({ data, onInvite }) => {
     }
   }
 
-  const { data: listDosen } = useDosen();
+  const { data: listMahasiswa } = useMahasiswa();
 
   return (
     <>
@@ -61,7 +68,7 @@ const InvitePesertaDosen = ({ data, onInvite }) => {
         onClick={toggle}
         pill
       >
-        Peserta Dosen
+        Peserta Mahasiswa
       </Button>
       <Modal title="Tambah Peserta" show={show} handler={toggle}>
         <Form className="space-y-4" onSubmit={submitHandler}>
@@ -73,18 +80,19 @@ const InvitePesertaDosen = ({ data, onInvite }) => {
           />
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">
-              Dosen (Pendidik) <span className="text-danger-600">*</span>
+              Mahasiswa <span className="text-danger-600">*</span>
             </Form.Label>
             <span>:</span>
             <Form.Combobox
-              name="nip_dosen"
-              onChange={handleDosenChange}
-              value={selectedDosen} 
-              options={listDosen?.map(dosen => ({
-                label: dosen.nama_lengkap,
-                value: dosen.nip,
+              name="npm"
+              onChange={handleMhsChange}
+              value={selectedMhs}
+              options={listMahasiswa?.map(mhs => ({
+                label: mhs.nama_lengkap,
+                value: mhs.npm,
               }))}
             />
+
           </Form.Group>
           <div className="flex gap-4 mt-12">
             <Button type="button" variant="secondary" onClick={close}>
@@ -100,4 +108,4 @@ const InvitePesertaDosen = ({ data, onInvite }) => {
   );
 };
 
-export default InvitePesertaDosen;
+export default InvitePesertaMhs;

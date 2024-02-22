@@ -9,13 +9,30 @@ import useUser from "../../../hooks/useUser";
 import useDatatable from "../../../hooks/useDatatable";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import useDosen from "../../../repo/dosen";
+import useMahasiswa from "../../../repo/mahasiswa";
 import useForm from "../../../hooks/useForm";
+import useCRUD from "../../../hooks/useCRUD";
+
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
+import { ROLE_ID_ADMIN } from "../../../config/role";
+import { Icon } from "@iconify-icon/react";
+import _ from "underscore";
+
 
 export default function CreateJadwal() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
+
+  const STORE_URL = `${process.env.API_ENDPOINT}/meet/store`;
+
+  const INITIAL_PESERTA_DOSEN = {
+    nip: ""
+  }
+  const INITIAL_PESERTA_MHS = {
+    npm: ""
+  }
 
   const INITIAL_FORM = {
     nm_pengundang: "",
@@ -25,9 +42,11 @@ export default function CreateJadwal() {
     status_ruangan: "",
     tanggal: "",
     waktu: "",
+    peserta_dosen: [],
+    peserta_mahasiswa: []
   }
 
-  const { form, inputHandler } = useForm(INITIAL_FORM, {
+  const { formdata, submitHandler } = useCRUD(STORE_URL, INITIAL_FORM, {
     rules: [
       { field: "nm_pengundang", label: "Nama Pengundang" },
       { field: "nm_kegiatan", label: "Nama Kegiatan" },
@@ -37,35 +56,37 @@ export default function CreateJadwal() {
       { field: "tanggal", label: "Tanggal" },
       { field: "waktu", label: "Waktu" },
     ],
+    transformData: (data) =>
+    _.omit(
+      {
+        ...data,
+        peserta: JSON.stringify({
+          peserta_mhs: data.peserta_mahasiswa.map((item) => _.omit(item, ["role"])),
+          peserta_dosen: data.peserta_dosen.map((item) => _.omit(item, ["role"])),
+        }),
+      },
+      ["peserta_dosen", "peserta_mahasiswa"]
+    ),
+    success: () => router.push(prefix + menu.url),
   });
 
-  async function submitHandler(event) {
-    event.preventDefault();
-    try {
-      const requestData = {
-        ...form,
-      };
+  const { form, inputHandler, setForm } = formdata;
 
-      const request = await axios({
-        url: `${process.env.API_ENDPOINT_ABSEN}/meeting/store`,
-        method: "POST",
-        data: requestData,
-      });
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
+    user,
+  ]);
 
-      const response = await request.data;
-
-      if(response){
-        toastAlert("success", "Make a schedule successfully");
-        router.push(prefix + menu.url);
-      } 
-    } catch (error) {
-      toastAlert("error", error.message);
-    }
-  }
+  const removeFromUser = (key, index, role) =>
+  setForm((state) => ({
+    ...state,
+    [key]: state[key].filter(
+      (item, idx) => item.role == role && idx != index
+    ),
+  }));
 
 
-
-  if ([user, menu].some((item) => item == null))
+  if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null))
     return <p>Loading...</p>;
   return (
     <Layout>
@@ -180,7 +201,225 @@ export default function CreateJadwal() {
             </Form.Group>
           </Card.Body>
         </Card>
-        <div className="flex gap-4 mt-4">
+
+
+        <div className="flex justify-between">
+          <div className="mr-4 flex-grow">
+            <table
+              className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+              cellPadding={10}
+            >
+              <colgroup>
+                  <col style={{ width: '80%' }} />
+                  <col style={{ width: '20%' }} />
+                </colgroup>
+              <thead>
+                <tr>
+                  <th
+                    colSpan={4}
+                    className="text-sm border-2 border-white bg-gray-50"
+                  >
+                    Peserta Rapat Pendidik(Dosen)
+                  </th>
+                </tr>
+                <tr>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    Nama
+                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {form.peserta_dosen.map((item, index) => (
+                  <tr key={`peserta-dosen-${index}`}>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      <Form.Combobox
+                        index={index}
+                        name="peserta_dosen.nip"
+                        onChange={(selected) => inputHandler({
+                          target: {
+                            attributes: {
+                              index: {
+                                value: index
+                              }
+                            },
+                            name: "peserta_dosen.nip",
+                            value: selected?.value
+                          }
+                        })}
+                        value={form.peserta_dosen[index].nip}
+                        options={
+                          listDosen && Array.isArray(listDosen) && listDosen.map((dosen) => ({
+                            label: dosen.nama_lengkap,
+                            value: dosen.nip,
+                          }))
+                        }
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      <div className="flex items-stretch gap-1">
+                          <Button.Icon
+                            type="button"
+                            variant="danger"
+                            icon={
+                              <Icon
+                                icon="solar:trash-bin-2-bold-duotone"
+                                width={20}
+                                height={20}
+                              />
+                            }
+                            onClick={() =>
+                              removeFromUser(
+                                "peserta_dosen",
+                                index,
+                                "Dosen"
+                              )
+                            }
+                          />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="text-sm border-2 border-white bg-gray-50"
+                  >
+                    <Button
+                      type="button"
+                      variant="primary"
+                      className="mx-auto"
+                      onClick={() =>
+                        setForm((state) => ({
+                          ...state,
+                          peserta_dosen: [
+                            ...state.peserta_dosen,
+                            { ...INITIAL_PESERTA_DOSEN, role: "Dosen" },
+                          ],
+                        }))
+                      }
+                    >
+                      Tambah Peserta
+                    </Button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+          <div className="flex-grow">
+            <table
+              className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+              cellPadding={10}
+            >
+              <colgroup>
+                  <col style={{ width: '80%' }} />
+                  <col style={{ width: '20%' }} />
+                </colgroup>
+              <thead>
+                <tr>
+                  <th
+                    colSpan={4}
+                    className="text-sm border-2 border-white bg-gray-50"
+                  >
+                    Peserta Rapat Mahasiswa
+                  </th>
+                </tr>
+                <tr>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    Nama
+                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {form.peserta_mahasiswa.map((item, index) => (
+                  <tr key={`peserta-mahasiswa-${index}`}>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      <Form.Combobox
+                        index={index}
+                        name="peserta_mahasiswa.npm"
+                        onChange={(selected) => inputHandler({
+                          target: {
+                            attributes: {
+                              index: {
+                                value: index
+                              }
+                            },
+                            name: "peserta_mahasiswa.npm",
+                            value: selected?.value
+                          }
+                        })}
+                        value={form.peserta_mahasiswa[index].npm}
+                        options={
+                          listMahasiswa && Array.isArray(listMahasiswa) && listMahasiswa.map((mahasiswa) => ({
+                            label: mahasiswa.nama_lengkap,
+                            value: mahasiswa.npm,
+                          }))
+                        }
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      <div className="flex items-stretch gap-1">
+                          <Button.Icon
+                            type="button"
+                            variant="danger"
+                            icon={
+                              <Icon
+                                icon="solar:trash-bin-2-bold-duotone"
+                                width={20}
+                                height={20}
+                              />
+                            }
+                            onClick={() =>
+                              removeFromUser(
+                                "peserta_mahasiswa",
+                                index,
+                                "Mahasiswa"
+                              )
+                            }
+                          />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="text-sm border-2 border-white bg-gray-50"
+                  >
+                    <Button
+                      type="button"
+                      variant="primary"
+                      className="mx-auto"
+                      onClick={() =>
+                        setForm((state) => ({
+                          ...state,
+                          peserta_mahasiswa: [
+                            ...state.peserta_mahasiswa,
+                            { ...INITIAL_PESERTA_MHS, role: "Mahasiswa" },
+                          ],
+                        }))
+                      }
+                    >
+                      Tambah Peserta
+                    </Button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+
+        <div className="flex gap-4 mt-8 mb-8">
           <Button
             as="a"
             href={prefix + menu.url}
