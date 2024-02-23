@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 import BackButton from "../../../../../components/BackButton";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
-import date from "../../../../../utils/date";
+import { getMonthOptions, getYearOptions } from "../../../../../repo/bulan-tahun";
 
 export default function AnggotaProfesiDetail() {
   const router = useRouter();
@@ -24,8 +24,10 @@ export default function AnggotaProfesiDetail() {
     prof_id: "",
     nama_organisasi: "",
     peran: "",
-    mulai_keanggotaan: "",
-    selesai_keanggotaan: "",
+    mulai_tahun: "",
+    mulai_bulan: "",
+    selesai_tahun: "",
+    selesai_bulan: "",
     instansi_prof: "",
     file: "",
     nama_kategori: "",
@@ -36,8 +38,10 @@ export default function AnggotaProfesiDetail() {
     rules: [
       { field: "nama_organisasi", label: "Nama Organisasi" },
       { field: "peran", label: "Peran" },
-      { field: "mulai_keanggotaan", label: "Mulai Keanggotaan" },
-      { field: "selesai_keanggotaan", label: "Selesai Keanggotaan" },
+      { field: "mulai_tahun", label: "Mulai Keanggotaan" },
+      { field: "mulai_bulan", label: "Mulai Keanggotaan" },
+      { field: "selesai_tahun", label: "Selesai Keanggotaan" },
+      { field: "selesai_bulan", label: "Selesai Keanggotaan" },
       { field: "instansi_prof", label: "Instansi Profesi" },
     ],
     success: () => router.push(prefix + menu.url),
@@ -50,11 +54,12 @@ export default function AnggotaProfesiDetail() {
     show(router.query.id, {
       transformData: (data) => ({
         ...data,
-        mulai_keanggotaan: date.formatToInput(data.mulai_keanggotaan),
-        selesai_keanggotaan: date.formatToInput(data.selesai_keanggotaan),
       }),
     });
   }, [router, user]);
+
+  const bulanOptions = getMonthOptions();
+  const tahunOptions = getYearOptions();
 
   if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
   return (
@@ -132,29 +137,43 @@ export default function AnggotaProfesiDetail() {
                 disabled
               />
             </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
+						<Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Mulai Keanggotaan <span className="text-danger-600">*</span>
+                Mulai <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="date"
+              <Form.Select
                 className="flex-1"
-                name="mulai_keanggotaan"
-                value={form.mulai_keanggotaan}
+                name="mulai_tahun"
+                value={form.mulai_tahun}
+                options={tahunOptions}
+                disabled
+              />
+              <Form.Select
+                className="flex-1"
+                name="mulai_bulan"
+                value={form.mulai_bulan}
+                options={bulanOptions}
                 disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Selesai Keanggotaan <span className="text-danger-600">*</span>
+                Selesai <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="date"
+              <Form.Select
                 className="flex-1"
-                name="selesai_keanggotaan"
-                value={form.selesai_keanggotaan}
+                name="selesai_tahun"
+                value={form.selesai_tahun}
+                options={tahunOptions}
+                disabled
+              />
+              <Form.Select
+                className="flex-1"
+                name="selesai_bulan"
+                value={form.selesai_bulan}
+                options={bulanOptions}
                 disabled
               />
             </Form.Group>
@@ -178,7 +197,7 @@ export default function AnggotaProfesiDetail() {
               <span>:</span>
               <div className="block flex-1 space-y-2">
                 <embed
-                  src={`${FILE_URL}/${form.file}`}
+                  src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
                   className="w-full h-[256px]"
                 />
               </div>

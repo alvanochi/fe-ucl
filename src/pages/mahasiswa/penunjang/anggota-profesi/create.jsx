@@ -8,6 +8,7 @@ import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import useKategoriProfesi from "../../../../repo/kategori-profesi";
+import {getMonthOptions, getYearOptions} from "../../../../repo/bulan-tahun"
 
 export default function AnggotaProfesiCreate() {
   const router = useRouter();
@@ -19,8 +20,10 @@ export default function AnggotaProfesiCreate() {
     kategori_id: "",
     nama_organisasi: "",
     peran: "",
-    mulai_keanggotaan: "",
-    selesai_keanggotaan: "",
+    mulai_tahun: "",
+    mulai_bulan: "",
+    selesai_tahun: "",
+    selesai_bulan: "",
     instansi_prof: "",
   };
 
@@ -28,8 +31,10 @@ export default function AnggotaProfesiCreate() {
     rules: [
       { field: "nama_organisasi", label: "Nama Organisasi" },
       { field: "peran", label: "Peran" },
-      { field: "mulai_keanggotaan", label: "Mulai Keanggotaan" },
-      { field: "selesai_keanggotaan", label: "Selesai Keanggotaan" },
+      { field: "mulai_tahun", label: "Mulai Keanggotaan" },
+      { field: "mulai_bulan", label: "Mulai Keanggotaan" },
+      { field: "selesai_tahun", label: "Selesai Keanggotaan" },
+      { field: "selesai_bulan", label: "Selesai Keanggotaan" },
       { field: "instansi_prof", label: "Instansi Profesi" },
     ],
     success: () => router.push(prefix + menu.url),
@@ -39,6 +44,9 @@ export default function AnggotaProfesiCreate() {
 
   const { data: kategoriProfesi, isLoading: isLoadingKategoriProfesi } =
     useKategoriProfesi([user]);
+
+  const bulanOptions = getMonthOptions();
+  const tahunOptions = getYearOptions();
 
   if ([user, menu, isLoadingKategoriProfesi].some((item) => item == null))
     return <p>Loading...</p>;
@@ -80,6 +88,7 @@ export default function AnggotaProfesiCreate() {
                 name="nama_organisasi"
                 onChange={inputHandler}
                 value={form.nama_organisasi}
+                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -93,37 +102,56 @@ export default function AnggotaProfesiCreate() {
                 name="peran"
                 onChange={inputHandler}
                 value={form.peran}
+                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Mulai Keanggotaan <span className="text-danger-600">*</span>
+                Mulai <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="date"
+              <Form.Select
                 className="flex-1"
-                name="mulai_keanggotaan"
+                name="mulai_tahun"
+                value={form.mulai_tahun}
                 onChange={inputHandler}
-                value={form.mulai_keanggotaan}
+                options={tahunOptions}
+                required
+              />
+              <Form.Select
+                className="flex-1"
+                name="mulai_bulan"
+                value={form.mulai_bulan}
+                onChange={inputHandler}
+                options={bulanOptions}
+                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Selesai Keanggotaan <span className="text-danger-600">*</span>
+                Selesai <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="date"
+              <Form.Select
                 className="flex-1"
-                name="selesai_keanggotaan"
+                name="selesai_tahun"
+                value={form.selesai_tahun}
                 onChange={inputHandler}
-                value={form.selesai_keanggotaan}
+                options={tahunOptions}
+                required
+              />
+              <Form.Select
+                className="flex-1"
+                name="selesai_bulan"
+                value={form.selesai_bulan}
+                onChange={inputHandler}
+                options={bulanOptions}
+                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Instansi Profesi <span className="text-danger-600">*</span>
+                Instansi Profesi
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -144,6 +172,7 @@ export default function AnggotaProfesiCreate() {
                 className="flex-1"
                 name="file_profesi"
                 onChange={inputHandler}
+                required
               />
             </Form.Group>
           </Card.Body>

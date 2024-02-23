@@ -8,9 +8,9 @@ import useMenu from "../../../../../hooks/useMenu";
 import useUser from "../../../../../hooks/useUser";
 import { useRouter } from "next/router";
 import useCRUD from "../../../../../hooks/useCRUD";
-import date from "../../../../../utils/date";
 import { useEffect } from "react";
 import useKategoriProfesi from "../../../../../repo/kategori-profesi";
+import { getMonthOptions, getYearOptions } from "../../../../../repo/bulan-tahun";
 
 export default function AnggotaProfesiEdit() {
 	const router = useRouter();
@@ -25,8 +25,10 @@ export default function AnggotaProfesiEdit() {
 		kategori_id: "",
 		nama_organisasi: "",
 		peran: "",
-		mulai_keanggotaan: "",
-		selesai_keanggotaan: "",
+    mulai_tahun: "",
+    mulai_bulan: "",
+    selesai_tahun: "",
+    selesai_bulan: "",
 		instansi_prof: "",
 		file: "",
 	};
@@ -36,8 +38,10 @@ export default function AnggotaProfesiEdit() {
 			{ field: "nama_organisasi", label: "Nama Organisasi" },
 			{ field: "kategori_id", label: "Kategori" },
 			{ field: "peran", label: "Peran" },
-			{ field: "mulai_keanggotaan", label: "Mulai Keanggotaan" },
-			{ field: "selesai_keanggotaan", label: "Selesai Keanggotaan" },
+      { field: "mulai_tahun", label: "Mulai Keanggotaan" },
+      { field: "mulai_bulan", label: "Mulai Keanggotaan" },
+      { field: "selesai_tahun", label: "Selesai Keanggotaan" },
+      { field: "selesai_bulan", label: "Selesai Keanggotaan" },
 			{ field: "instansi_prof", label: "Instansi Profesi" },
 		],
 		success: () => router.push(prefix + menu.url),
@@ -56,11 +60,12 @@ export default function AnggotaProfesiEdit() {
 		show(router.query.id, {
 			transformData: (data) => ({
 				...data,
-				mulai_keanggotaan: date.formatToInput(data.mulai_keanggotaan),
-				selesai_keanggotaan: date.formatToInput(data.selesai_keanggotaan),
 			}),
 		});
 	}, [router, user]);
+
+	const bulanOptions = getMonthOptions();
+  const tahunOptions = getYearOptions();
 
 	if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
 	return (
@@ -101,6 +106,7 @@ export default function AnggotaProfesiEdit() {
 								name="nama_organisasi"
 								onChange={inputHandler}
 								value={form.nama_organisasi}
+								required
 							/>
 						</Form.Group>
 						<Form.Group className="flex items-baseline gap-3">
@@ -108,34 +114,52 @@ export default function AnggotaProfesiEdit() {
 								Peran <span className="text-danger-600">*</span>
 							</Form.Label>
 							<span>:</span>
-							<Form.Input type="text" className="flex-1" name="peran" onChange={inputHandler} value={form.peran} />
+							<Form.Input type="text" className="flex-1" name="peran" onChange={inputHandler} value={form.peran} required />
 						</Form.Group>
 						<Form.Group className="flex items-baseline gap-3">
-							<Form.Label className="min-w-[18rem]">
-								Mulai Keanggotaan <span className="text-danger-600">*</span>
-							</Form.Label>
-							<span>:</span>
-							<Form.Input
-								type="date"
-								className="flex-1"
-								name="mulai_keanggotaan"
-								onChange={inputHandler}
-								value={form.mulai_keanggotaan}
-							/>
-						</Form.Group>
-						<Form.Group className="flex items-baseline gap-3">
-							<Form.Label className="min-w-[18rem]">
-								Selesai Keanggotaan <span className="text-danger-600">*</span>
-							</Form.Label>
-							<span>:</span>
-							<Form.Input
-								type="date"
-								className="flex-1"
-								name="selesai_keanggotaan"
-								onChange={inputHandler}
-								value={form.selesai_keanggotaan}
-							/>
-						</Form.Group>
+              <Form.Label className="min-w-[18rem]">
+                Mulai <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
+                className="flex-1"
+                name="mulai_tahun"
+                value={form.mulai_tahun}
+                onChange={inputHandler}
+                options={tahunOptions}
+                required
+              />
+              <Form.Select
+                className="flex-1"
+                name="mulai_bulan"
+                value={form.mulai_bulan}
+                onChange={inputHandler}
+                options={bulanOptions}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Selesai <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
+                className="flex-1"
+                name="selesai_tahun"
+                value={form.selesai_tahun}
+                onChange={inputHandler}
+                options={tahunOptions}
+                required
+              />
+              <Form.Select
+                className="flex-1"
+                name="selesai_bulan"
+                value={form.selesai_bulan}
+                onChange={inputHandler}
+                options={bulanOptions}
+                required
+              />
+            </Form.Group>
 						<Form.Group className="flex items-baseline gap-3">
 							<Form.Label className="min-w-[18rem]">
 								Instansi Profesi <span className="text-danger-600">*</span>
@@ -156,7 +180,10 @@ export default function AnggotaProfesiEdit() {
 							<span>:</span>
 							<div className="block flex-1 space-y-2">
 								<Form.Input type="file" className="flex-1" name="file_profesi" onChange={inputHandler} />
-								<embed src={`${FILE_URL}/${form.file}`} className="w-full h-[256px]" />
+								<embed     
+									src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
+									className="w-full h-[256px]" 
+								/>
 							</div>
 						</Form.Group>
 					</Card.Body>
