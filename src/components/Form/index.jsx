@@ -67,6 +67,7 @@ Form.Combobox = ({
     theme: { colors },
   } = config;
 
+  /* eslint-disable */
   const [selected, setSelected] = useState(null);
   useEffect(() => {
     if (!options || !Array.isArray(options) || !value) return;
@@ -74,6 +75,8 @@ Form.Combobox = ({
 
     setSelected(find);
   }, [options, value]);
+  /* eslint-enable */
+
 
   return (
     <div className="relative w-full max-w-full">

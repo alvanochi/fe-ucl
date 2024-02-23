@@ -120,7 +120,7 @@ export default function PenghargaanDetail() {
 								onChange={inputHandler}
 								options={[
 									{ label: "Lokal", value: "Lokal" },
-									{ label: "Daerah", value: "Daerah" },
+									{ label: "Regional", value: "Regional" },
 									{ label: "Nasional", value: "Nasional" },
 									{ label: "Internasional", value: "Internasional" },
 									{ label: "Lainnya", value: "Lainnya" },
