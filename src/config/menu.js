@@ -73,7 +73,7 @@ export const APP_MENU = [
     label: "Jadwal Kegiatan",
     url: "/jadwal-rapat",
     icon: "mdi-clock-fast",
-    allowedRoles: [ROLE_ID_ADMIN],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
     submenus: [],
   },
   {
