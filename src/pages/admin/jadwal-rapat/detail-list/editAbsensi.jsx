@@ -85,7 +85,7 @@ const EditAbsensi = ({ data, onAddAbsensi }) => {
     <>
       <Button.Icon variant="secondary" icon={<Icon icon="bx:edit" width={20} height={20} />} onClick={toggle} />
 
-      <Modal title="Edit Absensi" show={show} handler={toggle}>
+      <Modal title="Edit Presensi" show={show} handler={toggle}>
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group>
             <Form.Label>

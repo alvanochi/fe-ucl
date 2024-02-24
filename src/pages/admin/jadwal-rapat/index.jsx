@@ -37,7 +37,7 @@ export default function JadwalRapat() {
 	if ([user,  menu, loadingAbsensi].some((item) => item == null)) return <p>Loading...</p>;
 	return (
 		<Layout>
-			<PageHeader title="Jadwal Rapat" icon={menu.icon} items={menu.submenus} handler={setActive} />
+			<PageHeader title="Jadwal Kegiatan" icon={menu.icon} items={menu.submenus} handler={setActive} />
 			<div className="my-8">
         <div className="flex items-center justify-center gap-2 mb-8 mt-8">
           <Button

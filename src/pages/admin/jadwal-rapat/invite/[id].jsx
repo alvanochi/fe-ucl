@@ -79,7 +79,7 @@ export default function Invite() {
 	if ([user, menu, loadingAbsensi].some((item) => item == null)) return <p>Loading...</p>;
 	return (
 		<Layout>
-			<PageHeader title={`Peserta Rapat yang Diundang`} icon={menu.icon} handler={setActive} />
+			<PageHeader title={`Peserta Kegiatan yang Diundang`} icon={menu.icon} handler={setActive} />
 
 			<div className="my-8">
 			<div className="flex items-center justify-center gap-2 mb-8 mt-8">
