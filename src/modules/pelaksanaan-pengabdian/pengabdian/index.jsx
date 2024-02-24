@@ -26,22 +26,28 @@ export default function PengabdianModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
+    totalData
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 mb-8">
-        <Button
-          as="a"
-          href={`${baseURL}/pengabdian/create`}
-          variant="primary"
-          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-          pill
-        >
-          Tambah Pengabdian
-        </Button>
-        <Filter filter={filter} handler={setFilter} />
+      <div>
+        <div className="flex justify-center gap-2 mb-8">
+          <Button
+            as="a"
+            href={`${baseURL}/pengabdian/create`}
+            variant="primary"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
+            Tambah Pengabdian
+          </Button>
+          <Filter filter={filter} handler={setFilter} />
+        </div>
+        <div className="flex justify-between items-start">
+          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -66,10 +72,8 @@ export default function PengabdianModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("judul_kegiatan")}
               >
                 Judul
-                <SortIcon sort={getSortBy("judul_kegiatan")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -121,7 +125,7 @@ export default function PengabdianModule({ baseURL }) {
             data.map((row, index) => (
               <tr key={`row-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
+                  {((page-1) * 10) + index+1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
@@ -209,7 +213,7 @@ export default function PengabdianModule({ baseURL }) {
               />
             }
             onClick={() => setPage(page - 1)}
-            disabled={!canPrev}
+            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
             pill
           />
           <Button
@@ -224,7 +228,7 @@ export default function PengabdianModule({ baseURL }) {
             }
             iconPosition="right"
             onClick={() => setPage(page + 1)}
-            disabled={!canNext}
+            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
             pill
           >
             Next Page

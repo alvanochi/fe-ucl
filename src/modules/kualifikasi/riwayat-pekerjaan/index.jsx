@@ -25,22 +25,28 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
+    totalData
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 my-8">
-        <Button
-          as="a"
-          href={`${baseURL}/riwayat-pekerjaan/create`}
-          variant="primary"
-          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-          pill
-        >
-          Tambah Riwayat Pekerjaan
-        </Button>
-        <Filter filter={filter} handler={setFilter} />
+      <div>
+        <div className="flex justify-center gap-2 mb-8">
+          <Button
+            as="a"
+            href={`${baseURL}/riwayat-pekerjaan/create`}
+            variant="primary"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
+            Tambah Riwayat Pekerjaan
+          </Button>
+          <Filter filter={filter} handler={setFilter} />
+        </div>
+        <div className="flex justify-between items-start">
+          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow"
@@ -65,37 +71,29 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jabatan")}
               >
                 Nama Pekerjaan
-                <SortIcon sort={getSortBy("jabatan")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("deskripsi")}
               >
                 Jenis Pekerjaan
-                <SortIcon sort={getSortBy("deskripsi")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("mulai_kerja")}
               >
                 Waktu
-                <SortIcon sort={getSortBy("mulai_kerja")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("area_kerja")}
               >
                 LN/DN?
-                <SortIcon sort={getSortBy("area_kerja")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -133,7 +131,7 @@ export default function RiwayatPekerjaanModule({ baseURL }) {
               return (
                 <tr key={`row-${index}`}>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
+                    {rowNumber}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                     {row.status == 0 && (
