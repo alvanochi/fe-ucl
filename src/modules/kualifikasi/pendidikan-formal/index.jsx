@@ -25,22 +25,28 @@ export default function PendidikanFormalModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
+    totalData,
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 mb-8">
-        <Button
-          as="a"
-          href={`${baseURL}/pendidikan-formal/create`}
-          variant="primary"
-          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-          pill
-        >
-          Tambah Pendidikan Formal
-        </Button>
-        <Filter filter={filter} handler={setFilter} />
+      <div>
+        <div className="flex justify-center gap-2 mb-8">
+          <Button
+            as="a"
+            href={`${baseURL}/pendidikan-formal/create`}
+            variant="primary"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
+            Tambah Pendidikan Formal
+          </Button>
+          <Filter filter={filter} handler={setFilter} />
+        </div>
+        <div className="flex justify-between items-start">
+          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow"
@@ -65,20 +71,16 @@ export default function PendidikanFormalModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jenjang_studi")}
               >
                 Jenjang
-                <SortIcon sort={getSortBy("jenjang_studi")} />
               </div>
             </th>
 
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("asal")}
               >
                 Asal
-                <SortIcon sort={getSortBy("asal")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -93,10 +95,8 @@ export default function PendidikanFormalModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("gelar_akademik")}
               >
                 Gelar
-                <SortIcon sort={getSortBy("gelar_akademik")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -210,6 +210,7 @@ export default function PendidikanFormalModule({ baseURL }) {
             })}
         </tbody>
       </table>
+
       <div className="flex mt-8">
         <div className="flex gap-1 ml-auto">
           <Button.Icon
@@ -223,7 +224,7 @@ export default function PendidikanFormalModule({ baseURL }) {
               />
             }
             onClick={() => setPage(page - 1)}
-            disabled={!canPrev}
+            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
             pill
           />
           <Button
@@ -238,7 +239,7 @@ export default function PendidikanFormalModule({ baseURL }) {
             }
             iconPosition="right"
             onClick={() => setPage(page + 1)}
-            disabled={!canNext}
+            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
             pill
           >
             Next Page

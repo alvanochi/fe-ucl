@@ -73,7 +73,7 @@ const TambahMhs = ({ data, onTambahMhs }) => {
         onClick={toggle}
         pill
       >
-        Tambah
+        Presensi
       </Button>
       <Modal title="Tambah Mahasiswa" show={show} handler={toggle}>
         <Form className="space-y-4" onSubmit={submitHandler}>

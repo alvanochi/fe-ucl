@@ -49,7 +49,7 @@ export default function ListPerkuliahan() {
   if ([user, menu, loading].some((item) => item == null)) return <p>Loading...</p>;
   return (
     <Layout>
-      <PageHeader title={'Absensi Perkuliahan'} icon={menu.icon} handler={setActive} />
+      <PageHeader title={'Presensi Perkuliahan'} icon={menu.icon} handler={setActive} />
       <div className="flex justify-center gap-2 mb-8">
 
       </div>

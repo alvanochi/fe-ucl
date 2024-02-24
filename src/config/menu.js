@@ -47,7 +47,7 @@ export const APP_MENU = [
     ],
   },
   {
-    label: "Absensi",
+    label: "Presensi",
     url: "/absen",
     icon: "mdi:account-card-details",
     allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_ADMIN],
@@ -63,7 +63,7 @@ export const APP_MENU = [
         allowedRoles: [ROLE_ID_DOSEN],
       },
       {
-        label: "Rekap Absensi",
+        label: "Rekap Presensi",
         url: "#rekap-absensi",
         allowedRoles: [ROLE_ID_ADMIN],
       },
