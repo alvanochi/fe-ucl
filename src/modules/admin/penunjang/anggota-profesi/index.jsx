@@ -64,7 +64,9 @@ export default function AnggotaProfesiModule({ baseURL }) {
     }
   };
 
-  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/anggotaProfPending`);
+  const [dataUrl, setDataUrl] = useState(
+    `${process.env.API_ENDPOINT}/admin/anggotaProfPending`
+  );
 
   const handleApproveClick = async () => {
     await approveData();
@@ -108,7 +110,7 @@ export default function AnggotaProfesiModule({ baseURL }) {
           icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
           onClick={handlePendingClick}
           pill
-          >
+        >
           Pending
         </Button>
         <Button
@@ -116,7 +118,7 @@ export default function AnggotaProfesiModule({ baseURL }) {
           icon={<Icon icon="oi:check" width={20} height={20} />}
           onClick={handleApproveClick}
           pill
-          >
+        >
           Aprove
         </Button>
         <Button
@@ -124,7 +126,7 @@ export default function AnggotaProfesiModule({ baseURL }) {
           icon={<Icon icon="oi:x" width={20} height={20} />}
           onClick={handleRejectClick}
           pill
-          >
+        >
           Reject
         </Button>
       </div>
@@ -157,30 +159,18 @@ export default function AnggotaProfesiModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("nama_organisasi")}
-              >
+              <div className="flex items-center gap-2 cursor-pointer">
                 Nama Organisasi
-                <SortIcon sort={getSortBy("nama_organisasi")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("peran")}
-              >
+              <div className="flex items-center gap-2 cursor-pointer">
                 Peran/Kedudukan
-                <SortIcon sort={getSortBy("peran")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("mulai_keanggotaan")}
-              >
-                Mulai Keanggotaan
-                <SortIcon sort={getSortBy("mulai_keanggotaan")} />
+              <div className="flex items-center gap-2 cursor-pointer">
+                Periode
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
@@ -249,7 +239,7 @@ export default function AnggotaProfesiModule({ baseURL }) {
                     {row.peran}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {date.formatToID(new Date(row.mulai_keanggotaan))}
+                    {`${row.mulai_tahun} ${row.mulai_bulan} s.d ${row.selesai_tahun} ${row.selesai_bulan}`}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
@@ -265,33 +255,32 @@ export default function AnggotaProfesiModule({ baseURL }) {
                           />
                         }
                       />
-                      {
-                        row.status === 0 && (
-                          <>
-                            <Button.Icon
-                              variant="success"
-                              type="button"
-                              icon={<Icon icon="oi:check" width={20} height={20} />}
-                              onClick={() =>
-                                approveData(row.prof_id).then(() => refresh())
-                              }
-                            />
-                            <Button.Icon
-                              variant="danger"
-                              type="button"
-                              icon={<Icon icon="oi:x" width={20} height={20} />}
-                              onClick={() =>
-                                rejectData(row.prof_id).then(() => refresh())
-                              }
-                            />
-                          </>
-                        )
-                      }
-                      
+                      {row.status === 0 && (
+                        <>
+                          <Button.Icon
+                            variant="success"
+                            type="button"
+                            icon={
+                              <Icon icon="oi:check" width={20} height={20} />
+                            }
+                            onClick={() =>
+                              approveData(row.prof_id).then(() => refresh())
+                            }
+                          />
+                          <Button.Icon
+                            variant="danger"
+                            type="button"
+                            icon={<Icon icon="oi:x" width={20} height={20} />}
+                            onClick={() =>
+                              rejectData(row.prof_id).then(() => refresh())
+                            }
+                          />
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
-              )
+              );
             })}
         </tbody>
       </table>
