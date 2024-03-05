@@ -246,6 +246,19 @@ export const APP_MENU = [
     ],
   },
   {
+    label: "E-Voting",
+    url: "/e-voting",
+    icon: "ic:twotone-how-to-vote",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "voting",
+        url: "#voting",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
     label: "Gamify",
     url: "/gamify-tias",
     icon: "iconoir:gamepad",

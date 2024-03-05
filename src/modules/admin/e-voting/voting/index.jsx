@@ -1,49 +1,42 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
 import Filter from "./filter";
-import useDatatable from "../../../../hooks/useDatatable";
-import SortIcon from "../../../../components/SortIcon";
+import useDatatableAbsensi from "../../../../hooks/useDataTableAbsensi";
+import date from "../../../../utils/date";
 import Form from "../../../../components/Form";
-import ChangeStatus from "../changeStatus";
 import useCRUD from "../../../../hooks/useCRUD";
 
-export default function EventModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/berita/event`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/berita`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/berita/pamflet`;
-
+export default function VotingModule({ baseURL }) {
+  const DATA_URL = `${process.env.API_ENDPOINT}/voting/question-all`;
+  const DELETE_URL = `${process.env.API_ENDPOINT}/voting/question`;
   const {
-    data,
-    loading,
-    page,
-    pageCount,
+    dataAbsensi,
+    loadingAbsensi,
+    pageAbsensi,
+    pageCountAbsensi,
     filter,
-    setPage,
+    setPageAbsensi,
     setFilter,
-    canPrev,
-    canNext,
-    refresh,
+    canPrevAbsensi,
+    canNextAbsensi,
+    refreshAbsensi,
     sortBy,
     getSortBy,
-  } = useDatatable(DATA_URL);
+  } = useDatatableAbsensi(DATA_URL);
 
   const { destroy } = useCRUD(DELETE_URL);
-
-  const handleStatusChange = () => {
-    refresh();
-  };
 
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-8">
         <Button
           as="a"
-          href={`${baseURL}/event/create`}
+          href={`${baseURL}/create`}
           variant="primary"
           icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
           pill
         >
-          Tambah Event
+          Create Vote
         </Button>
         <Filter />
       </div>
@@ -58,29 +51,24 @@ export default function EventModule({ baseURL }) {
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                Title
+                deskripsi
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                Deskripsi
+                status
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Pamflet
+                Tanggal Dibuat
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
         </thead>
         <tbody>
-          {loading && (
+          {loadingAbsensi && (
             <tr>
               <td
                 colSpan="6"
@@ -90,7 +78,7 @@ export default function EventModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading && data && data.length < 1 && (
+          {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
             <tr>
               <td
                 colSpan="6"
@@ -100,15 +88,12 @@ export default function EventModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading &&
-            data &&
-            data.map((row, index) => (
+          {!loadingAbsensi &&
+            dataAbsensi &&
+            dataAbsensi.map((row, index) => (
               <tr key={`row-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {index + 1}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.title}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {`${row.deskripsi.split(" ").slice(0, 5).join(" ")}${
@@ -116,30 +101,33 @@ export default function EventModule({ baseURL }) {
                   }`}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status === 0 ? (
+                  {row.status_pertanyaan === 1 ? (
                     <h5 className="text-green-500 font-bold">ACTIVE</h5>
                   ) : (
                     <h5 className="text-red-500 font-bold">NON ACTIVE</h5>
                   )}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  <img
-                    src={`${FILE_URL}/${row.pamflet}`}
-                    alt="pamflet"
-                    className="w-2/3 h-[140px]"
-                  />
+                  {date.formatToID(new Date(row.created_at))}
                 </td>
 
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
-                    <ChangeStatus
-                      id={{ id: row.id }}
-                      status={{ status: row.status }}
-                      onStatusChange={handleStatusChange}
+                    <Button.Icon
+                      as="a"
+                      href={`${baseURL}/detail-question/${row.id}`}
+                      variant="info"
+                      icon={
+                        <Icon
+                          icon="fluent:info-24-filled"
+                          width={20}
+                          height={20}
+                        />
+                      }
                     />
                     <Button.Icon
                       as="a"
-                      href={`${baseURL}/${row.id}`}
+                      href={`${baseURL}/edit-question/${row.id}`}
                       variant="secondary"
                       icon={<Icon icon="bx:edit" width={20} height={20} />}
                     />
@@ -152,7 +140,9 @@ export default function EventModule({ baseURL }) {
                           height={20}
                         />
                       }
-                      onClick={() => destroy(row.id).then(() => refresh())}
+                      onClick={() =>
+                        destroy(row.id).then(() => refreshAbsensi())
+                      }
                     />
                   </div>
                 </td>
@@ -172,8 +162,8 @@ export default function EventModule({ baseURL }) {
                 height={20}
               />
             }
-            onClick={() => setPage(page - 1)}
-            disabled={!canPrev}
+            onClick={() => setPageAbsensi(pageAbsensi - 1)}
+            disabled={pageAbsensi <= 1}
             pill
           />
           <Button
@@ -187,8 +177,8 @@ export default function EventModule({ baseURL }) {
               />
             }
             iconPosition="right"
-            onClick={() => setPage(page + 1)}
-            disabled={!canNext}
+            onClick={() => setPageAbsensi(pageAbsensi + 1)}
+            disabled={pageAbsensi >= pageCountAbsensi}
             pill
           >
             Next Page
@@ -199,15 +189,19 @@ export default function EventModule({ baseURL }) {
           <Form.Input
             type="number"
             min="1"
-            max={pageCount}
+            max={pageCountAbsensi || 1}
             className="w-20"
-            value={page}
+            value={pageAbsensi}
             onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
+              setPageAbsensi(
+                Math.max(
+                  1,
+                  Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)
+                )
+              )
             }
           />
-          of {pageCount || 1}
+          of {pageCountAbsensi || 1}
         </div>
       </div>
     </>
