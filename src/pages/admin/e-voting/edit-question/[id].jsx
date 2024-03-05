@@ -75,7 +75,7 @@ export default function CreateQuestion() {
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
         <Card className="mt-4">
-          <Card.Header className="text-center">Buat Pertanyaan</Card.Header>
+          <Card.Header className="text-center">Pertanyaan</Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
@@ -151,7 +151,7 @@ export default function CreateQuestion() {
                     colSpan={4}
                     className="text-sm border-2 border-white bg-gray-50"
                   >
-                    Jawaban Pertanyaan
+                    Option
                   </th>
                 </tr>
                 <tr>

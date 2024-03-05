@@ -38,7 +38,7 @@ export default function VotingModule({ baseURL }) {
         >
           Create Vote
         </Button>
-        <Filter />
+        {/* <Filter /> */}
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
