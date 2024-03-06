@@ -18,6 +18,7 @@ function MyApp({ Component, pageProps }) {
         path.startsWith("/mahasiswa") ||
         path.startsWith("/dosen") ||
         path.startsWith("/admin") ||
+        path.startsWith("/demo") ||
         path.startsWith("/login") ||
         path.startsWith("/register") ||
         path.startsWith("/forgot-password") ||

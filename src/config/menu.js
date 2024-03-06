@@ -1,4 +1,9 @@
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA, ROLE_ID_ADMIN } from "./role";
+import {
+  ROLE_ID_DOSEN,
+  ROLE_ID_MAHASISWA,
+  ROLE_ID_ADMIN,
+  ROLE_ID_DEMO,
+} from "./role";
 
 export const APP_MENU = [
   {
@@ -10,6 +15,7 @@ export const APP_MENU = [
       ROLE_ID_DOSEN,
       ROLE_ID_MAHASISWA,
       ROLE_ID_ADMIN,
+      ROLE_ID_DEMO,
     ],
     submenus: [],
   },
@@ -17,22 +23,42 @@ export const APP_MENU = [
     label: "Profil",
     url: "/profil",
     icon: "mdi:user-circle",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+    allowedRoles: [
+      ROLE_ID_ADMIN,
+      ROLE_ID_DOSEN,
+      ROLE_ID_MAHASISWA,
+      ROLE_ID_DEMO,
+    ],
     submenus: [
       {
         label: "Kependudukan",
         url: "#kependudukan",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [
+          ROLE_ID_ADMIN,
+          ROLE_ID_DOSEN,
+          ROLE_ID_MAHASISWA,
+          ROLE_ID_DEMO,
+        ],
       },
       {
         label: "Alamat dan Kontak",
         url: "#alamat-dan-kontak",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [
+          ROLE_ID_ADMIN,
+          ROLE_ID_DOSEN,
+          ROLE_ID_MAHASISWA,
+          ROLE_ID_DEMO,
+        ],
       },
       {
         label: "Keluarga",
         url: "#keluarga",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [
+          ROLE_ID_ADMIN,
+          ROLE_ID_DOSEN,
+          ROLE_ID_MAHASISWA,
+          ROLE_ID_DEMO,
+        ],
       },
       {
         label: "Kepangkatan",
@@ -73,7 +99,12 @@ export const APP_MENU = [
     label: "Jadwal Kegiatan",
     url: "/jadwal-rapat",
     icon: "mdi-clock-fast",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+    allowedRoles: [
+      ROLE_ID_ADMIN,
+      ROLE_ID_DOSEN,
+      ROLE_ID_MAHASISWA,
+      ROLE_ID_DEMO,
+    ],
     submenus: [],
   },
   {
@@ -337,17 +368,32 @@ export const APP_MENU = [
     label: "Setting",
     url: "/setting",
     icon: "ant-design:setting-filled",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+    allowedRoles: [
+      ROLE_ID_ADMIN,
+      ROLE_ID_DOSEN,
+      ROLE_ID_MAHASISWA,
+      ROLE_ID_DEMO,
+    ],
     submenus: [
       {
         label: "Ganti Password",
         url: "#change-password",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [
+          ROLE_ID_ADMIN,
+          ROLE_ID_DOSEN,
+          ROLE_ID_MAHASISWA,
+          ROLE_ID_DEMO,
+        ],
       },
       {
         label: "Akun",
         url: "#akun",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [
+          ROLE_ID_ADMIN,
+          ROLE_ID_DOSEN,
+          ROLE_ID_MAHASISWA,
+          ROLE_ID_DEMO,
+        ],
       },
     ],
   },

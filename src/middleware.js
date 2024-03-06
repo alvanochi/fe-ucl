@@ -49,14 +49,12 @@ export const middleware = async (req) => {
   //   DataPribadi == false
   // )
   //   return response;
-    
 
   if (user == null && !protectedRoute.includes(url.pathname))
     return NextResponse.redirect(new URL("/login", req.url));
 
   // if (user && DataPribadi == false)
   // return NextResponse.redirect(new URL("/createDataPribadi", req.url));
-  
 
   if (
     user?.role == "Dosen" &&
@@ -64,6 +62,12 @@ export const middleware = async (req) => {
     !universalRoute.includes(url.pathname)
   )
     return NextResponse.redirect(new URL("/dosen", req.url));
+  if (
+    user?.role == "Demo" &&
+    url.pathname.startsWith("/demo") === false &&
+    !universalRoute.includes(url.pathname)
+  )
+    return NextResponse.redirect(new URL("/demo", req.url));
   if (
     user?.role == "Mahasiswa" &&
     url.pathname.startsWith("/mahasiswa") === false &&
