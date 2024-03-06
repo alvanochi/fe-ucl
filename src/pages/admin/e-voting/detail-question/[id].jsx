@@ -191,7 +191,7 @@ export default function VoteDetail() {
                   )}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                  {opt.jmlSuara}
+                  {opt.hasil}
                 </td>
               </tr>
             ))}
