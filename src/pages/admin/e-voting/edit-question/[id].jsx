@@ -202,7 +202,7 @@ export default function CreateQuestion() {
                               }));
                             }}
                           />
-                          NON ACTIVE
+                          ACTIVE
                         </Form.Label>
                         <Form.Label>
                           <Form.Radio
@@ -218,7 +218,7 @@ export default function CreateQuestion() {
                               }));
                             }}
                           />
-                          ACTIVE
+                          NON ACTIVE
                         </Form.Label>
                       </div>
                     </td>
