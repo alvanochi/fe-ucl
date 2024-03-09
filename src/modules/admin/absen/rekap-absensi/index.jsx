@@ -152,7 +152,7 @@ export default function RekapAbsensi({ baseURL }) {
               />
             }
             onClick={() => setPage(page - 1)}
-            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
+            disabled={!canPrev}
             pill
           />
           <Button
@@ -167,7 +167,7 @@ export default function RekapAbsensi({ baseURL }) {
             }
             iconPosition="right"
             onClick={() => setPage(page + 1)}
-            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
+            disabled={!canNext}
             pill
           >
             Next Page
