@@ -27,28 +27,27 @@ export default function RekapAbsensi({ baseURL }) {
     getSortBy,
   } = useDatatable(DATA_URL);
 
-  const [totalDataMhs, setTotalDataMhs] = useState('');
-  const [totalDataDosen, setTotalDataDosen] = useState('');
+  const [totalDataMhs, setTotalDataMhs] = useState("");
+  const [totalDataDosen, setTotalDataDosen] = useState("");
 
-
-  
   useEffect(() => {
     const fetchTotalData = async () => {
       try {
-        const response = await axios.get(`${process.env.API_ENDPOINT}/users/total-data`);
+        const response = await axios.get(
+          `${process.env.API_ENDPOINT}/users/total-data`
+        );
 
         const res = response.data;
 
         setTotalDataMhs(res.total_mahasiswa);
-        setTotalDataDosen(res.total_dosen)
+        setTotalDataDosen(res.total_dosen);
       } catch (error) {
         console.error("Error fetching pertemuan:", error);
       }
     };
-  
+
     fetchTotalData();
   }, []);
-
 
   return (
     <>
@@ -56,7 +55,9 @@ export default function RekapAbsensi({ baseURL }) {
         <Filter filter={filter} handler={setFilter} />
       </div>
       <div className="flex items-start">
-        <span>Total Data Dosen: <b>{totalDataDosen}</b></span>
+        <span>
+          Total Data Dosen: <b>{totalDataDosen}</b>
+        </span>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -74,15 +75,20 @@ export default function RekapAbsensi({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                NIDN
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">NIDN</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">Email</div>
+              <div className="flex items-center gap-2 cursor-pointer">
+                GASAL
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                GENAP
+              </div>
             </th>
           </tr>
         </thead>
@@ -118,12 +124,18 @@ export default function RekapAbsensi({ baseURL }) {
                   {row.nidn}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  <Link href={`${baseURL}/rekap-absensi/${row.nip}`} className="text-blue-500">
+                  <Link
+                    href={`${baseURL}/rekap-absensi/${row.nip}`}
+                    className="text-blue-500"
+                  >
                     {row.nama_lengkap}
                   </Link>
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.email}
+                  0.84%
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">
+                  0.67%
                 </td>
               </tr>
             ))}

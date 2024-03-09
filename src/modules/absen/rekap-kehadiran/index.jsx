@@ -6,21 +6,24 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function RekapKehadiran({ baseURL, user }) {
-  const [data, setData] = useState(null);
+  const [dataGasal, setDataGasal] = useState(null);
+  const [dataGenap, setDataGenap] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchDataGasal = async () => {
       try {
         const DATA_URL = `https://absen.ft.uika-bogor.ac.id/api/pembelajaran/list-pertemuan`;
         const response = await axios.get(DATA_URL, {
           params: {
             dataTable: true,
+            filter: ["semester"],
+            filterValue: ["gasal"],
             code: user && user.nip,
           },
         });
-        setData(response.data.data);
+        setDataGasal(response.data.data);
       } catch (error) {
         setError(error);
       } finally {
@@ -28,7 +31,27 @@ export default function RekapKehadiran({ baseURL, user }) {
       }
     };
 
-    fetchData();
+    const fetchDataGenap = async () => {
+      try {
+        const DATA_URL = `https://absen.ft.uika-bogor.ac.id/api/pembelajaran/list-pertemuan`;
+        const response = await axios.get(DATA_URL, {
+          params: {
+            dataTable: true,
+            filter: ["semester"],
+            filterValue: ["genap"],
+            code: user && user.nip,
+          },
+        });
+        setDataGenap(response.data.data);
+      } catch (error) {
+        setError(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDataGenap();
+    fetchDataGasal();
   }, [user]);
 
   return (
@@ -57,21 +80,17 @@ export default function RekapKehadiran({ baseURL, user }) {
         </ul>
       </div>
 
-      <Button
-        type="button"
-        variant="primary"
-        icon={
-          <Icon
-            icon="solar:alt-arrow-down-bold-duotone"
-            width={20}
-            height={20}
-          />
-        }
-        iconPosition="right"
-        pill
-      >
-        GASAL
-      </Button>
+      <div className="flex justify-center items-center">
+        <Button
+          type="button"
+          variant="primary"
+          className="cursor-default"
+          iconPosition="right"
+          pill
+        >
+          GASAL
+        </Button>
+      </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
         cellPadding={10}
@@ -129,8 +148,8 @@ export default function RekapKehadiran({ baseURL, user }) {
             </tr>
           )}
           {!loading &&
-            data &&
-            data.map((row, index) => (
+            dataGasal &&
+            dataGasal.map((row, index) => (
               <tr key={index}>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {index + 1}
@@ -199,22 +218,17 @@ export default function RekapKehadiran({ baseURL, user }) {
         </tbody>
       </table>
 
-      <Button
-        type="button"
-        variant="primary"
-        className="mt-8"
-        icon={
-          <Icon
-            icon="solar:alt-arrow-down-bold-duotone"
-            width={20}
-            height={20}
-          />
-        }
-        iconPosition="right"
-        pill
-      >
-        GENAP
-      </Button>
+      <div className="flex justify-center items-center">
+        <Button
+          type="button"
+          variant="primary"
+          className="mt-8 cursor-default"
+          iconPosition="right"
+          pill
+        >
+          GENAP
+        </Button>
+      </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
         cellPadding={10}
@@ -272,8 +286,8 @@ export default function RekapKehadiran({ baseURL, user }) {
             </tr>
           )}
           {!loading &&
-            data &&
-            data.map((row, index) => (
+            dataGenap &&
+            dataGenap.map((row, index) => (
               <tr key={index}>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {index + 1}
@@ -341,6 +355,21 @@ export default function RekapKehadiran({ baseURL, user }) {
             ))}
         </tbody>
       </table>
+
+      <div className="flex mt-8">
+        <Button
+          as="a"
+          href={baseURL}
+          variant="danger"
+          icon={
+            <Icon icon="material-symbols:chevron-left" width={20} height={20} />
+          }
+          iconPosition="left"
+          pill
+        >
+          Kembali
+        </Button>
+      </div>
     </>
   );
 }

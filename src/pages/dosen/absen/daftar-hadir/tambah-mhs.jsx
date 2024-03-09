@@ -7,33 +7,38 @@ import useModal from "../../../../hooks/useModal";
 import { Icon } from "@iconify-icon/react";
 import useForm from "../../../../hooks/useForm";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import useMahasiswa from "../../../../repo/mahasiswa";
 
 const TambahMhs = ({ data, onTambahMhs }) => {
   const { show, toggle, close } = useModal();
 
   const INITIAL_FORM = {
     id_pembelajaran: data && data.id ? data.id : "",
-    npm: "",
     status_absen: "1",
-  }
+  };
 
-  const {form, inputHandler} = useForm(INITIAL_FORM, {
+  const [selectedMhs, setSelectedMhs] = useState("");
+
+  const handleMhsChange = (selected) => {
+    setSelectedMhs(selected?.value);
+  };
+
+  const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
       { field: "id", label: "id" },
-      { field: "npm", label: "npm" },
       { field: "status_absen", label: "status_absen" },
     ],
   });
-  
 
   async function submitHandler(event) {
     event.preventDefault();
     try {
       const requestData = {
         ...form,
-      }
+        npm: selectedMhs,
+      };
 
-      if(!requestData.status_absen || !requestData.npm){
+      if (!requestData.status_absen || !requestData.npm) {
         toastAlert("error", "Pleas fill in all the required fields.");
 
         return;
@@ -65,6 +70,8 @@ const TambahMhs = ({ data, onTambahMhs }) => {
     }
   }
 
+  const { data: listMahasiswa } = useMahasiswa();
+
   return (
     <>
       <Button
@@ -83,18 +90,20 @@ const TambahMhs = ({ data, onTambahMhs }) => {
             onChange={inputHandler}
             value={form.id_pembelajaran}
           />
-          <Form.Group>
-            <Form.Label>
-              NPM <span className="text-danger-600">*</span>
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[10rem]">
+              Mahasiswa <span className="text-danger-600">*</span>
             </Form.Label>
-            <Form.Input
-              type="number"
+            <span>:</span>
+            <Form.Combobox
               name="npm"
-              value={form.npm}
-              onChange={inputHandler}
-              required
+              onChange={handleMhsChange}
+              value={selectedMhs}
+              options={listMahasiswa?.map((mhs) => ({
+                label: mhs.nama_lengkap,
+                value: mhs.npm,
+              }))}
             />
-
           </Form.Group>
           <Form.Group className="flex items-baseline gap-2">
             <Form.Label className="min-w-[8rem] text-sm">
@@ -102,33 +111,33 @@ const TambahMhs = ({ data, onTambahMhs }) => {
             </Form.Label>
             <span>:</span>
             <div className="flex gap-6">
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
-                value={1}
-                onChange={inputHandler}
-                checked={form.status_absen == 1}
-              />
-              Masuk
-            </Form.Label>
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
-                value={2}
-                onChange={inputHandler}
-                checked={form.status_absen == 2}
-              />
-              Sakit / Izin
-            </Form.Label>
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
-                value={0}
-                onChange={inputHandler}
-                checked={form.status_absen == 0}
-              />
-              Alfa
-            </Form.Label>
+              <Form.Label>
+                <Form.Radio
+                  name="status_absen"
+                  value={1}
+                  onChange={inputHandler}
+                  checked={form.status_absen == 1}
+                />
+                Masuk
+              </Form.Label>
+              <Form.Label>
+                <Form.Radio
+                  name="status_absen"
+                  value={2}
+                  onChange={inputHandler}
+                  checked={form.status_absen == 2}
+                />
+                Sakit / Izin
+              </Form.Label>
+              <Form.Label>
+                <Form.Radio
+                  name="status_absen"
+                  value={0}
+                  onChange={inputHandler}
+                  checked={form.status_absen == 0}
+                />
+                Alfa
+              </Form.Label>
             </div>
           </Form.Group>
           <div className="flex gap-4 mt-12">

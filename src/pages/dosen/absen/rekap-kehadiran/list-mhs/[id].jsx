@@ -46,6 +46,8 @@ export default function ListMhs() {
   
     fetchData();
   }, [router.query]);
+
+  console.log(data);
 	
 	if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
 	return (
@@ -132,7 +134,7 @@ export default function ListMhs() {
                       <div className="flex items-stretch gap-1">
                         {row.status_absen[columnIndex] === 1 && 'Y'}
                         {row.status_absen[columnIndex] === 0 && 'A'}
-                        {row.status_absen[columnIndex] === 2 && 'S'}
+                        {row.status_absen[columnIndex] === 2 && 'S/I'}
                         {row.status_absen[columnIndex] == null && '-'}
                       </div>
                     </td>
@@ -145,7 +147,7 @@ export default function ListMhs() {
                       <div className="flex items-stretch gap-1">
                         {row.status_absen[columnIndex + 7] === 1 && 'Y'}
                         {row.status_absen[columnIndex + 7] === 0 && 'A'}
-                        {row.status_absen[columnIndex + 7] === 2 && 'S'}
+                        {row.status_absen[columnIndex + 7] === 2 && 'S/I'}
                         {row.status_absen[columnIndex + 7] == null && '-'}
                       </div>
                     </td>
