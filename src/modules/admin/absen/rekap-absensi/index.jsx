@@ -10,37 +10,23 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function RekapAbsensi({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/absensi/list-dosen`;
-
-  const {
-    data,
-    loading,
-    page,
-    pageCount,
-    filter,
-    setPage,
-    setFilter,
-    canPrev,
-    canNext,
-    refresh,
-    sortBy,
-    getSortBy,
-  } = useDatatable(DATA_URL);
-
-  const [totalDataDosen, setTotalDataDosen] = useState("");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true); // Tambahkan state untuk loading
 
   useEffect(() => {
     const fetchTotalData = async () => {
       try {
         const response = await axios.get(
-          `${process.env.API_ENDPOINT}/users/total-data`
+          `${process.env.API_ENDPOINT}/absensi/list-dosen`
         );
 
-        const res = response.data;
+        const res = response.data.data;
 
-        setTotalDataDosen(res.total_dosen);
+        setData(res);
+        setLoading(false); // Set loading menjadi false setelah data berhasil diambil
       } catch (error) {
         console.error("Error fetching pertemuan:", error);
+        setLoading(false); // Set loading menjadi false jika terjadi error
       }
     };
 
@@ -49,14 +35,8 @@ export default function RekapAbsensi({ baseURL }) {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 my-8">
-        <Filter filter={filter} handler={setFilter} />
-      </div>
-      <div className="flex items-start">
-        <span>
-          Total Data Dosen: <b>{totalDataDosen}</b>
-        </span>
-      </div>
+      <div className="flex items-center justify-center gap-2 my-8"></div>
+
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
@@ -64,13 +44,7 @@ export default function RekapAbsensi({ baseURL }) {
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pangkat_id")}
-              >
-                No
-                <SortIcon sort={getSortBy("pangkat_id")} />
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">No</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">NIDN</div>
@@ -139,56 +113,7 @@ export default function RekapAbsensi({ baseURL }) {
             ))}
         </tbody>
       </table>
-      <div className="flex mt-8">
-        <div className="flex gap-1 ml-auto">
-          <Button.Icon
-            type="button"
-            variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
-            onClick={() => setPage(page - 1)}
-            disabled={!canPrev}
-            pill
-          />
-          <Button
-            type="button"
-            variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
-            iconPosition="right"
-            onClick={() => setPage(page + 1)}
-            disabled={!canNext}
-            pill
-          >
-            Next Page
-          </Button>
-        </div>
-        <div className="ml-auto whitespace-nowrap flex items-center gap-2">
-          <p className="">Page</p>
-          <Form.Input
-            type="number"
-            min="1"
-            max={pageCount}
-            className="w-20"
-            value={page}
-            onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
-            }
-          />
-          of {pageCount || 1}
-        </div>
-      </div>
+
     </>
   );
 }
