@@ -137,13 +137,13 @@ export default function Profil() {
                   date.formatToID(new Date(data.tanggal_lahir))}
               </p>
             </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
+            {/* <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[12rem]">
                 Nama Ibu Kandung
               </Form.Label>
               <span>:</span>
               <p>{data.ibu_kandung}</p>
-            </Form.Group>
+            </Form.Group> */}
           </div>
         </Card.Body>
         <Card.Body className="flex border-t">
