@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 export default function RekapAbsensi({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/users/getDosen`;
+  const DATA_URL = `${process.env.API_ENDPOINT}/absensi/list-dosen`;
 
   const {
     data,
@@ -27,7 +27,6 @@ export default function RekapAbsensi({ baseURL }) {
     getSortBy,
   } = useDatatable(DATA_URL);
 
-  const [totalDataMhs, setTotalDataMhs] = useState("");
   const [totalDataDosen, setTotalDataDosen] = useState("");
 
   useEffect(() => {
@@ -39,7 +38,6 @@ export default function RekapAbsensi({ baseURL }) {
 
         const res = response.data;
 
-        setTotalDataMhs(res.total_mahasiswa);
         setTotalDataDosen(res.total_dosen);
       } catch (error) {
         console.error("Error fetching pertemuan:", error);
@@ -132,10 +130,10 @@ export default function RekapAbsensi({ baseURL }) {
                   </Link>
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  0.84%
+                  {row.gasal}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  0.67%
+                  {row.genap}
                 </td>
               </tr>
             ))}
@@ -154,7 +152,7 @@ export default function RekapAbsensi({ baseURL }) {
               />
             }
             onClick={() => setPage(page - 1)}
-            disabled={!canPrev}
+            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
             pill
           />
           <Button
@@ -169,7 +167,7 @@ export default function RekapAbsensi({ baseURL }) {
             }
             iconPosition="right"
             onClick={() => setPage(page + 1)}
-            disabled={!canNext}
+            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
             pill
           >
             Next Page

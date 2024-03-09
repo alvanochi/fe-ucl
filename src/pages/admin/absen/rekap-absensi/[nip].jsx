@@ -106,13 +106,6 @@ export default function RekapKehadiran() {
           type="button"
           variant="primary"
           className="mt-8 cursor-default"
-          icon={
-            <Icon
-              icon="solar:alt-arrow-down-bold-duotone"
-              width={20}
-              height={20}
-            />
-          }
           iconPosition="right"
           pill
         >
@@ -253,13 +246,6 @@ export default function RekapKehadiran() {
           type="button"
           variant="primary"
           className="mt-8 cursor-default"
-          icon={
-            <Icon
-              icon="solar:alt-arrow-down-bold-duotone"
-              width={20}
-              height={20}
-            />
-          }
           iconPosition="right"
           pill
         >
