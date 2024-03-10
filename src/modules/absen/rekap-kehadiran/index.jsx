@@ -4,6 +4,7 @@ import Form from "../../../components/Form";
 import Link from "next/link";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toastAlert } from "../../../lib/sweetalert";
 
 export default function RekapKehadiran({ baseURL, user }) {
   const [dataGasal, setDataGasal] = useState(null);
@@ -19,7 +20,7 @@ export default function RekapKehadiran({ baseURL, user }) {
           params: {
             dataTable: true,
             filter: ["semester", "curr_code"],
-              filterValue: ["gasal", "TIF2021"],
+            filterValue: ["gasal", "TIF2021"],
             code: user && user.nip,
           },
         });
@@ -38,7 +39,7 @@ export default function RekapKehadiran({ baseURL, user }) {
           params: {
             dataTable: true,
             filter: ["semester", "curr_code"],
-              filterValue: ["genap", "TIF2021"],
+            filterValue: ["genap", "TIF2021"],
             code: user && user.nip,
           },
         });
@@ -53,6 +54,36 @@ export default function RekapKehadiran({ baseURL, user }) {
     fetchDataGenap();
     fetchDataGasal();
   }, [user]);
+
+  const GENERATE_URL = `${process.env.API_ENDPOINT}/absensi/list-pertemuan/excel`;
+
+  async function generate(semester) {
+    try {
+      if (user && user.nip) {
+        const response = await axios.get(GENERATE_URL, {
+          params: {
+            semester: semester,
+            nip: user && user.nip,
+          },
+          responseType: "blob",
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "absensi.xlsx");
+        document.body.appendChild(link);
+        link.click();
+        toastAlert("success", "Exported!");
+      }
+    } catch (error) {
+      if (error.name === "AxiosError") {
+        toastAlert("warning", error.response.data);
+        return;
+      }
+      toastAlert("error", error);
+    }
+  }
 
   return (
     <>
@@ -80,16 +111,14 @@ export default function RekapKehadiran({ baseURL, user }) {
         </ul>
       </div>
 
-      <div className="flex justify-center items-center">
-        <Button
-          type="button"
-          variant="primary"
-          className="cursor-default"
-          iconPosition="right"
-          pill
-        >
-          GASAL
-        </Button>
+      <div className="flex justify-between items-start">
+        <span className="mt-6">Semester: GASAL</span>
+        <Button.Icon
+          className="mb-2"
+          variant="success"
+          icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
+          onClick={() => generate("gasal")}
+        />
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
@@ -218,16 +247,14 @@ export default function RekapKehadiran({ baseURL, user }) {
         </tbody>
       </table>
 
-      <div className="flex justify-center items-center">
-        <Button
-          type="button"
-          variant="primary"
-          className="mt-8 cursor-default"
-          iconPosition="right"
-          pill
-        >
-          GENAP
-        </Button>
+      <div className="flex justify-between items-start mt-8">
+        <span className="mt-6">Semester: GENAP</span>
+        <Button.Icon
+          className="mb-2"
+          variant="success"
+          icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
+          onClick={() => generate("genap")}
+        />
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
