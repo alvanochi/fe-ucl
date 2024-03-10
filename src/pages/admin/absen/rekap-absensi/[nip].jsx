@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import useUser from "../../../../hooks/useUser";
 import useMenu from "../../../../hooks/useMenu";
 import PageHeader from "../../../../components/PageHeader";
+import { toastAlert } from "../../../../lib/sweetalert";
 
 export default function RekapKehadiran() {
   const router = useRouter();
@@ -66,6 +67,36 @@ export default function RekapKehadiran() {
     }
   }, [router, user]);
 
+  const GENERATE_URL = `${process.env.API_ENDPOINT}/absensi/list-pertemuan/excel`;
+
+  async function generate(semester) {
+    try {
+      if (router.query.nip) {
+        const response = await axios.get(GENERATE_URL, {
+          params: {
+            semester: semester,
+            nip: router.query.nip,
+          },
+          responseType: "blob",
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "absensi.xlsx");
+        document.body.appendChild(link);
+        link.click();
+        toastAlert("success", "Exported!");
+      }
+    } catch (error) {
+      if (error.name === "AxiosError") {
+        toastAlert("warning", error.response.data);
+        return;
+      }
+      toastAlert("error", error);
+    }
+  }
+
   if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
 
   return (
@@ -101,19 +132,17 @@ export default function RekapKehadiran() {
         </ul>
       </div>
 
-      <div className="flex justify-center items-center">
-        <Button
-          type="button"
-          variant="primary"
-          className="mt-8 cursor-default"
-          iconPosition="right"
-          pill
-        >
-          GASAL
-        </Button>
+      <div className="flex justify-between items-start">
+        <span className="mt-6">Semester: GASAL</span>
+        <Button.Icon
+          className="mb-2"
+          variant="success"
+          icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
+          onClick={() => generate("gasal")}
+        />
       </div>
       <table
-        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
       >
         <thead>
@@ -241,20 +270,17 @@ export default function RekapKehadiran() {
         </tbody>
       </table>
 
-      <div className="flex justify-center items-center">
-        <Button
-          type="button"
-          variant="primary"
-          className="mt-8 cursor-default"
-          iconPosition="right"
-          pill
-        >
-          GENAP
-        </Button>
+      <div className="flex justify-between items-start mt-8">
+        <span className="mt-6">Semester: GENAP</span>
+        <Button.Icon
+          className="mb-2"
+          variant="success"
+          icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
+          onClick={() => generate("genap")}
+        />
       </div>
-
       <table
-        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
       >
         <thead>
