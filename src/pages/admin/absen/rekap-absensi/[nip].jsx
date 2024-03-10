@@ -31,6 +31,8 @@ export default function RekapKehadiran() {
               dataTable: true,
               filter: ["semester"],
               filterValue: ["gasal"],
+              filter: ["curr_code"],
+              filterValue: ["TIF2021"],
               code: router.query.nip,
             },
           });
@@ -50,6 +52,8 @@ export default function RekapKehadiran() {
               dataTable: true,
               filter: ["semester"],
               filterValue: ["genap"],
+              filter: ["curr_code"],
+              filterValue: ["TIF2021"],
               code: router.query.nip,
             },
           });

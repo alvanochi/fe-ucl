@@ -20,6 +20,8 @@ export default function RekapKehadiran({ baseURL, user }) {
             dataTable: true,
             filter: ["semester"],
             filterValue: ["gasal"],
+            filter: ["curr_code"],
+            filterValue: ["TIF2021"],
             code: user && user.nip,
           },
         });
