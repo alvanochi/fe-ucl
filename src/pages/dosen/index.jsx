@@ -15,7 +15,7 @@ const AreaChart = dynamic(() => import("../../components/Chart/area"), {
 });
 
 export default function Home() {
-	const { user } = useUser({ redirectTo: "/login" });
+  const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu } = useMenu();
 
   const DATA_URL = `${process.env.API_ENDPOINT}/dashboard`;
@@ -23,26 +23,26 @@ export default function Home() {
 
   function isUserDataIncomplete(userData) {
     return (
-      userData?.nik == null ||
-      userData?.jenkel == null ||
-      userData?.tanggal_lahir == null ||
-      userData?.tempat_lahir == null ||
-      userData?.agama == null ||
-      userData?.warga_negara == null ||
-      userData?.email == null ||
-      userData?.alamat == null ||
-      userData?.rt == null ||
-      userData?.rw == null ||
-      userData?.desa_kelurahan == null ||
-      userData?.kota_kabupaten == null ||
-      userData?.provinsi == null ||
-      userData?.kode_pos == null ||
-      userData?.no_hp == null
+      userData.nik == null ||
+      userData.jenkel == null ||
+      userData.tanggal_lahir == null ||
+      userData.tempat_lahir == null ||
+      userData.agama == null ||
+      userData.warga_negara == null ||
+      userData.email == null ||
+      userData.alamat == null ||
+      userData.rt == null ||
+      userData.rw == null ||
+      userData.desa_kelurahan == null ||
+      userData.kota_kabupaten == null ||
+      userData.provinsi == null ||
+      userData.kode_pos == null ||
+      userData.no_hp == null ||
+      userData.singkat_name == null
     );
   }
 
-  if ([menu, user].some((item) => item == null))
-    return <p>Loading...</p>;
+  if ([menu, user].some((item) => item == null)) return <p>Loading...</p>;
   return (
     <Layout>
       <Head>
@@ -53,7 +53,9 @@ export default function Home() {
       <div className="flex flex-col sm:flex-row gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
         <div className="w-full sm:w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
           <img
-            src={process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image}
+            src={
+              process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image
+            }
             alt="Profile"
             className="object-cover object-top w-full h-auto"
           />
@@ -170,14 +172,16 @@ export default function Home() {
                   <p className="block text-2xl font-bold leading-relaxed">
                     {data.belum_kolo}
                   </p>
-                  <p className="block text-sm">Jumlah Mahasiswa Bimbingan Skripsi Belum Kolokium</p>
+                  <p className="block text-sm">
+                    Jumlah Mahasiswa Bimbingan Skripsi Belum Kolokium
+                  </p>
                 </Link>
               </Card.Body>
             </Card>
             <Card>
               <Card.Body>
-              <Link href="#">
-                <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                <Link href="#">
+                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="fa6-solid:hand-holding-hand"
                       width={24}
@@ -188,14 +192,16 @@ export default function Home() {
                   <p className="block text-2xl font-bold leading-relaxed">
                     {data.besum_sidang}
                   </p>
-                  <p className="block text-sm">Jumlah Mahasiswa Bimbingan Skripsi Belum Sidang</p>
-              </Link>
+                  <p className="block text-sm">
+                    Jumlah Mahasiswa Bimbingan Skripsi Belum Sidang
+                  </p>
+                </Link>
               </Card.Body>
             </Card>
             <Card>
               <Card.Body>
-              <Link href="#">
-                <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                <Link href="#">
+                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="solar:users-group-two-rounded-bold-duotone"
                       width={24}
@@ -206,31 +212,15 @@ export default function Home() {
                   <p className="block text-2xl font-bold leading-relaxed">
                     {data.belum_revisi}
                   </p>
-                  <p className="block text-sm">Jumlah Mahasiswa Bimbingan Skripsi Belum Revisi</p>
-              </Link>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Body>
-              <Link href="#">
-                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="fa:flask"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
-                  </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.kp_selesai}
+                  <p className="block text-sm">
+                    Jumlah Mahasiswa Bimbingan Skripsi Belum Revisi
                   </p>
-                  <p className="block text-sm">Jumlah Mahasiswa Kp Belum Selesai</p>
                 </Link>
               </Card.Body>
             </Card>
             <Card>
               <Card.Body>
-              <Link href="#">
+                <Link href="#">
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="fa:flask"
@@ -242,13 +232,15 @@ export default function Home() {
                   <p className="block text-2xl font-bold leading-relaxed">
                     {data.kp_selesai}
                   </p>
-                  <p className="block text-sm">Jumlah Mahasiswa Kp Sudah Selesai</p>
+                  <p className="block text-sm">
+                    Jumlah Mahasiswa Kp Belum Selesai
+                  </p>
                 </Link>
               </Card.Body>
             </Card>
             <Card>
               <Card.Body>
-              <Link href="#">
+                <Link href="#">
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="fa:flask"
@@ -260,7 +252,29 @@ export default function Home() {
                   <p className="block text-2xl font-bold leading-relaxed">
                     {data.kp_selesai}
                   </p>
-                  <p className="block text-sm">Jumlah Mahasiswa Bimbingan Kademik</p>
+                  <p className="block text-sm">
+                    Jumlah Mahasiswa Kp Sudah Selesai
+                  </p>
+                </Link>
+              </Card.Body>
+            </Card>
+            <Card>
+              <Card.Body>
+                <Link href="#">
+                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                    <Icon
+                      icon="fa:flask"
+                      width={24}
+                      height={24}
+                      className="text-white"
+                    />
+                  </div>
+                  <p className="block text-2xl font-bold leading-relaxed">
+                    {data.kp_selesai}
+                  </p>
+                  <p className="block text-sm">
+                    Jumlah Mahasiswa Bimbingan Kademik
+                  </p>
                 </Link>
               </Card.Body>
             </Card>
