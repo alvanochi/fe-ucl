@@ -23,22 +23,21 @@ export default function Home() {
 
   function isUserDataIncomplete(userData) {
     return (
-      userData.nik == null ||
-      userData.jenkel == null ||
-      userData.tanggal_lahir == null ||
-      userData.tempat_lahir == null ||
-      userData.agama == null ||
-      userData.warga_negara == null ||
-      userData.email == null ||
-      userData.alamat == null ||
-      userData.rt == null ||
-      userData.rw == null ||
-      userData.desa_kelurahan == null ||
-      userData.kota_kabupaten == null ||
-      userData.provinsi == null ||
-      userData.kode_pos == null ||
-      userData.no_hp == null ||
-      userData.singkat_name == null
+      userData?.nik == null ||
+      userData?.jenkel == null ||
+      userData?.tanggal_lahir == null ||
+      userData?.tempat_lahir == null ||
+      userData?.agama == null ||
+      userData?.warga_negara == null ||
+      userData?.email == null ||
+      userData?.alamat == null ||
+      userData?.rt == null ||
+      userData?.rw == null ||
+      userData?.desa_kelurahan == null ||
+      userData?.kota_kabupaten == null ||
+      userData?.provinsi == null ||
+      userData?.kode_pos == null ||
+      userData?.no_hp == null
     );
   }
 
