@@ -49,7 +49,7 @@ export const Register = () => {
   }, []);
 
   const INITIAL_FORM = {
-    npm_nidn: "",
+    npm: "",
     email: "",
     password: "",
   };
@@ -70,7 +70,7 @@ export const Register = () => {
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
-      { field: "npm_nidn", label: "NPM/NIDN" },
+      { field: "npm", label: "NPM" },
       { field: "email", label: "E-Mail" },
       { field: "password", label: "Password" },
     ],
@@ -80,7 +80,7 @@ export const Register = () => {
     event.preventDefault();
     try {
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/auth/register`,
+        url: `${process.env.API_ENDPOINT}/auth/register-pmm`,
         method: "POST",
         data: form,
       });
@@ -170,7 +170,7 @@ export const Register = () => {
               <h1
                 className={`block font-bold text-primary-600 ${stylesForm.head}`}
               >
-                Buat Akun Pribadimu
+                Buat Akun Pribadi (MAHASISWA PMM)
               </h1>
               <p
                 className=" text-gray-600 text-sm"
@@ -185,9 +185,9 @@ export const Register = () => {
               <input
                 type="text"
                 className="form-input"
-                name="npm_nidn"
+                name="npm"
                 onChange={inputHandler}
-                value={form.npm_nidn}
+                value={form.npm}
                 required
               />
             </div>
@@ -218,8 +218,8 @@ export const Register = () => {
             </Button>
             <div className={`block ${stylesForm.footer}`}>
               <p className="block text-sm text-center font-medium text-gray-400">
-                Mahasiswa PMM?{" "}
-                <Link href="/register-pmm" className="text-primary-600">
+                Mahasiswa UIKA?{" "}
+                <Link href="/register" className="text-primary-600">
                   Daftar disini
                 </Link>
               </p>
