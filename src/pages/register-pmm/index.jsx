@@ -170,7 +170,7 @@ export const Register = () => {
               <h1
                 className={`block font-bold text-primary-600 ${stylesForm.head}`}
               >
-                Buat Akun Pribadi (MAHASISWA PMM)
+                Buat Akun Pribadi - MAHASISWA PMM
               </h1>
               <p
                 className=" text-gray-600 text-sm"
