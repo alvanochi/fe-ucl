@@ -73,7 +73,7 @@ export default function CreateDokumen({ id }) {
           </Form.Group>
           <Form.Group>
             <Form.Label>
-              Tautan Dokumen <span className="text-danger-600">*</span>
+              Tautan Dokumen 
             </Form.Label>
             <Form.Input
               type="text"

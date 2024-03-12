@@ -358,16 +358,29 @@ export default function PublikasiKaryaCreate() {
             {form.penulis_dosen.map((item, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
+                  <Form.Combobox
                     index={index}
                     name="penulis_dosen.user_id"
-                    onChange={inputHandler}
-                    value={form.penulis_dosen[index].user_id}
+                    onChange={(selected) =>
+                      inputHandler({
+                        target: {
+                          attributes: {
+                            index: {
+                              value: index,
+                            },
+                          },
+                          name: "penulis_dosen.user_id",
+                          value: selected?.value,
+                        },
+                      })
+                    }
+                    value={form.penulis_dosen[index].user_id || ""}
                     options={
                       listDosen &&
-                      listDosen.map((dosen) => ({
-                        label: dosen.nama_lengkap,
-                        value: dosen.user_id,
+                      Array.isArray(listDosen) &&
+                      listDosen.map((mhs) => ({
+                        label: mhs.nama_lengkap,
+                        value: mhs.user_id,
                       }))
                     }
                   />
@@ -499,21 +512,33 @@ export default function PublikasiKaryaCreate() {
           </thead>
           <tbody>
             {form.penulis_mahasiswa.map((item, index) => (
-              <tr key={`anggota-dosen-${index}`}>
+              <tr key={`anggota-mhs-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
+                  <Form.Combobox
                     index={index}
                     name="penulis_mahasiswa.user_id"
-                    onChange={inputHandler}
-                    value={form.penulis_mahasiswa[index].user_id}
+                    onChange={(selected) =>
+                      inputHandler({
+                        target: {
+                          attributes: {
+                            index: {
+                              value: index,
+                            },
+                          },
+                          name: "penulis_mahasiswa.user_id",
+                          value: selected?.value,
+                        },
+                      })
+                    }
+                    value={form.penulis_mahasiswa[index].user_id || ""}
                     options={
                       listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
-                        label: dosen.nama_lengkap,
-                        value: dosen.user_id,
+                      Array.isArray(listMahasiswa) &&
+                      listMahasiswa.map((mhs) => ({
+                        label: mhs.nama_lengkap,
+                        value: mhs.user_id,
                       }))
                     }
-                    required
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">

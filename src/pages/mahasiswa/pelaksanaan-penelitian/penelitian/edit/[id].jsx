@@ -76,7 +76,7 @@ export default function PembicaraEdit() {
   const { form, inputHandler, setForm } = formdata;
 
   const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } =
-  useKategoriPublikasi([user]);
+    useKategoriPublikasi([user]);
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
     user,
@@ -460,19 +460,37 @@ export default function PembicaraEdit() {
             {form.anggota_penelitian_dosen.map((item, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
-                    index={index}
-                    name="anggota_penelitian_dosen.user_id"
-                    onChange={inputHandler}
-                    value={form.anggota_penelitian_dosen[index].user_id}
-                    options={
-                      listDosen &&
-                      listDosen.map((dosen) => ({
-                        label: dosen.nama_lengkap,
-                        value: dosen.user_id,
-                      }))
-                    }
-                  />
+                  {user?.user_id === item.user_id &&
+                    listDosen &&
+                    findInUser(listDosen, item.user_id)?.nama_lengkap}
+                  {user?.user_id !== item.user_id && (
+                    <Form.Combobox
+                      index={index}
+                      name="anggota_penelitian_dosen.user_id"
+                      onChange={(selected) =>
+                        inputHandler({
+                          target: {
+                            attributes: {
+                              index: {
+                                value: index,
+                              },
+                            },
+                            name: "anggota_penelitian_dosen.user_id",
+                            value: selected?.value,
+                          },
+                        })
+                      }
+                      value={form.anggota_penelitian_dosen[index].user_id}
+                      options={
+                        listDosen &&
+                        Array.isArray(listDosen) &&
+                        listDosen.map((dosen) => ({
+                          label: dosen.nama_lengkap,
+                          value: dosen.user_id,
+                        }))
+                      }
+                    />
+                  )}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Form.Select
@@ -580,19 +598,39 @@ export default function PembicaraEdit() {
             {form.anggota_penelitian_mahasiswa.map((item, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
-                    index={index}
-                    name="anggota_penelitian_mahasiswa.user_id"
-                    onChange={inputHandler}
-                    value={form.anggota_penelitian_mahasiswa[index].user_id}
-                    options={
-                      listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
-                        label: dosen.nama_lengkap,
-                        value: dosen.user_id,
-                      }))
-                    }
-                  />
+                  {user?.user_id == item.user_id &&
+                    listMahasiswa &&
+                    findInUser(listMahasiswa, item.user_id)?.nama_lengkap}
+                  {user?.user_id != item.user_id && (
+                    <Form.Combobox
+                      index={index}
+                      name="anggota_penelitian_mahasiswa.user_id"
+                      onChange={(selected) =>
+                        inputHandler({
+                          target: {
+                            attributes: {
+                              index: {
+                                value: index,
+                              },
+                            },
+                            name: "anggota_penelitian_mahasiswa.user_id",
+                            value: selected?.value,
+                          },
+                        })
+                      }
+                      value={
+                        form.anggota_penelitian_mahasiswa[index].user_id || ""
+                      }
+                      options={
+                        listMahasiswa &&
+                        Array.isArray(listMahasiswa) &&
+                        listMahasiswa.map((mhs) => ({
+                          label: mhs.nama_lengkap,
+                          value: mhs.user_id,
+                        }))
+                      }
+                    />
+                  )}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Form.Select

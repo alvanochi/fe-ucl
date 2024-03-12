@@ -19,10 +19,7 @@ Form.Group = ({ children, className, ...props }) => (
 
 Form.Label = ({ children, className, ...props }) => (
   <label
-    className={classnames(
-      "block text-sm font-bold text-gray-900",
-      className
-    )}
+    className={classnames("block text-sm font-bold text-gray-900", className)}
     {...props}
   >
     {children}
@@ -37,7 +34,12 @@ Form.Input = ({ type, className, ...props }) => (
   />
 );
 
-Form.Select = ({ options, className, emptyStateLabel = "-- Pilih --", ...props } = {}) => (
+Form.Select = ({
+  options,
+  className,
+  emptyStateLabel = "-- Pilih --",
+  ...props
+} = {}) => (
   <select className={classnames("form-select", className)} {...props}>
     <option value="">{emptyStateLabel}</option>
     {options &&
@@ -67,80 +69,41 @@ Form.Combobox = ({
     theme: { colors },
   } = config;
 
-  /* eslint-disable */
   const [selected, setSelected] = useState(null);
+
   useEffect(() => {
     if (!options || !Array.isArray(options) || !value) return;
-    const find = options.find((item) => item.value == value) ?? null;
+    const find = options.find((item) => item.value === value) ?? null;
 
     setSelected(find);
   }, [options, value]);
-  /* eslint-enable */
 
+  const handleChange = (selectedOption) => {
+    setSelected(selectedOption);
+    if (props.onChange) {
+      props.onChange({
+        target: {
+          name: props.name,
+          value: selectedOption ? selectedOption.value : null,
+        },
+      });
+    }
+  };
 
   return (
     <div className="relative w-full max-w-full">
       <Select
         className={className}
-        styles={{
-          menuPortal: (base) => ({ ...base, zIndex: 9999, ...styles?.menuPortal }),
-          control: (base, state) => ({
-            ...base,
-            borderWidth: "1px",
-            borderColor: colors.gray[500],
-            boxShadow: "none !important",
-            padding: "0 0.5rem",
-            fontSize: "0.875rem",
-            "&:disabled": {
-              backgroundColor: colors.primary[100],
-            },
-            "&:hover": {
-              borderColor: colors.primary[500],
-            },
-            ...(state.isDisabled ? { backgroundColor: colors.neutral[100] } : {}),
-            ...styles?.control,
-            fontSize: "0.875rem",
-          }),
-          container: (base) => ({
-            ...base,
-            border: "none",
-            ...styles?.container,
-            fontSize: "0.875rem",
-          }),
-          option: (base, state) => ({
-            ...base,
-            backgroundColor: state.isSelected ? colors.primary[100] : colors.white,
-            color: colors.primary[900],
-            "&:active": {
-              backgroundColor: colors.primary[100],
-            },
-            ...styles?.option,
-            fontSize: "0.875rem",
-          }),
-          valueContainer: (base) => ({
-            ...base,
-            ...styles?.valueContainer,
-            fontSize: "0.875rem",
-            padding: 0,
-          }),
-          singleValue: (base) => ({
-            ...base,
-            color: "black",
-            fontSize: "0.875rem",
-          }),
-          // New style for the indicator separator
-          indicatorsContainer: (base) => ({
-            ...base,
-            padding: "0.25rem",
-            color: colors.gray[400],
-          }),
-        }}
+        styles={
+          {
+            // styles here
+          }
+        }
         menuPortalTarget={document.body}
         menuPosition="fixed"
-        defaultValue={selected}
-        options={options ?? []}
-        placeholder=""
-        isClearable
+        value={selected}
+        options={options || []}
+        onChange={handleChange}
         {...props}
       />
       {required && (
@@ -149,7 +112,7 @@ Form.Combobox = ({
           className="absolute inset-0 z-[-1]"
           style={{ border: "none" }}
           onChange={() => true}
-          value={value || ""}
+          value={selected ? selected.value : ""}
           required
         />
       )}
@@ -158,10 +121,18 @@ Form.Combobox = ({
 };
 
 Form.Checkbox = ({ className, ...props }) => (
-  <input type="checkbox" className={classnames("form-checkbox", className)} {...props} />
+  <input
+    type="checkbox"
+    className={classnames("form-checkbox", className)}
+    {...props}
+  />
 );
 Form.Radio = ({ className, ...props }) => (
-  <input type="radio" className={classnames("form-radio", className)} {...props} />
+  <input
+    type="radio"
+    className={classnames("form-radio", className)}
+    {...props}
+  />
 );
 
 Form.Textarea = ({ className, ...props }) => (

@@ -191,7 +191,7 @@ export default function PenelitianCreate() {
                 ).map((item) => ({
                   label: item,
                   value: item,
-                }))}                
+                }))}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -211,7 +211,6 @@ export default function PenelitianCreate() {
                   label: item,
                   value: item,
                 }))}
-                
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -231,7 +230,6 @@ export default function PenelitianCreate() {
                   label: item,
                   value: item,
                 }))}
-                
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -312,13 +310,26 @@ export default function PenelitianCreate() {
             {form.anggota_penelitian_dosen.map((item, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
+                  <Form.Combobox
                     index={index}
                     name="anggota_penelitian_dosen.user_id"
-                    onChange={inputHandler}
+                    onChange={(selected) =>
+                      inputHandler({
+                        target: {
+                          attributes: {
+                            index: {
+                              value: index,
+                            },
+                          },
+                          name: "anggota_penelitian_dosen.user_id",
+                          value: selected?.value,
+                        },
+                      })
+                    }
                     value={form.anggota_penelitian_dosen[index].user_id}
                     options={
                       listDosen &&
+                      Array.isArray(listDosen) &&
                       listDosen.map((dosen) => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
@@ -432,19 +443,33 @@ export default function PenelitianCreate() {
             {form.anggota_penelitian_mahasiswa.map((item, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
+                  <Form.Combobox
                     index={index}
                     name="anggota_penelitian_mahasiswa.user_id"
-                    onChange={inputHandler}
-                    value={form.anggota_penelitian_mahasiswa[index].user_id}
+                    onChange={(selected) =>
+                      inputHandler({
+                        target: {
+                          attributes: {
+                            index: {
+                              value: index,
+                            },
+                          },
+                          name: "anggota_penelitian_mahasiswa.user_id",
+                          value: selected?.value,
+                        },
+                      })
+                    }
+                    value={
+                      form.anggota_penelitian_mahasiswa[index].user_id || ""
+                    }
                     options={
                       listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
-                        label: dosen.nama_lengkap,
-                        value: dosen.user_id,
+                      Array.isArray(listMahasiswa) &&
+                      listMahasiswa.map((mhs) => ({
+                        label: mhs.nama_lengkap,
+                        value: mhs.user_id,
                       }))
                     }
-                    required
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">

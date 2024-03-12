@@ -58,9 +58,7 @@ export default function UploadDokumen({ form, inputHandler }) {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>
-              Tautan Dokumen <span className="text-danger-600">*</span>
-            </Form.Label>
+            <Form.Label>Tautan Dokumen</Form.Label>
             <Form.Input
               type="text"
               name="tautan_dok"

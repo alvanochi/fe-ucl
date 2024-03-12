@@ -85,7 +85,7 @@ export default function PengabdianEdit() {
   const { form, inputHandler, setForm } = formdata;
 
   const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } =
-  useKategoriPublikasi([user]);
+    useKategoriPublikasi([user]);
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
     user,
@@ -132,9 +132,13 @@ export default function PengabdianEdit() {
   const { destroy } = useCRUD(DELETE_FILE_URL);
 
   if (
-    [user, menu, isDosenLoading, isMahasiswaLoading, isLoadingKategoriPublikasi].some(
-      (item) => item == null
-    )
+    [
+      user,
+      menu,
+      isDosenLoading,
+      isMahasiswaLoading,
+      isLoadingKategoriPublikasi,
+    ].some((item) => item == null)
   )
     return <p>Loading...</p>;
   return (
@@ -195,11 +199,23 @@ export default function PengabdianEdit() {
                   { label: "Kesehatan", value: "Kesehatan" },
                   { label: "Lingkungan", value: "Lingkungan" },
                   { label: "Sosial", value: "Sosial" },
-                  { label: "Teknologi dan Inovasi", value: "Teknologi dan Inovasi" },
+                  {
+                    label: "Teknologi dan Inovasi",
+                    value: "Teknologi dan Inovasi",
+                  },
                   { label: "Seni dan Budaya", value: "Seni dan Budaya" },
-                  { label: "Keagamaan dan Etika", value: "Keagamaan dan Etika" },
-                  { label: "Pertanian dan Ketahanan Pangan", value: "Pertanian dan Ketahanan Pangan" },
-                  { label: "Pengembangan Wilayah", value: "Pengembangan Wilayah" },
+                  {
+                    label: "Keagamaan dan Etika",
+                    value: "Keagamaan dan Etika",
+                  },
+                  {
+                    label: "Pertanian dan Ketahanan Pangan",
+                    value: "Pertanian dan Ketahanan Pangan",
+                  },
+                  {
+                    label: "Pengembangan Wilayah",
+                    value: "Pengembangan Wilayah",
+                  },
                 ]}
               />
             </Form.Group>
@@ -392,77 +408,93 @@ export default function PengabdianEdit() {
             </tr>
           </thead>
           <tbody>
-            {form.anggota_pengabdian_dosen.map((item, index) => (
-              <tr key={`anggota-dosen-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {user?.user_id == item.user_id &&
-                    listDosen &&
-                    findInUser(listDosen, item.user_id)?.nama_lengkap}
-                  {user?.user_id != item.user_id && (
-                    <Form.Select
-                      index={index}
-                      name="anggota_pengabdian_dosen.user_id"
-                      onChange={inputHandler}
-                      value={form.anggota_pengabdian_dosen[index].user_id}
-                      options={
-                        listDosen &&
-                        listDosen.map((dosen) => ({
-                          label: dosen.nama_lengkap,
-                          value: dosen.user_id,
-                        }))
-                      }
-                    />
-                  )}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
-                    index={index}
-                    name="anggota_pengabdian_dosen.peran"
-                    onChange={inputHandler}
-                    value={form.anggota_pengabdian_dosen[index].peran}
-                    options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
-                    ]}
-                  />
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Label>
-                    <Form.Checkbox
-                      index={index}
-                      name="anggota_pengabdian_dosen.status"
-                      onChange={inputHandler}
-                      checked={form.anggota_pengabdian_dosen[index].status}
-                    />{" "}
-                    Aktif
-                  </Form.Label>
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    {(index > 0 || user?.role != ROLE_ID_DOSEN) && (
-                      <Button.Icon
-                        type="button"
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
+            {form.anggota_pengabdian_dosen.map((item, index) => {
+              return (
+                <tr key={`anggota-dosen-${index}`}>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {user?.user_id === item.user_id &&
+                      listDosen &&
+                      findInUser(listDosen, item.user_id)?.nama_lengkap}
+                    {user?.user_id !== item.user_id && (
+                      <Form.Combobox
+                        index={index}
+                        name="anggota_pengabdian_dosen.user_id"
+                        onChange={(selected) =>
+                          inputHandler({
+                            target: {
+                              attributes: {
+                                index: {
+                                  value: index,
+                                },
+                              },
+                              name: "anggota_pengabdian_dosen.user_id",
+                              value: selected?.value,
+                            },
+                          })
                         }
-                        onClick={() =>
-                          removeFromUser(
-                            "anggota_pengabdian_dosen",
-                            index,
-                            "Dosen"
-                          )
+                        value={form.anggota_pengabdian_dosen[index].user_id}
+                        options={
+                          listDosen &&
+                          Array.isArray(listDosen) &&
+                          listDosen.map((dosen) => ({
+                            label: dosen.nama_lengkap,
+                            value: dosen.user_id,
+                          }))
                         }
                       />
                     )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    <Form.Select
+                      index={index}
+                      name="anggota_pengabdian_dosen.peran"
+                      onChange={inputHandler}
+                      value={form.anggota_pengabdian_dosen[index].peran}
+                      options={[
+                        { label: "Ketua", value: "ketua" },
+                        { label: "Anggota", value: "anggota" },
+                      ]}
+                    />
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    <Form.Label>
+                      <Form.Checkbox
+                        index={index}
+                        name="anggota_pengabdian_dosen.status"
+                        onChange={inputHandler}
+                        checked={form.anggota_pengabdian_dosen[index].status}
+                      />{" "}
+                      Aktif
+                    </Form.Label>
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    <div className="flex items-stretch gap-1">
+                      {(index > 0 || user?.role != ROLE_ID_DOSEN) && (
+                        <Button.Icon
+                          type="button"
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() =>
+                            removeFromUser(
+                              "anggota_pengabdian_dosen",
+                              index,
+                              "Dosen"
+                            )
+                          }
+                        />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
           <tfoot>
             <tr>
@@ -524,16 +556,31 @@ export default function PengabdianEdit() {
                     listMahasiswa &&
                     findInUser(listMahasiswa, item.user_id)?.nama_lengkap}
                   {user?.user_id != item.user_id && (
-                    <Form.Select
+                    <Form.Combobox
                       index={index}
                       name="anggota_pengabdian_mahasiswa.user_id"
-                      onChange={inputHandler}
-                      value={form.anggota_pengabdian_mahasiswa[index].user_id}
+                      onChange={(selected) =>
+                        inputHandler({
+                          target: {
+                            attributes: {
+                              index: {
+                                value: index,
+                              },
+                            },
+                            name: "anggota_pengabdian_mahasiswa.user_id",
+                            value: selected?.value,
+                          },
+                        })
+                      }
+                      value={
+                        form.anggota_pengabdian_mahasiswa[index].user_id || ""
+                      }
                       options={
                         listMahasiswa &&
-                        listMahasiswa.map((dosen) => ({
-                          label: dosen.nama_lengkap,
-                          value: dosen.user_id,
+                        Array.isArray(listMahasiswa) &&
+                        listMahasiswa.map((mhs) => ({
+                          label: mhs.nama_lengkap,
+                          value: mhs.user_id,
                         }))
                       }
                     />

@@ -85,6 +85,8 @@ export default function PengabdianCreate() {
     user,
   ]);
 
+  // const { data: listMahasiswa } = useMahasiswa();
+
   const findInUser = (lists, id) =>
     lists.find((item) => item.user_id == id) ?? null;
   const removeFromUser = (key, index, role) =>
@@ -170,11 +172,23 @@ export default function PengabdianCreate() {
                   { label: "Kesehatan", value: "Kesehatan" },
                   { label: "Lingkungan", value: "Lingkungan" },
                   { label: "Sosial", value: "Sosial" },
-                  { label: "Teknologi dan Inovasi", value: "Teknologi dan Inovasi" },
+                  {
+                    label: "Teknologi dan Inovasi",
+                    value: "Teknologi dan Inovasi",
+                  },
                   { label: "Seni dan Budaya", value: "Seni dan Budaya" },
-                  { label: "Keagamaan dan Etika", value: "Keagamaan dan Etika" },
-                  { label: "Pertanian dan Ketahanan Pangan", value: "Pertanian dan Ketahanan Pangan" },
-                  { label: "Pengembangan Wilayah", value: "Pengembangan Wilayah" },
+                  {
+                    label: "Keagamaan dan Etika",
+                    value: "Keagamaan dan Etika",
+                  },
+                  {
+                    label: "Pertanian dan Ketahanan Pangan",
+                    value: "Pertanian dan Ketahanan Pangan",
+                  },
+                  {
+                    label: "Pengembangan Wilayah",
+                    value: "Pengembangan Wilayah",
+                  },
                 ]}
               />
             </Form.Group>
@@ -269,13 +283,26 @@ export default function PengabdianCreate() {
             {form.anggota_pengabdian_dosen.map((item, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
+                  <Form.Combobox
                     index={index}
                     name="anggota_pengabdian_dosen.user_id"
-                    onChange={inputHandler}
+                    onChange={(selected) =>
+                      inputHandler({
+                        target: {
+                          attributes: {
+                            index: {
+                              value: index,
+                            },
+                          },
+                          name: "anggota_pengabdian_dosen.user_id",
+                          value: selected?.value,
+                        },
+                      })
+                    }
                     value={form.anggota_pengabdian_dosen[index].user_id}
                     options={
                       listDosen &&
+                      Array.isArray(listDosen) &&
                       listDosen.map((dosen) => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
@@ -387,18 +414,33 @@ export default function PengabdianCreate() {
           </thead>
           <tbody>
             {form.anggota_pengabdian_mahasiswa.map((item, index) => (
-              <tr key={`anggota-dosen-${index}`}>
+              <tr key={`anggota-mhs-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
+                  <Form.Combobox
                     index={index}
                     name="anggota_pengabdian_mahasiswa.user_id"
-                    onChange={inputHandler}
-                    value={form.anggota_pengabdian_mahasiswa[index].user_id}
+                    onChange={(selected) =>
+                      inputHandler({
+                        target: {
+                          attributes: {
+                            index: {
+                              value: index,
+                            },
+                          },
+                          name: "anggota_pengabdian_mahasiswa.user_id",
+                          value: selected?.value,
+                        },
+                      })
+                    }
+                    value={
+                      form.anggota_pengabdian_mahasiswa[index].user_id || ""
+                    }
                     options={
                       listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
-                        label: dosen.nama_lengkap,
-                        value: dosen.user_id,
+                      Array.isArray(listMahasiswa) &&
+                      listMahasiswa.map((mhs) => ({
+                        label: mhs.nama_lengkap,
+                        value: mhs.user_id,
                       }))
                     }
                   />
@@ -422,6 +464,7 @@ export default function PengabdianCreate() {
                       name="anggota_pengabdian_mahasiswa.status"
                       onChange={inputHandler}
                       checked={form.anggota_pengabdian_mahasiswa[index].status}
+                      required
                     />{" "}
                     Aktif
                   </Form.Label>
