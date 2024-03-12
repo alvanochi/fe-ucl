@@ -55,7 +55,12 @@ Form.Select = ({
   </select>
 );
 
-Form.Combobox = ({
+// Definisi Combobox di dalam Form
+Form.Combobox = ({ name, ...props }) => (
+  <Combobox name={name} {...props} />
+);
+
+const Combobox = ({
   className,
   value,
   required,
@@ -94,11 +99,7 @@ Form.Combobox = ({
     <div className="relative w-full max-w-full">
       <Select
         className={className}
-        styles={
-          {
-            // styles here
-          }
-        }
+        styles={styles}
         menuPortalTarget={document.body}
         menuPosition="fixed"
         value={selected}
@@ -143,7 +144,7 @@ Form.Group.displayName = "FormGroup";
 Form.Label.displayName = "FormLabel";
 Form.Input.displayName = "FormInput";
 Form.Select.displayName = "FormSelect";
-Form.Combobox.displayName = "FormCombobox";
+Form.Combobox.displayName = "FormCombobox"; // Tetap mengatur displayName ke "FormCombobox"
 Form.Checkbox.displayName = "FormCheckbox";
 Form.Radio.displayName = "FormRadio";
 Form.Textarea.displayName = "FormTextarea";
