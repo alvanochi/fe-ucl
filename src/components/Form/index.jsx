@@ -56,9 +56,7 @@ Form.Select = ({
 );
 
 // Definisi Combobox di dalam Form
-Form.Combobox = ({ name, ...props }) => (
-  <Combobox name={name} {...props} />
-);
+Form.Combobox = ({ name, ...props }) => <Combobox name={name} {...props} />;
 
 const Combobox = ({
   className,
@@ -100,8 +98,6 @@ const Combobox = ({
       <Select
         className={className}
         styles={styles}
-        menuPortalTarget={document.body}
-        menuPosition="fixed"
         value={selected}
         options={options || []}
         onChange={handleChange}
@@ -110,7 +106,6 @@ const Combobox = ({
       {required && (
         <input
           autoComplete="off"
-          className="absolute inset-0 z-[-1]"
           style={{ border: "none" }}
           onChange={() => true}
           value={selected ? selected.value : ""}
