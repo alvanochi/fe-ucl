@@ -68,6 +68,8 @@ export default function CreateQuestion() {
     });
   }, [router.isReady, user]);
 
+
+
   if (!user || !menu) return <p>Loading...</p>;
 
   return (
@@ -161,9 +163,9 @@ export default function CreateQuestion() {
                   <th className="text-sm border-2 border-white bg-gray-200">
                     Status
                   </th>
-                  <th className="text-sm border-2 border-white bg-gray-200">
+                  {/* <th className="text-sm border-2 border-white bg-gray-200">
                     Action
-                  </th>
+                  </th> */}
                 </tr>
               </thead>
               <tbody>
@@ -222,7 +224,7 @@ export default function CreateQuestion() {
                         </Form.Label>
                       </div>
                     </td>
-                    <td>
+                    {/* <td>
                       <div className="flex items-stretch gap-1">
                         <Button.Icon
                           type="button"
@@ -237,7 +239,7 @@ export default function CreateQuestion() {
                           onClick={() => hapusJawaban(index)}
                         />
                       </div>
-                    </td>
+                    </td> */}
                   </tr>
                 ))}
               </tbody>
