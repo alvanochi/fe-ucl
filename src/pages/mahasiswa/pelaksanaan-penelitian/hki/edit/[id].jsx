@@ -378,38 +378,39 @@ export default function HkiEdit() {
             {form.penulis_dosen.map((item, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                    {user?.user_id === item.user_id &&
-                      listDosen &&
-                      findInUser(listDosen, item.user_id)?.nama_lengkap}
-                    {user?.user_id !== item.user_id && (
-                      <Form.Combobox
-                        index={index}
-                        name="penulis_dosen.user_id"
-                        onChange={(selected) =>
-                          inputHandler({
-                            target: {
-                              attributes: {
-                                index: {
-                                  value: index,
-                                },
+                  {user?.user_id === item.user_id &&
+                    listDosen &&
+                    findInUser(listDosen, item.user_id)?.nama_lengkap}
+                  {user?.user_id !== item.user_id && (
+                    <Form.Combobox
+                      index={index}
+                      name="penulis_dosen.user_id"
+                      onChange={(selected) =>
+                        inputHandler({
+                          target: {
+                            attributes: {
+                              index: {
+                                value: index,
                               },
-                              name: "penulis_dosen.user_id",
-                              value: selected?.value,
                             },
-                          })
-                        }
-                        value={form.penulis_dosen[index].user_id}
-                        options={
-                          listDosen &&
-                          Array.isArray(listDosen) &&
-                          listDosen.map((dosen) => ({
-                            label: dosen.nama_lengkap,
-                            value: dosen.user_id,
-                          }))
-                        }
-                      />
-                    )}
-                  </td>
+                            name: "penulis_dosen.user_id",
+                            value: selected?.value,
+                          },
+                        })
+                      }
+                      value={form.penulis_dosen[index].user_id}
+                      options={
+                        listDosen &&
+                        Array.isArray(listDosen) &&
+                        listDosen.map((dosen) => ({
+                          label: dosen.nama_lengkap,
+                          value: dosen.user_id,
+                        }))
+                      }
+                      menuTarget={document.body}
+                    />
+                  )}
+                </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Form.Input
                     type="number"
@@ -559,9 +560,7 @@ export default function HkiEdit() {
                           },
                         })
                       }
-                      value={
-                        form.penulis_mahasiswa[index].user_id || ""
-                      }
+                      value={form.penulis_mahasiswa[index].user_id || ""}
                       options={
                         listMahasiswa &&
                         Array.isArray(listMahasiswa) &&
@@ -570,6 +569,8 @@ export default function HkiEdit() {
                           value: mhs.user_id,
                         }))
                       }
+                      menuTarget={document.body}
+
                     />
                   )}
                 </td>

@@ -5,6 +5,7 @@ import useUser from "../../../hooks/useUser";
 import IpModule from "../../../modules/admin/pelaksanaan-pendidikan/ip/index";
 import BimbinganModule from "../../../modules/admin/pelaksanaan-pendidikan/bimbingan/index";
 import BahanAjarModule from "../../../modules/admin/pelaksanaan-pendidikan/bahan-ajar/index";
+import AkademikModule from "../../../modules/admin/pelaksanaan-pendidikan/akademik/index";
 
 export default function PelaksanaanPendidikan() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -27,6 +28,9 @@ export default function PelaksanaanPendidikan() {
         )}
         {active.url === "#bahan-ajar" && (
           <BahanAjarModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#akademik" && (
+          <AkademikModule baseURL={prefix + menu.url} />
         )}
       </div>
     </Layout>

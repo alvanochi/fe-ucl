@@ -181,7 +181,7 @@ export const Register = () => {
               </p>
             </div>
             <div className="block mb-6">
-              <label className="block text-sm font-medium mb-1">NPM/NIDN</label>
+              <label className="block text-sm font-medium mb-1">NPM/NIM ASAL</label>
               <input
                 type="text"
                 className="form-input"

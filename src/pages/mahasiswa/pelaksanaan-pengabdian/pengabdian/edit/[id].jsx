@@ -441,6 +441,7 @@ export default function PengabdianEdit() {
                             value: dosen.user_id,
                           }))
                         }
+                      menuTarget={document.body}
                       />
                     )}
                   </td>
@@ -583,6 +584,7 @@ export default function PengabdianEdit() {
                           value: mhs.user_id,
                         }))
                       }
+                      menuTarget={document.body}
                     />
                   )}
                 </td>

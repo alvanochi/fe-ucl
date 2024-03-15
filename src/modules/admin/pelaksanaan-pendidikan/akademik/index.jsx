@@ -1,10 +1,8 @@
 import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import SortIcon from "../../../components/SortIcon";
-import Form from "../../../components/Form";
+import Button from "../../../../components/Button";
+import useDatatable from "../../../../hooks/useDatatable";
+import useCRUD from "../../../../hooks/useCRUD";
+import Form from "../../../../components/Form";
 
 export default function AkademikModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik/get`;
@@ -28,7 +26,17 @@ export default function AkademikModule({ baseURL }) {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 mb-8"></div>
+      <div className="flex items-center justify-center gap-2 mb-8">
+        <Button
+          as="a"
+          href={`${baseURL}/akademik/create`}
+          variant="primary"
+          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+          pill
+        >
+          Tambah Bimbingan
+        </Button>
+      </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
@@ -41,6 +49,11 @@ export default function AkademikModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
                 Tahun Akademik
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Dosen
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -84,6 +97,9 @@ export default function AkademikModule({ baseURL }) {
                     {row.tahun_akademik}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.nama_lengkap}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
                         as="a"
@@ -96,6 +112,23 @@ export default function AkademikModule({ baseURL }) {
                             height={20}
                           />
                         }
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/akademik/edit/${row.id}`}
+                        variant="secondary"
+                        icon={<Icon icon="bx:edit" width={20} height={20} />}
+                      />
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() => destroy(row.id).then(() => refresh())}
                       />
                     </div>
                   </td>

@@ -284,6 +284,7 @@ export default function HkiCreate() {
                         value: dosen.user_id,
                       }))
                     }
+                    menuTarget={document.body}
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
@@ -440,6 +441,7 @@ export default function HkiCreate() {
                         value: mhs.user_id,
                       }))
                     }
+                    menuTarget={document.body}
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">

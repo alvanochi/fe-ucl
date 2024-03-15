@@ -126,7 +126,7 @@ export const APP_MENU = [
       {
         label: "Bimbingan",
         url: "#bimbingan",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN],
       },
       {
         label: "B-Akademik",

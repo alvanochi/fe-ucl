@@ -335,6 +335,7 @@ export default function PenelitianCreate() {
                         value: dosen.user_id,
                       }))
                     }
+                    menuTarget={document.body}
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
@@ -470,6 +471,7 @@ export default function PenelitianCreate() {
                         value: mhs.user_id,
                       }))
                     }
+                    menuTarget={document.body}
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">

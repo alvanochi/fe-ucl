@@ -308,6 +308,7 @@ export default function PengabdianCreate() {
                         value: dosen.user_id,
                       }))
                     }
+                    menuTarget={document.body}
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
@@ -443,6 +444,7 @@ export default function PengabdianCreate() {
                         value: mhs.user_id,
                       }))
                     }
+                    menuTarget={document.body}
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">

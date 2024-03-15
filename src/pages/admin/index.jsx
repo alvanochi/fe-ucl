@@ -49,20 +49,20 @@ export default function Home() {
             <Icon icon="ep:rank" width={16} height={16} className="mr-1" />
             POINT : {data.userData?.total_point}
           </span> */}
-          <span className="block text-base text-gray-500 font-normal">
+          {/* <span className="block text-base text-gray-500 font-normal">
             <Icon
               icon="ri:briefcase-fill"
               width={16}
               height={16}
               className="mr-1"
             />
-            {/* {profile?.educations?.at(0) != null
+            {profile?.educations?.at(0) != null
               ? profile?.educations.at(0).jenjang_studi
               : ""}{" "}
             {profile?.educations?.at(0) != null
               ? profile?.educations.at(0).program_studi
-              : ""} */}
-          </span>
+              : ""}
+          </span> */}
         </div>
       </div>
       <Card className="mb-4">

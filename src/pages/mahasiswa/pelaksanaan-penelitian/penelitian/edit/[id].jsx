@@ -489,6 +489,7 @@ export default function PembicaraEdit() {
                           value: dosen.user_id,
                         }))
                       }
+                      menuTarget={document.body}
                     />
                   )}
                 </td>
@@ -629,6 +630,7 @@ export default function PembicaraEdit() {
                           value: mhs.user_id,
                         }))
                       }
+                      menuTarget={document.body}
                     />
                   )}
                 </td>

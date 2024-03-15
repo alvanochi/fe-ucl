@@ -63,6 +63,7 @@ const Combobox = ({
   value,
   required,
   options,
+  menuTarget,
   styles = {},
   ...props
 } = {}) => {
@@ -101,6 +102,7 @@ const Combobox = ({
         value={selected}
         options={options || []}
         onChange={handleChange}
+        menuPortalTarget={menuTarget || ""}
         {...props}
       />
       {required && (

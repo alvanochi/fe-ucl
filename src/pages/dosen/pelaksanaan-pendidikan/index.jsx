@@ -5,9 +5,9 @@ import useUser from "../../../hooks/useUser";
 import BimbinganModule from "../../../modules/pelaksanaan-pendidikan/bimbingan";
 import BahanAjarModule from "../../../modules/pelaksanaan-pendidikan/bahan-ajar";
 import { DevelopmentPage } from "../../../components/DevelopmentPage";
-import AkademikModule from "../../../modules/pelaksanaan-pendidikan/akademik";
 import KpModule from "../../../modules/pelaksanaan-pendidikan/kp";
 import SkripsiModule from "../../../modules/pelaksanaan-pendidikan/skripsi";
+import AkademikModule from "../../../modules/pelaksanaan-pendidikan/akademik";
 
 export default function PelaksanaanPendidikan() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -24,12 +24,18 @@ export default function PelaksanaanPendidikan() {
         handler={setActive}
       />
       <div className="my-8">
-				{active.url === "#bimbingan" && <BimbinganModule baseURL={prefix + menu.url} />}
-				{active.url === "#akademik" && <AkademikModule baseURL={prefix + menu.url} />}
-				{active.url === "#kp" && <KpModule baseURL={prefix + menu.url} />}
-				{active.url === "#skripsi" && <SkripsiModule baseURL={prefix + menu.url} />}
+        {active.url === "#bimbingan" && (
+          <BimbinganModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#kp" && <KpModule baseURL={prefix + menu.url} />}
+        {active.url === "#skripsi" && (
+          <SkripsiModule baseURL={prefix + menu.url} />
+        )}
         {active.url === "#bahan-ajar" && (
           <BahanAjarModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#akademik" && (
+          <AkademikModule baseURL={prefix + menu.url} />
         )}
       </div>
 

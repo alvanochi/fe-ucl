@@ -87,8 +87,6 @@ export default function Profil() {
     );
   }
 
-  console.log(data);
-
   if ([user, menu, loading].some((item) => item == null))
     return <p>Loading...</p>;
   return (

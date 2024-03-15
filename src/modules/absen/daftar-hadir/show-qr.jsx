@@ -27,15 +27,20 @@ export default function ShowQr({ data }) {
     }
   };
 
-
   return (
     <>
       <Button.Icon
-        variant="info"
+        variant="secondary"
         icon={<Icon icon="bx:qr-scan" width={20} height={20} />}
         onClick={handleShowQr}
       />
-      <Modal title={`${data && data.matkul ? data.matkul : ""} ${data && data.pertemuan ? data.pertemuan : ""} | ${data && data.kelas ? data.kelas : ""}`} show={qrCode !== null} handler={() => setQrCode(null)}>
+      <Modal
+        title={`${data && data.matkul ? data.matkul : ""} ${
+          data && data.pertemuan ? data.pertemuan : ""
+        } | ${data && data.kelas ? data.kelas : ""}`}
+        show={qrCode !== null}
+        handler={() => setQrCode(null)}
+      >
         {loading ? (
           <p>Loading QR code...</p>
         ) : qrCode ? (
@@ -56,14 +61,20 @@ export default function ShowQr({ data }) {
                 }}
               />
             </div>
-            <h1 className="text-center font-bold text-4xl pt-4">{data.token}</h1>
+            <h1 className="text-center font-bold text-4xl pt-4">
+              {data.token}
+            </h1>
           </>
         ) : (
           <p>No QR code available.</p>
         )}
 
         <div className="flex gap-4 mt-8">
-          <Button onClick={() => setQrCode(null)} variant="primary" className="w-full h-12">
+          <Button
+            onClick={() => setQrCode(null)}
+            variant="primary"
+            className="w-full h-12"
+          >
             Close
           </Button>
         </div>
