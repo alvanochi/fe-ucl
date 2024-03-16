@@ -12,6 +12,8 @@ export default function RekapKehadiran({ baseURL, user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  console.log(dataGasal);
+
   useEffect(() => {
     const fetchDataGasal = async () => {
       try {
@@ -95,6 +97,46 @@ export default function RekapKehadiran({ baseURL, user }) {
     }
   }
 
+  const GENERATE_URL_REKAP = `${process.env.API_ENDPOINT}/absensi/rekap-pertemuan/excel`;
+
+  async function generateRekap(id_matkul, kelas) {
+    try {
+      if (id_matkul && kelas) {
+        const response = await axios.get(GENERATE_URL_REKAP, {
+          params: {
+            id_matkul: id_matkul,
+            kelas: kelas,
+          },
+          responseType: "blob",
+        });
+
+        const contentDisposition = response.headers["content-disposition"];
+        const filename = contentDisposition
+          .split("filename=")[1]
+          .replace(/"/g, "");
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+
+        toastAlert("success", "Exported!");
+      }
+    } catch (error) {
+      if (error.name === "AxiosError") {
+        toastAlert("warning", error.response.data);
+        return;
+      }
+      toastAlert("error", error);
+    }
+  }
+
   return (
     <>
       <div className="flex justify-center gap-2 mb-12">
@@ -138,6 +180,11 @@ export default function RekapKehadiran({ baseURL, user }) {
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">No</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Export
+              </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
@@ -192,6 +239,16 @@ export default function RekapKehadiran({ baseURL, user }) {
               <tr key={index}>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {index + 1}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  <i className="cursor-pointer">
+                    <Icon
+                      icon="ri:file-excel-2-line"
+                      width={20}
+                      height={20}
+                      onClick={() => generateRekap(row.course_code, row.class)}
+                    />
+                  </i>
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.curr_code}
@@ -276,9 +333,10 @@ export default function RekapKehadiran({ baseURL, user }) {
               <div className="flex items-center gap-2 cursor-pointer">No</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Kurikulum
-              </div>
+              Export
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              Kurikulum
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
@@ -328,6 +386,16 @@ export default function RekapKehadiran({ baseURL, user }) {
               <tr key={index}>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {index + 1}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                <i className="cursor-pointer">
+                    <Icon
+                      icon="ri:file-excel-2-line"
+                      width={20}
+                      height={20}
+                      onClick={() => generateRekap(row.course_code, row.class)}
+                    />
+                  </i>
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.curr_code}
