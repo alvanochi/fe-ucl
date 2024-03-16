@@ -10,6 +10,7 @@ import useDatatable from "../../../../hooks/useDatatable";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import useForm from "../../../../hooks/useForm";
+import useDosen from "../../../../repo/dosen";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 
 export default function GenerateQrCode() {
@@ -17,17 +18,14 @@ export default function GenerateQrCode() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-
   const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
   const { data, loading, refresh } = useDatatable(DATA_URL);
 
-
   const [courseOptions, setCourseOptions] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(""); 
+  const [selectedCourse, setSelectedCourse] = useState("");
   const [pertemuanData, setPertemuanData] = useState(null);
 
   const [idLecture, setIdLecture] = useState();
-
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -38,11 +36,11 @@ export default function GenerateQrCode() {
             {
               params: {
                 code: data.nip,
-              }
+              },
             },
             {
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
             }
           );
@@ -53,10 +51,10 @@ export default function GenerateQrCode() {
             label: `${course.name} | ${course.class}`,
             value: `${course.course_code} - ${course.class}`,
             dataId: course.id,
-            kelas: course.class
+            kelas: course.class,
           }));
-          
-          setCourseOptions(options);          
+
+          setCourseOptions(options);
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
@@ -64,34 +62,39 @@ export default function GenerateQrCode() {
     };
 
     fetchCourses();
-  }, [data.nip]); 
+  }, [data.nip]);
 
   const INITIAL_FORM = {
     status_kelas: "",
-  }
+    rps_dasar: "",
+    rps_pelaksanaan: "",
+  };
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
-    rules: [
-      { field: "status_kelas", label: "status_kelas" },
-    ],
+    rules: [{ field: "status_kelas", label: "status_kelas" }],
   });
-
 
   useEffect(() => {
     const fetchPertemuan = async () => {
       try {
         if (selectedCourse) {
-          const selectedOption = courseOptions.find(option => option.value === selectedCourse);
+          const selectedOption = courseOptions.find(
+            (option) => option.value === selectedCourse
+          );
 
           if (!selectedOption) {
             console.error("Selected course not found in options");
             return;
           }
-    
-          const [selectedCourseCode, selectedClass] = selectedCourse.split('-');
-          const [optionCourseCode, optionClass] = selectedOption.value.split('-');
-    
-          if (selectedCourseCode !== optionCourseCode || selectedClass !== optionClass) {
+
+          const [selectedCourseCode, selectedClass] = selectedCourse.split("-");
+          const [optionCourseCode, optionClass] =
+            selectedOption.value.split("-");
+
+          if (
+            selectedCourseCode !== optionCourseCode ||
+            selectedClass !== optionClass
+          ) {
             console.error("Selected course and class don't match with options");
             return;
           }
@@ -103,12 +106,12 @@ export default function GenerateQrCode() {
                   nik_dosen: data.nip,
                   id_matkul: selectedCourseCode,
                   kelas: selectedOption.kelas,
-                  id_lecture: selectedOption.dataId
-                }
+                  id_lecture: selectedOption.dataId,
+                },
               }
             );
-  
-            const pertemuanData = response.data.data.pertemuan_ke; 
+
+            const pertemuanData = response.data.data.pertemuan_ke;
             setPertemuanData(pertemuanData);
           }
         }
@@ -116,31 +119,42 @@ export default function GenerateQrCode() {
         console.error("Error fetching pertemuan:", error);
       }
     };
-  
+
     fetchPertemuan();
   }, [selectedCourse, courseOptions, data.nip]);
 
+  const [selectedDosen, setSelectedDosen] = useState("");
 
+  const handleDosenChange = (selected) => {
+    setSelectedDosen(selected?.value);
+  };
+
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   async function submitHandler(event) {
     event.preventDefault();
     try {
-      const selectedOption = courseOptions.find(option => option.value === selectedCourse);
+      const selectedOption = courseOptions.find(
+        (option) => option.value === selectedCourse
+      );
 
       if (!selectedOption) {
         console.error("Selected course not found in options");
         return;
       }
 
-      const [selectedCourseCode, selectedClass] = selectedCourse.split('-');
-      const [optionCourseCode, optionClass] = selectedOption.value.split('-');
+      const [selectedCourseCode, selectedClass] = selectedCourse.split("-");
+      const [optionCourseCode, optionClass] = selectedOption.value.split("-");
 
       // Pemeriksaan course_code dan class
-      if (selectedCourseCode !== optionCourseCode || selectedClass !== optionClass) {
+      if (
+        selectedCourseCode !== optionCourseCode ||
+        selectedClass !== optionClass
+      ) {
         console.error("Selected course and class don't match with options");
         return;
       }
-      if(!form.status_kelas){
+      if (!form.status_kelas) {
         toastAlert("error", "Pleas fill in all the required fields.");
 
         return;
@@ -152,7 +166,8 @@ export default function GenerateQrCode() {
         id_matkul: selectedCourseCode,
         kelas: selectedClass,
         pertemuan: pertemuanData,
-        id_lecture: selectedOption.dataId
+        id_lecture: selectedOption.dataId,
+        nidn_dosen_pengganti: selectedDosen,
       };
 
       const request = await axios({
@@ -179,7 +194,7 @@ export default function GenerateQrCode() {
     }
   }
 
-  if ([user, menu, loading].some((item) => item == null))
+  if ([user, menu, loading, isDosenLoading].some((item) => item == null))
     return <p>Loading...</p>;
   return (
     <Layout>
@@ -203,17 +218,15 @@ export default function GenerateQrCode() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-            <Form.Label className="min-w-[14rem]">
-              Matakuliah <span className="text-danger-600">*</span>
-            </Form.Label>
-            <span>:</span>
-            <Form.Select
+              <Form.Label className="min-w-[14rem]">
+                Matakuliah <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
                 className="flex-1"
                 name="id_matkul"
                 onChange={(e) => {
                   setSelectedCourse(e.target.value);
-                  // setIdLecture(e.target.idLecture);
-                  // console.log(e.target);
                 }}
                 value={selectedCourse}
                 options={courseOptions}
@@ -240,18 +253,67 @@ export default function GenerateQrCode() {
               <span>:</span>
               <div className="flex gap-4">
                 <Form.Label>
-                  <Form.Radio name="status_kelas" onChange={inputHandler}value={0} />
+                  <Form.Radio
+                    name="status_kelas"
+                    onChange={inputHandler}
+                    value={0}
+                  />
                   Offline
                 </Form.Label>
                 <Form.Label>
-                  <Form.Radio name="status_kelas" onChange={inputHandler} value={1} />
+                  <Form.Radio
+                    name="status_kelas"
+                    onChange={inputHandler}
+                    value={1}
+                  />
                   Online
                 </Form.Label>
                 <Form.Label>
-                  <Form.Radio name="status_kelas" onChange={inputHandler} value={2} />
+                  <Form.Radio
+                    name="status_kelas"
+                    onChange={inputHandler}
+                    value={2}
+                  />
                   Hybird
                 </Form.Label>
               </div>
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">RPS Dasar</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="rps_dasar"
+                onChange={inputHandler}
+                value={data.rps_dasar}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">RPS Pelaksanaan</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="rps_pelaksanaan"
+                onChange={inputHandler}
+                value={data.rps_pelaksanaan}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">Dosen Pengganti</Form.Label>
+              <span>:</span>
+              <Form.Combobox
+                name="nidn_dosen_pengganti"
+                className="flex-1"
+                onChange={handleDosenChange}
+                value={selectedDosen}
+                options={listDosen?.map((dosen) => ({
+                  label: dosen.nama_lengkap,
+                  value: dosen.nip,
+                }))}
+                menuTarget={document.body}
+              />
             </Form.Group>
           </Card.Body>
         </Card>
@@ -267,7 +329,7 @@ export default function GenerateQrCode() {
           <Button type="submit" variant="primary" className="w-full h-12">
             Konfirmasi
           </Button>
-        </div>   
+        </div>
       </Form>
     </Layout>
   );
