@@ -12,8 +12,6 @@ export default function RekapKehadiran({ baseURL, user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  console.log(dataGasal);
-
   useEffect(() => {
     const fetchDataGasal = async () => {
       try {
@@ -130,7 +128,7 @@ export default function RekapKehadiran({ baseURL, user }) {
       }
     } catch (error) {
       if (error.name === "AxiosError") {
-        toastAlert("warning", error.response.data);
+        toastAlert("warning", error.response.statusText);
         return;
       }
       toastAlert("error", error);
@@ -388,7 +386,7 @@ export default function RekapKehadiran({ baseURL, user }) {
                   {index + 1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                <i className="cursor-pointer">
+                  <i className="cursor-pointer">
                     <Icon
                       icon="ri:file-excel-2-line"
                       width={20}
