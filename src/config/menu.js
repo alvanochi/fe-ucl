@@ -342,7 +342,7 @@ export const APP_MENU = [
   {
     label: "Users",
     url: "/users",
-    icon: "iconoir:user",
+    icon: "flowbite:users-solid",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
       {
@@ -363,6 +363,19 @@ export const APP_MENU = [
     icon: "mdi-certificate",
     allowedRoles: [ROLE_ID_DOSEN],
     submenus: [],
+  },
+  {
+    label: "Group",
+    url: "/group",
+    icon: "fa6-solid:users",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Group",
+        url: "#group",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
   },
   {
     label: "Setting",
