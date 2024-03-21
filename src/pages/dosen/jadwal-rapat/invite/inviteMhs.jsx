@@ -13,22 +13,19 @@ import useMahasiswa from "../../../../repo/mahasiswa";
 const InvitePesertaMhs = ({ data, onInvite }) => {
   const { show, toggle, close } = useModal();
 
-  const [selectedMhs, setSelectedMhs] = useState(""); 
+  const [selectedMhs, setSelectedMhs] = useState("");
 
   const INITIAL_FORM = {
     id_meeting: data?.id || "",
   };
 
-  const {form, inputHandler} = useForm(INITIAL_FORM, {
-    rules: [
-      { field: "id_meeting", label: "id_meeting" },
-    ],
+  const { form, inputHandler } = useForm(INITIAL_FORM, {
+    rules: [{ field: "id_meeting", label: "id_meeting" }],
   });
 
   const handleMhsChange = (selected) => {
     setSelectedMhs(selected?.value);
   };
-
 
   async function submitHandler(event) {
     event.preventDefault();
@@ -38,14 +35,17 @@ const InvitePesertaMhs = ({ data, onInvite }) => {
         npm: selectedMhs,
       };
 
-      if(!requestData.npm){
+      if (!requestData.npm) {
         toastAlert("error", "Pleas fill in all the required fields.");
 
         return;
       }
-      await axios.post(`${process.env.API_ENDPOINT_ABSEN}/meeting-invite/store`, requestData);
+      await axios.post(
+        `${process.env.API_ENDPOINT_ABSEN}/meeting-invite/store`,
+        requestData
+      );
       toastAlert("success", "Invite successfully");
-      close()
+      close();
       onInvite();
     } catch (error) {
       if (error.name === "AxiosError") {
@@ -87,12 +87,11 @@ const InvitePesertaMhs = ({ data, onInvite }) => {
               name="npm"
               onChange={handleMhsChange}
               value={selectedMhs}
-              options={listMahasiswa?.map(mhs => ({
-                label: mhs.nama_lengkap,
+              options={listMahasiswa?.map((mhs) => ({
+                label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                 value: mhs.npm,
               }))}
             />
-
           </Form.Group>
           <div className="flex gap-4 mt-12">
             <Button type="button" variant="secondary" onClick={close}>

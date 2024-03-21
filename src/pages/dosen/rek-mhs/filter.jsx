@@ -52,7 +52,7 @@ export default function Filter({ filter, handler }) {
               }
               value={form?.npm ?? ""}
               options={listMahasiswa?.map((mhs) => ({
-                label: mhs.nama_lengkap,
+                label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                 value: mhs.npm,
               }))}
             />

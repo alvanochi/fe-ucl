@@ -359,7 +359,7 @@ export default function CreateJadwal() {
                         value={form.peserta_mahasiswa[index].npm}
                         options={
                           listMahasiswa && Array.isArray(listMahasiswa) && listMahasiswa.map((mahasiswa) => ({
-                            label: mahasiswa.nama_lengkap,
+                            label: `${mahasiswa.nama_lengkap} - ${mahasiswa.npm}`,
                             value: mahasiswa.npm,
                           }))
                         }

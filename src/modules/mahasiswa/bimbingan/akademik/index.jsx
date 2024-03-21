@@ -92,6 +92,8 @@ export default function AkademikModule({ baseURL }) {
     }
   };
 
+  console.log(data);
+
   if ([user, menu, isDosenLoading, loading].some((item) => item == null))
     return <p>Loading...</p>;
 
@@ -245,39 +247,44 @@ export default function AkademikModule({ baseURL }) {
           </Form.Group>
         </Card.Body>
       </Card>
-
-      <Form onSubmit={handleSubmit}>
-        <Card className="mt-8 mb-8">
-          <Card.Header className="text-center">Dokumen FRS</Card.Header>
-          <Card.Body className="space-y-4">
-            <Form.Group className="flex items-baseline gap-3">
-              <div className="flex-1 block">
-                <div className="space-y-2 mt-2">
-                  <Form.Group className="mb-4">
-                    <Form.Label>Dokumen</Form.Label>
-                    <Form.Input type="file" className="flex-1" name="dok_frs" />
-                  </Form.Group>
-                  <Form.Group className="mb-4">
-                    <embed
-                      src={`${FILE_URL}/${activeSemester?.dok_frs}`}
-                      className="w-full h-[256px]"
-                    />
-                  </Form.Group>
+      {!data ? null : (
+        <Form onSubmit={handleSubmit}>
+          <Card className="mt-8 mb-8">
+            <Card.Header className="text-center">Dokumen FRS</Card.Header>
+            <Card.Body className="space-y-4">
+              <Form.Group className="flex items-baseline gap-3">
+                <div className="flex-1 block">
+                  <div className="space-y-2 mt-2">
+                    <Form.Group className="mb-4">
+                      <Form.Label>Dokumen</Form.Label>
+                      <Form.Input
+                        type="file"
+                        className="flex-1"
+                        name="dok_frs"
+                      />
+                    </Form.Group>
+                    <Form.Group className="mb-4">
+                      <embed
+                        src={`${FILE_URL}/${activeSemester?.dok_frs}`}
+                        className="w-full h-[256px]"
+                      />
+                    </Form.Group>
+                  </div>
+                  <div className="flex gap-4 mt-8">
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      className="w-full h-12"
+                    >
+                      Submit
+                    </Button>
+                  </div>
                 </div>
-                <div className="flex gap-4 mt-8">
-                  <Button
-                    type="submit"
-                    variant="primary"
-                    className="w-full h-12"
-                  >
-                    Submit
-                  </Button>
-                </div>
-              </div>
-            </Form.Group>
-          </Card.Body>
-        </Card>
-      </Form>
+              </Form.Group>
+            </Card.Body>
+          </Card>
+        </Form>
+      )}
     </>
   );
 }

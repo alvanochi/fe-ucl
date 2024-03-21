@@ -50,6 +50,31 @@ export default function DetailBimbinganAkademik() {
     fetchData();
   }, [router.query]);
 
+  const handleChange = (mhsIndex, semesterIndex, fieldName, value) => {
+    const updatedMhsBimbingan = [...mhsBimbingan];
+    updatedMhsBimbingan[mhsIndex].semesters[semesterIndex][fieldName] = value;
+    setMhsBimbingan(updatedMhsBimbingan);
+  };
+
+  const handleEdit = async (id, mhsIndex, semesterIndex, updatedData) => {
+    try {
+      await axios.patch(`${API_URL}/edit-dosen/${id}`, updatedData);
+
+      const updatedMhsBimbingan = [...mhsBimbingan];
+      updatedMhsBimbingan[mhsIndex].semesters[semesterIndex] = updatedData;
+      setMhsBimbingan(updatedMhsBimbingan);
+
+      toastAlert("success", "Updated!");
+    } catch (error) {
+      console.error("Gagal mengubah data:", error);
+      if (error.name === "AxiosError") {
+        toastAlert("warning", error.response.data);
+        return;
+      }
+      toastAlert("error", error);
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return dateString.substring(0, 10);
@@ -114,13 +139,10 @@ export default function DetailBimbinganAkademik() {
                     key={`mhs-${mhsIndex}`}
                     title={`${mhsIndex + 1}. ${mhs.nama_lengkap} - ${mhs.npm}`}
                   >
-                    <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
-                      <ul className="flex flex-wrap -mb-px">
+                    <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+                      <ul class="flex flex-wrap -mb-px">
                         {[1, 2, 3, 4, 5, 6, 7, 8].map((semesterNum) => (
-                          <li
-                            className="me-2"
-                            key={`semester-tab-${semesterNum}`}
-                          >
+                          <li class="me-2" key={`semester-tab-${semesterNum}`}>
                             <button
                               onClick={() => setActiveSemester(semesterNum)}
                               className={`inline-block p-4 border-b-2 ${
@@ -136,95 +158,241 @@ export default function DetailBimbinganAkademik() {
                       </ul>
                     </div>
 
-                    {mhs.semesters.map((semester, semesterIndex) => (
-                      <div key={`semester-${semesterIndex}`}>
-                        {activeSemester === semester.semester && (
-                          <>
-                            <Form.Group className="flex items-baseline pt-2 gap-3">
-                              <Form.Label className="min-w-[18rem]">
-                                Pertemuan 1{" "}
-                                <span className="text-danger-600">*</span>
-                              </Form.Label>
-                              <span>:</span>
-                              <Form.Input
-                                type="date"
-                                className="flex-1"
-                                name={`p1-${mhsIndex}-${semesterIndex}`}
-                                value={formatDate(semester.p1)}
-                                disabled
-                              />
-                            </Form.Group>
-                            <Form.Group className="flex items-baseline pt-2 gap-3">
-                              <Form.Label className="min-w-[18rem]">
-                                Pertemuan 2{" "}
-                                <span className="text-danger-600">*</span>
-                              </Form.Label>
-                              <span>:</span>
-                              <Form.Input
-                                type="date"
-                                className="flex-1"
-                                name={`p2-${mhsIndex}-${semesterIndex}`}
-                                value={formatDate(semester.p2)}
-                                disabled
-                              />
-                            </Form.Group>
-                            <Form.Group className="flex items-baseline pt-2 gap-3">
-                              <Form.Label className="min-w-[18rem]">
-                                Pertemuan 3{" "}
-                                <span className="text-danger-600">*</span>
-                              </Form.Label>
-                              <span>:</span>
-                              <Form.Input
-                                type="date"
-                                className="flex-1"
-                                name={`p1-${mhsIndex}-${semesterIndex}`}
-                                value={formatDate(semester.p3)}
-                                disabled
-                              />
-                            </Form.Group>
-                            <Form.Group className="flex items-baseline pt-2 gap-3">
-                              <Form.Label className="min-w-[18rem]">
-                                Pertemuan 4{" "}
-                                <span className="text-danger-600">*</span>
-                              </Form.Label>
-                              <span>:</span>
-                              <Form.Input
-                                type="date"
-                                className="flex-1"
-                                name={`p4-${mhsIndex}-${semesterIndex}`}
-                                value={formatDate(semester.p4)}
-                                disabled
-                              />
-                            </Form.Group>
-                            <Form.Group className="flex items-baseline pt-2 gap-3">
-                              <Form.Label className="min-w-[18rem]">
-                                Catatan
-                                <span className="text-danger-600">*</span>
-                              </Form.Label>
-                              <span>:</span>
-                              <Form.Textarea
-                                className="flex-1"
-                                rows="5"
-                                name={`catatan-${mhsIndex}-${semesterIndex}`}
-                                value={semester.catatan || ""}
-                                disabled
-                              />
-                            </Form.Group>
-                            <Form.Group className="flex items-baseline pt-2 gap-3">
-                              <Form.Label className="min-w-[18rem]">
-                                Dokumen FRS
-                                <span className="text-danger-600">*</span>
-                              </Form.Label>
-                              <span>:</span>
-                              <embed
-                                src={`${FILE_URL}/${semester.dok_frs}`}
-                                className="w-full h-[256px]"
-                              />
-                            </Form.Group>
-                          </>
-                        )}
-                      </div>
-                    ))}
+                    {mhs.semesters.map((semester, semesterIndex) => {
+                      return (
+                        <div key={`semester-${semesterIndex}`}>
+                          {activeSemester === semester.semester && (
+                            <>
+                              <Form.Group className="flex items-baseline pt-2 gap-3">
+                                <Form.Label className="min-w-[18rem]">
+                                  Pertemuan 1{" "}
+                                  <span className="text-danger-600">*</span>
+                                </Form.Label>
+                                <span>:</span>
+                                <Form.Input
+                                  type="date"
+                                  className="flex-1"
+                                  name={`p1-${mhsIndex}-${semesterIndex}`}
+                                  value={formatDate(semester.p1)}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      mhsIndex,
+                                      semesterIndex,
+                                      "p1",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+
+                                <Button.Icon
+                                  variant="secondary"
+                                  icon={
+                                    <Icon
+                                      icon="bx:edit"
+                                      width={20}
+                                      height={20}
+                                    />
+                                  }
+                                  onClick={() => {
+                                    const updatedData = {
+                                      ...semester,
+                                    };
+                                    handleEdit(
+                                      semester.id,
+                                      mhsIndex,
+                                      semesterIndex,
+                                      updatedData
+                                    );
+                                  }}
+                                />
+                              </Form.Group>
+                              <Form.Group className="flex items-baseline pt-2 gap-3">
+                                <Form.Label className="min-w-[18rem]">
+                                  Pertemuan 2{" "}
+                                  <span className="text-danger-600">*</span>
+                                </Form.Label>
+                                <span>:</span>
+                                <Form.Input
+                                  type="date"
+                                  className="flex-1"
+                                  name={`p2-${mhsIndex}-${semesterIndex}`}
+                                  value={formatDate(semester.p2)}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      mhsIndex,
+                                      semesterIndex,
+                                      "p2",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+
+                                <Button.Icon
+                                  variant="secondary"
+                                  icon={
+                                    <Icon
+                                      icon="bx:edit"
+                                      width={20}
+                                      height={20}
+                                    />
+                                  }
+                                  onClick={() => {
+                                    const updatedData = {
+                                      ...semester,
+                                    };
+                                    handleEdit(
+                                      semester.id,
+                                      mhsIndex,
+                                      semesterIndex,
+                                      updatedData
+                                    );
+                                  }}
+                                />
+                              </Form.Group>
+                              <Form.Group className="flex items-baseline pt-2 gap-3">
+                                <Form.Label className="min-w-[18rem]">
+                                  Pertemuan 3{" "}
+                                  <span className="text-danger-600">*</span>
+                                </Form.Label>
+                                <span>:</span>
+                                <Form.Input
+                                  type="date"
+                                  className="flex-1"
+                                  name={`p1-${mhsIndex}-${semesterIndex}`}
+                                  value={formatDate(semester.p3)}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      mhsIndex,
+                                      semesterIndex,
+                                      "p3",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+
+                                <Button.Icon
+                                  variant="secondary"
+                                  icon={
+                                    <Icon
+                                      icon="bx:edit"
+                                      width={20}
+                                      height={20}
+                                    />
+                                  }
+                                  onClick={() => {
+                                    const updatedData = {
+                                      ...semester,
+                                    };
+                                    handleEdit(
+                                      semester.id,
+                                      mhsIndex,
+                                      semesterIndex,
+                                      updatedData
+                                    );
+                                  }}
+                                />
+                              </Form.Group>
+                              <Form.Group className="flex items-baseline pt-2 gap-3">
+                                <Form.Label className="min-w-[18rem]">
+                                  Pertemuan 4{" "}
+                                  <span className="text-danger-600">*</span>
+                                </Form.Label>
+                                <span>:</span>
+                                <Form.Input
+                                  type="date"
+                                  className="flex-1"
+                                  name={`p4-${mhsIndex}-${semesterIndex}`}
+                                  value={formatDate(semester.p4)}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      mhsIndex,
+                                      semesterIndex,
+                                      "p4",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+
+                                <Button.Icon
+                                  variant="secondary"
+                                  icon={
+                                    <Icon
+                                      icon="bx:edit"
+                                      width={20}
+                                      height={20}
+                                    />
+                                  }
+                                  onClick={() => {
+                                    const updatedData = {
+                                      ...semester,
+                                    };
+                                    handleEdit(
+                                      semester.id,
+                                      mhsIndex,
+                                      semesterIndex,
+                                      updatedData
+                                    );
+                                  }}
+                                />
+                              </Form.Group>
+                              <Form.Group className="flex items-baseline pt-2 gap-3">
+                                <Form.Label className="min-w-[18rem]">
+                                  Catatan
+                                  <span className="text-danger-600">*</span>
+                                </Form.Label>
+                                <span>:</span>
+                                <Form.Textarea
+                                  className="flex-1"
+                                  rows="5"
+                                  name={`catatan-${mhsIndex}-${semesterIndex}`}
+                                  value={semester.catatan || ""}
+                                  onChange={(e) =>
+                                    handleChange(
+                                      mhsIndex,
+                                      semesterIndex,
+                                      "catatan",
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <Button.Icon
+                                  variant="secondary"
+                                  icon={
+                                    <Icon
+                                      icon="bx:edit"
+                                      width={20}
+                                      height={20}
+                                    />
+                                  }
+                                  onClick={() => {
+                                    const updatedData = {
+                                      ...semester,
+                                    };
+                                    handleEdit(
+                                      semester.id,
+                                      mhsIndex,
+                                      semesterIndex,
+                                      updatedData
+                                    );
+                                  }}
+                                />
+                              </Form.Group>
+                              <Form.Group className="flex items-baseline pt-2 gap-3">
+                                <Form.Label className="min-w-[18rem]">
+                                  Dokumen FRS
+                                  <span className="text-danger-600">*</span>
+                                </Form.Label>
+                                <span>:</span>
+                                <embed
+                                  src={`${FILE_URL}/${semester.dok_frs}`}
+                                  className="w-full h-[256px]"
+                                />
+                              </Form.Group>
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
                   </Accordion>
                 ))}
               </div>
@@ -232,7 +400,6 @@ export default function DetailBimbinganAkademik() {
           </Form.Group>
         </Card.Body>
       </Card>
-
       <div className="flex mt-8">
         <Button
           as="a"

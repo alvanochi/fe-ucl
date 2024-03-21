@@ -163,7 +163,7 @@ export default function AkademikCreate() {
                       listMahasiswa &&
                       Array.isArray(listMahasiswa) &&
                       listMahasiswa.map((mhs) => ({
-                        label: mhs.nama_lengkap,
+                        label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                         value: mhs.user_id,
                       }))
                     }
@@ -172,18 +172,18 @@ export default function AkademikCreate() {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
-                      <Button.Icon
-                        type="button"
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() => removeFromUser("mhs_bimbingan", index)}
-                      />
+                    <Button.Icon
+                      type="button"
+                      variant="danger"
+                      icon={
+                        <Icon
+                          icon="solar:trash-bin-2-bold-duotone"
+                          width={20}
+                          height={20}
+                        />
+                      }
+                      onClick={() => removeFromUser("mhs_bimbingan", index)}
+                    />
                   </div>
                 </td>
               </tr>

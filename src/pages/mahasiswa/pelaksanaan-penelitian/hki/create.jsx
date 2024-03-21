@@ -437,7 +437,7 @@ export default function HkiCreate() {
                       listMahasiswa &&
                       Array.isArray(listMahasiswa) &&
                       listMahasiswa.map((mhs) => ({
-                        label: mhs.nama_lengkap,
+                        label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                         value: mhs.user_id,
                       }))
                     }
