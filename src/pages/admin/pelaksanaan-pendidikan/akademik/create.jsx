@@ -30,7 +30,7 @@ export default function AkademikCreate() {
 
   const INITIAL_FORM = {
     dosen_id: "",
-    tahun_akademik: "",
+    tahun_angkatan: "",
     mhs_bimbingan: [],
   };
 
@@ -77,14 +77,14 @@ export default function AkademikCreate() {
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Tahun Akademik <span className="text-danger-600">*</span>
+                Tahun Angkatan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
                 className="flex-1"
-                name="tahun_akademik"
-                value={form.tahun_akademik}
+                name="tahun_angkatan"
+                value={form.tahun_angkatan}
                 onChange={inputHandler}
               />
             </Form.Group>

@@ -48,7 +48,7 @@ export default function AkademikModule({ baseURL }) {
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                Tahun Akademik
+                Tahun Angkatan
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -94,7 +94,7 @@ export default function AkademikModule({ baseURL }) {
                     {rowNumber}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.tahun_akademik}
+                    {row.tahun_angkatan}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     {row.nama_lengkap}

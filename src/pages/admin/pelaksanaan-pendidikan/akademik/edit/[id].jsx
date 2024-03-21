@@ -28,7 +28,7 @@ export default function AkademikEdit() {
   const INITIAL_FORM = {
     id: "",
     dosen_id: "",
-    tahun_akademik: "",
+    tahun_angkatan: "",
     mhs_bimbingan: [],
   };
 
@@ -62,18 +62,6 @@ export default function AkademikEdit() {
       transformData: (data) => ({
         ...INITIAL_FORM,
         ...data.dataBimbingan,
-        p1: data.dataBimbingan.p1
-          ? date.formatToInput(data.dataBimbingan.p1)
-          : "",
-        p2: data.dataBimbingan.p2
-          ? date.formatToInput(data.dataBimbingan.p2)
-          : "",
-        p3: data.dataBimbingan.p3
-          ? date.formatToInput(data.dataBimbingan.p3)
-          : "",
-        p4: data.dataBimbingan.p4
-          ? date.formatToInput(data.dataBimbingan.p4)
-          : "",
         mhs_bimbingan: data.mhsBimbingan,
       }),
     });
@@ -102,14 +90,14 @@ export default function AkademikEdit() {
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Tahun Akademik <span className="text-danger-600">*</span>
+                Tahun Angkatan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
                 className="flex-1"
-                name="tahun_akademik"
-                value={form.tahun_akademik}
+                name="tahun_angkatan"
+                value={form.tahun_angkatan}
                 onChange={inputHandler}
               />
             </Form.Group>

@@ -172,19 +172,6 @@ export default function DaftarHadirModule({ baseURL, user }) {
                       variant="primary"
                       icon={<Icon icon="bx:group" width={20} height={20} />}
                     />
-                    <Button.Icon
-                      variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() =>
-                        destroy(row.id).then(() => refreshAbsensi())
-                      }
-                    />
                     <i
                       className={
                         row.learning_done == null || row.learning_done == ""
@@ -199,6 +186,19 @@ export default function DaftarHadirModule({ baseURL, user }) {
                     >
                       <Icon icon="ph:power-fill" width={30} height={30} />
                     </i>
+                    <Button.Icon
+                      variant="danger"
+                      icon={
+                        <Icon
+                          icon="solar:trash-bin-2-bold-duotone"
+                          width={20}
+                          height={20}
+                        />
+                      }
+                      onClick={() =>
+                        destroy(row.id).then(() => refreshAbsensi())
+                      }
+                    />
                   </div>
                 </td>
               </tr>
