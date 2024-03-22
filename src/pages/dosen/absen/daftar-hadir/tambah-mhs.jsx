@@ -56,6 +56,7 @@ const TambahMhs = ({ data, onTambahMhs }) => {
 
       toastAlert("success", "Successfully");
       close();
+      setSelectedMhs("");
       onTambahMhs();
     } catch (error) {
       if (error.name === "AxiosError") {
