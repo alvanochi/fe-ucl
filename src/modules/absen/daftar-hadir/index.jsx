@@ -6,31 +6,32 @@ import useCRUD from "../../../hooks/useCRUD";
 import date from "../../../utils/date";
 import SortIcon from "../../../components/SortIcon";
 import Form from "../../../components/Form";
-import useDatatableAbsensi from "../../../hooks/useDataTableAbsensi";
 import ShowQr from "./show-qr";
 import axios from "axios";
 import { toastAlert } from "../../../lib/sweetalert";
+import { useState } from "react";
+import useNewDataTable from "../../../hooks/useNewDataTable";
 
 export default function DaftarHadirModule({ baseURL, user }) {
   const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran`;
   const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/delete`;
+  const [searchValue, setSearchValue] = useState("");
+
   const {
     dataAbsensi,
     loadingAbsensi,
     pageAbsensi,
     pageCountAbsensi,
-    filter,
     setPageAbsensi,
-    setFilter,
-    canPrevAbsensi,
-    canNextAbsensi,
     refreshAbsensi,
-    sortBy,
-    getSortBy,
-  } = useDatatableAbsensi(DATA_URL, {
-    filter: ["nik_dosen"],
-    filterValue: [user && user.nip],
-  });
+  } = useNewDataTable(
+    DATA_URL,
+    {
+      filter: ["nik_dosen"],
+      filterValue: [user && user.nip],
+    },
+    searchValue
+  );
 
   const { destroy } = useCRUD(DELETE_URL);
 
@@ -60,17 +61,30 @@ export default function DaftarHadirModule({ baseURL, user }) {
 
   return (
     <>
-      <div className="flex justify-center gap-2 mb-8">
-        <Button
-          as="a"
-          href={`${baseURL}/daftar-hadir/generate`}
-          variant="primary"
-          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-          pill
-        >
-          Generate QRCODE
-        </Button>
+      <div className="flex mb-8 justify-end items-center">
+        <div className="mr-4">
+          <Button
+            as="a"
+            href={`${baseURL}/daftar-hadir/generate`}
+            variant="primary"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
+            Generate QRCODE
+          </Button>
+        </div>
+        <div className="flex-shrink">
+          <Form.Input
+            type="text"
+            name="search"
+            placeholder="Search"
+            style={{ width: "400px" }}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
       </div>
+
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}

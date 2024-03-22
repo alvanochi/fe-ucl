@@ -1,14 +1,16 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
-import Filter from "./filter";
-import useDatatableAbsensi from "../../../../hooks/useDataTableAbsensi";
 import date from "../../../../utils/date";
 import Form from "../../../../components/Form";
 import useCRUD from "../../../../hooks/useCRUD";
+import useNewDataTable from "../../../../hooks/useNewDataTable";
+import { useState } from "react";
 
 export default function VotingModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/voting/question-all`;
   const DELETE_URL = `${process.env.API_ENDPOINT}/voting/question`;
+  const [searchValue, setSearchValue] = useState("");
+
   const {
     dataAbsensi,
     loadingAbsensi,
@@ -22,23 +24,34 @@ export default function VotingModule({ baseURL }) {
     refreshAbsensi,
     sortBy,
     getSortBy,
-  } = useDatatableAbsensi(DATA_URL);
+  } = useNewDataTable(DATA_URL, {}, searchValue);
 
   const { destroy } = useCRUD(DELETE_URL);
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 my-8">
-        <Button
-          as="a"
-          href={`${baseURL}/create`}
-          variant="primary"
-          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-          pill
-        >
-          Create Vote
-        </Button>
-        {/* <Filter /> */}
+      <div className="flex mb-8 justify-end items-center">
+        <div className="mr-4">
+          <Button
+            as="a"
+            href={`${baseURL}/create`}
+            variant="primary"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
+            Create Vote
+          </Button>
+        </div>
+        <div className="flex-shrink">
+          <Form.Input
+            type="text"
+            name="search"
+            placeholder="Search"
+            style={{ width: "400px" }}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"

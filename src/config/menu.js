@@ -154,7 +154,7 @@ export const APP_MENU = [
       {
         label: "Penelitian",
         url: "#penelitian",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+        allowedRoles: [],
       },
       {
         label: "Publikasi Karya",

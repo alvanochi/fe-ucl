@@ -1,10 +1,6 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../../hooks/useDatatable";
-import SortIcon from "../../../../components/SortIcon";
-import Form from "../../../../components/Form";
+
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
