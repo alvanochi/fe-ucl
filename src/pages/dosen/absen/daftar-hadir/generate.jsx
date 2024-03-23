@@ -68,6 +68,7 @@ export default function GenerateQrCode() {
     status_kelas: "",
     rps_dasar: "",
     rps_pelaksanaan: "",
+    dosen_tamu: "",
   };
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
@@ -313,6 +314,17 @@ export default function GenerateQrCode() {
                   value: dosen.nip,
                 }))}
                 menuTarget={document.body}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">Dosen Tamu</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="dosen_tamu"
+                onChange={inputHandler}
+                value={data.dosen_tamu}
               />
             </Form.Group>
           </Card.Body>
