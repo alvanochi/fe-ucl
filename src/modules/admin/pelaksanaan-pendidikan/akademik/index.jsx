@@ -42,7 +42,7 @@ export default function AkademikModule({ baseURL }) {
           <Form.Input
             type="text"
             name="search"
-            placeholder="Search"
+            placeholder="Search Mahasiswa"
             style={{ width: "400px" }}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
@@ -140,7 +140,9 @@ export default function AkademikModule({ baseURL }) {
                             height={20}
                           />
                         }
-                        onClick={() => destroy(row.id).then(() => refresh())}
+                        onClick={() =>
+                          destroy(row.id).then(() => refreshAbsensi())
+                        }
                       />
                     </div>
                   </td>

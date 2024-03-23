@@ -1,34 +1,42 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import useDatatable from "../../../hooks/useDatatable";
 import useCRUD from "../../../hooks/useCRUD";
 import SortIcon from "../../../components/SortIcon";
 import Form from "../../../components/Form";
+import { useState } from "react";
+import useDataTableBk from "../../../hooks/useDataTableBk";
 
 export default function AkademikModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik/get`;
   const DELETE_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik`;
 
+  const [searchValue, setSearchValue] = useState("");
+
   const {
-    data,
-    loading,
-    page,
-    pageCount,
-    filter,
-    setPage,
-    setFilter,
-    canPrev,
-    canNext,
-    refresh,
-    sortBy,
-    getSortBy,
-  } = useDatatable(DATA_URL);
-  const { destroy } = useCRUD(DELETE_URL);
+    dataAbsensi,
+    loadingAbsensi,
+    pageAbsensi,
+    pageCountAbsensi,
+    setPageAbsensi,
+    refreshAbsensi,
+    canPrevAbsensi,
+    canNextAbsensi,
+  } = useDataTableBk(DATA_URL, {}, searchValue);
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 mb-8"></div>
+      <div className="flex mb-8 justify-end items-center">
+        <div className="flex-shrink">
+          <Form.Input
+            type="text"
+            name="search"
+            placeholder="Search Mahasiswa"
+            style={{ width: "400px" }}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
+      </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
@@ -49,7 +57,7 @@ export default function AkademikModule({ baseURL }) {
           </tr>
         </thead>
         <tbody>
-          {loading && (
+          {loadingAbsensi && (
             <tr>
               <td
                 colSpan="6"
@@ -59,7 +67,7 @@ export default function AkademikModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading && data && data.length < 1 && (
+          {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
             <tr>
               <td
                 colSpan="6"
@@ -69,10 +77,10 @@ export default function AkademikModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading &&
-            data &&
-            data.map((row, index) => {
-              const startNumber = (page - 1) * 10 + 1;
+          {!loadingAbsensi &&
+            dataAbsensi &&
+            dataAbsensi.map((row, index) => {
+              const startNumber = (pageAbsensi - 1) * 10 + 1;
 
               const rowNumber = startNumber + index;
               return (
@@ -116,8 +124,8 @@ export default function AkademikModule({ baseURL }) {
                 height={20}
               />
             }
-            onClick={() => setPage(page - 1)}
-            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
+            onClick={() => setPageAbsensi(pageAbsensi - 1)}
+            disabled={!canPrevAbsensi || pageAbsensi === 1} // Tambahkan kondisi page === 1
             pill
           />
           <Button
@@ -131,8 +139,8 @@ export default function AkademikModule({ baseURL }) {
               />
             }
             iconPosition="right"
-            onClick={() => setPage(page + 1)}
-            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
+            onClick={() => setPageAbsensi(pageAbsensi + 1)}
+            disabled={!canNextAbsensi || pageAbsensi === pageCountAbsensi} // Tambahkan kondisi page === pageCount
             pill
           >
             Next Page
@@ -143,15 +151,15 @@ export default function AkademikModule({ baseURL }) {
           <Form.Input
             type="number"
             min="1"
-            max={pageCount}
+            max={pageCountAbsensi}
             className="w-20"
-            value={page}
+            value={pageAbsensi}
             onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
+              event.target.valueAsNumber <= pageCountAbsensi &&
+              setPageAbsensi(event.target.value)
             }
           />
-          of {pageCount || 1}
+          of {pageCountAbsensi || 1}
         </div>
       </div>
     </>
