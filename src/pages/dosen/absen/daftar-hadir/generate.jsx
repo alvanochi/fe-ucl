@@ -25,6 +25,11 @@ export default function GenerateQrCode() {
   const [selectedCourse, setSelectedCourse] = useState("");
   const [pertemuanData, setPertemuanData] = useState(null);
 
+  const [rps, setRps] = useState({
+    rps_dasar: null,
+    rps_pelaksanaan: null,
+  });
+
   const [idLecture, setIdLecture] = useState();
 
   useEffect(() => {
@@ -66,8 +71,6 @@ export default function GenerateQrCode() {
 
   const INITIAL_FORM = {
     status_kelas: "",
-    rps_dasar: "",
-    rps_pelaksanaan: "",
     dosen_tamu: "",
   };
 
@@ -113,7 +116,13 @@ export default function GenerateQrCode() {
             );
 
             const pertemuanData = response.data.data.pertemuan_ke;
+            const rps = response.data.data.rps_dasar;
+            const rpsp = response.data.data.rps_pelaksanaan;
             setPertemuanData(pertemuanData);
+            setRps({
+              rps_dasar: rps !== null ? rps : "",
+              rps_pelaksanaan: rpsp !== null ? rpsp : "",
+            });
           }
         }
       } catch (error) {
@@ -128,6 +137,14 @@ export default function GenerateQrCode() {
 
   const handleDosenChange = (selected) => {
     setSelectedDosen(selected?.value);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setRps((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
   };
 
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
@@ -163,6 +180,7 @@ export default function GenerateQrCode() {
 
       const requestData = {
         ...form,
+        ...rps,
         nik_dosen: data.nip,
         id_matkul: selectedCourseCode,
         kelas: selectedClass,
@@ -286,8 +304,8 @@ export default function GenerateQrCode() {
                 type="text"
                 className="flex-1"
                 name="rps_dasar"
-                onChange={inputHandler}
-                value={data.rps_dasar}
+                value={rps.rps_dasar}
+                onChange={handleChange}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -297,8 +315,8 @@ export default function GenerateQrCode() {
                 type="text"
                 className="flex-1"
                 name="rps_pelaksanaan"
-                onChange={inputHandler}
-                value={data.rps_pelaksanaan}
+                value={rps.rps_pelaksanaan}
+                onChange={handleChange}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

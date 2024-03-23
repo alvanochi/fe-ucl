@@ -3,10 +3,13 @@ import Button from "../../../../components/Button";
 import useDatatable from "../../../../hooks/useDatatable";
 import useCRUD from "../../../../hooks/useCRUD";
 import Form from "../../../../components/Form";
+import { useState } from "react";
 
 export default function AkademikModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik/get`;
   const DELETE_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik`;
+
+  const [searchValue, setSearchValue] = useState("");
 
   const {
     data,
@@ -26,16 +29,28 @@ export default function AkademikModule({ baseURL }) {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 mb-8">
-        <Button
-          as="a"
-          href={`${baseURL}/akademik/create`}
-          variant="primary"
-          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-          pill
-        >
-          Tambah Bimbingan
-        </Button>
+      <div className="flex mb-8 justify-end items-center">
+        <div className="mr-4">
+          <Button
+            as="a"
+            href={`${baseURL}/akademik/create`}
+            variant="primary"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
+            Tambah Bimbingan
+          </Button>
+        </div>
+        <div className="flex-shrink">
+          <Form.Input
+            type="text"
+            name="search"
+            placeholder="Search"
+            style={{ width: "400px" }}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
