@@ -15,11 +15,18 @@ export const middleware = async (req) => {
     "/register",
     "/register-pmm",
     "/forgot-password",
+    "/validasi-dokumen",
   ];
 
   // const universalRouteId = ["/resetPassword"]
   const protectedRoute = ["/login", "/auth/verify"];
   if (user == null && universalRoute.includes(url.pathname)) return response;
+
+  if (
+    user ||
+    (user == null && url.pathname.startsWith("/validasi-dokumen") === true)
+  )
+    return response;
 
   if (user == null && url.pathname.startsWith("/resetPassword") === true)
     return response;

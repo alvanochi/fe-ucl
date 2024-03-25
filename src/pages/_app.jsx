@@ -12,8 +12,9 @@ function MyApp({ Component, pageProps }) {
     const loadCSSBasedOnPath = async () => {
       const path = router.pathname;
 
-      if (path === "/") {
+      if (path === "/" || path.startsWith("/validasi-dokumen")) {
         await import("../../styles/main.css");
+        await import("../../styles/tailwind.globals.css");
       } else if (
         path.startsWith("/mahasiswa") ||
         path.startsWith("/dosen") ||

@@ -28,8 +28,8 @@ export const useNewDataTable = (url, options = {}, searchValue) => {
 
     const query = {
       dataTable: true,
-      orderField: "id",
-      orderValue: "desc",
+      orderField: options.orderField || "id",
+      orderValue: options.orderValue || "desc",
       filter: options.filter || [],
       filterValue: options.filterValue || [],
       length: -1,
@@ -111,8 +111,6 @@ export const useNewDataTable = (url, options = {}, searchValue) => {
   };
 
   useEffect(() => {
-    if (!user) return;
-
     fetchData();
   }, [page, user, searchValue]);
 
