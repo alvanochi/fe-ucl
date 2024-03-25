@@ -10,7 +10,10 @@ export const Hero = () => {
 
       <div className="container py-20">
         <div className="flex flex-col items-center z-20 md:flex-row">
-          <div className="text-center mb-12 md:text-left md:w-1/2 md:pr-10">
+          <div
+            data-aos="zoom-in-down"
+            className="text-center mb-12 md:text-left md:w-1/2 md:pr-10"
+          >
             <h1 className="title mb-4">
               The Academic System of Informatics Engineering
             </h1>
@@ -24,7 +27,7 @@ export const Hero = () => {
             </Link>
           </div>
 
-          <div className="md:w-1/2">
+          <div data-aos="zoom-in-down" className="md:w-1/2">
             <img src="/img/landing-page/hero-image.png" alt="" />
           </div>
         </div>

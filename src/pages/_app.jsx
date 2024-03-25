@@ -4,6 +4,8 @@ import Head from "next/head";
 import { SWRConfig } from "swr";
 import fetcher from "../lib/fetcher";
 import "swiper/css/bundle";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
@@ -32,7 +34,14 @@ function MyApp({ Component, pageProps }) {
     };
 
     loadCSSBasedOnPath();
-  }, [router.pathname, Component]); // Update useEffect dependencies
+  }, [router.pathname, Component]);
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: false,
+    });
+  }, []);
 
   return (
     <>

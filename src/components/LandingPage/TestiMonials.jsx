@@ -21,7 +21,7 @@ export const TestiMonials = () => {
   return (
     <section id="support">
       <div className="container py-20">
-        <div className="text-center m-auto mb-20 md:w-1/2">
+        <div data-aos="fade-up" className="text-center m-auto mb-20 md:w-1/2">
           <h4 className="font-bold text-color-secondary mb-4">Support</h4>
           <h1 className="title">
             need help? Or do you have suggestions for improving the app? Please
@@ -30,7 +30,10 @@ export const TestiMonials = () => {
         </div>
 
         <div className="mt-8">
-          <div className="flex items-center justify-center flex-wrap">
+          <div
+            data-aos="zoom-in-down"
+            className="flex items-center justify-center flex-wrap"
+          >
             <img
               src="/img/azis.jpg"
               alt=""

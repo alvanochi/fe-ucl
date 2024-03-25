@@ -9,11 +9,11 @@ export const About = () => {
         <div className="w-80 h-80 bg-color-blob absolute bottom-10 right-0 -z-12 blur-2xl opacity-30 overflow-hidden rounded-full"></div>
 
         <div className="flex flex-col items-center justify-between md:flex-row">
-          <div className="mb-12 md:w-1/2">
+          <div data-aos="fade-right" className="mb-12 md:w-1/2">
             <img src="/img/landing-page/about.png" alt="" />
           </div>
 
-          <div className="text-center md:text-left md:w-1/2 md:ml-20">
+          <div data-aos="fade-left" className="text-center md:text-left md:w-1/2 md:ml-20">
             <h4 className="font-bold text-color-secondary mb-4">About</h4>
             <h1 className="title mb-4">
               Unveiling Excellence, Insights into Our Mission and Values.
