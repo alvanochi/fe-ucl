@@ -3,6 +3,7 @@ import Layout from "../../../components/Layout";
 import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
 import Group from "../../../modules/admin/group/group-page";
+import UsersGroup from "../../../modules/admin/group/users-group";
 
 export default function Voting() {
   /* eslint-disable */
@@ -21,6 +22,9 @@ export default function Voting() {
         handler={setActive}
       />
       <div className="my-8">
+        {active.url === "#users-group" && (
+          <UsersGroup baseURL={prefix + menu.url} />
+        )}
         {active.url === "#group" && <Group baseURL={prefix + menu.url} />}
       </div>
     </Layout>

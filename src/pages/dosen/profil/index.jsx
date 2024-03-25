@@ -20,6 +20,7 @@ import Modal from "../../../components/Modal";
 import axios from "axios";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 import Link from "next/link";
+import TtdModule from "../../../modules/profil/ttd";
 
 export default function Profil() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -233,6 +234,7 @@ export default function Profil() {
         {active.url === "#keluarga" && (
           <KeluargaModule baseURL={prefix + menu.url} />
         )}
+        {active.url === "#ttd" && <TtdModule baseURL={prefix + menu.url} />}
         {active.url === "#kepangkatan" && (
           <KepangkatanModule baseURL={prefix + menu.url} />
         )}

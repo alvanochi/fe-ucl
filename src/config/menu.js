@@ -61,6 +61,11 @@ export const APP_MENU = [
         ],
       },
       {
+        label: "TTD",
+        url: "#ttd",
+        allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+      },
+      {
         label: "Kepangkatan",
         url: "#kepangkatan",
         allowedRoles: [ROLE_ID_DOSEN],
@@ -370,6 +375,11 @@ export const APP_MENU = [
     icon: "fa6-solid:users",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
+      {
+        label: "Users Group",
+        url: "#users-group",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
       {
         label: "Group",
         url: "#group",
