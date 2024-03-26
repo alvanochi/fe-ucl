@@ -376,11 +376,6 @@ export const APP_MENU = [
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
       {
-        label: "Users Group",
-        url: "#users-group",
-        allowedRoles: [ROLE_ID_ADMIN],
-      },
-      {
         label: "Group",
         url: "#group",
         allowedRoles: [ROLE_ID_ADMIN],

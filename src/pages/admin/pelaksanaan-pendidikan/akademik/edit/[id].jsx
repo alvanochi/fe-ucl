@@ -86,7 +86,7 @@ export default function AkademikEdit() {
       />
       <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
         <Card className="mt-4">
-          <Card.Header className="text-center">Penelitian</Card.Header>
+          <Card.Header className="text-center">Bimbingan Akademik</Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
