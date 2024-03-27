@@ -4,7 +4,7 @@ import { toastAlert } from "../lib/sweetalert";
 import useUser from "./useUser";
 
 export const useDatatable = (url, options = {}) => {
-  const { user } = useUser({ redirectTo: "/login" });
+  const { user, logout } = useUser({ redirectTo: "/login" });
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -39,8 +39,8 @@ export const useDatatable = (url, options = {}) => {
       limit: pageSize,
       sort: Object.entries(sort).at(0)?.join(":"),
       ...filter,
-      id_matkul: options.id_matkul || '',
-      kelas: options.kelas || '',
+      id_matkul: options.id_matkul || "",
+      kelas: options.kelas || "",
     };
 
     try {
@@ -66,9 +66,12 @@ export const useDatatable = (url, options = {}) => {
         typeof options.onLoad == "function" &&
         options.onLoad(finalData);
     } catch (error) {
-      if (error.name == "AxiosError" && error?.response)
-        toastAlert("error", error.response.data.message);
-      else toastAlert("error", "Internal Server Error!");
+      if (error.response.statusText == "Unauthorized") {
+        toastAlert("error", "session expired");
+        logout();
+      } else {
+        toastAlert("error", "Internal Server Error!");
+      }
 
       setLoading(false);
       setData([]);
