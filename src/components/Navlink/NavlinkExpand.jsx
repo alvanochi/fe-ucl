@@ -15,9 +15,9 @@ export const NavlinkExpand = ({
       href={url}
       style={{ direction: "ltr" }}
       className={classNames(
-        "flex shrink-0 w-full items-center hover:bg-white hover:bg-opacity-10 hover:shadow-md justify-start rounded-r-full px-4 py-4 font-medium text-white backdrop-blur-0 hover:backdrop-blur-sm",
+        "flex shrink-0 items-center w-full hover:bg-white hover:bg-opacity-10 hover:shadow-md justify-start rounded-r-full px-4 py-4 font-medium text-white backdrop-blur-0 hover:backdrop-blur-sm hover:text-base",
         {
-          "bg-white bg-opacity-10 shadow-md backdrop-blur-sm": active,
+          "bg-white bg-opacity-10 shadow-md backdrop-blur-sm text-base": active,
         },
         className
       )}
