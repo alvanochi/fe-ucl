@@ -10,6 +10,7 @@ import useForm from "../../../../hooks/useForm";
 import { toastAlert } from "../../../../lib/sweetalert";
 import _ from "underscore";
 import axios from "axios";
+import { Loading } from "../../../../components/Loading";
 
 export default function ChangePassword() {
 	const router = useRouter();
@@ -58,7 +59,7 @@ export default function ChangePassword() {
   }
 
 
-	if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user, menu].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title={`Ubah Sandi ${menu.label}`} icon={menu.icon} handler={setActive} />

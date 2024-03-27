@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import Accordion from "../../../../../components/Accordion";
 import _ from "underscore";
+import { Loading } from "../../../../../components/Loading";
 
 export default function PembicaraEdit() {
 	const router = useRouter();
@@ -75,7 +76,7 @@ export default function PembicaraEdit() {
 		});
 	}, [router, user]);
 
-	if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user, menu].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title={`Edit ${menu.label}`} icon={menu.icon} handler={setActive} />

@@ -8,7 +8,8 @@ import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import useKategoriProfesi from "../../../../repo/kategori-profesi";
-import {getMonthOptions, getYearOptions} from "../../../../repo/bulan-tahun"
+import { getMonthOptions, getYearOptions } from "../../../../repo/bulan-tahun";
+import { Loading } from "../../../../components/Loading";
 
 export default function AnggotaProfesiCreate() {
   const router = useRouter();
@@ -49,7 +50,7 @@ export default function AnggotaProfesiCreate() {
   const tahunOptions = getYearOptions();
 
   if ([user, menu, isLoadingKategoriProfesi].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

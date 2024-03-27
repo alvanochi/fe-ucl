@@ -16,6 +16,7 @@ import useMahasiswa from "../../../../repo/mahasiswa";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../config/role";
 import _ from "underscore";
 import useKategoriPublikasi from "../../../../repo/kategori-publikasi";
+import { Loading } from "../../../../components/Loading";
 
 export default function PenelitianCreate() {
   const router = useRouter();
@@ -107,7 +108,7 @@ export default function PenelitianCreate() {
       isLoadingKategoriPublikasi,
     ].some((item) => item == null)
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

@@ -14,6 +14,7 @@ import _ from "underscore";
 import useNewDataTable from "../../../hooks/useNewDataTable";
 import axios from "axios";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
+import { Loading } from "../../../components/Loading";
 
 export default function AkademikEdit() {
   const router = useRouter();
@@ -129,7 +130,7 @@ export default function AkademikEdit() {
   };
 
   if ([user, menu, isUsersLoading].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader

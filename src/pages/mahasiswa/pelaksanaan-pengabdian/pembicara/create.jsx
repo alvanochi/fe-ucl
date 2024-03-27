@@ -9,6 +9,7 @@ import useUser from "../../../../hooks/useUser";
 import UploadDokumen from "../../../../modules/pelaksanaan-pengabdian/pembicara/upload-dokumen";
 import useCRUD from "../../../../hooks/useCRUD";
 import useKategoriPublikasi from "../../../../repo/kategori-publikasi";
+import { Loading } from "../../../../components/Loading";
 
 export default function PembicaraCreate() {
   const router = useRouter();
@@ -56,7 +57,7 @@ export default function PembicaraCreate() {
   const { form, inputHandler } = formdata;
 
   if ([user, menu, isLoadingKategoriPublikasi].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import useCRUD from "../../../../hooks/useCRUD";
 import useKategoriPrestasi from "../../../../repo/kategori-prestasi";
 import { useEffect } from "react";
+import { Loading } from "../../../../components/Loading";
 
 export default function PenghargaanDetail() {
 	const router = useRouter();
@@ -53,7 +54,7 @@ export default function PenghargaanDetail() {
 		show(router.query.id);
 	}, [router, user]);
 
-	if ([user, menu, isLoadingKategoriPrestasi].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user, menu, isLoadingKategoriPrestasi].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

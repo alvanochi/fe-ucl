@@ -4,12 +4,13 @@ import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
 import PendidikanFormalModule from "../../../modules/admin/kualifikasi/pendidikan-formal/index";
 import RiwayatPekerjaanModule from "../../../modules/admin/kualifikasi/riwayat-pekerjaan/index";
+import { Loading } from "../../../components/Loading";
 
 export default function Kualifikasi() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

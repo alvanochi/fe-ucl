@@ -9,6 +9,7 @@ import useUser from "../../../../../hooks/useUser";
 import { useRouter } from "next/router";
 import useCRUD from "../../../../../hooks/useCRUD";
 import date from "../../../../../utils/date";
+import { Loading } from "../../../../../components/Loading";
 
 export default function RiwayatPekerjaanEdit() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function RiwayatPekerjaanEdit() {
     });
   }, [router, user]);
 
-  if ([user, menu, form].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu, form].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

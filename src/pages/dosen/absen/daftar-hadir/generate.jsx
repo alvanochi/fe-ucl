@@ -12,6 +12,7 @@ import axios from "axios";
 import useForm from "../../../../hooks/useForm";
 import useDosen from "../../../../repo/dosen";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { Loading } from "../../../../components/Loading";
 
 export default function GenerateQrCode() {
   const router = useRouter();
@@ -214,7 +215,7 @@ export default function GenerateQrCode() {
   }
 
   if ([user, menu, loading, isDosenLoading].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

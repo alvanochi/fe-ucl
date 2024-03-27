@@ -10,6 +10,7 @@ import useCRUD from "../../../hooks/useCRUD";
 import { Icon } from "@iconify-icon/react";
 import _ from "underscore";
 import { useState } from "react";
+import { Loading } from "../../../components/Loading";
 
 export default function CreateQuestion() {
   const router = useRouter();
@@ -45,7 +46,7 @@ export default function CreateQuestion() {
 
   const { form, inputHandler } = formdata;
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

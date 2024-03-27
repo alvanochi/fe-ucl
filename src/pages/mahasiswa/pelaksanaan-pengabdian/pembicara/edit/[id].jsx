@@ -14,6 +14,7 @@ import date from "../../../../../utils/date";
 import Accordion from "../../../../../components/Accordion";
 import _ from "underscore";
 import useKategoriPublikasi from "../../../../../repo/kategori-publikasi";
+import { Loading } from "../../../../../components/Loading";
 
 export default function PembicaraEdit() {
   const router = useRouter();
@@ -63,7 +64,7 @@ export default function PembicaraEdit() {
   const { form, inputHandler } = formdata;
 
   const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } =
-  useKategoriPublikasi([user]);
+    useKategoriPublikasi([user]);
 
   const EDIT_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/editPembicara`;
   const EDIT_OPTION = {
@@ -91,7 +92,7 @@ export default function PembicaraEdit() {
 
   const { destroy } = useCRUD(DELETE_FILE_URL);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

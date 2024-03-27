@@ -4,6 +4,7 @@ import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
 import KepangkatanModule from "../../../modules/admin/dosenOnly/kepangkatan/index";
 import JabatanFungsionalModule from "../../../modules/admin/dosenOnly/jabatan-fungsional/index";
+import { Loading } from "../../../components/Loading";
 
 export default function dosenOnly() {
   /* eslint-disable */
@@ -11,7 +12,7 @@ export default function dosenOnly() {
   const { prefix, menu, active, setActive } = useMenu();
   /* eslint-enable */
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

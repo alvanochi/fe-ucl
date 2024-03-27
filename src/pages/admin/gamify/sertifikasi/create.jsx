@@ -7,6 +7,7 @@ import PageHeader from "../../../../components/PageHeader";
 import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
+import { Loading } from "../../../../components/Loading";
 
 export default function SertifikasiGamifyCreate() {
   const router = useRouter();
@@ -26,13 +27,15 @@ export default function SertifikasiGamifyCreate() {
 
   const { form, inputHandler } = formdata;
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <Form onSubmit={submitHandler}>
         <Card className="mt-4">
-          <Card.Header className="text-center">Tambah Kategori Sertifikasi</Card.Header>
+          <Card.Header className="text-center">
+            Tambah Kategori Sertifikasi
+          </Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">

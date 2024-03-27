@@ -11,6 +11,7 @@ import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import resolveConfig from "tailwindcss/resolveConfig";
 import twConfig from "../../../../../tailwind.config";
+import { Loading } from "../../../../components/Loading";
 
 const BarChart = dynamic(() => import("../../../../components/Chart/bar"), {
   ssr: false,
@@ -81,7 +82,7 @@ export default function VoteDetail() {
     }
   }, [form]);
 
-  if ([user, menu, form].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu, form].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

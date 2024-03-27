@@ -8,15 +8,16 @@ import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect } from "react";
+import { Loading } from "../../../../components/Loading";
 
 export default function GamifyEdit() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-	const API_URL = `${process.env.API_ENDPOINT}/achievments/detail`;
-	const IMG_URL = `${process.env.API_ENDPOINT}/gamify`;
-	const IMG_URL_LENCANA = `${process.env.API_ENDPOINT}/gamify/lencana`;
+  const API_URL = `${process.env.API_ENDPOINT}/achievments/detail`;
+  const IMG_URL = `${process.env.API_ENDPOINT}/gamify`;
+  const IMG_URL_LENCANA = `${process.env.API_ENDPOINT}/gamify/lencana`;
 
   const INITIAL_FORM = {
     id: "",
@@ -47,8 +48,8 @@ export default function GamifyEdit() {
   const { form, inputHandler } = formdata;
 
   const EDIT_URL = `${process.env.API_ENDPOINT}/achievments`;
-  const EDIT_OPTION = {url: `${EDIT_URL}/${form.id}`, method: "PATCH"};
-  
+  const EDIT_OPTION = { url: `${EDIT_URL}/${form.id}`, method: "PATCH" };
+
   useEffect(() => {
     if (router.isReady === false || !user) return;
     show(router.query.id, {
@@ -58,13 +59,14 @@ export default function GamifyEdit() {
     });
   }, [router, user]);
 
-
-  if ([user, menu].some((item) => item == null))
-    return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)} type="formdata">
+      <Form
+        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
+        type="formdata"
+      >
         <Card className="mt-4">
           <Card.Header className="text-center">Edit Gamify</Card.Header>
           <Card.Body className="space-y-4">
@@ -159,7 +161,7 @@ export default function GamifyEdit() {
                 onChange={inputHandler}
               />
             </Form.Group>
-            
+
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Lencana <span className="text-danger-600">*</span>
@@ -172,7 +174,12 @@ export default function GamifyEdit() {
                   name="lencana"
                   onChange={inputHandler}
                 />
-                <img src={`${IMG_URL_LENCANA}/${form.lencana}`} alt="img-edit" width={80} height={80} />
+                <img
+                  src={`${IMG_URL_LENCANA}/${form.lencana}`}
+                  alt="img-edit"
+                  width={80}
+                  height={80}
+                />
               </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -187,7 +194,11 @@ export default function GamifyEdit() {
                   name="image"
                   onChange={inputHandler}
                 />
-                <img src={`${IMG_URL}/${form.image}`} alt="img-edit" className="w-2/4 h-[256px]" />
+                <img
+                  src={`${IMG_URL}/${form.image}`}
+                  alt="img-edit"
+                  className="w-2/4 h-[256px]"
+                />
               </div>
             </Form.Group>
           </Card.Body>

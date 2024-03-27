@@ -12,6 +12,7 @@ import useMahasiswa from "../../../../repo/mahasiswa";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../config/role";
 import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect } from "react";
+import { Loading } from "../../../../components/Loading";
 
 export default function BimbinganMahasiswaCreate() {
 	const router = useRouter();
@@ -77,7 +78,7 @@ export default function BimbinganMahasiswaCreate() {
 		});
 	}, [user]);
 
-	if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

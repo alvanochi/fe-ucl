@@ -15,6 +15,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import UploadTugas from "../uploadTugas";
 import useNewDataTable from "../../../../../hooks/useNewDataTable";
+import { Loading } from "../../../../../components/Loading";
 
 export default function ListMhs() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -79,7 +80,7 @@ export default function ListMhs() {
   };
 
   if ([user, menu, loadingAbsensi].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader

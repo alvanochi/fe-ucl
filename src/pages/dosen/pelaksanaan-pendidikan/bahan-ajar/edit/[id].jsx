@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
 import _ from "underscore";
 import Accordion from "../../../../../components/Accordion";
+import { Loading } from "../../../../../components/Loading";
 
 export default function BahanAjarEdit() {
   const router = useRouter();
@@ -115,7 +116,7 @@ export default function BahanAjarEdit() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

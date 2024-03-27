@@ -14,6 +14,7 @@ import Accordion from "../../../../../components/Accordion";
 import { Icon } from "@iconify-icon/react";
 import axios from "axios";
 import { toastAlert } from "../../../../../lib/sweetalert";
+import { Loading } from "../../../../../components/Loading";
 
 export default function DetailBimbinganAkademik() {
   const router = useRouter();
@@ -81,7 +82,7 @@ export default function DetailBimbinganAkademik() {
   };
 
   if ([user, menu, isDosenLoading].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

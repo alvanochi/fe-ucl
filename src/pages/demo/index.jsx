@@ -6,6 +6,7 @@ import Card from "../../components/Card";
 import useUser from "../../hooks/useUser";
 import useDatatable from "../../hooks/useDatatable";
 import Link from "next/link";
+import { Loading } from "../../components/Loading";
 
 export default function Home() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -14,7 +15,7 @@ export default function Home() {
   const DATA_URL = `${process.env.API_ENDPOINT}/dashboard/admin`;
   const { data } = useDatatable(DATA_URL);
 
-  if ([menu, user].some((item) => item == null)) return <p>Loading...</p>;
+  if ([menu, user].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <Head>

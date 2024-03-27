@@ -8,6 +8,7 @@ import useMenu from "../../../../../hooks/useMenu";
 import useUser from "../../../../../hooks/useUser";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
+import { Loading } from "../../../../../components/Loading";
 
 export default function DetailKategoriProfesi() {
   const router = useRouter();
@@ -43,13 +44,15 @@ export default function DetailKategoriProfesi() {
     show(router.query.id, { transformData: (data) => ({ ...data }) });
   }, [router, user]);
 
-  if ([user, menu, form].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu, form].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
         <Card className="mt-4">
-          <Card.Header className="text-center">Edit Kategori Profesi</Card.Header>
+          <Card.Header className="text-center">
+            Edit Kategori Profesi
+          </Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">

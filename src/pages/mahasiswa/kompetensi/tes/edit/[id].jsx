@@ -10,6 +10,7 @@ import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import useKategoriSertifikasi from "../../../../../repo/kategori-sertifikasi";
+import { Loading } from "../../../../../components/Loading";
 
 export default function TesEdit() {
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function TesEdit() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -185,7 +186,11 @@ export default function TesEdit() {
                   onChange={inputHandler}
                 />
                 <embed
-                  src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
+                  src={
+                    form.file.startsWith("https")
+                      ? `${form.file}`
+                      : `${FILE_URL}/${form.file}`
+                  }
                   className="w-full h-[256px]"
                 />
               </div>

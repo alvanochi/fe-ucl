@@ -9,6 +9,7 @@ import axios from "axios";
 import Button from "../../../../components/Button";
 import { Icon } from "@iconify-icon/react";
 import { toastAlert } from "../../../../lib/sweetalert";
+import { Loading } from "../../../../components/Loading";
 
 export default function RekapKehadiran() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -48,7 +49,6 @@ export default function RekapKehadiran() {
   }, [router.query]);
 
   const GENERATE_URL = `${process.env.API_ENDPOINT}/absensi/list-absensi/excel`;
-
 
   async function generate() {
     try {
@@ -90,7 +90,7 @@ export default function RekapKehadiran() {
     }
   }
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

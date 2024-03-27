@@ -4,12 +4,13 @@ import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
 import SertifikasiModule from "../../../modules/admin/kompetensi/sertifikasi/index";
 import TesModule from "../../../modules/admin/kompetensi/tes/index";
+import { Loading } from "../../../components/Loading";
 
 export default function Kopentensi() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

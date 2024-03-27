@@ -11,6 +11,7 @@ import useUser from "../../../../../hooks/useUser";
 import useCRUD from "../../../../../hooks/useCRUD";
 import useKategoriSertifikasi from "../../../../../repo/kategori-sertifikasi";
 import date from "../../../../../utils/date";
+import { Loading } from "../../../../../components/Loading";
 
 export default function SertifikasiDetail() {
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function SertifikasiDetail() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -229,7 +230,11 @@ export default function SertifikasiDetail() {
               </Form.Label>
               <span>:</span>
               <embed
-                src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
+                src={
+                  form.file.startsWith("https")
+                    ? `${form.file}`
+                    : `${FILE_URL}/${form.file}`
+                }
                 className="w-full h-[256px]"
               />
             </Form.Group>

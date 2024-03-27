@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
 import Accordion from "../../../../../components/Accordion";
+import { Loading } from "../../../../../components/Loading";
 
 export default function PengabdianDetail() {
 	const router = useRouter();
@@ -96,7 +97,7 @@ export default function PengabdianDetail() {
 		});
 	}, [router, user]);
 
-	if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

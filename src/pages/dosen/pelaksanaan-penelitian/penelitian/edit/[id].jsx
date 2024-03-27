@@ -17,6 +17,7 @@ import { useEffect } from "react";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
 import _ from "underscore";
 import Accordion from "../../../../../components/Accordion";
+import { Loading } from "../../../../../components/Loading";
 
 export default function PembicaraEdit() {
   const router = useRouter();
@@ -123,7 +124,7 @@ export default function PembicaraEdit() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader
@@ -194,7 +195,7 @@ export default function PembicaraEdit() {
                 ).map((item) => ({
                   label: item,
                   value: item,
-                }))}                
+                }))}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -213,7 +214,7 @@ export default function PembicaraEdit() {
                 ).map((item) => ({
                   label: item,
                   value: item,
-                }))}                
+                }))}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -232,7 +233,7 @@ export default function PembicaraEdit() {
                 ).map((item) => ({
                   label: item,
                   value: item,
-                }))}                
+                }))}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

@@ -8,6 +8,7 @@ import useMenu from "../../../hooks/useMenu";
 import useUser from "../../../hooks/useUser";
 import useCRUD from "../../../hooks/useCRUD";
 import { useEffect } from "react";
+import { Loading } from "../../../components/Loading";
 
 export default function EventEdit() {
   const router = useRouter();
@@ -53,7 +54,7 @@ export default function EventEdit() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

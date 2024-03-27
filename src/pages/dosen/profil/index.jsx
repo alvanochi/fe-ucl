@@ -21,6 +21,7 @@ import axios from "axios";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 import Link from "next/link";
 import TtdModule from "../../../modules/profil/ttd";
+import { Loading } from "../../../components/Loading";
 
 export default function Profil() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -88,8 +89,7 @@ export default function Profil() {
     );
   }
 
-  if ([user, menu, loading].some((item) => item == null))
-    return <p>Loading...</p>;
+  if ([user, menu, loading].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <Head>

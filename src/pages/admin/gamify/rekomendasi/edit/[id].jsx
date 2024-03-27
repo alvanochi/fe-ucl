@@ -8,6 +8,7 @@ import useMenu from "../../../../../hooks/useMenu";
 import useUser from "../../../../../hooks/useUser";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
+import { Loading } from "../../../../../components/Loading";
 
 export default function DetailKategoriRekomendasi() {
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function DetailKategoriRekomendasi() {
     show(router.query.id, { transformData: (data) => ({ ...data }) });
   }, [router, user]);
 
-  if ([user, menu, form].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu, form].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

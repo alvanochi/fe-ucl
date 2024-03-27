@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import InvitePesertaDosen from "./invite";
 import InvitePesertaMhs from "./inviteMhs";
+import { Loading } from "../../../../components/Loading";
 
 
 export default function Invite() {
@@ -76,7 +77,7 @@ export default function Invite() {
   };
 
 	
-	if ([user, menu, loadingAbsensi].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user, menu, loadingAbsensi].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title={`Peserta Kegiatan yang Diundang`} icon={menu.icon} handler={setActive} />

@@ -9,6 +9,7 @@ import axios from "axios";
 import useUser from "../../hooks/useUser";
 import useDatatable from "../../hooks/useDatatable";
 import Link from "next/link";
+import { Loading } from "../../components/Loading";
 
 const AreaChart = dynamic(() => import("../../components/Chart/area"), {
   ssr: false,
@@ -41,7 +42,7 @@ export default function Home() {
     );
   }
 
-  if ([menu, user].some((item) => item == null)) return <p>Loading...</p>;
+  if ([menu, user].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <Head>

@@ -13,6 +13,7 @@ import useDatatableAbsensi from "../../../../../hooks/useDataTableAbsensi";
 import useDatatable from "../../../../../hooks/useDatatable";
 import axios from "axios";
 import { toastAlert } from "../../../../../lib/sweetalert";
+import { Loading } from "../../../../../components/Loading";
 
 export default function EditPembelajran() {
   const router = useRouter();
@@ -23,11 +24,10 @@ export default function EditPembelajran() {
   const { data, loading, refresh } = useDatatable(DATA_URL);
 
   const [courseOptions, setCourseOptions] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState(""); 
+  const [selectedCourse, setSelectedCourse] = useState("");
 
   const [classOptions, setClassOptions] = useState([]);
   const [selectedClass, setSelectedClass] = useState("");
-
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -40,30 +40,31 @@ export default function EditPembelajran() {
             },
             {
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
               },
             }
           );
-  
+
           const courses = response.data.Data;
 
           const options = courses.map((course) => ({
             label: course.name,
             value: course.course_code,
           }));
-  
+
           setCourseOptions(options);
 
-          async function getClass(){
+          async function getClass() {
             try {
               const response = await axios.get(
-                `${process.env.API_ENDPOINT}/help/get-class`,{
+                `${process.env.API_ENDPOINT}/help/get-class`,
+                {
                   headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                   },
                 }
               );
-        
+
               const dataCLass = response.data.data;
 
               const options = dataCLass.map((classs) => ({
@@ -71,31 +72,31 @@ export default function EditPembelajran() {
                 value: classs.name,
               }));
 
-              setClassOptions(options)
-        
-              
+              setClassOptions(options);
             } catch (error) {
-              console.log(error)
+              console.log(error);
             }
           }
-        
+
           getClass();
         }
       } catch (error) {
         console.error("Error fetching courses:", error);
       }
     };
-  
+
     fetchCourses();
-  }, [data.nip]); 
+  }, [data.nip]);
 
-  const DATA_URL_ABSENSI = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran`
+  const DATA_URL_ABSENSI = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran`;
   const id = router.query.id;
-  const { dataAbsensi, loadingAbsensi } = useDatatableAbsensi(DATA_URL_ABSENSI, {
-    filter: ["id"],
-    filterValue: [id],
-  });
-
+  const { dataAbsensi, loadingAbsensi } = useDatatableAbsensi(
+    DATA_URL_ABSENSI,
+    {
+      filter: ["id"],
+      filterValue: [id],
+    }
+  );
 
   const [formData, setFormData] = useState({
     id_matkul: dataAbsensi?.[0]?.id_matkul,
@@ -105,9 +106,11 @@ export default function EditPembelajran() {
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: name === 'status_kelas' ? parseInt(value) : value }));
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: name === "status_kelas" ? parseInt(value) : value,
+    }));
   };
-  
 
   async function submitEditHandler(event) {
     event.preventDefault();
@@ -117,7 +120,7 @@ export default function EditPembelajran() {
       const response = await axios.post(EDIT_URL, formData);
 
       toastAlert("success", "Updated Successfuly");
-      router.push(prefix + menu.url)
+      router.push(prefix + menu.url);
     } catch (error) {
       toastAlert("error", error.message);
     }
@@ -132,13 +135,16 @@ export default function EditPembelajran() {
       });
     }
   }, [dataAbsensi]);
-  
 
   if ([user, menu, loadingAbsensi].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
-      <PageHeader title='Edit Pembelajaran' icon={menu.icon} handler={setActive} />
+      <PageHeader
+        title="Edit Pembelajaran"
+        icon={menu.icon}
+        handler={setActive}
+      />
       <Form onSubmit={submitEditHandler}>
         <Card className="mt-4">
           <Card.Header className="text-center">Edit Pembelajaran</Card.Header>
@@ -156,7 +162,6 @@ export default function EditPembelajran() {
                     checked={formData.status_kelas === 0}
                     onChange={inputHandler}
                   />
-
                   Offline
                 </Form.Label>
                 <Form.Label>

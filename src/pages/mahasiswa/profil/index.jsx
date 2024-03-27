@@ -21,6 +21,7 @@ import axios from "axios";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 import Link from "next/link";
 import TtdModule from "../../../modules/profil/ttd";
+import { Loading } from "../../../components/Loading";
 
 export default function Profil() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -87,8 +88,7 @@ export default function Profil() {
     );
   }
 
-  if ([user, menu, loading].some((item) => item == null))
-    return <p>Loading...</p>;
+  if ([user, menu, loading].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <Head>
@@ -223,9 +223,7 @@ export default function Profil() {
         {active.url === "#keluarga" && (
           <KeluargaModule baseURL={prefix + menu.url} />
         )}
-        {active.url === "#ttd" && (
-          <TtdModule baseURL={prefix + menu.url} />
-        )}
+        {active.url === "#ttd" && <TtdModule baseURL={prefix + menu.url} />}
       </div>
       <Modal title="Ganti Foto Profil" show={show} handler={toggle}>
         <Form onSubmit={submitHandler} className="space-y-2" type="formdata">

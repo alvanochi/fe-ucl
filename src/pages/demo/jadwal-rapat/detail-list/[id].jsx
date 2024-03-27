@@ -16,6 +16,7 @@ import EditAbsensi from "./editAbsensi";
 import Card from "../../../../components/Card";
 import { data } from "autoprefixer";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { Loading } from "../../../../components/Loading";
 
 
 export default function DetailList() {
@@ -129,7 +130,7 @@ export default function DetailList() {
 
 
 	
-	if ([user, menu, loadingAbsensi].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user, menu, loadingAbsensi].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title={`Detail Pertemuan dan List Absensi`} icon={menu.icon} handler={setActive} />

@@ -11,6 +11,7 @@ import BackButton from "../../../../../components/BackButton";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
 import date from "../../../../../utils/date";
+import { Loading } from "../../../../../components/Loading";
 
 export default function TesDetail() {
   const router = useRouter();
@@ -53,7 +54,7 @@ export default function TesDetail() {
     });
   }, [router, user]);
 
-  if ([user, menu, form].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu, form].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

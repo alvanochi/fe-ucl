@@ -9,6 +9,7 @@ import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import { useRouter } from "next/router";
 import date from "../../../../utils/date";
+import { Loading } from "../../../../components/Loading";
 
 export default function KeluargaEdit() {
   const router = useRouter();
@@ -55,7 +56,7 @@ export default function KeluargaEdit() {
     });
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

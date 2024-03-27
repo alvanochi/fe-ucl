@@ -8,6 +8,7 @@ import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect } from "react";
+import { Loading } from "../../../../components/Loading";
 
 export default function AlamatDanKontakEdit() {
   const router = useRouter();
@@ -54,7 +55,7 @@ export default function AlamatDanKontakEdit() {
     show("");
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

@@ -9,6 +9,7 @@ import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import axios from "axios";
 import { toastAlert } from "../../../../lib/sweetalert";
+import { Loading } from "../../../../components/Loading";
 
 export default function Achievements() {
   const router = useRouter();
@@ -29,8 +30,13 @@ export default function Achievements() {
     const fetchData = async () => {
       try {
         const response = await axios.get(API_URL);
-        const sortedAchievements = response.data.data.achievements.sort((a, b) => a.points - b.points);
-        const updatedFormData = { ...response.data.data, achievements: sortedAchievements };
+        const sortedAchievements = response.data.data.achievements.sort(
+          (a, b) => a.points - b.points
+        );
+        const updatedFormData = {
+          ...response.data.data,
+          achievements: sortedAchievements,
+        };
         setForm(updatedFormData);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -43,7 +49,9 @@ export default function Achievements() {
   const handleStatusChange = (event, index) => {
     const { value } = event.target;
     const updatedAchievements = form.achievements.map((achievement, i) =>
-      i === index ? { ...achievement, status: parseInt(value, 10) } : achievement
+      i === index
+        ? { ...achievement, status: parseInt(value, 10) }
+        : achievement
     );
 
     setForm((prevForm) => ({ ...prevForm, achievements: updatedAchievements }));
@@ -65,7 +73,7 @@ export default function Achievements() {
     }
   };
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
 
   return (
     <Layout>
@@ -116,7 +124,10 @@ export default function Achievements() {
         </Card.Body>
       </Card>
 
-      <div className="grid grid-cols-2 gap-4" style={{ flexDirection: 'row-reverse' }}>
+      <div
+        className="grid grid-cols-2 gap-4"
+        style={{ flexDirection: "row-reverse" }}
+      >
         {form.achievements.map((achievement, index) => (
           <Card key={index} className="mt-4" style={{ width: "20rem" }}>
             <Card.Header className="text-center">
@@ -167,7 +178,9 @@ export default function Achievements() {
                 <Button
                   variant="primary"
                   className="w-24 h-8"
-                  onClick={() => handleSaveClick(achievement.id, achievement.status)}
+                  onClick={() =>
+                    handleSaveClick(achievement.id, achievement.status)
+                  }
                 >
                   Save
                 </Button>

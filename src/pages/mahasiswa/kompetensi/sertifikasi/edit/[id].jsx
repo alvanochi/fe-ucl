@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import useKategoriSertifikasi from "../../../../../repo/kategori-sertifikasi";
 import date from "../../../../../utils/date";
 import _ from "underscore";
+import { Loading } from "../../../../../components/Loading";
 
 export default function SertifikasiEdit() {
   const router = useRouter();
@@ -19,7 +20,6 @@ export default function SertifikasiEdit() {
 
   const API_URL = `${process.env.API_ENDPOINT}/kompetensi/detailCertif`;
   const FILE_URL = `${process.env.API_ENDPOINT}/file-sertifikasi`;
-
 
   const INITIAL_FORM = {
     sertifikat_id: "",
@@ -32,7 +32,7 @@ export default function SertifikasiEdit() {
     nomor_peserta: "",
     nomor_regist: "",
     penyelenggara: "",
-    file: ""
+    file: "",
   };
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
@@ -76,7 +76,7 @@ export default function SertifikasiEdit() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -208,7 +208,7 @@ export default function SertifikasiEdit() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                No. SK Sertifikasi 
+                No. SK Sertifikasi
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -220,9 +220,7 @@ export default function SertifikasiEdit() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Nomor Peserta 
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Nomor Peserta</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -234,7 +232,7 @@ export default function SertifikasiEdit() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Nomor Registrasi 
+                Nomor Registrasi
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -258,9 +256,13 @@ export default function SertifikasiEdit() {
                   onChange={inputHandler}
                 />
                 <embed
-                src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
-                className="w-full h-[256px]"
-              />
+                  src={
+                    form.file.startsWith("https")
+                      ? `${form.file}`
+                      : `${FILE_URL}/${form.file}`
+                  }
+                  className="w-full h-[256px]"
+                />
               </div>
             </Form.Group>
           </Card.Body>

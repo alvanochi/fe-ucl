@@ -6,12 +6,13 @@ import IpModule from "../../../modules/admin/pelaksanaan-pendidikan/ip/index";
 import BimbinganModule from "../../../modules/admin/pelaksanaan-pendidikan/bimbingan/index";
 import BahanAjarModule from "../../../modules/admin/pelaksanaan-pendidikan/bahan-ajar/index";
 import AkademikModule from "../../../modules/admin/pelaksanaan-pendidikan/akademik/index";
+import { Loading } from "../../../components/Loading";
 
 export default function PelaksanaanPendidikan() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

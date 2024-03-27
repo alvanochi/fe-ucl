@@ -7,6 +7,7 @@ import PageHeader from "../../../../components/PageHeader";
 import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
+import { Loading } from "../../../../components/Loading";
 
 export default function EventCreate() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function EventCreate() {
   const { form, inputHandler } = formdata;
 
   if ([user, menu].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

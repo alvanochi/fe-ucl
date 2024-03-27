@@ -16,6 +16,7 @@ import EditAbsensi from "./editAbsensi";
 import Card from "../../../../components/Card";
 import { data } from "autoprefixer";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { Loading } from "../../../../components/Loading";
 
 export default function DetailList() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -154,7 +155,7 @@ export default function DetailList() {
   const FILE_URL = `https://absen.ft.uika-bogor.ac.id/storage/meeting/photo/${dataMeet.bukti_foto}`;
 
   if ([user, menu, loadingAbsensi].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader

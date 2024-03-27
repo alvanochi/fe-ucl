@@ -12,6 +12,7 @@ import useDosen from "../../../../repo/dosen";
 import useMahasiswa from "../../../../repo/mahasiswa";
 import { useEffect } from "react";
 import date from "../../../../utils/date";
+import { Loading } from "../../../../components/Loading";
 
 export default function PenghargaanDetail() {
   const router = useRouter();
@@ -80,7 +81,7 @@ export default function PenghargaanDetail() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

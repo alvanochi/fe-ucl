@@ -9,6 +9,7 @@ import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect } from "react";
 import date from "../../../../utils/date";
+import { Loading } from "../../../../components/Loading";
 
 export default function TesDetail() {
   const router = useRouter();
@@ -53,7 +54,7 @@ export default function TesDetail() {
     });
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -166,7 +167,11 @@ export default function TesDetail() {
               </Form.Label>
               <span>:</span>
               <embed
-                src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
+                src={
+                  form.file.startsWith("https")
+                    ? `${form.file}`
+                    : `${FILE_URL}/${form.file}`
+                }
                 className="w-full h-[256px]"
               />
             </Form.Group>

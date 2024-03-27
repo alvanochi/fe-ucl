@@ -7,12 +7,13 @@ import AkademikModule from "../../../modules/mahasiswa/bimbingan/akademik/index"
 import KpModule from "../../../modules/pelaksanaan-pendidikan/kp";
 import SkripsiModule from "../../../modules/pelaksanaan-pendidikan/skripsi";
 import PerkuliahanModule from "../../../modules/pelaksanaan-pendidikan/perkuliahan";
+import { Loading } from "../../../components/Loading";
 
 export default function PelaksanaanPendidikan() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

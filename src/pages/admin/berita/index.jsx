@@ -4,6 +4,7 @@ import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
 import EventModule from "../../../modules/admin/berita/event";
 import TantanganModule from "../../../modules/admin/berita/tantangan";
+import { Loading } from "../../../components/Loading";
 
 export default function Berita() {
   /* eslint-disable */
@@ -11,7 +12,7 @@ export default function Berita() {
   const { prefix, menu, active, setActive } = useMenu();
   /* eslint-enable */
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

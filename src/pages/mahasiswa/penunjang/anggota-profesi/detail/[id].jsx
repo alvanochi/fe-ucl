@@ -10,7 +10,11 @@ import { useRouter } from "next/router";
 import BackButton from "../../../../../components/BackButton";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
-import { getMonthOptions, getYearOptions } from "../../../../../repo/bulan-tahun";
+import {
+  getMonthOptions,
+  getYearOptions,
+} from "../../../../../repo/bulan-tahun";
+import { Loading } from "../../../../../components/Loading";
 
 export default function AnggotaProfesiDetail() {
   const router = useRouter();
@@ -61,7 +65,7 @@ export default function AnggotaProfesiDetail() {
   const bulanOptions = getMonthOptions();
   const tahunOptions = getYearOptions();
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader
@@ -137,7 +141,7 @@ export default function AnggotaProfesiDetail() {
                 disabled
               />
             </Form.Group>
-						<Form.Group className="flex items-baseline gap-3">
+            <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Mulai <span className="text-danger-600">*</span>
               </Form.Label>
@@ -197,7 +201,11 @@ export default function AnggotaProfesiDetail() {
               <span>:</span>
               <div className="block flex-1 space-y-2">
                 <embed
-                  src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
+                  src={
+                    form.file.startsWith("https")
+                      ? `${form.file}`
+                      : `${FILE_URL}/${form.file}`
+                  }
                   className="w-full h-[256px]"
                 />
               </div>

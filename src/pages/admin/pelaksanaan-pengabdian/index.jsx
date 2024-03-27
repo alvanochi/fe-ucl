@@ -4,12 +4,13 @@ import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
 import PengabdianModule from "../../../modules/admin/pelaks-pengabdian/pengabdian/index";
 import PembicaraModule from "../../../modules/admin/pelaks-pengabdian/pembicara/index";
+import { Loading } from "../../../components/Loading";
 
 export default function PelaksanaanPengabdian() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

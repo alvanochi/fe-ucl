@@ -8,12 +8,13 @@ import { DevelopmentPage } from "../../../components/DevelopmentPage";
 import KpModule from "../../../modules/pelaksanaan-pendidikan/kp";
 import SkripsiModule from "../../../modules/pelaksanaan-pendidikan/skripsi";
 import AkademikModule from "../../../modules/pelaksanaan-pendidikan/akademik";
+import { Loading } from "../../../components/Loading";
 
 export default function PelaksanaanPendidikan() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

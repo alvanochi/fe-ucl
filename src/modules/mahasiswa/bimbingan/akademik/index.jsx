@@ -7,6 +7,7 @@ import Form from "../../../../components/Form";
 import Button from "../../../../components/Button";
 import useDosen from "../../../../repo/dosen";
 import { toastAlert } from "../../../../lib/sweetalert";
+import { Loading } from "../../../../components/Loading";
 
 export default function AkademikModule({ baseURL }) {
   const { user } = useUser({ redirectTo: "/login" });
@@ -92,10 +93,8 @@ export default function AkademikModule({ baseURL }) {
     }
   };
 
-  console.log(data);
-
   if ([user, menu, isDosenLoading, loading].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
 
   return (
     <>

@@ -12,6 +12,7 @@ import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect } from "react";
 import date from "../../../../utils/date";
 import Accordion from "../../../../components/Accordion";
+import { Loading } from "../../../../components/Loading";
 
 export default function AnggotaProfesiEdit() {
   const router = useRouter();
@@ -77,7 +78,7 @@ export default function AnggotaProfesiEdit() {
     });
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader
@@ -92,31 +93,31 @@ export default function AnggotaProfesiEdit() {
           <Card.Header className="text-center">Pembicara</Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
-							<Form.Label className="min-w-[18rem]">
-								Kategori <span className="text-danger-600">*</span>
-							</Form.Label>
-							<span>:</span>
-							<Form.Input
-								type="text"
-								className="flex-1"
-								name="nama_kategori"
-								value={`${form.nama_kategori} - ${form.tingkatan}`}
-								disabled
-							/>
-						</Form.Group>
+              <Form.Label className="min-w-[18rem]">
+                Kategori <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nama_kategori"
+                value={`${form.nama_kategori} - ${form.tingkatan}`}
+                disabled
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-							<Form.Label className="min-w-[18rem]">
-								Point <span className="text-danger-600">*</span>
-							</Form.Label>
-							<span>:</span>
-							<Form.Input
-								type="text"
-								className="flex-1"
-								name="point"
-								value={form.point} 
-								disabled
-							/>
-						</Form.Group>
+              <Form.Label className="min-w-[18rem]">
+                Point <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="point"
+                value={form.point}
+                disabled
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Kategori Pembicara <span className="text-danger-600">*</span>

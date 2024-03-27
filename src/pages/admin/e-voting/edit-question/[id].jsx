@@ -9,6 +9,7 @@ import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import { Icon } from "@iconify-icon/react";
 import { useEffect, useState } from "react";
+import { Loading } from "../../../../components/Loading";
 
 export default function CreateQuestion() {
   const router = useRouter();
@@ -68,9 +69,7 @@ export default function CreateQuestion() {
     });
   }, [router.isReady, user]);
 
-
-
-  if (!user || !menu) return <p>Loading...</p>;
+  if (!user || !menu) return <Loading />;
 
   return (
     <Layout>

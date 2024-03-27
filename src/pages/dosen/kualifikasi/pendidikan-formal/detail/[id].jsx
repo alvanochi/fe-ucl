@@ -10,6 +10,7 @@ import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import { Icon } from "@iconify-icon/react";
+import { Loading } from "../../../../../components/Loading";
 
 export default function PendidikanFormalDetial() {
   const router = useRouter();
@@ -59,7 +60,7 @@ export default function PendidikanFormalDetial() {
     });
   }, [router, user]);
 
-  if ([user, menu, form].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu, form].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

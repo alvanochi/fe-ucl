@@ -10,6 +10,7 @@ import _ from "underscore";
 import Card from "../../../components/Card";
 import useCRUD from "../../../hooks/useCRUD";
 import { useEffect } from "react";
+import { Loading } from "../../../components/Loading";
 
 export default function AkunModule({ baseURL }) {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function AkunModule({ baseURL }) {
     });
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <>
       <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>

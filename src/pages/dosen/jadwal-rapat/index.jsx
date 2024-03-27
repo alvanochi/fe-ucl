@@ -8,6 +8,7 @@ import useDatatableAbsensi from "../../../hooks/useDataTableAbsensi";
 import useCRUD from "../../../hooks/useCRUD";
 import Form from "../../../components/Form";
 import ShowQr from "./showQr";
+import { Loading } from "../../../components/Loading";
 
 
 export default function JadwalRapat() {
@@ -34,7 +35,7 @@ export default function JadwalRapat() {
 
   const { destroy } = useCRUD(DELETE_URL);
 
-	if ([user,  menu, loadingAbsensi].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user,  menu, loadingAbsensi].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title="Jadwal Kegiatan" icon={menu.icon} items={menu.submenus} handler={setActive} />

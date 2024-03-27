@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
 import _ from "underscore";
 import Accordion from "../../../../../components/Accordion";
+import { Loading } from "../../../../../components/Loading";
 
 export default function PenghargaanDetail() {
 	const router = useRouter();
@@ -94,7 +95,7 @@ export default function PenghargaanDetail() {
 		});
 	}, [router, user]);
 
-	if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

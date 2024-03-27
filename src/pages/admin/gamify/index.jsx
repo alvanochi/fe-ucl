@@ -9,13 +9,13 @@ import PrestasiGamifyModule from "../../../modules/admin/gamify/prestasi";
 import HkiGamifyModule from "../../../modules/admin/gamify/hki";
 import IpGamifyModule from "../../../modules/admin/gamify/ip";
 import RekomendasiGamifyModule from "../../../modules/admin/gamify/rekomendasi";
-
+import { Loading } from "../../../components/Loading";
 
 export default function Users() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader
@@ -26,7 +26,7 @@ export default function Users() {
         handler={setActive}
       />
       <div className="my-8">
-      {active.url === "#kategori-sertifikasi" && (
+        {active.url === "#kategori-sertifikasi" && (
           <SertifikasiGamifyModule baseURL={prefix + menu.url} />
         )}
         {active.url === "#kategori-publikasi" && (

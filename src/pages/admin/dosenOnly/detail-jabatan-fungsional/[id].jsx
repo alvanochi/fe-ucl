@@ -10,6 +10,7 @@ import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect } from "react";
 import date from "../../../../utils/date";
 import { Icon } from "@iconify-icon/react";
+import { Loading } from "../../../../components/Loading";
 
 export default function JabatanFungsionalDetail() {
   const router = useRouter();
@@ -54,7 +55,7 @@ export default function JabatanFungsionalDetail() {
     });
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

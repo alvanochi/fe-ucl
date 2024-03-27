@@ -8,6 +8,7 @@ import useCRUD from "../../../../hooks/useCRUD";
 import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useKategoriSertifikasi from "../../../../repo/kategori-sertifikasi";
+import { Loading } from "../../../../components/Loading";
 
 export default function SertifikasiCreate() {
   const router = useRouter();
@@ -48,7 +49,7 @@ export default function SertifikasiCreate() {
     useKategoriSertifikasi([user]);
 
   if ([user, menu, isLoadingKategoriSertifikasi].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -189,9 +190,7 @@ export default function SertifikasiCreate() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Nomor Peserta 
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Nomor Peserta</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"

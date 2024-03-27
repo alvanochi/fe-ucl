@@ -18,6 +18,7 @@ import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 import { ROLE_ID_ADMIN } from "../../../config/role";
 import { Icon } from "@iconify-icon/react";
 import _ from "underscore";
+import { Loading } from "../../../components/Loading";
 
 
 export default function CreateJadwal() {
@@ -88,7 +89,7 @@ export default function CreateJadwal() {
 
 
   if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

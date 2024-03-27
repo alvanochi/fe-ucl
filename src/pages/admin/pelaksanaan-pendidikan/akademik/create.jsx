@@ -16,6 +16,7 @@ import {
 } from "../../../../config/role";
 import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect } from "react";
+import { Loading } from "../../../../components/Loading";
 
 export default function AkademikCreate() {
   const router = useRouter();
@@ -67,7 +68,7 @@ export default function AkademikCreate() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

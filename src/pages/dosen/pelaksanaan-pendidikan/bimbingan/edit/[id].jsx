@@ -13,6 +13,7 @@ import useMahasiswa from "../../../../../repo/mahasiswa";
 import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
+import { Loading } from "../../../../../components/Loading";
 
 export default function BimbinganMahasiswaEdit() {
 	const router = useRouter();
@@ -82,7 +83,7 @@ export default function BimbinganMahasiswaEdit() {
 		});
 	}, [router, user]);
 
-	if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null)) return <p>Loading...</p>;
+	if ([user, menu, isDosenLoading, isMahasiswaLoading].some((item) => item == null)) return <Loading />;
 	return (
 		<Layout>
 			<PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

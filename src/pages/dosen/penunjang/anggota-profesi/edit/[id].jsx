@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import useCRUD from "../../../../../hooks/useCRUD";
 import date from "../../../../../utils/date";
 import { useEffect } from "react";
+import { Loading } from "../../../../../components/Loading";
 
 export default function AnggotaProfesiEdit() {
   const router = useRouter();
@@ -56,7 +57,7 @@ export default function AnggotaProfesiEdit() {
     });
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

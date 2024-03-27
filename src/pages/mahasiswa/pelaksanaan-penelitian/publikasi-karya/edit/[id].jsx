@@ -18,6 +18,7 @@ import date from "../../../../../utils/date";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
 import Accordion from "../../../../../components/Accordion";
 import useKategoriPublikasi from "../../../../../repo/kategori-publikasi";
+import { Loading } from "../../../../../components/Loading";
 
 export default function PublikasiKaryaEdit() {
   const router = useRouter();
@@ -125,7 +126,7 @@ export default function PublikasiKaryaEdit() {
       isLoadingKategoriPublikasi,
     ].some((item) => item == null)
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -484,38 +485,38 @@ export default function PublikasiKaryaEdit() {
             {form.penulis_dosen.map((item, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                    {user?.user_id === item.user_id &&
-                      listDosen &&
-                      findInUser(listDosen, item.user_id)?.nama_lengkap}
-                    {user?.user_id !== item.user_id && (
-                      <Form.Combobox
-                        index={index}
-                        name="penulis_dosen.user_id"
-                        onChange={(selected) =>
-                          inputHandler({
-                            target: {
-                              attributes: {
-                                index: {
-                                  value: index,
-                                },
+                  {user?.user_id === item.user_id &&
+                    listDosen &&
+                    findInUser(listDosen, item.user_id)?.nama_lengkap}
+                  {user?.user_id !== item.user_id && (
+                    <Form.Combobox
+                      index={index}
+                      name="penulis_dosen.user_id"
+                      onChange={(selected) =>
+                        inputHandler({
+                          target: {
+                            attributes: {
+                              index: {
+                                value: index,
                               },
-                              name: "penulis_dosen.user_id",
-                              value: selected?.value,
                             },
-                          })
-                        }
-                        value={form.penulis_dosen[index].user_id}
-                        options={
-                          listDosen &&
-                          Array.isArray(listDosen) &&
-                          listDosen.map((dosen) => ({
-                            label: dosen.nama_lengkap,
-                            value: dosen.user_id,
-                          }))
-                        }
-                      />
-                    )}
-                  </td>
+                            name: "penulis_dosen.user_id",
+                            value: selected?.value,
+                          },
+                        })
+                      }
+                      value={form.penulis_dosen[index].user_id}
+                      options={
+                        listDosen &&
+                        Array.isArray(listDosen) &&
+                        listDosen.map((dosen) => ({
+                          label: dosen.nama_lengkap,
+                          value: dosen.user_id,
+                        }))
+                      }
+                    />
+                  )}
+                </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Form.Input
                     type="number"

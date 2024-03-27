@@ -8,6 +8,7 @@ import { toastAlert } from "../../../lib/sweetalert";
 import axios from "axios";
 import _ from "underscore";
 import Card from "../../../components/Card";
+import { Loading } from "../../../components/Loading";
 
 export default function ChangePasswordModule({ baseURL }) {
   const router = useRouter();
@@ -53,14 +54,12 @@ export default function ChangePasswordModule({ baseURL }) {
     }
   }
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <>
       <Form onSubmit={submitHandler}>
         <Card className="mt-4">
-          <Card.Header className="text-center">
-            Form Ganti Password
-          </Card.Header>
+          <Card.Header className="text-center">Form Ganti Password</Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">

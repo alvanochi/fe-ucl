@@ -15,6 +15,7 @@ import { useEffect } from "react";
 import date from "../../../../utils/date";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../config/role";
 import Accordion from "../../../../components/Accordion";
+import { Loading } from "../../../../components/Loading";
 
 export default function AnggotaProfesiEdit() {
   const router = useRouter();
@@ -88,13 +89,11 @@ export default function AnggotaProfesiEdit() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <div className="flex justify-center mt-4">
-
-      </div>
+      <div className="flex justify-center mt-4"></div>
       <Form>
         <Card className="mt-4">
           <Card.Header className="text-center">HKI</Card.Header>

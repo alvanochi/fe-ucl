@@ -13,21 +13,30 @@ import useDataTableAbsensi from "../../../hooks/useDataTableAbsensi";
 import axios from "axios";
 import DaftarHadirModule from "../../../modules/absen/daftar-hadir";
 import RekapKehadiran from "../../../modules/absen/rekap-kehadiran";
-
+import { Loading } from "../../../components/Loading";
 
 export default function Absen() {
-	const { user } = useUser({ redirectTo: "/login" });
-	const { prefix, menu, active,  setActive } = useMenu();
+  const { user } = useUser({ redirectTo: "/login" });
+  const { prefix, menu, active, setActive } = useMenu();
 
-	if ([user,  menu].some((item) => item == null)) return <p>Loading...</p>;
-	return (
-		<Layout>
-			<PageHeader title={menu.label} icon={menu.icon} items={menu.submenus} active={active.url} handler={setActive} />
-			<div className="my-8">
-				{active.url === "#daftar-hadir" && <DaftarHadirModule baseURL={prefix + menu.url} user={user} />}
-				{active.url === "#rekap-kehadiran" && <RekapKehadiran baseURL={prefix + menu.url} user={user} />}
-			</div>
-			
-		</Layout>
-	);
+  if ([user, menu].some((item) => item == null)) return <Loading />;
+  return (
+    <Layout>
+      <PageHeader
+        title={menu.label}
+        icon={menu.icon}
+        items={menu.submenus}
+        active={active.url}
+        handler={setActive}
+      />
+      <div className="my-8">
+        {active.url === "#daftar-hadir" && (
+          <DaftarHadirModule baseURL={prefix + menu.url} user={user} />
+        )}
+        {active.url === "#rekap-kehadiran" && (
+          <RekapKehadiran baseURL={prefix + menu.url} user={user} />
+        )}
+      </div>
+    </Layout>
+  );
 }

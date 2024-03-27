@@ -12,6 +12,7 @@ import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import useKategoriSertifikasi from "../../../../../repo/kategori-sertifikasi";
+import { Loading } from "../../../../../components/Loading";
 
 export default function TesDetail() {
   const router = useRouter();
@@ -64,7 +65,7 @@ export default function TesDetail() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader
@@ -192,7 +193,11 @@ export default function TesDetail() {
               <span>:</span>
               <div className="block flex-1 space-y-2">
                 <embed
-                  src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
+                  src={
+                    form.file.startsWith("https")
+                      ? `${form.file}`
+                      : `${FILE_URL}/${form.file}`
+                  }
                   className="w-full h-[256px]"
                 />
               </div>

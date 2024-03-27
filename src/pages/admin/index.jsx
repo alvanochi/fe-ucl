@@ -6,16 +6,16 @@ import Card from "../../components/Card";
 import useUser from "../../hooks/useUser";
 import useDatatable from "../../hooks/useDatatable";
 import Link from "next/link";
+import { Loading } from "../../components/Loading";
 
 export default function Home() {
-	const { user } = useUser({ redirectTo: "/login" });
+  const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu } = useMenu();
 
   const DATA_URL = `${process.env.API_ENDPOINT}/dashboard/admin`;
   const { data } = useDatatable(DATA_URL);
 
-  if ([menu, user].some((item) => item == null))
-    return <p>Loading...</p>;
+  if ([menu, user].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <Head>
@@ -26,7 +26,9 @@ export default function Home() {
       <div className="flex gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
         <div className="w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
           <img
-            src={process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image}
+            src={
+              process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image
+            }
             alt="Profile"
             className="object-cover object-top h-full w-full"
           />
@@ -73,7 +75,7 @@ export default function Home() {
           <div className="grid grid-cols-4 gap-4">
             <Card>
               <Card.Body>
-                <Link href={`${prefix}/kompetensi`} >
+                <Link href={`${prefix}/kompetensi`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="icon-park-outline:certificate"
@@ -127,8 +129,8 @@ export default function Home() {
             </Card>
             <Card>
               <Card.Body>
-              <Link href={`${prefix}/pelaksanaan-pengabdian`}>
-                <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                <Link href={`${prefix}/pelaksanaan-pengabdian`}>
+                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="fa6-solid:hand-holding-hand"
                       width={24}
@@ -140,13 +142,13 @@ export default function Home() {
                     {data.pengabdian}
                   </p>
                   <p className="block text-sm">Total Pengajuan Pengabdian</p>
-              </Link>
+                </Link>
               </Card.Body>
             </Card>
             <Card>
               <Card.Body>
-              <Link href={`${prefix}/penunjang`}>
-                <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                <Link href={`${prefix}/penunjang`}>
+                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="solar:users-group-two-rounded-bold-duotone"
                       width={24}
@@ -158,12 +160,12 @@ export default function Home() {
                     {data.penghargaan}
                   </p>
                   <p className="block text-sm">Total Pengajuan Penghargaan</p>
-              </Link>
+                </Link>
               </Card.Body>
             </Card>
             <Card>
               <Card.Body>
-              <Link href={`${prefix}/pelaksanaan-penelitian`}>
+                <Link href={`${prefix}/pelaksanaan-penelitian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="fa:flask"
@@ -193,13 +195,15 @@ export default function Home() {
                   <p className="block text-2xl font-bold leading-relaxed">
                     {data.publikasi}
                   </p>
-                  <p className="block text-sm">Total Pengajuan Publikasi Karya</p>
+                  <p className="block text-sm">
+                    Total Pengajuan Publikasi Karya
+                  </p>
                 </Link>
               </Card.Body>
             </Card>
             <Card>
               <Card.Body>
-               <Link href={`${prefix}/pelaksanaan-penelitian`}>
+                <Link href={`${prefix}/pelaksanaan-penelitian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
                     <Icon
                       icon="fa:flask"

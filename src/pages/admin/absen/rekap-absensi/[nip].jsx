@@ -10,6 +10,7 @@ import useUser from "../../../../hooks/useUser";
 import useMenu from "../../../../hooks/useMenu";
 import PageHeader from "../../../../components/PageHeader";
 import { toastAlert } from "../../../../lib/sweetalert";
+import { Loading } from "../../../../components/Loading";
 
 export default function RekapKehadiran() {
   const router = useRouter();
@@ -107,7 +108,6 @@ export default function RekapKehadiran() {
     }
   }
 
-
   const GENERATE_URL_REKAP = `${process.env.API_ENDPOINT}/absensi/rekap-pertemuan/excel`;
 
   async function generateRekap(id_matkul, kelas) {
@@ -148,7 +148,7 @@ export default function RekapKehadiran() {
     }
   }
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
 
   return (
     <Layout>

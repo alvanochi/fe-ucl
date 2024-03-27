@@ -9,7 +9,7 @@ import { Icon } from "@iconify-icon/react";
 import { useEffect, useState } from "react";
 import useDatatable from "../../../../../hooks/useDatatable";
 import UploadTugas from "../uploadTugas";
-
+import { Loading } from "../../../../../components/Loading";
 
 export default function ListPerkuliahan() {
   const router = useRouter();
@@ -19,8 +19,7 @@ export default function ListPerkuliahan() {
   const DATA_URL = `${process.env.API_ENDPOINT}/absensi/get-absensi-mhs`;
 
   const id = router.query.id || "";
-  const [idmatkul, kelas] = id.split('-');
-
+  const [idmatkul, kelas] = id.split("-");
 
   const {
     data,
@@ -41,130 +40,131 @@ export default function ListPerkuliahan() {
   });
 
   const handleEditDok = () => {
-
     refresh();
   };
 
-
-  if ([user, menu, loading].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu, loading].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
-      <PageHeader title={'Presensi Perkuliahan'} icon={menu.icon} handler={setActive} />
-      <div className="flex justify-center gap-2 mb-8">
-
-      </div>
+      <PageHeader
+        title={"Presensi Perkuliahan"}
+        icon={menu.icon}
+        handler={setActive}
+      />
+      <div className="flex justify-center gap-2 mb-8"></div>
       <table
-          className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
-          cellPadding={10}
-        >
-          <thead>
+        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
+        cellPadding={10}
+      >
+        <thead>
+          <tr>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">No</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Matakuliah
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Pertemuan
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Status Kelas
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Status Absen
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Tugas</th>
+            <th className="text-sm border-2 border-white bg-gray-200">Nilai</th>
+          </tr>
+        </thead>
+        <tbody>
+          {loading && (
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div
-                  className="flex items-center gap-2 cursor-pointer">
-                  No
-                </div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Matakuliah
-                </div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Pertemuan
-                </div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Status Kelas
-                </div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Status Absen
-                </div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Tugas
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nilai
-              </th>
+              <td
+                colSpan="6"
+                className="text-sm border-2 border-white bg-gray-50 text-center"
+              >
+                Loading...
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {loading && (
-              <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
-                  Loading...
+          )}
+          {!loading && data && data.length < 1 && (
+            <tr>
+              <td
+                colSpan="6"
+                className="text-sm border-2 border-white bg-gray-50 text-center"
+              >
+                Tidak ada data
+              </td>
+            </tr>
+          )}
+          {!loading &&
+            data &&
+            data.map((row, index) => (
+              <tr key={`row-${index}`}>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  {index + 1}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  {row.pembelajaran.matkul?.name}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  {row.pembelajaran?.pertemuan}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  {row.pembelajaran?.status_kelas === 1
+                    ? "ONLINE"
+                    : row.pembelajaran?.status_kelas === 0
+                    ? "OFFLINE"
+                    : "HYBRID"}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  {row.status_absen === 1
+                    ? "MASUK"
+                    : row.status_absen === 2
+                    ? "SAKIT"
+                    : row.status_absen === 0
+                    ? "ALFA"
+                    : ""}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                  <div className="flex items-stretch gap-1">
+                    <UploadTugas
+                      data={{ id: row.id }}
+                      onEditAbsensi={handleEditDok}
+                    />
+                  </div>
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  {row.nilai ? row.nilai : "-"}
                 </td>
               </tr>
-            )}
-            {!loading && data && data.length < 1 && (
-              <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
-                  Tidak ada data
-                </td>
-              </tr>
-            )}
-            {!loading &&
-              data &&
-              data.map((row, index) => (
-                <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.pembelajaran.matkul?.name}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.pembelajaran?.pertemuan}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.pembelajaran?.status_kelas === 1 ? "ONLINE" : (row.pembelajaran?.status_kelas === 0 ? "OFFLINE" : "HYBRID")}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.status_absen === 1
-                      ? "MASUK"
-                      : row.status_absen === 2
-                      ? "SAKIT"
-                      : row.status_absen === 0
-                      ? "ALFA"
-                      : ""}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      <UploadTugas data={{ id: row.id }} onEditAbsensi={handleEditDok} />
-                     
-                    </div>
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.nilai ? row.nilai : "-"}
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+            ))}
+        </tbody>
+      </table>
 
-        <div className="flex mt-8">
-          <Button
-            as="a"
-            href={`${prefix + menu.url}`}
-            variant="danger"
-            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
-            iconPosition="left"
-            pill
-          >
-            Kembali
-          </Button>
-        </div>
+      <div className="flex mt-8">
+        <Button
+          as="a"
+          href={`${prefix + menu.url}`}
+          variant="danger"
+          icon={
+            <Icon icon="material-symbols:chevron-left" width={20} height={20} />
+          }
+          iconPosition="left"
+          pill
+        >
+          Kembali
+        </Button>
+      </div>
     </Layout>
   );
 }

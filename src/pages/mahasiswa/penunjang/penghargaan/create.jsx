@@ -8,6 +8,7 @@ import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import useKategoriPrestasi from "../../../../repo/kategori-prestasi";
+import { Loading } from "../../../../components/Loading";
 
 export default function SertifikasiCreate() {
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function SertifikasiCreate() {
     useKategoriPrestasi([user]);
 
   if ([user, menu, isLoadingKategoriPrestasi].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

@@ -9,6 +9,7 @@ import axios from "axios";
 import Button from "../../../../../components/Button";
 import { Icon } from "@iconify-icon/react";
 import { toastAlert } from "../../../../../lib/sweetalert";
+import { Loading } from "../../../../../components/Loading";
 
 export default function ListMhs() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -89,7 +90,7 @@ export default function ListMhs() {
     }
   }
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

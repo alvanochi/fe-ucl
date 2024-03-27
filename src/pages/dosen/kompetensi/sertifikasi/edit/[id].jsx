@@ -10,6 +10,7 @@ import useCRUD from "../../../../../hooks/useCRUD";
 import { useEffect } from "react";
 import date from "../../../../../utils/date";
 import _ from "underscore";
+import { Loading } from "../../../../../components/Loading";
 
 export default function SertifikasiEdit() {
   const router = useRouter();
@@ -62,7 +63,7 @@ export default function SertifikasiEdit() {
     });
   }, [router, user]);
 
-  if ([user, menu, form].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu, form].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

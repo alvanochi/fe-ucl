@@ -18,6 +18,7 @@ import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
 import _ from "underscore";
 import Accordion from "../../../../../components/Accordion";
 import useKategoriPublikasi from "../../../../../repo/kategori-publikasi";
+import { Loading } from "../../../../../components/Loading";
 
 export default function PembicaraEdit() {
   const router = useRouter();
@@ -127,7 +128,7 @@ export default function PembicaraEdit() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader

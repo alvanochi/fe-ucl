@@ -8,6 +8,7 @@ import useMenu from "../../../../hooks/useMenu";
 import useUser from "../../../../hooks/useUser";
 import useCRUD from "../../../../hooks/useCRUD";
 import useKategoriSertifikasi from "../../../../repo/kategori-sertifikasi";
+import { Loading } from "../../../../components/Loading";
 
 export default function TesCreate() {
   const router = useRouter();
@@ -42,7 +43,7 @@ export default function TesCreate() {
     useKategoriSertifikasi([user]);
 
   if ([user, menu, isLoadingKategoriSertifikasi].some((item) => item == null))
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

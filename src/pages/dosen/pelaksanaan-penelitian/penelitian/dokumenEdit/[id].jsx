@@ -8,6 +8,7 @@ import useUser from "../../../../../hooks/useUser";
 import useMenu from "../../../../../hooks/useMenu";
 import useCRUD from "../../../../../hooks/useCRUD";
 import Button from "../../../../../components/Button";
+import { Loading } from "../../../../../components/Loading";
 
 const DokumenEdit = () => {
   const router = useRouter();
@@ -49,7 +50,7 @@ const DokumenEdit = () => {
     show(router.query.id, { transformData: (data) => ({ ...data }) });
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

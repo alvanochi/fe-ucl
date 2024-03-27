@@ -16,6 +16,7 @@ import useMahasiswa from "../../../../repo/mahasiswa";
 import { useEffect } from "react";
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../config/role";
 import _ from "underscore";
+import { Loading } from "../../../../components/Loading";
 
 export default function HkiCreate() {
   const router = useRouter();
@@ -97,7 +98,7 @@ export default function HkiCreate() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />

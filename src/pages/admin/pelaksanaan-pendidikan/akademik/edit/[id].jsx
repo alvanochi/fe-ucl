@@ -13,6 +13,7 @@ import useMahasiswa from "../../../../../repo/mahasiswa";
 import date from "../../../../../utils/date";
 import { useEffect } from "react";
 import _ from "underscore";
+import { Loading } from "../../../../../components/Loading";
 
 export default function AkademikEdit() {
   const router = useRouter();
@@ -76,7 +77,7 @@ export default function AkademikEdit() {
       (item) => item == null
     )
   )
-    return <p>Loading...</p>;
+    return <Loading />;
   return (
     <Layout>
       <PageHeader

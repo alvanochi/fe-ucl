@@ -5,12 +5,13 @@ import useUser from "../../../hooks/useUser";
 import PenelitianModule from "../../../modules/admin/pelaks-penelitian/penelitian/index";
 import PublikasiKaryaModule from "../../../modules/admin/pelaks-penelitian/publikasi-karya/index";
 import HKIModule from "../../../modules/admin/pelaks-penelitian/hki/index";
+import { Loading } from "../../../components/Loading";
 
 export default function PelaksanaanPenelitian() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

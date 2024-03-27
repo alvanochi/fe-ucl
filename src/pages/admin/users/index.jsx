@@ -4,6 +4,7 @@ import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
 import MahasiswaModule from "../../../modules/admin/users/mahasiswa/index";
 import DosenModule from "../../../modules/admin/users/dosen";
+import { Loading } from "../../../components/Loading";
 
 export default function Users() {
   /* eslint-disable */
@@ -11,7 +12,7 @@ export default function Users() {
   const { prefix, menu, active, setActive } = useMenu();
   /* eslint-enable */
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader

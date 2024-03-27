@@ -10,6 +10,7 @@ import BackButton from "../../../../components/BackButton";
 import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect } from "react";
 import date from "../../../../utils/date";
+import { Loading } from "../../../../components/Loading";
 
 export default function AnggotaProfesiDetail() {
   const router = useRouter();
@@ -28,7 +29,7 @@ export default function AnggotaProfesiDetail() {
     instansi_prof: "",
     file: "",
     nama_kategori: "",
-    point: ""
+    point: "",
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -55,7 +56,7 @@ export default function AnggotaProfesiDetail() {
     });
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader
