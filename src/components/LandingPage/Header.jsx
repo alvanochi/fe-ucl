@@ -69,7 +69,7 @@ export const Header = () => {
                 className="hover:text-color-secondary ease-in duration-200"
                 onClick={handleLinkClick}
               >
-                Support
+                Supports
               </a>
             </li>
             <li>
@@ -142,7 +142,7 @@ export const Header = () => {
                 className="hover:text-color-secondary ease-in duration-200"
                 onClick={handleLinkClick}
               >
-                Support
+                Supports
               </a>
             </li>
             <li>
