@@ -52,6 +52,8 @@ export const Login = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
     dotsClass: styles["slick-dots"],
     customPaging: function (i) {
       return (
@@ -189,7 +191,8 @@ export const Login = () => {
                 Login
               </h1>
               <p className="block text-gray-600 text-sm">
-              Selamat datang di TIAS. Kami merekomendasikan untuk login menggunakan perangkat dengan layar berukuran desktop.
+                Selamat datang di TIAS. Kami merekomendasikan untuk login
+                menggunakan perangkat dengan layar berukuran desktop.
               </p>
             </div>
             <div className="block mb-6">

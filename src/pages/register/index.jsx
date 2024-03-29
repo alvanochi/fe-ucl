@@ -60,6 +60,8 @@ export const Register = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
     dotsClass: styles["slick-dots"],
     customPaging: function (i) {
       return (

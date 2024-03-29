@@ -60,6 +60,8 @@ export const Register = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
     dotsClass: styles["slick-dots"],
     customPaging: function (i) {
       return (
@@ -181,7 +183,9 @@ export const Register = () => {
               </p>
             </div>
             <div className="block mb-6">
-              <label className="block text-sm font-medium mb-1">NPM/NIM ASAL</label>
+              <label className="block text-sm font-medium mb-1">
+                NPM/NIM ASAL
+              </label>
               <input
                 type="text"
                 className="form-input"

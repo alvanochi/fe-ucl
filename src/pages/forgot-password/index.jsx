@@ -19,7 +19,7 @@ const ForgotPassword = () => {
   });
 
   useEffect(() => {
-    if(typeof window !== 'undefined'){
+    if (typeof window !== "undefined") {
       const handleResize = () => {
         const screenWidth = window.innerWidth;
         setStylesPage({
@@ -28,16 +28,15 @@ const ForgotPassword = () => {
           formContainer: screenWidth <= 880 ? "w-10/12" : "w-3/5",
         });
       };
-  
+
       window.addEventListener("resize", handleResize);
-  
+
       handleResize();
-  
+
       return () => {
         window.removeEventListener("resize", handleResize);
       };
     }
-    
   }, []);
 
   const API_URL = `${process.env.API_ENDPOINT}/auth/forgotPassword`;
@@ -52,6 +51,8 @@ const ForgotPassword = () => {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 2000,
     dotsClass: styles["slick-dots"],
     customPaging: function (i) {
       return (
