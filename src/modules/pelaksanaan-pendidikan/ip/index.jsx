@@ -24,7 +24,7 @@ export default function IPModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
+    totalData,
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
@@ -43,7 +43,9 @@ export default function IPModule({ baseURL }) {
         <Filter filter={filter} handler={setFilter} />
       </div>
       <div className="flex items-start">
-        <span>Total Data: <b>{totalData}</b></span>
+        <span>
+          Total Data: <b>{totalData}</b>
+        </span>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -54,35 +56,41 @@ export default function IPModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("ip_id")}
               >
                 No
+                <SortIcon sort={getSortBy("ip_id")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("semester")}
               >
                 Semester
+                <SortIcon sort={getSortBy("semester")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("tahun")}
               >
                 Tahun
+                <SortIcon sort={getSortBy("tahun")} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-              >
+            <th
+              className="text-sm border-2 border-white bg-gray-200"
+              onClick={() => sortBy("ip")}
+            >
+              <div className="flex items-center gap-2 cursor-pointer">
                 [IPS]
+                <SortIcon sort={getSortBy("ip")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-              >
+              <div className="flex items-center gap-2 cursor-pointer">
                 Point
               </div>
             </th>
@@ -115,25 +123,25 @@ export default function IPModule({ baseURL }) {
               const startNumber = (page - 1) * 10 + 1;
 
               const rowNumber = startNumber + index;
-            return (
-              <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
-                  <p className="truncate">{row.semester}</p>
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
-                  {row.tahun}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[4rem] truncate mx-auto">
-                  {row.ip}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[4rem] truncate mx-auto">
-                  {row.point}
-                </td>
-              </tr>
-            );
+              return (
+                <tr key={`row-${index}`}>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {rowNumber}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
+                    <p className="truncate">{row.semester}</p>
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
+                    {row.tahun}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[4rem] truncate mx-auto">
+                    {row.ip}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[4rem] truncate mx-auto">
+                    {row.point}
+                  </td>
+                </tr>
+              );
             })}
         </tbody>
       </table>

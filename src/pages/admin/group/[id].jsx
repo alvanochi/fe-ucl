@@ -15,8 +15,9 @@ import useNewDataTable from "../../../hooks/useNewDataTable";
 import axios from "axios";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 import { Loading } from "../../../components/Loading";
+import SortIcon from "../../../components/SortIcon";
 
-export default function AkademikEdit() {
+export default function GroupDetail() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
@@ -25,24 +26,12 @@ export default function AkademikEdit() {
 
   const [searchValue, setSearchValue] = useState("");
   const DATA_GROUP_USERS = `${process.env.API_ENDPOINT}/voting/group-users`;
-  const {
-    dataAbsensi,
-    loadingAbsensi,
-    pageAbsensi,
-    pageCountAbsensi,
-    filter,
-    setPageAbsensi,
-    setFilter,
-    canPrevAbsensi,
-    canNextAbsensi,
-    refreshAbsensi,
-    sortBy,
-    getSortBy,
-  } = useNewDataTable(
-    DATA_GROUP_USERS,
-    { filter: ["id_group"], filterValue: [router.query.id] },
-    searchValue
-  );
+  const { dataNew, loadingNew, pageNew, pageCountNew, setPageNew, refreshNew } =
+    useNewDataTable(
+      DATA_GROUP_USERS,
+      { filter: ["id_group"], filterValue: [router.query.id] },
+      searchValue
+    );
 
   const INITIAL_USERS = {
     user_id: "",
@@ -61,7 +50,7 @@ export default function AkademikEdit() {
         ...state,
         users: [],
       }));
-      refreshAbsensi();
+      refreshNew();
     },
     transformData: (data) => ({
       ...data,
@@ -114,7 +103,7 @@ export default function AkademikEdit() {
       const response = await request.data;
 
       toastAlert("success", "Successfully removed from group.");
-      refreshAbsensi();
+      refreshNew();
     } catch (error) {
       if (error.name === "AxiosError") {
         const { status_code, message, data } = error.response.data;
@@ -129,7 +118,7 @@ export default function AkademikEdit() {
     }
   };
 
-  if ([user, menu, isUsersLoading].some((item) => item == null))
+  if ([user, menu, isUsersLoading, loadingNew].some((item) => item == null))
     return <Loading />;
   return (
     <Layout>
@@ -321,7 +310,7 @@ export default function AkademikEdit() {
           </tr>
         </thead>
         <tbody>
-          {loadingAbsensi && (
+          {loadingNew && (
             <tr>
               <td
                 colSpan="6"
@@ -331,7 +320,7 @@ export default function AkademikEdit() {
               </td>
             </tr>
           )}
-          {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
+          {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
               <td
                 colSpan="6"
@@ -341,9 +330,9 @@ export default function AkademikEdit() {
               </td>
             </tr>
           )}
-          {!loadingAbsensi &&
-            dataAbsensi &&
-            dataAbsensi.map((user, index) => (
+          {!loadingNew &&
+            dataNew &&
+            dataNew.map((user, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {user.nama_lengkap}
@@ -388,8 +377,8 @@ export default function AkademikEdit() {
                 height={20}
               />
             }
-            onClick={() => setPageAbsensi(pageAbsensi - 1)}
-            disabled={pageAbsensi <= 1}
+            onClick={() => setPageNew(pageNew - 1)}
+            disabled={pageNew <= 1}
             pill
           />
           <Button
@@ -403,8 +392,8 @@ export default function AkademikEdit() {
               />
             }
             iconPosition="right"
-            onClick={() => setPageAbsensi(pageAbsensi + 1)}
-            disabled={pageAbsensi >= pageCountAbsensi}
+            onClick={() => setPageNew(pageNew + 1)}
+            disabled={pageNew >= pageCountNew}
             pill
           >
             Next Page
@@ -415,19 +404,19 @@ export default function AkademikEdit() {
           <Form.Input
             type="number"
             min="1"
-            max={pageCountAbsensi || 1}
+            max={pageCountNew || 1}
             className="w-20"
-            value={pageAbsensi}
+            value={pageNew}
             onChange={(event) =>
-              setPageAbsensi(
+              setPageNew(
                 Math.max(
                   1,
-                  Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)
+                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
                 )
               )
             }
           />
-          of {pageCountAbsensi || 1}
+          of {pageCountNew || 1}
         </div>
       </div>
     </Layout>

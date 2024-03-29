@@ -29,20 +29,18 @@ export default function TesModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
+    totalData,
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
   const GENERATE_URL = `${process.env.API_ENDPOINT}/skpi/bahasa`;
 
-  async function generate(){
+  async function generate() {
     try {
       const response = await axios.get(GENERATE_URL);
       refresh();
 
       toastAlert("success", response.data.message);
-
-
     } catch (error) {
       if (error.name === "AxiosError") {
         toastAlert("warning", error.response.data);
@@ -70,7 +68,9 @@ export default function TesModule({ baseURL }) {
           <Filter filter={filter} handler={setFilter} />
         </div>
         <div className="flex justify-between items-start">
-          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+          <span className="mt-6">
+            Total Data: <b>{totalData}</b>
+          </span>
           <Button.Icon
             className="mb-4"
             variant="secondary"
@@ -88,15 +88,19 @@ export default function TesModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("kategori_id")}
+                onClick={() => sortBy("tes_id")}
               >
                 No
-                <SortIcon sort={getSortBy("kategori_id")} />
+                <SortIcon sort={getSortBy("tes_id")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("status")}
+              >
                 Status
+                <SortIcon sort={getSortBy("status")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -204,13 +208,15 @@ export default function TesModule({ baseURL }) {
                           />
                         }
                       />
-                    {(row.status === 0 || row.status === 2) &&  (
+                      {(row.status === 0 || row.status === 2) && (
                         <>
                           <Button.Icon
                             as="a"
                             href={`${baseURL}/tes/edit/${row.tes_id}`}
                             variant="secondary"
-                            icon={<Icon icon="bx:edit" width={20} height={20} />}
+                            icon={
+                              <Icon icon="bx:edit" width={20} height={20} />
+                            }
                           />
                           <Button.Icon
                             variant="danger"
@@ -226,7 +232,7 @@ export default function TesModule({ baseURL }) {
                             }
                           />
                         </>
-                    )}
+                      )}
                     </div>
                   </td>
                 </tr>

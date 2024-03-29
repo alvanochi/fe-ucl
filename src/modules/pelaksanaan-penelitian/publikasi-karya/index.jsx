@@ -26,7 +26,7 @@ export default function PublikasiKaryaModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
+    totalData,
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
@@ -46,7 +46,9 @@ export default function PublikasiKaryaModule({ baseURL }) {
           <Filter filter={filter} handler={setFilter} />
         </div>
         <div className="flex justify-between items-start">
-          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+          <span className="mt-6">
+            Total Data: <b>{totalData}</b>
+          </span>
         </div>
       </div>
       <table
@@ -65,22 +67,30 @@ export default function PublikasiKaryaModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("status")}
+              >
                 Status
+                <SortIcon sort={getSortBy("status")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("judul_artikel")}
               >
                 Judul
+                <SortIcon sort={getSortBy("judul_artikel")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("nama_jurnal")}
               >
                 Nama Jurnal
+                <SortIcon sort={getSortBy("nama_jurnal")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -123,7 +133,7 @@ export default function PublikasiKaryaModule({ baseURL }) {
             data.map((row, index) => (
               <tr key={`row-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {((page-1) * 10) + index+1}
+                  {(page - 1) * 10 + index + 1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
@@ -154,42 +164,44 @@ export default function PublikasiKaryaModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
-                        as="a"
-                        href={`${baseURL}/publikasi-karya/detail/${row.publikasi_id}`}
-                        variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                      />
-                  {(row.status === 0 || row.status === 2) && (
-                    <>
-                      <CreateDokumen id={{ publikasi_id: row.publikasi_id }} />
-                      
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/publikasi-karya/edit/${row.publikasi_id}`}
-                        variant="secondary"
-                        icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.publikasi_id).then(() => refresh())
-                        }
-                      />
-                    </>
-                  )}
+                      as="a"
+                      href={`${baseURL}/publikasi-karya/detail/${row.publikasi_id}`}
+                      variant="info"
+                      icon={
+                        <Icon
+                          icon="fluent:info-24-filled"
+                          width={20}
+                          height={20}
+                        />
+                      }
+                    />
+                    {(row.status === 0 || row.status === 2) && (
+                      <>
+                        <CreateDokumen
+                          id={{ publikasi_id: row.publikasi_id }}
+                        />
+
+                        <Button.Icon
+                          as="a"
+                          href={`${baseURL}/publikasi-karya/edit/${row.publikasi_id}`}
+                          variant="secondary"
+                          icon={<Icon icon="bx:edit" width={20} height={20} />}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() =>
+                            destroy(row.publikasi_id).then(() => refresh())
+                          }
+                        />
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>

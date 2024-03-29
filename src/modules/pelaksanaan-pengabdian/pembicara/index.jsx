@@ -26,7 +26,7 @@ export default function PembicaraModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
+    totalData,
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
@@ -46,7 +46,9 @@ export default function PembicaraModule({ baseURL }) {
           <Filter filter={filter} handler={setFilter} />
         </div>
         <div className="flex justify-between items-start">
-          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+          <span className="mt-6">
+            Total Data: <b>{totalData}</b>
+          </span>
         </div>
       </div>
       <table
@@ -65,22 +67,30 @@ export default function PembicaraModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("status")}
+              >
                 Status
+                <SortIcon sort={getSortBy("status")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("judul_makalah")}
               >
                 Judul Makalah
+                <SortIcon sort={getSortBy("judul_makalah")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("penyelenggara")}
               >
                 Penyelenggara
+                <SortIcon sort={getSortBy("penyelenggara")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -123,7 +133,7 @@ export default function PembicaraModule({ baseURL }) {
             data.map((row, index) => (
               <tr key={`row-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {((page-1) * 10) + index+1}
+                  {(page - 1) * 10 + index + 1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
@@ -165,10 +175,12 @@ export default function PembicaraModule({ baseURL }) {
                         />
                       }
                     />
-                  {(row.status === 0 || row.status === 2) && (
+                    {(row.status === 0 || row.status === 2) && (
                       <>
-                        <CreateDokumen id={{ pembicara_id: row.pembicara_id }} />
-                        
+                        <CreateDokumen
+                          id={{ pembicara_id: row.pembicara_id }}
+                        />
+
                         <Button.Icon
                           as="a"
                           href={`${baseURL}/pembicara/edit/${row.pembicara_id}`}
@@ -189,7 +201,7 @@ export default function PembicaraModule({ baseURL }) {
                           }
                         />
                       </>
-                  )}
+                    )}
                   </div>
                 </td>
               </tr>

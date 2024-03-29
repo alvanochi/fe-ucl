@@ -18,12 +18,14 @@ export default function DaftarHadirModule({ baseURL, user }) {
   const [searchValue, setSearchValue] = useState("");
 
   const {
-    dataAbsensi,
-    loadingAbsensi,
-    pageAbsensi,
-    pageCountAbsensi,
-    setPageAbsensi,
-    refreshAbsensi,
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    refreshNew,
+    sortByNew,
+    getSortByNew,
   } = useNewDataTable(
     DATA_URL,
     {
@@ -84,141 +86,174 @@ export default function DaftarHadirModule({ baseURL, user }) {
           />
         </div>
       </div>
-
-      <table
-        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
-        cellPadding={10}
-      >
-        <thead>
-          <tr>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No</div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Matakuliah
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">Kode</div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Pertemuan
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Kelas
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {loadingAbsensi && (
+      <div className="overflow-x-auto">
+        <table
+          className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
+          cellPadding={10}
+        >
+          <thead>
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
-                Loading...
-              </td>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("id")}
+                >
+                  No
+                  <SortIcon sort={getSortByNew("id")} />
+                </div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("id_matkul")}
+                >
+                  Matakuliah
+                  <SortIcon sort={getSortByNew("id_matkul")} />
+                </div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("id_matkul")}
+                >
+                  Kode <SortIcon sort={getSortByNew("id_matkul")} />
+                </div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("pertemuan")}
+                >
+                  Pertemuan
+                  <SortIcon sort={getSortByNew("pertemuan")} />
+                </div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("kelas")}
+                >
+                  Kelas
+                  <SortIcon sort={getSortByNew("kelas")} />
+                </div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("status_kelas")}
+                >
+                  Status
+                  <SortIcon sort={getSortByNew("status_kelas")} />
+                </div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                Action
+              </th>
             </tr>
-          )}
-          {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
-            <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
-                Tidak ada data
-              </td>
-            </tr>
-          )}
-          {!loadingAbsensi &&
-            dataAbsensi &&
-            dataAbsensi.map((row, index) => (
-              <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.matkul?.name}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.id_matkul}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.pertemuan}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.kelas}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status_kelas === 1
-                    ? "ONLINE"
-                    : row.status_kelas === 0
-                    ? "OFFLINE"
-                    : "HYBRID"}
-                </td>
-
-                <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                  <div className="flex items-stretch gap-1">
-                    <ShowQr
-                      data={{
-                        token: row.token,
-                        matkul: row.matkul?.name,
-                        kelas: row.kelas,
-                        pertemuan: row.pertemuan,
-                      }}
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/daftar-hadir/list-mhs/${row.id}`}
-                      variant="primary"
-                      icon={<Icon icon="bx:group" width={20} height={20} />}
-                    />
-                    <i
-                      className={
-                        row.learning_done == null || row.learning_done == ""
-                          ? " text-sky-600 cursor-pointer transition duration-300 hover:text-blue-500"
-                          : "text-gray-500"
-                      }
-                      onClick={() => {
-                        if (!row.learning_done) {
-                          updateLearningDone(row.id);
-                        }
-                      }}
-                    >
-                      <Icon icon="ph:power-fill" width={30} height={30} />
-                    </i>
-                    <Button.Icon
-                      variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() =>
-                        destroy(row.id).then(() => refreshAbsensi())
-                      }
-                    />
-                  </div>
+          </thead>
+          <tbody>
+            {loadingNew && (
+              <tr>
+                <td
+                  colSpan="6"
+                  className="text-sm border-2 border-white bg-gray-50 text-center"
+                >
+                  Loading...
                 </td>
               </tr>
-            ))}
-        </tbody>
-      </table>
+            )}
+            {!loadingNew && dataNew && dataNew.length < 1 && (
+              <tr>
+                <td
+                  colSpan="6"
+                  className="text-sm border-2 border-white bg-gray-50 text-center"
+                >
+                  Tidak ada data
+                </td>
+              </tr>
+            )}
+            {!loadingNew &&
+              dataNew &&
+              dataNew.map((row, index) => (
+                <tr key={`row-${index}`}>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {index + 1}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.matkul?.name &&
+                      row.matkul.name
+                        .split(" ")
+                        .slice(0, 3)
+                        .concat("...")
+                        .join(" ")}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.id_matkul}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.pertemuan}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.kelas}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {row.status_kelas === 1
+                      ? "ONLINE"
+                      : row.status_kelas === 0
+                      ? "OFFLINE"
+                      : "HYBRID"}
+                  </td>
+
+                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                    <div className="flex items-stretch gap-1">
+                      <ShowQr
+                        data={{
+                          token: row.token,
+                          matkul: row.matkul?.name,
+                          kelas: row.kelas,
+                          pertemuan: row.pertemuan,
+                        }}
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/daftar-hadir/list-mhs/${row.id}`}
+                        variant="primary"
+                        icon={<Icon icon="bx:group" width={18} height={18} />}
+                      />
+                      <i
+                        className={
+                          row.learning_done == null || row.learning_done == ""
+                            ? " text-sky-600 cursor-pointer transition duration-300 hover:text-blue-500"
+                            : "text-gray-500"
+                        }
+                        onClick={() => {
+                          if (!row.learning_done) {
+                            updateLearningDone(row.id);
+                          }
+                        }}
+                      >
+                        <Icon icon="ph:power-fill" width={28} height={28} />
+                      </i>
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={18}
+                            height={18}
+                          />
+                        }
+                        onClick={() =>
+                          destroy(row.id).then(() => refreshAbsensi())
+                        }
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+          </tbody>
+        </table>
+      </div>
 
       <div className="flex mt-8">
         <div className="flex gap-1 ml-auto">
@@ -232,8 +267,8 @@ export default function DaftarHadirModule({ baseURL, user }) {
                 height={20}
               />
             }
-            onClick={() => setPageAbsensi(pageAbsensi - 1)}
-            disabled={pageAbsensi <= 1}
+            onClick={() => setPageNew(pageNew - 1)}
+            disabled={pageNew <= 1}
             pill
           />
           <Button
@@ -247,8 +282,8 @@ export default function DaftarHadirModule({ baseURL, user }) {
               />
             }
             iconPosition="right"
-            onClick={() => setPageAbsensi(pageAbsensi + 1)}
-            disabled={pageAbsensi >= pageCountAbsensi}
+            onClick={() => setPageNew(pageNew + 1)}
+            disabled={pageNew >= pageCountNew}
             pill
           >
             Next Page
@@ -259,19 +294,19 @@ export default function DaftarHadirModule({ baseURL, user }) {
           <Form.Input
             type="number"
             min="1"
-            max={pageCountAbsensi || 1}
+            max={pageCountNew || 1}
             className="w-20"
-            value={pageAbsensi}
+            value={pageNew}
             onChange={(event) =>
-              setPageAbsensi(
+              setPageNew(
                 Math.max(
                   1,
-                  Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)
+                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
                 )
               )
             }
           />
-          of {pageCountAbsensi || 1}
+          of {pageCountNew || 1}
         </div>
       </div>
     </>

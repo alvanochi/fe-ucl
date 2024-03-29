@@ -16,18 +16,16 @@ const ValidasiDokumen = () => {
   const DATA_URL = `${process.env.API_ENDPOINT}/validasi/validasi-dokumen`;
 
   const {
-    dataAbsensi,
-    loadingAbsensi,
-    pageAbsensi,
-    pageCountAbsensi,
-    filter,
-    setPageAbsensi,
-    setFilter,
-    canPrevAbsensi,
-    canNextAbsensi,
-    refreshAbsensi,
-    sortBy,
-    getSortBy,
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    canPrevNew,
+    canNextNew,
+    refreshNew,
+    sortByNew,
+    getSortByNew,
   } = useNewDataTable(DATA_URL, {}, searchValue);
 
   return (
@@ -73,7 +71,7 @@ const ValidasiDokumen = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {loadingAbsensi && (
+                    {loadingNew && (
                       <tr>
                         <td
                           colSpan="6"
@@ -83,22 +81,20 @@ const ValidasiDokumen = () => {
                         </td>
                       </tr>
                     )}
-                    {!loadingAbsensi &&
-                      dataAbsensi &&
-                      dataAbsensi.length < 1 && (
-                        <tr>
-                          <td
-                            colSpan="6"
-                            className="text-sm border-2 bg-gray-800 border-gray-700 text-center"
-                          >
-                            Tidak ada data
-                          </td>
-                        </tr>
-                      )}
-                    {!loadingAbsensi &&
-                      dataAbsensi &&
-                      dataAbsensi.map((row, index) => {
-                        const startNumber = (pageAbsensi - 1) * 10 + 1;
+                    {!loadingNew && dataNew && dataNew.length < 1 && (
+                      <tr>
+                        <td
+                          colSpan="6"
+                          className="text-sm border-2 bg-gray-800 border-gray-700 text-center"
+                        >
+                          Tidak ada data
+                        </td>
+                      </tr>
+                    )}
+                    {!loadingNew &&
+                      dataNew &&
+                      dataNew.map((row, index) => {
+                        const startNumber = (pageNew - 1) * 10 + 1;
 
                         const rowNumber = startNumber + index;
                         return (
@@ -146,8 +142,8 @@ const ValidasiDokumen = () => {
                           height={20}
                         />
                       }
-                      onClick={() => setPageAbsensi(pageAbsensi - 1)}
-                      disabled={pageAbsensi <= 1}
+                      onClick={() => setPageNew(pageNew - 1)}
+                      disabled={pageNew <= 1}
                       pill
                     />
                     <Button
@@ -161,8 +157,8 @@ const ValidasiDokumen = () => {
                         />
                       }
                       iconPosition="right"
-                      onClick={() => setPageAbsensi(pageAbsensi + 1)}
-                      disabled={pageAbsensi >= pageCountAbsensi}
+                      onClick={() => setPageNew(pageNew + 1)}
+                      disabled={pageNew >= pageCountNew}
                       pill
                     >
                       Next Page
@@ -173,22 +169,22 @@ const ValidasiDokumen = () => {
                     <Form.Input
                       type="number"
                       min="1"
-                      max={pageCountAbsensi || 1}
+                      max={pageCountNew || 1}
                       className="w-20 text-color-white"
-                      value={pageAbsensi}
+                      value={pageNew}
                       onChange={(event) =>
-                        setPageAbsensi(
+                        setPageNew(
                           Math.max(
                             1,
                             Math.min(
                               event.target.valueAsNumber,
-                              pageCountAbsensi || 1
+                              pageCountNew || 1
                             )
                           )
                         )
                       }
                     />
-                    of {pageCountAbsensi || 1}
+                    of {pageCountNew || 1}
                   </div>
                 </div>
               </div>

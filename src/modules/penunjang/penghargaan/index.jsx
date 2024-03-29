@@ -27,20 +27,18 @@ export default function PenghargaanModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
+    totalData,
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
   const GENERATE_URL = `${process.env.API_ENDPOINT}/skpi/prestasi`;
 
-  async function generate(){
+  async function generate() {
     try {
       const response = await axios.get(GENERATE_URL);
       refresh();
 
       toastAlert("success", response.data.message);
-
-
     } catch (error) {
       if (error.name === "AxiosError") {
         toastAlert("warning", error.response.data);
@@ -68,7 +66,9 @@ export default function PenghargaanModule({ baseURL }) {
           <Filter filter={filter} handler={setFilter} />
         </div>
         <div className="flex justify-between items-start">
-          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+          <span className="mt-6">
+            Total Data: <b>{totalData}</b>
+          </span>
           <Button.Icon
             className="mb-4"
             variant="secondary"
@@ -93,29 +93,39 @@ export default function PenghargaanModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("status")}
+              >
                 Status
+                <SortIcon sort={getSortBy("status")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("tingkat_peng")}
               >
                 Tingkat Penghargaan
+                <SortIcon sort={getSortBy("tingkat_peng")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("jenis_peng")}
               >
                 Jenis Penghargaan
+                <SortIcon sort={getSortBy("jenis_peng")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("nama_peng")}
               >
                 Nama Penghargaan
+                <SortIcon sort={getSortBy("nama_peng")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -128,9 +138,7 @@ export default function PenghargaanModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-              >
+              <div className="flex items-center gap-2 cursor-pointer">
                 Instansi Pemberi
               </div>
             </th>
@@ -217,34 +225,35 @@ export default function PenghargaanModule({ baseURL }) {
                           />
                         }
                       />
-                    {(row.status === 0 || row.status === 2) && (
-                      <>
-                      
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/penghargaan/edit/${row.penghargaan_id}`}
-                        variant="secondary"
-                        icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
+                      {(row.status === 0 || row.status === 2) && (
+                        <>
+                          <Button.Icon
+                            as="a"
+                            href={`${baseURL}/penghargaan/edit/${row.penghargaan_id}`}
+                            variant="secondary"
+                            icon={
+                              <Icon icon="bx:edit" width={20} height={20} />
+                            }
                           />
-                        }
-                        onClick={() =>
-                          destroy(row.penghargaan_id).then(() => refresh())
-                        }
-                      />
-                      </>
-                    )}
+                          <Button.Icon
+                            variant="danger"
+                            icon={
+                              <Icon
+                                icon="solar:trash-bin-2-bold-duotone"
+                                width={20}
+                                height={20}
+                              />
+                            }
+                            onClick={() =>
+                              destroy(row.penghargaan_id).then(() => refresh())
+                            }
+                          />
+                        </>
+                      )}
                     </div>
                   </td>
                 </tr>
-              )
+              );
             })}
         </tbody>
       </table>

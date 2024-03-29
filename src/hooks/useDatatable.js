@@ -31,13 +31,19 @@ export const useDatatable = (url, options = {}) => {
     });
   };
 
+  const sortEntries = Object.entries(sort);
+  const sortEntry = sortEntries.length > 0 ? sortEntries[0] : [];
+  const sortByName = sortEntry.length > 0 ? sortEntry[0] : "";
+  const sorting = sortEntry.length > 1 ? sortEntry[1] : "";
+
   const fetchData = async () => {
     setLoading(true);
 
     const query = {
       page: page,
       limit: pageSize,
-      sort: Object.entries(sort).at(0)?.join(":"),
+      sortByName,
+      sorting,
       ...filter,
       id_matkul: options.id_matkul || "",
       kelas: options.kelas || "",

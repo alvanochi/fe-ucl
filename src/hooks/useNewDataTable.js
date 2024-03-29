@@ -12,6 +12,7 @@ export const useNewDataTable = (url, options = {}, searchValue) => {
   const [loading, setLoading] = useState(true);
   const [pageCount, setPageCount] = useState(1);
   const [recordsTotal, setRecordsTotal] = useState(0);
+  const [sort, setSort] = useState({});
 
   const refresh = () => {
     toastAlert("info", "Mengambil Data!", 1000);
@@ -20,16 +21,33 @@ export const useNewDataTable = (url, options = {}, searchValue) => {
 
   const canNext = () => page + 1 < pageCount;
   const canPrev = () => page - 1 > pageCount;
+  const getSortBy = (key) => sort[key] ?? null;
+  const sortBy = (key) => {
+    setSort((state) => {
+      const isSameAsBefore = state[key] ?? false;
+      return { [key]: isSameAsBefore && state[key] == "desc" ? "asc" : "desc" };
+    });
+  };
 
   const adjustedPage = page - 1;
 
   const fetchData = async () => {
     setLoading(true);
 
+    let keySort;
+    let valueObjSort;
+    const keys = Object.keys(sort);
+
+    keys.forEach((key) => {
+      const value = sort[key];
+      keySort = key;
+      valueObjSort = value;
+    });
+
     const query = {
       dataTable: true,
-      orderField: options.orderField || "id",
-      orderValue: options.orderValue || "desc",
+      orderField: keySort || "id",
+      orderValue: valueObjSort || "desc",
       filter: options.filter || [],
       filterValue: options.filterValue || [],
       length: -1,
@@ -112,20 +130,22 @@ export const useNewDataTable = (url, options = {}, searchValue) => {
 
   useEffect(() => {
     fetchData();
-  }, [page, user, searchValue]);
+  }, [page, user, searchValue, sort]);
 
   return {
-    dataAbsensi: data,
-    pageAbsensi: page,
-    loadingAbsensi: loading,
-    recordsTotalAbsensi: recordsTotal,
-    pageCountAbsensi: pageCount,
-    refreshAbsensi: refresh,
-    fetchDataAbsensi: fetchData,
-    setDataAbsensi: setData,
-    setPageAbsensi: setPage,
-    canNextAbsensi: canNext,
-    canPrevAbsensi: canPrev,
+    dataNew: data,
+    pageNew: page,
+    loadingNew: loading,
+    recordsTotalNew: recordsTotal,
+    pageCountNew: pageCount,
+    refreshNew: refresh,
+    fetchDataNew: fetchData,
+    setDataNew: setData,
+    setPageNew: setPage,
+    canNextNew: canNext,
+    canPrevNew: canPrev,
+    sortByNew: sortBy,
+    getSortByNew: getSortBy,
   };
 };
 

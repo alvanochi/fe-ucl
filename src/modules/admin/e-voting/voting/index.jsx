@@ -5,6 +5,7 @@ import Form from "../../../../components/Form";
 import useCRUD from "../../../../hooks/useCRUD";
 import useNewDataTable from "../../../../hooks/useNewDataTable";
 import { useState } from "react";
+import SortIcon from "../../../../components/SortIcon";
 
 export default function VotingModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/voting/question-all`;
@@ -12,18 +13,13 @@ export default function VotingModule({ baseURL }) {
   const [searchValue, setSearchValue] = useState("");
 
   const {
-    dataAbsensi,
-    loadingAbsensi,
-    pageAbsensi,
-    pageCountAbsensi,
-    filter,
-    setPageAbsensi,
-    setFilter,
-    canPrevAbsensi,
-    canNextAbsensi,
-    refreshAbsensi,
-    sortBy,
-    getSortBy,
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    sortByNew,
+    getSortByNew,
   } = useNewDataTable(DATA_URL, {}, searchValue);
 
   const { destroy } = useCRUD(DELETE_URL);
@@ -60,28 +56,45 @@ export default function VotingModule({ baseURL }) {
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No</div>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("id")}
+              >
+                No <SortIcon sort={getSortByNew("id")} />
+              </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("deskripsi")}
+              >
                 deskripsi
+                <SortIcon sort={getSortByNew("deskripsi")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("status_pertanyaan")}
+              >
                 status
+                <SortIcon sort={getSortByNew("status_pertanyaan")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("created_at")}
+              >
                 Tanggal Dibuat
+                <SortIcon sort={getSortByNew("created_at")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
         </thead>
         <tbody>
-          {loadingAbsensi && (
+          {loadingNew && (
             <tr>
               <td
                 colSpan="6"
@@ -91,7 +104,7 @@ export default function VotingModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
+          {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
               <td
                 colSpan="6"
@@ -101,9 +114,9 @@ export default function VotingModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loadingAbsensi &&
-            dataAbsensi &&
-            dataAbsensi.map((row, index) => (
+          {!loadingNew &&
+            dataNew &&
+            dataNew.map((row, index) => (
               <tr key={`row-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {index + 1}
@@ -175,8 +188,8 @@ export default function VotingModule({ baseURL }) {
                 height={20}
               />
             }
-            onClick={() => setPageAbsensi(pageAbsensi - 1)}
-            disabled={pageAbsensi <= 1}
+            onClick={() => setPageNew(pageNew - 1)}
+            disabled={pageNew <= 1}
             pill
           />
           <Button
@@ -190,8 +203,8 @@ export default function VotingModule({ baseURL }) {
               />
             }
             iconPosition="right"
-            onClick={() => setPageAbsensi(pageAbsensi + 1)}
-            disabled={pageAbsensi >= pageCountAbsensi}
+            onClick={() => setPageNew(pageNew + 1)}
+            disabled={pageNew >= pageCountNew}
             pill
           >
             Next Page
@@ -202,19 +215,19 @@ export default function VotingModule({ baseURL }) {
           <Form.Input
             type="number"
             min="1"
-            max={pageCountAbsensi || 1}
+            max={pageCountNew || 1}
             className="w-20"
-            value={pageAbsensi}
+            value={pageNew}
             onChange={(event) =>
-              setPageAbsensi(
+              setPageNew(
                 Math.max(
                   1,
-                  Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)
+                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
                 )
               )
             }
           />
-          of {pageCountAbsensi || 1}
+          of {pageCountNew || 1}
         </div>
       </div>
     </>

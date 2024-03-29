@@ -45,7 +45,9 @@ export default function PendidikanFormalModule({ baseURL }) {
           <Filter filter={filter} handler={setFilter} />
         </div>
         <div className="flex justify-between items-start">
-          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+          <span className="mt-6">
+            Total Data: <b>{totalData}</b>
+          </span>
         </div>
       </div>
       <table
@@ -69,33 +71,25 @@ export default function PendidikanFormalModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-              >
+              <div className="flex items-center gap-2 cursor-pointer">
                 Jenjang
               </div>
             </th>
 
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                Asal
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Asal</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("thn_lulus")}
+                onClick={() => sortBy("tahun_lulus")}
               >
                 Tahun Lulus
-                <SortIcon sort={getSortBy("thn_lulus")} />
+                <SortIcon sort={getSortBy("tahun_lulus")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-              >
+              <div className="flex items-center gap-2 cursor-pointer">
                 Gelar
               </div>
             </th>
@@ -167,42 +161,44 @@ export default function PendidikanFormalModule({ baseURL }) {
                     {row.gelar_akademik}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                      <div className="flex items-stretch gap-1">
-                        <Button.Icon
-                          as="a"
-                          href={`${baseURL}/pendidikan-formal/detail/${row.pend_id}`}
-                          variant="info"
-                          icon={
-                            <Icon
-                              icon="fluent:info-24-filled"
-                              width={20}
-                              height={20}
-                            />
-                          }
-                        />
-                    {(row.status === 0 || row.status === 2) && ( 
+                    <div className="flex items-stretch gap-1">
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/pendidikan-formal/detail/${row.pend_id}`}
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                      {(row.status === 0 || row.status === 2) && (
                         <>
-                        <Button.Icon
-                          as="a"
-                          href={`${baseURL}/pendidikan-formal/edit/${row.pend_id}`}
-                          variant="secondary"
-                          icon={<Icon icon="bx:edit" width={20} height={20} />}
-                        />
-                        <Button.Icon
-                          variant="danger"
-                          icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
-                          }
-                          onClick={() =>
-                            destroy(row.pend_id).then(() => refresh())
-                          }
-                        />
+                          <Button.Icon
+                            as="a"
+                            href={`${baseURL}/pendidikan-formal/edit/${row.pend_id}`}
+                            variant="secondary"
+                            icon={
+                              <Icon icon="bx:edit" width={20} height={20} />
+                            }
+                          />
+                          <Button.Icon
+                            variant="danger"
+                            icon={
+                              <Icon
+                                icon="solar:trash-bin-2-bold-duotone"
+                                width={20}
+                                height={20}
+                              />
+                            }
+                            onClick={() =>
+                              destroy(row.pend_id).then(() => refresh())
+                            }
+                          />
                         </>
-                    )}
+                      )}
                     </div>
                   </td>
                 </tr>

@@ -27,21 +27,18 @@ export default function SertifikasiModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
+    totalData,
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
-
   const GENERATE_URL = `${process.env.API_ENDPOINT}/skpi/sertifikasi`;
 
-  async function generate(){
+  async function generate() {
     try {
       const response = await axios.get(GENERATE_URL);
       refresh();
 
       toastAlert("success", response.data.message);
-
-
     } catch (error) {
       if (error.name === "AxiosError") {
         toastAlert("warning", error.response.data);
@@ -55,29 +52,31 @@ export default function SertifikasiModule({ baseURL }) {
 
   return (
     <>
-    <div>
-      <div className="flex justify-center gap-2 mb-8">
-        <Button
-          as="a"
-          href={`${baseURL}/sertifikasi/create`}
-          variant="primary"
-          icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-          pill
-        >
-          Tambah Sertifikat
-        </Button>
-        <Filter filter={filter} handler={setFilter} />
+      <div>
+        <div className="flex justify-center gap-2 mb-8">
+          <Button
+            as="a"
+            href={`${baseURL}/sertifikasi/create`}
+            variant="primary"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
+            Tambah Sertifikat
+          </Button>
+          <Filter filter={filter} handler={setFilter} />
+        </div>
+        <div className="flex justify-between items-start">
+          <span className="mt-6">
+            Total Data: <b>{totalData}</b>
+          </span>
+          <Button.Icon
+            className="mb-4"
+            variant="secondary"
+            icon={<Icon icon="mdi:ballot-recount" width={40} height={40} />}
+            onClick={() => generate()}
+          />
+        </div>
       </div>
-      <div className="flex justify-between items-start">
-        <span className="mt-6">Total Data: <b>{totalData}</b></span>
-        <Button.Icon
-          className="mb-4"
-          variant="secondary"
-          icon={<Icon icon="mdi:ballot-recount" width={40} height={40} />}
-          onClick={() => generate()}
-        />
-      </div>
-    </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow"
         cellPadding={10}
@@ -87,36 +86,46 @@ export default function SertifikasiModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("kategori_id")}
+                onClick={() => sortBy("sertifikat_id")}
               >
                 No
-                <SortIcon sort={getSortBy("kategori_id")} />
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
+                <SortIcon sort={getSortBy("sertifikat_id")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("status")}
+              >
+                Status
+                <SortIcon sort={getSortBy("status")} />
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("nama_serti")}
               >
                 Nama Sertifikasi
+                <SortIcon sort={getSortBy("nama_serti")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("penyelenggara")}
               >
                 Penyelenggara
+                <SortIcon sort={getSortBy("penyelenggara")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("jenis_serti")}
               >
                 Jenis Sertifikasi
+                <SortIcon sort={getSortBy("jenis_serti")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -196,25 +205,27 @@ export default function SertifikasiModule({ baseURL }) {
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                          as="a"
-                          href={`${baseURL}/sertifikasi/detail/${row.sertifikat_id}`}
-                          variant="info"
-                          icon={
-                            <Icon
-                              icon="fluent:info-24-filled"
-                              width={20}
-                              height={20}
-                            />
-                          }
-                        />
-                    {(row.status === 0 || row.status === 2) && (
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/sertifikasi/detail/${row.sertifikat_id}`}
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                      {(row.status === 0 || row.status === 2) && (
                         <>
                           <Button.Icon
-                          as="a"
-                          href={`${baseURL}/sertifikasi/edit/${row.sertifikat_id}`}
-                          variant="secondary"
-                          icon={<Icon icon="bx:edit" width={20} height={20} />}
+                            as="a"
+                            href={`${baseURL}/sertifikasi/edit/${row.sertifikat_id}`}
+                            variant="secondary"
+                            icon={
+                              <Icon icon="bx:edit" width={20} height={20} />
+                            }
                           />
                           <Button.Icon
                             variant="danger"
@@ -230,8 +241,8 @@ export default function SertifikasiModule({ baseURL }) {
                             }
                           />
                         </>
-                        )}
-                        </div>
+                      )}
+                    </div>
                   </td>
                 </tr>
               );

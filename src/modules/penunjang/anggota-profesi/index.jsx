@@ -27,20 +27,18 @@ export default function AnggotaProfesiModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
+    totalData,
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
   const GENERATE_URL = `${process.env.API_ENDPOINT}/skpi/organisasi`;
 
-  async function generate(){
+  async function generate() {
     try {
       const response = await axios.get(GENERATE_URL);
       refresh();
 
       toastAlert("success", response.data.message);
-
-
     } catch (error) {
       if (error.name === "AxiosError") {
         toastAlert("warning", error.response.data);
@@ -57,18 +55,20 @@ export default function AnggotaProfesiModule({ baseURL }) {
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-              as="a"
-              href={`${baseURL}/anggota-profesi/create`}
-              variant="primary"
-              icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-              pill
-            >
+            as="a"
+            href={`${baseURL}/anggota-profesi/create`}
+            variant="primary"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
             Tambah Anggota Profesi
           </Button>
           <Filter filter={filter} handler={setFilter} />
         </div>
         <div className="flex justify-between items-start">
-          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+          <span className="mt-6">
+            Total Data: <b>{totalData}</b>
+          </span>
           <Button.Icon
             className="mb-4"
             variant="secondary"
@@ -93,32 +93,44 @@ export default function AnggotaProfesiModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("status")}
+              >
                 Status
+                <SortIcon sort={getSortBy("status")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("nama_organisasi")}
               >
                 Nama Organisasi
+                <SortIcon sort={getSortBy("nama_organisasi")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("peran")}
               >
                 Peran/Kedudukan
+                <SortIcon sort={getSortBy("peran")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("mulai_tahun")}
               >
                 Periode
+                <SortIcon sort={getSortBy("mulai_tahun")} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
@@ -177,7 +189,7 @@ export default function AnggotaProfesiModule({ baseURL }) {
                     {row.peran}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                  {`${row.mulai_tahun} ${row.mulai_bulan} s.d ${row.selesai_tahun} ${row.selesai_bulan}`}
+                    {`${row.mulai_tahun} ${row.mulai_bulan} s.d ${row.selesai_tahun} ${row.selesai_bulan}`}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
@@ -193,31 +205,35 @@ export default function AnggotaProfesiModule({ baseURL }) {
                           />
                         }
                       />
-                    {(row.status === 0 || row.status === 2) && (  
-                      <>                   
-                        <Button.Icon
-                          as="a"
-                          href={`${baseURL}/anggota-profesi/edit/${row.prof_id}`}
-                          variant="secondary"
-                          icon={<Icon icon="bx:edit" width={20} height={20} />}
-                        />
-                        <Button.Icon
-                          variant="danger"
-                          icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
-                          }
-                          onClick={() => destroy(row.prof_id).then(() => refresh())}
-                        />
+                      {(row.status === 0 || row.status === 2) && (
+                        <>
+                          <Button.Icon
+                            as="a"
+                            href={`${baseURL}/anggota-profesi/edit/${row.prof_id}`}
+                            variant="secondary"
+                            icon={
+                              <Icon icon="bx:edit" width={20} height={20} />
+                            }
+                          />
+                          <Button.Icon
+                            variant="danger"
+                            icon={
+                              <Icon
+                                icon="solar:trash-bin-2-bold-duotone"
+                                width={20}
+                                height={20}
+                              />
+                            }
+                            onClick={() =>
+                              destroy(row.prof_id).then(() => refresh())
+                            }
+                          />
                         </>
-                        )}
-                        </div>
+                      )}
+                    </div>
                   </td>
                 </tr>
-              )
+              );
             })}
         </tbody>
       </table>

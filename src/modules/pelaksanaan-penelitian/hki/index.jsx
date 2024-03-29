@@ -26,7 +26,7 @@ export default function HKIModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
+    totalData,
   } = useDatatable(DATA_URL);
   const { destroy } = useCRUD(DELETE_URL);
 
@@ -46,7 +46,9 @@ export default function HKIModule({ baseURL }) {
           <Filter filter={filter} handler={setFilter} />
         </div>
         <div className="flex justify-between items-start">
-          <span className="mt-6">Total Data: <b>{totalData}</b></span>
+          <span className="mt-6">
+            Total Data: <b>{totalData}</b>
+          </span>
         </div>
       </div>
       <table
@@ -65,22 +67,30 @@ export default function HKIModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("status")}
+              >
                 Status
+                <SortIcon sort={getSortBy("status")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("judul_hki")}
               >
                 Judul
+                <SortIcon sort={getSortBy("judul_hki")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortBy("jenis_hki")}
               >
                 Jenis Publikasi
+                <SortIcon sort={getSortBy("jenis_hki")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -123,7 +133,7 @@ export default function HKIModule({ baseURL }) {
             data.map((row, index) => (
               <tr key={`row-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                {((page-1) * 10) + index+1}
+                  {(page - 1) * 10 + index + 1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
@@ -152,45 +162,45 @@ export default function HKIModule({ baseURL }) {
                   {date.formatToID(new Date(row.tgl_terbit_hki))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                <div className="flex items-stretch gap-1">
-                <Button.Icon
-                        as="a"
-                        href={`${baseURL}/hki/detail/${row.hki_id}`}
-                        variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                      />
-                  {(row.status === 0 || row.status === 2) && (
-                    <>
-                      <CreateDokumen id={{ hki_id: row.hki_id }} />
-                      
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/hki/edit/${row.hki_id}`}
-                        variant="secondary"
-                        icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.hki_id).then(() => refresh())
-                        }
-                      />
-                    </>
-                  )}
-                </div>
+                  <div className="flex items-stretch gap-1">
+                    <Button.Icon
+                      as="a"
+                      href={`${baseURL}/hki/detail/${row.hki_id}`}
+                      variant="info"
+                      icon={
+                        <Icon
+                          icon="fluent:info-24-filled"
+                          width={20}
+                          height={20}
+                        />
+                      }
+                    />
+                    {(row.status === 0 || row.status === 2) && (
+                      <>
+                        <CreateDokumen id={{ hki_id: row.hki_id }} />
+
+                        <Button.Icon
+                          as="a"
+                          href={`${baseURL}/hki/edit/${row.hki_id}`}
+                          variant="secondary"
+                          icon={<Icon icon="bx:edit" width={20} height={20} />}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() =>
+                            destroy(row.hki_id).then(() => refresh())
+                          }
+                        />
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}

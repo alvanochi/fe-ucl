@@ -31,7 +31,7 @@ export default function ShowQr({ data }) {
     <>
       <Button.Icon
         variant="secondary"
-        icon={<Icon icon="bx:qr-scan" width={20} height={20} />}
+        icon={<Icon icon="bx:qr-scan" width={18} height={18} />}
         onClick={handleShowQr}
       />
       <Modal

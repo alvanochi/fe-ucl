@@ -16,6 +16,7 @@ import axios from "axios";
 import UploadTugas from "../uploadTugas";
 import useNewDataTable from "../../../../../hooks/useNewDataTable";
 import { Loading } from "../../../../../components/Loading";
+import SortIcon from "../../../../../components/SortIcon";
 
 export default function ListMhs() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -57,13 +58,14 @@ export default function ListMhs() {
   }, [id]);
 
   const {
-    dataAbsensi,
-    loadingAbsensi,
-    pageAbsensi,
-    pageCountAbsensi,
-    filter,
-    setPageAbsensi,
-    refreshAbsensi,
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    refreshNew,
+    sortByNew,
+    getSortByNew,
   } = useNewDataTable(
     DATA_URL,
     {
@@ -76,11 +78,10 @@ export default function ListMhs() {
   const { destroy } = useCRUD(DELETE_URL);
 
   const handleTambahMhs = () => {
-    refreshAbsensi();
+    refreshNew();
   };
 
-  if ([user, menu, loadingAbsensi].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, loadingNew].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader
@@ -112,7 +113,12 @@ export default function ListMhs() {
           <thead>
             <tr>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">No</div>
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("id")}
+                >
+                  No <SortIcon sort={getSortByNew("id")} />
+                </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2 cursor-pointer">
@@ -120,13 +126,21 @@ export default function ListMhs() {
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("npm")}
+                >
                   NPM
+                  <SortIcon sort={getSortByNew("npm")} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("status_absen")}
+                >
                   Status
+                  <SortIcon sort={getSortByNew("status_absen")} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
@@ -147,7 +161,7 @@ export default function ListMhs() {
             </tr>
           </thead>
           <tbody>
-            {loadingAbsensi && (
+            {loadingNew && (
               <tr>
                 <td
                   colSpan="6"
@@ -157,7 +171,7 @@ export default function ListMhs() {
                 </td>
               </tr>
             )}
-            {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
+            {!loadingNew && dataNew && dataNew.length < 1 && (
               <tr>
                 <td
                   colSpan="6"
@@ -167,9 +181,9 @@ export default function ListMhs() {
                 </td>
               </tr>
             )}
-            {!loadingAbsensi &&
-              dataAbsensi &&
-              dataAbsensi.map((row, index) => (
+            {!loadingNew &&
+              dataNew &&
+              dataNew.map((row, index) => (
                 <tr key={`row-${index}`}>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     {index + 1}
@@ -213,9 +227,7 @@ export default function ListMhs() {
                             height={20}
                           />
                         }
-                        onClick={() =>
-                          destroy(row.id).then(() => refreshAbsensi())
-                        }
+                        onClick={() => destroy(row.id).then(() => refreshNew())}
                       />
                     </div>
                   </td>
@@ -252,8 +264,8 @@ export default function ListMhs() {
                   height={20}
                 />
               }
-              onClick={() => setPageAbsensi(pageAbsensi - 1)}
-              disabled={pageAbsensi <= 1}
+              onClick={() => setPageNew(pageNew - 1)}
+              disabled={pageNew <= 1}
               pill
             />
             <Button
@@ -267,8 +279,8 @@ export default function ListMhs() {
                 />
               }
               iconPosition="right"
-              onClick={() => setPageAbsensi(pageAbsensi + 1)}
-              disabled={pageAbsensi >= pageCountAbsensi}
+              onClick={() => setPageNew(pageNew + 1)}
+              disabled={pageNew >= pageCountNew}
               pill
             >
               Next Page
@@ -279,19 +291,19 @@ export default function ListMhs() {
             <Form.Input
               type="number"
               min="1"
-              max={pageCountAbsensi || 1}
+              max={pageCountNew || 1}
               className="w-20"
-              value={pageAbsensi}
+              value={pageNew}
               onChange={(event) =>
-                setPageAbsensi(
+                setPageNew(
                   Math.max(
                     1,
-                    Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)
+                    Math.min(event.target.valueAsNumber, pageCountNew || 1)
                   )
                 )
               }
             />
-            of {pageCountAbsensi || 1}
+            of {pageCountNew || 1}
           </div>
         </div>
       </div>
