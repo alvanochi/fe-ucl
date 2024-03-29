@@ -11,12 +11,12 @@ import { toastAlert } from "../../../../lib/sweetalert";
 import _ from "underscore";
 import axios from "axios";
 import { Loading } from "../../../../components/Loading";
+import { useState } from "react";
 
 export default function ChangePassword() {
-	const router = useRouter();
-	const { user } = useUser({ redirectTo: "/login" });
-	const { prefix, menu, setActive } = useMenu();
-
+  const router = useRouter();
+  const { user } = useUser({ redirectTo: "/login" });
+  const { prefix, menu, setActive } = useMenu();
 
   const INITIAL_FORM = {
     password: "",
@@ -37,7 +37,7 @@ export default function ChangePassword() {
         data: _.omit(form, ["confirmPassword"]),
       });
       const response = await request;
-      
+
       if (response) {
         toastAlert("success", "Sukses mengubah passoword");
         return router.push(prefix + menu.url);
@@ -58,58 +58,130 @@ export default function ChangePassword() {
     }
   }
 
+  const [email, setEmail] = useState("");
 
-	if ([user, menu].some((item) => item == null)) return <Loading />;
-	return (
-		<Layout>
-			<PageHeader title={`Ubah Sandi ${menu.label}`} icon={menu.icon} handler={setActive} />
+  const inputHandlerEmail = (event) => {
+    setEmail(event.target.value);
+  };
+
+  async function submitHandlerEmail(event) {
+    event.preventDefault();
+
+    if (!email) {
+      toastAlert("error", "Email harus diisi");
+      return;
+    }
+
+    try {
+      const request = await axios({
+        url: `${process.env.API_ENDPOINT}/users/change-email/${router.query.id}`,
+        method: "PATCH",
+        data: { email: email },
+      });
+      const response = await request;
+
+      if (response.status === 200) {
+        toastAlert("success", "Sukses mengubah email");
+        router.push(prefix + menu.url);
+      } else {
+        toastAlert("error", "Gagal mengubah email");
+        router.push(prefix + menu.url);
+      }
+    } catch (error) {
+      setEmail("");
+      if (error.response) {
+        const { status_code, message, data } = error.response.data;
+        toastAlert("error", message);
+      } else {
+        toastAlert("error", error.message);
+      }
+    }
+  }
+
+  if ([user, menu].some((item) => item == null)) return <Loading />;
+  return (
+    <Layout>
+      <PageHeader
+        title={`Ubah Sandi/Email ${menu.label}`}
+        icon={menu.icon}
+        handler={setActive}
+      />
       <Form onSubmit={submitHandler}>
         <Card className="mt-4">
           <Card.Header className="text-center">Ubah Kata Sandi</Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
-                  Password<span className="text-danger-600">*</span>
-                </Form.Label>
-                <span>:</span>
-                <Form.Input
-                  type="password"
-                  className="flex-1"
-                  name="password"
-                  onChange={inputHandler}
-                  required
-                />
-              </Form.Group>
-              <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
-                  Konfirmasi Sandi Baru <span className="text-danger-600">*</span>
-                </Form.Label>
-                <span>:</span>
-                <Form.Input
-                  type="password"
-                  className="flex-1"
-                  name="confirmPassword"
-                  onChange={inputHandler}
-                  value={form.confirmPassword}
-                  required
-                />
-              </Form.Group>
+              <Form.Label className="min-w-[18rem]">
+                Password<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="password"
+                className="flex-1"
+                name="password"
+                onChange={inputHandler}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Konfirmasi Sandi Baru <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="password"
+                className="flex-1"
+                name="confirmPassword"
+                onChange={inputHandler}
+                value={form.confirmPassword}
+                required
+              />
+            </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
-            Batal
-          </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
             Konfirmasi
           </Button>
         </div>
-			</Form>
-		</Layout>
-	);
+      </Form>
+
+      <Form onSubmit={submitHandlerEmail}>
+        <Card className="mt-8">
+          <Card.Header className="text-center">Ubah Email</Card.Header>
+          <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                New Email<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="email"
+                className="flex-1"
+                name="email"
+                onChange={inputHandlerEmail}
+                value={email}
+                required
+              />
+            </Form.Group>
+          </Card.Body>
+        </Card>
+        <div className="flex gap-4 mt-4">
+          <Button type="submit" variant="primary" className="w-full h-12">
+            Konfirmasi
+          </Button>
+        </div>
+      </Form>
+      <div className="flex gap-4 mt-4">
+        <Button
+          as="a"
+          href={prefix + menu.url}
+          variant="secondary"
+          className="w-full h-12"
+        >
+          Batal
+        </Button>
+      </div>
+    </Layout>
+  );
 }
