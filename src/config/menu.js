@@ -385,12 +385,25 @@ export const APP_MENU = [
   {
     label: "Jabatan",
     url: "/jabatan",
-    icon: "fa6-solid:users",
+    icon: "fluent:position-to-back-24-regular",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
       {
         label: "Jabatan",
         url: "#jabatan",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
+    label: "Struktural Prodi",
+    url: "/struktural-prodi",
+    icon: "solar:floor-lamp-bold",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Struktural Prodi",
+        url: "#struktural-prodi",
         allowedRoles: [ROLE_ID_ADMIN],
       },
     ],
