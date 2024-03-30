@@ -383,6 +383,19 @@ export const APP_MENU = [
     ],
   },
   {
+    label: "Jabatan",
+    url: "/jabatan",
+    icon: "fa6-solid:users",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Jabatan",
+        url: "#jabatan",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
     label: "Setting",
     url: "/setting",
     icon: "ant-design:setting-filled",
