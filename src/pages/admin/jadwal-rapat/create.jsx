@@ -278,6 +278,7 @@ export default function CreateJadwal() {
                             value: dosen.nip,
                           }))
                         }
+                        menuTarget={document.body}
                       />
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
@@ -384,6 +385,7 @@ export default function CreateJadwal() {
                             value: mahasiswa.npm,
                           }))
                         }
+                        menuTarget={document.body}
                       />
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">

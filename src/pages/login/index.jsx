@@ -134,9 +134,9 @@ export const Login = () => {
         <div
           className={`relative flex flex-col grow py-12 px-10 ${styles["slider"]}`}
         >
-          <div className={`mb-16 ${styles["logo"]}`}>
+          <Link href="/" className={`mb-16 ${styles["logo"]}`}>
             <img src="/img/app_logo.png" alt="App Logo" />
-          </div>
+          </Link>
           <div className="block relative w-[32rem] mx-auto my-auto">
             {/* SLIDER HERE */}
             <Slider {...settings} arrows={false} className={styles["slider"]}>
