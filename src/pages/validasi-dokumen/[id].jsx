@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import axios from "axios";
 import { Icon } from "@iconify-icon/react";
 import Button from "../../components/Button";
+import Form from "../../components/Form";
 
 const DetailValidasi = () => {
   const router = useRouter();
@@ -57,7 +58,7 @@ const DetailValidasi = () => {
                 <div className="card mt-8 w-6/12">
                   <div
                     id="card_1_front"
-                    className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray text-center"
+                    className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray text-color-white"
                   >
                     {loading ? (
                       <div role="status">
@@ -81,25 +82,49 @@ const DetailValidasi = () => {
                       </div>
                     ) : (
                       <>
-                        <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
-                          {data[0]?.nama_kegiatan}
-                        </h5>
-                        <div className="flex justify-center gap-2 mb-4">
-                          <Button
-                            as="a"
-                            href={`${data[0]?.link_kegiatan}`}
-                            variant="primary"
-                            icon={
-                              <Icon
-                                icon="material-symbols:link"
-                                width={20}
-                                height={20}
-                              />
-                            }
-                            pill
-                          >
-                            Link
-                          </Button>
+                        <div>
+                          <Form.Group className="flex items-baseline gap-3">
+                            <Form.LabelFront className="min-w-[8rem] ">
+                              Dosen
+                            </Form.LabelFront>
+                            <span>:</span>
+                            <p>{data[0]?.nama_dosen}</p>
+                          </Form.Group>
+                          <Form.Group className="flex items-baseline gap-3">
+                            <Form.LabelFront className="min-w-[8rem] ">
+                              Mahasiswa
+                            </Form.LabelFront>
+                            <span>:</span>
+                            <p>{data[0]?.nama_mhs}</p>
+                          </Form.Group>
+                          <Form.Group className="flex items-baseline gap-3">
+                            <Form.LabelFront className="min-w-[8rem] ">
+                              Kegiatan
+                            </Form.LabelFront>
+                            <span>:</span>
+                            <p>Memberikan rekomendasi mahasiswa</p>
+                          </Form.Group>
+                          <Form.Group className="flex items-baseline gap-3 mt-2">
+                            <Form.LabelFront className="min-w-[8rem] ">
+                              Link
+                            </Form.LabelFront>
+                            <span>:</span>
+                            <Button
+                              as="a"
+                              href={`${data[0]?.link_kegiatan}`}
+                              variant="primary"
+                              icon={
+                                <Icon
+                                  icon="material-symbols:link"
+                                  width={10}
+                                  height={10}
+                                />
+                              }
+                              pill
+                            >
+                              Link
+                            </Button>
+                          </Form.Group>
                         </div>
                       </>
                     )}

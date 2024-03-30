@@ -9,6 +9,9 @@ import useNewDataTable from "../../hooks/useNewDataTable";
 import date from "../../utils/date";
 import HeaderOnPage from "../../components/LandingPage/HeaderOnPage";
 import { Breadcrumb } from "../../components/LandingPage/Breadcrumb";
+import useDosen from "../../repo/dosen";
+import useMahasiswa from "../../repo/mahasiswa";
+import ShowQr from "./show-qr";
 
 const ValidasiDokumen = () => {
   const [searchValue, setSearchValue] = useState("");
@@ -63,11 +66,18 @@ const ValidasiDokumen = () => {
                         No
                       </th>
                       <th scope="col" className="px-6 py-3">
+                        Dosen
+                      </th>
+                      <th scope="col" className="px-6 py-3">
                         Nama Kegiatan
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                        Mahasiswa
                       </th>
                       <th scope="col" className="px-6 py-3">
                         <div className="flex items-center ">Tanggal</div>
                       </th>
+                      <th scope="col" className="px-6 py-3"></th>
                     </tr>
                   </thead>
                   <tbody>
@@ -103,6 +113,7 @@ const ValidasiDokumen = () => {
                             key={`row-${index}`}
                           >
                             <td className="px-6 py-4">{rowNumber}</td>
+                            <td className="px-6 py-4">{row.nama_dosen}</td>
                             <th
                               scope="row"
                               className="px-6 py-4 font-medium  whitespace-nowrap"
@@ -121,8 +132,16 @@ const ValidasiDokumen = () => {
                                 }`}
                               </Link>
                             </th>
+                            <td className="px-6 py-4">{row.nama_mhs}</td>
                             <td className="px-6 py-4">
                               {date.formatToID(new Date(row.created_at))}
+                            </td>
+                            <td className="px-6 py-4">
+                              <ShowQr
+                                data={{
+                                  id: row.id,
+                                }}
+                              />
                             </td>
                           </tr>
                         );

@@ -26,6 +26,15 @@ Form.Label = ({ children, className, ...props }) => (
   </label>
 );
 
+Form.LabelFront = ({ children, className, ...props }) => (
+  <label
+    className={classnames("block text-sm font-bold text-white", className)}
+    {...props}
+  >
+    {children}
+  </label>
+);
+
 Form.Input = ({ type, className, ...props }) => (
   <input
     type={type}
@@ -139,6 +148,7 @@ Form.Textarea = ({ className, ...props }) => (
 
 Form.Group.displayName = "FormGroup";
 Form.Label.displayName = "FormLabel";
+Form.LabelFront.displayName = "FormLabelFront";
 Form.Input.displayName = "FormInput";
 Form.Select.displayName = "FormSelect";
 Form.Combobox.displayName = "FormCombobox"; // Tetap mengatur displayName ke "FormCombobox"
