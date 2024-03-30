@@ -55,13 +55,16 @@ const DetailValidasi = () => {
               <Breadcrumb title="Detail Validasi" />
 
               <div className="flex justify-center">
-                <div className="card mt-8 w-6/12">
+                <div className="card mt-8 w-full lg:w-1/2">
                   <div
                     id="card_1_front"
                     className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray text-color-white"
                   >
                     {loading ? (
-                      <div role="status">
+                      <div
+                        role="status"
+                        className="flex justify-center items-center"
+                      >
                         <svg
                           aria-hidden="true"
                           className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-purple-600"
@@ -88,21 +91,23 @@ const DetailValidasi = () => {
                               Dosen
                             </Form.LabelFront>
                             <span>:</span>
-                            <p>{data[0]?.nama_dosen}</p>
+                            <p className="text-sm">{data[0]?.nama_dosen}</p>
                           </Form.Group>
                           <Form.Group className="flex items-baseline gap-3">
                             <Form.LabelFront className="min-w-[8rem] ">
                               Mahasiswa
                             </Form.LabelFront>
                             <span>:</span>
-                            <p>{data[0]?.nama_mhs}</p>
+                            <p className="text-sm">{data[0]?.nama_mhs}</p>
                           </Form.Group>
                           <Form.Group className="flex items-baseline gap-3">
                             <Form.LabelFront className="min-w-[8rem] ">
                               Kegiatan
                             </Form.LabelFront>
                             <span>:</span>
-                            <p>Memberikan rekomendasi mahasiswa</p>
+                            <p className="text-sm">
+                              Memberikan rekomendasi mahasiswa
+                            </p>
                           </Form.Group>
                           <Form.Group className="flex items-baseline gap-3 mt-2">
                             <Form.LabelFront className="min-w-[8rem] ">
