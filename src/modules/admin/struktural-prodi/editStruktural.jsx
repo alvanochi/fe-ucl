@@ -22,6 +22,7 @@ const EditStruktural = ({ id, onAction }) => {
   const [selectedDepartemen, setSelectedDepartemen] = useState("");
   const [selectedJabatan, setSelectedJabatan] = useState("");
   const [selectedNip, setSelectedNip] = useState("");
+  const [keterangan, setKeterangan] = useState(null);
 
   const handleDosenChange = (selected) => {
     setSelectedDosen(selected?.value);
@@ -32,6 +33,11 @@ const EditStruktural = ({ id, onAction }) => {
   };
   const handleJabatanChange = (selected) => {
     setSelectedJabatan(selected?.value);
+  };
+
+  const handleInputChangeKeterangan = (e) => {
+    const { name, value } = e.target;
+    setKeterangan(value);
   };
 
   const getData = async (id) => {
@@ -46,6 +52,7 @@ const EditStruktural = ({ id, onAction }) => {
       setSelectedNip(dataResponse.nip);
       setSelectedDepartemen(dataResponse.kode_prodi);
       setSelectedJabatan(dataResponse.id_jabatan);
+      setKeterangan(dataResponse.keterangan);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -66,6 +73,7 @@ const EditStruktural = ({ id, onAction }) => {
         nip: selectedNip,
         kode_prodi: selectedDepartemen,
         id_jabatan: selectedJabatan,
+        keterangan: keterangan,
       };
       const response = await axios.put(
         `${process.env.API_ENDPOINT}/struktural/${id || ""}`,
@@ -143,6 +151,17 @@ const EditStruktural = ({ id, onAction }) => {
                 value: dosen.user_id,
                 nip: dosen.nip,
               }))}
+            />
+          </Form.Group>
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[10rem]">Keterangan</Form.Label>
+            <span>:</span>
+            <Form.Textarea
+              className="flex-1"
+              rows="5"
+              name="keterangan"
+              value={keterangan}
+              onChange={handleInputChangeKeterangan}
             />
           </Form.Group>
           <div className="flex gap-4 mt-12">

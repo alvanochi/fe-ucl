@@ -23,6 +23,7 @@ const CreateStruktural = ({ onAction }) => {
   const [selectedDepartemen, setSelectedDepartemen] = useState("");
   const [selectedJabatan, setSelectedJabatan] = useState("");
   const [selectedNip, setSelectedNip] = useState("");
+  const [keterangan, setKeterangan] = useState(null);
 
   const handleDosenChange = (selected) => {
     setSelectedDosen(selected?.value);
@@ -35,6 +36,11 @@ const CreateStruktural = ({ onAction }) => {
     setSelectedJabatan(selected?.value);
   };
 
+  const handleInputChangeKeterangan = (e) => {
+    const { name, value } = e.target;
+    setKeterangan(value);
+  };
+
   async function submitHandler(event) {
     event.preventDefault();
     try {
@@ -43,6 +49,7 @@ const CreateStruktural = ({ onAction }) => {
         nip: selectedNip,
         kode_prodi: selectedDepartemen,
         id_jabatan: selectedJabatan,
+        keterangan: keterangan,
       };
 
       if (
@@ -67,6 +74,7 @@ const CreateStruktural = ({ onAction }) => {
       setSelectedDosen("");
       setSelectedNip("");
       setSelectedJabatan("");
+      setKeterangan(null);
 
       toastAlert("success", "Successfully");
       close();
@@ -140,6 +148,17 @@ const CreateStruktural = ({ onAction }) => {
                 value: dosen.user_id,
                 nip: dosen.nip,
               }))}
+            />
+          </Form.Group>
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[10rem]">Keterangan</Form.Label>
+            <span>:</span>
+            <Form.Textarea
+              className="flex-1"
+              rows="5"
+              name="keterangan"
+              value={keterangan}
+              onChange={handleInputChangeKeterangan}
             />
           </Form.Group>
           <div className="flex gap-4 mt-12">
