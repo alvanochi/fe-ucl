@@ -88,18 +88,6 @@ export default function JabatanModules({ baseURL }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/${row.id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
                     <EditJabatan id={row.id} onAction={handleAction} />
                     <Button.Icon
                       variant="danger"
