@@ -13,6 +13,7 @@ import useForm from "../../../../hooks/useForm";
 import useDosen from "../../../../repo/dosen";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 import { Loading } from "../../../../components/Loading";
+import useMahasiswa from "../../../../repo/mahasiswa";
 
 export default function GenerateQrCode() {
   const router = useRouter();
@@ -22,9 +23,15 @@ export default function GenerateQrCode() {
   const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
   const { data, loading, refresh } = useDatatable(DATA_URL);
 
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
+    user,
+  ]);
+
   const [courseOptions, setCourseOptions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
   const [pertemuanData, setPertemuanData] = useState(null);
+  const [selectedMhs, setSelectedMhs] = useState("");
 
   const [rps, setRps] = useState({
     rps_dasar: null,
@@ -148,7 +155,9 @@ export default function GenerateQrCode() {
     }));
   };
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const handleMhsChange = (selected) => {
+    setSelectedMhs(selected?.value);
+  };
 
   async function submitHandler(event) {
     event.preventDefault();
@@ -188,6 +197,7 @@ export default function GenerateQrCode() {
         pertemuan: pertemuanData,
         id_lecture: selectedOption.dataId,
         nidn_dosen_pengganti: selectedDosen,
+        npm_komti: selectedMhs,
       };
 
       const request = await axios({
@@ -214,7 +224,11 @@ export default function GenerateQrCode() {
     }
   }
 
-  if ([user, menu, loading, isDosenLoading].some((item) => item == null))
+  if (
+    [user, menu, loading, isDosenLoading, isMahasiswaLoading].some(
+      (item) => item == null
+    )
+  )
     return <Loading />;
   return (
     <Layout>
@@ -344,6 +358,22 @@ export default function GenerateQrCode() {
                 name="dosen_tamu"
                 onChange={inputHandler}
                 value={data.dosen_tamu}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">
+                Komti Kelas <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Combobox
+                name="npm_komti"
+                onChange={handleMhsChange}
+                value={selectedMhs}
+                options={listMahasiswa?.map((mhs) => ({
+                  label: `${mhs.nama_lengkap} - ${mhs.npm}`,
+                  value: mhs.npm,
+                }))}
+                menuTarget={document.body}
               />
             </Form.Group>
           </Card.Body>
