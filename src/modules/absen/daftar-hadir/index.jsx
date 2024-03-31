@@ -51,7 +51,7 @@ export default function DaftarHadirModule({ baseURL, user }) {
         }
       );
 
-      refreshAbsensi();
+      refreshNew();
 
       toastAlert("success", "Non Active!");
     } catch (error) {
@@ -174,83 +174,88 @@ export default function DaftarHadirModule({ baseURL, user }) {
             )}
             {!loadingNew &&
               dataNew &&
-              dataNew.map((row, index) => (
-                <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.matkul?.name &&
-                      row.matkul.name
-                        .split(" ")
-                        .slice(0, 3)
-                        .concat("...")
-                        .join(" ")}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.id_matkul}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.pertemuan}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.kelas}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.status_kelas === 1
-                      ? "ONLINE"
-                      : row.status_kelas === 0
-                      ? "OFFLINE"
-                      : "HYBRID"}
-                  </td>
+              dataNew.map((row, index) => {
+                const startNumber = (pageNew - 1) * 10 + 1;
 
-                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      <ShowQr
-                        data={{
-                          token: row.token,
-                          matkul: row.matkul?.name,
-                          kelas: row.kelas,
-                          pertemuan: row.pertemuan,
-                        }}
-                      />
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/daftar-hadir/list-mhs/${row.id}`}
-                        variant="primary"
-                        icon={<Icon icon="bx:group" width={18} height={18} />}
-                      />
-                      <i
-                        className={
-                          row.learning_done == null || row.learning_done == ""
-                            ? " text-sky-600 cursor-pointer transition duration-300 hover:text-blue-500"
-                            : "text-gray-500"
-                        }
-                        onClick={() => {
-                          if (!row.learning_done) {
-                            updateLearningDone(row.id);
+                const rowNumber = startNumber + index;
+                return (
+                  <tr key={`row-${index}`}>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {rowNumber}
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {row.matkul?.name &&
+                        row.matkul.name
+                          .split(" ")
+                          .slice(0, 3)
+                          .concat("...")
+                          .join(" ")}
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {row.id_matkul}
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {row.pertemuan}
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {row.kelas}
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {row.status_kelas === 1
+                        ? "ONLINE"
+                        : row.status_kelas === 0
+                        ? "OFFLINE"
+                        : "HYBRID"}
+                    </td>
+
+                    <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                      <div className="flex items-stretch gap-1">
+                        <ShowQr
+                          data={{
+                            token: row.token,
+                            matkul: row.matkul?.name,
+                            kelas: row.kelas,
+                            pertemuan: row.pertemuan,
+                          }}
+                        />
+                        <Button.Icon
+                          as="a"
+                          href={`${baseURL}/daftar-hadir/list-mhs/${row.id}`}
+                          variant="primary"
+                          icon={<Icon icon="bx:group" width={18} height={18} />}
+                        />
+                        <i
+                          className={
+                            row.learning_done == null || row.learning_done == ""
+                              ? " text-sky-600 cursor-pointer transition duration-300 hover:text-blue-500"
+                              : "text-gray-500"
                           }
-                        }}
-                      >
-                        <Icon icon="ph:power-fill" width={28} height={28} />
-                      </i>
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={18}
-                            height={18}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.id).then(() => refreshAbsensi())
-                        }
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                          onClick={() => {
+                            if (!row.learning_done) {
+                              updateLearningDone(row.id);
+                            }
+                          }}
+                        >
+                          <Icon icon="ph:power-fill" width={28} height={28} />
+                        </i>
+                        <Button.Icon
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={18}
+                              height={18}
+                            />
+                          }
+                          onClick={() =>
+                            destroy(row.id).then(() => refreshNew())
+                          }
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
       </div>
