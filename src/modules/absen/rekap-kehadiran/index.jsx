@@ -15,7 +15,7 @@ export default function RekapKehadiran({ baseURL, user }) {
   useEffect(() => {
     const fetchDataGasal = async () => {
       try {
-        const DATA_URL = `https://absen.ft.uika-bogor.ac.id/api/pembelajaran/list-pertemuan`;
+        const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/list-pertemuan`;
         const response = await axios.get(DATA_URL, {
           params: {
             dataTable: true,
@@ -34,7 +34,7 @@ export default function RekapKehadiran({ baseURL, user }) {
 
     const fetchDataGenap = async () => {
       try {
-        const DATA_URL = `https://absen.ft.uika-bogor.ac.id/api/pembelajaran/list-pertemuan`;
+        const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/list-pertemuan`;
         const response = await axios.get(DATA_URL, {
           params: {
             dataTable: true,
@@ -458,21 +458,6 @@ export default function RekapKehadiran({ baseURL, user }) {
             ))}
         </tbody>
       </table>
-
-      <div className="flex mt-8">
-        <Button
-          as="a"
-          href={baseURL}
-          variant="danger"
-          icon={
-            <Icon icon="material-symbols:chevron-left" width={20} height={20} />
-          }
-          iconPosition="left"
-          pill
-        >
-          Kembali
-        </Button>
-      </div>
     </>
   );
 }
