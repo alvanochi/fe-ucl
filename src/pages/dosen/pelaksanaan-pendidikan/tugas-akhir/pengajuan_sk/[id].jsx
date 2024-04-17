@@ -62,7 +62,7 @@ export default function PengajuanSkAction() {
 
     try {
       const response = await axios.put(
-        `http://localhost:5000/tugas-akhir/approve/${id}`,
+        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
         // Gunakan form.id sebagai bagian dari URL
         {
           [name]: true,
