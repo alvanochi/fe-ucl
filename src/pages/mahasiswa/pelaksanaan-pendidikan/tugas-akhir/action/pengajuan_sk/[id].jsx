@@ -48,6 +48,7 @@ export default function PengajuanSkAction() {
     show(router.query.id, {
       transformData: (data) => ({
         ...data,
+        tgl_sk: data.tgl_sk ? date.formatToInput(data.tgl_sk) : "",
       }),
     });
   }, [router, user]);

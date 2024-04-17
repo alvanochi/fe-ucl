@@ -16,6 +16,7 @@ import {
   loadingAlert,
   toastAlert,
 } from "../../../../../lib/sweetalert";
+import date from "../../../../../utils/date";
 
 export default function PengajuanSkAction() {
   const router = useRouter();
@@ -91,6 +92,7 @@ export default function PengajuanSkAction() {
     show(router.query.id, {
       transformData: (data) => ({
         ...data,
+        tgl_sk: data.tgl_sk ? date.formatToInput(data.tgl_sk) : "",
       }),
     });
   }, [router, user]);
