@@ -5,9 +5,9 @@ import useUser from "../../../hooks/useUser";
 import IpModule from "../../../modules/pelaksanaan-pendidikan/ip/index";
 import AkademikModule from "../../../modules/mahasiswa/bimbingan/akademik/index";
 import KpModule from "../../../modules/pelaksanaan-pendidikan/kp";
-import SkripsiModule from "../../../modules/pelaksanaan-pendidikan/skripsi";
 import PerkuliahanModule from "../../../modules/pelaksanaan-pendidikan/perkuliahan";
 import { Loading } from "../../../components/Loading";
+import TugasAkhirModule from "../../../modules/mahasiswa/bimbingan/tugas-akhir";
 
 export default function PelaksanaanPendidikan() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -32,8 +32,8 @@ export default function PelaksanaanPendidikan() {
           <AkademikModule baseURL={prefix + menu.url} />
         )}
         {active.url === "#kp" && <KpModule baseURL={prefix + menu.url} />}
-        {active.url === "#skripsi" && (
-          <SkripsiModule baseURL={prefix + menu.url} />
+        {active.url === "#tugas-akhir" && (
+          <TugasAkhirModule baseURL={prefix + menu.url} />
         )}
       </div>
     </Layout>

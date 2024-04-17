@@ -9,6 +9,7 @@ import KpModule from "../../../modules/pelaksanaan-pendidikan/kp";
 import SkripsiModule from "../../../modules/pelaksanaan-pendidikan/skripsi";
 import AkademikModule from "../../../modules/pelaksanaan-pendidikan/akademik";
 import { Loading } from "../../../components/Loading";
+import TugasAkhirModule from "../../../modules/pelaksanaan-pendidikan/tugas-akhir";
 
 export default function PelaksanaanPendidikan() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -37,6 +38,9 @@ export default function PelaksanaanPendidikan() {
         )}
         {active.url === "#akademik" && (
           <AkademikModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#tugas-akhir" && (
+          <TugasAkhirModule baseURL={prefix + menu.url} />
         )}
       </div>
 

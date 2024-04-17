@@ -7,6 +7,7 @@ import BimbinganModule from "../../../modules/admin/pelaksanaan-pendidikan/bimbi
 import BahanAjarModule from "../../../modules/admin/pelaksanaan-pendidikan/bahan-ajar/index";
 import AkademikModule from "../../../modules/admin/pelaksanaan-pendidikan/akademik/index";
 import { Loading } from "../../../components/Loading";
+import TugasAkhirModule from "../../../modules/admin/pelaksanaan-pendidikan/tugas-akhir";
 
 export default function PelaksanaanPendidikan() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -32,6 +33,9 @@ export default function PelaksanaanPendidikan() {
         )}
         {active.url === "#akademik" && (
           <AkademikModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#tugas-akhir" && (
+          <TugasAkhirModule baseURL={prefix + menu.url} />
         )}
       </div>
     </Layout>

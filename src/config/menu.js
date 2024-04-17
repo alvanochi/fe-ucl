@@ -139,13 +139,8 @@ export const APP_MENU = [
         allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
       },
       {
-        label: "B-Skripsi",
-        url: "#skripsi",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
-      },
-      {
-        label: "B-Kerja Praktikum",
-        url: "#kp",
+        label: "Tugas Akhir",
+        url: "#tugas-akhir",
         allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
       },
     ],
