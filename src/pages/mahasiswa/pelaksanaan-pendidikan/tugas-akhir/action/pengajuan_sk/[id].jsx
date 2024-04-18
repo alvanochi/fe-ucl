@@ -31,13 +31,13 @@ export default function PengajuanSkAction() {
   ]);
 
   const pembimbing1Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.pembimbing_1
+    (dosen) => dosen.user_id === form?.sk_pembimbing_1
   );
   const pembimbing2Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.pembimbing_2
+    (dosen) => dosen.user_id === form?.sk_pembimbing_2
   );
   const pembimbing3Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.pembimbing_3
+    (dosen) => dosen.user_id === form?.sk_pembimbing_3
   );
   const kepalaLabData = listDosen?.find(
     (dosen) => dosen.user_id === form?.kepala_lab
@@ -187,7 +187,7 @@ export default function PengajuanSkAction() {
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
                     <input
                       type="checkbox"
-                      checked={form?.status_pem_1 ? true : false}
+                      checked={form?.sk_status_pem_1 ? true : false}
                       disabled
                     />
                   </div>
@@ -213,7 +213,7 @@ export default function PengajuanSkAction() {
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
                     <input
                       type="checkbox"
-                      checked={form?.status_pem_2 ? true : false}
+                      checked={form?.sk_status_pem_2 ? true : false}
                       disabled
                     />
                   </div>
@@ -231,7 +231,7 @@ export default function PengajuanSkAction() {
                     </div>
                     <div className="flex-1 min-w-0 ms-4">
                       <p className="text-sm font-medium text-gray-900 truncate">
-                        Pembimbing 3
+                        Pembimbing 3 (optional)
                       </p>
                       <p className="text-md text-gray-500 truncate">
                         {pembimbing3Data?.nama_lengkap}
@@ -240,7 +240,7 @@ export default function PengajuanSkAction() {
                     <div className="inline-flex items-center text-base font-semibold text-gray-900">
                       <input
                         type="checkbox"
-                        checked={form?.status_pem_3 ? true : false}
+                        checked={form?.sk_status_pem_3 ? true : false}
                         disabled
                       />
                     </div>

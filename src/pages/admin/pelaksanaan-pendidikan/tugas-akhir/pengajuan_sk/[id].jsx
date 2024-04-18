@@ -30,13 +30,13 @@ export default function PengajuanSkAction() {
     nomor_sk: "",
     tgl_sk: "",
     link_dokumen_sk: "",
-    pembimbing_1: "",
-    pembimbing_2: "",
-    pembimbing_3: "",
+    sk_pembimbing_1: "",
+    sk_pembimbing_2: "",
+    sk_pembimbing_3: "",
     kepala_lab: "",
-    status_pem_1: "",
-    status_pem_2: "",
-    status_pem_3: "",
+    sk_status_pem_1: "",
+    sk_status_pem_2: "",
+    sk_status_pem_3: "",
     status_kepala_lab: "",
     nama_lengkap: "",
     npm: "",
@@ -61,13 +61,13 @@ export default function PengajuanSkAction() {
   };
 
   const pembimbing1Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.pembimbing_1
+    (dosen) => dosen.user_id === form?.sk_pembimbing_1
   );
   const pembimbing2Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.pembimbing_2
+    (dosen) => dosen.user_id === form?.sk_pembimbing_2
   );
   const pembimbing3Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.pembimbing_3
+    (dosen) => dosen.user_id === form?.sk_pembimbing_3
   );
   const kepalaLabData = listDosen?.find(
     (dosen) => dosen.user_id === form?.kepala_lab
@@ -126,9 +126,7 @@ export default function PengajuanSkAction() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Semester <span className="text-danger-600">*</span>
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Semester</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -151,7 +149,7 @@ export default function PengajuanSkAction() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Nomor SK Penugasan
+                Nomor SK Penugasan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -164,7 +162,7 @@ export default function PengajuanSkAction() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Tanggal SK Penugasan
+                Tanggal SK Penugasan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -176,7 +174,9 @@ export default function PengajuanSkAction() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">Link Dokumen SK</Form.Label>
+              <Form.Label className="min-w-[18rem]">
+                Link Dokumen SK <span className="text-danger-600">*</span>
+              </Form.Label>
               <span>:</span>
               <Form.Input
                 type="url"
@@ -217,7 +217,7 @@ export default function PengajuanSkAction() {
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
                     <input
                       type="checkbox"
-                      checked={form?.status_pem_1 ? true : false}
+                      checked={form?.sk_status_pem_1 ? true : false}
                       disabled
                     />
                   </div>
@@ -243,7 +243,7 @@ export default function PengajuanSkAction() {
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
                     <input
                       type="checkbox"
-                      checked={form?.status_pem_2 ? true : false}
+                      checked={form?.sk_status_pem_2 ? true : false}
                       disabled
                     />
                   </div>
@@ -270,7 +270,7 @@ export default function PengajuanSkAction() {
                     <div className="inline-flex items-center text-base font-semibold text-gray-900">
                       <input
                         type="checkbox"
-                        checked={form?.status_pem_3 ? true : false}
+                        checked={form?.sk_status_pem_3 ? true : false}
                         disabled
                       />
                     </div>

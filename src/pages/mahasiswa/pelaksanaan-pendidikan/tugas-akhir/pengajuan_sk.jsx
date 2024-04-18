@@ -25,22 +25,28 @@ export default function BimbinganMahasiswaCreate() {
     judul_skripsi: "",
     lokasi_kegiatan: "",
     semester: "",
-    pembimbing_1: "",
-    pembimbing_2: "",
-    pembimbing_3: null,
+    sk_pembimbing_1: "",
+    sk_pembimbing_2: "",
+    sk_pembimbing_3: null,
     kepala_lab: "",
   };
 
   const handlePembimbing1 = (selected) => {
-    inputHandler({ target: { name: "pembimbing_1", value: selected?.value } });
+    inputHandler({
+      target: { name: "sk_pembimbing_1", value: selected?.value },
+    });
   };
 
   const handlePembimbing2 = (selected) => {
-    inputHandler({ target: { name: "pembimbing_2", value: selected?.value } });
+    inputHandler({
+      target: { name: "sk_pembimbing_2", value: selected?.value },
+    });
   };
 
   const handlePembimbing3 = (selected) => {
-    inputHandler({ target: { name: "pembimbing_3", value: selected?.value } });
+    inputHandler({
+      target: { name: "sk_pembimbing_3", value: selected?.value },
+    });
   };
 
   const handleKepalaLab = (selected) => {
@@ -52,8 +58,8 @@ export default function BimbinganMahasiswaCreate() {
       { field: "judul_skripsi", label: "Judul Skripsi" },
       { field: "lokasi_kegiatan", label: "Lokasi Kegiatan" },
       { field: "semester", label: "semester" },
-      { field: "pembimbing_1", label: "Pembimbing 1" },
-      { field: "pembimbing_2", label: "Pembimbing 2" },
+      { field: "sk_pembimbing_1", label: "Pembimbing 1" },
+      { field: "sk_pembimbing_2", label: "Pembimbing 2" },
       { field: "kepala_lab", label: "Kepala Lab" },
     ],
     success: () => router.push(prefix + menu.url),
@@ -150,6 +156,12 @@ export default function BimbinganMahasiswaCreate() {
                 className="text-sm border-2 border-white bg-gray-50"
               >
                 Dosen Terkait
+                <div className="mt-2">
+                  <span className="font-normal">
+                    <b>Catatan:</b> Pastikan sudah berkomunikasi dengan dosen
+                    terkait sebelum mengajukan SK Pembimbing Tugas Akhir.
+                  </span>
+                </div>
               </th>
             </tr>
             <tr>
@@ -170,9 +182,9 @@ export default function BimbinganMahasiswaCreate() {
               <td className="text-sm border-2 border-white">
                 <Form.Group className="flex items-baseline gap-3">
                   <Form.Combobox
-                    name="pembimbing_1"
+                    name="sk_pembimbing_1"
                     onChange={handlePembimbing1}
-                    value={form.pembimbing_1}
+                    value={form.sk_pembimbing_1}
                     options={listDosen?.map((dosen) => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
@@ -190,9 +202,9 @@ export default function BimbinganMahasiswaCreate() {
               <td className="text-sm border-2 border-white">
                 <Form.Group className="flex items-baseline gap-3">
                   <Form.Combobox
-                    name="pembimbing_2"
+                    name="sk_pembimbing_2"
                     onChange={handlePembimbing2}
-                    value={form.pembimbing_2}
+                    value={form.sk_pembimbing_2}
                     options={listDosen?.map((dosen) => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
@@ -209,9 +221,9 @@ export default function BimbinganMahasiswaCreate() {
               <td className="text-sm border-2 border-white">
                 <Form.Group className="flex items-baseline gap-3">
                   <Form.Combobox
-                    name="pembimbing_3"
+                    name="sk_pembimbing_3"
                     onChange={handlePembimbing3}
-                    value={form.pembimbing_3}
+                    value={form.sk_pembimbing_3}
                     options={listDosen?.map((dosen) => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,

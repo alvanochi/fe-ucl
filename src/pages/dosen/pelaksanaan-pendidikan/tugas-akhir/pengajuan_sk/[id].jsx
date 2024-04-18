@@ -32,13 +32,13 @@ export default function PengajuanSkAction() {
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const pembimbing1Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.pembimbing_1
+    (dosen) => dosen.user_id === form?.sk_pembimbing_1
   );
   const pembimbing2Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.pembimbing_2
+    (dosen) => dosen.user_id === form?.sk_pembimbing_2
   );
   const pembimbing3Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.pembimbing_3
+    (dosen) => dosen.user_id === form?.sk_pembimbing_3
   );
   const kepalaLabData = listDosen?.find(
     (dosen) => dosen.user_id === form?.kepala_lab
@@ -51,11 +51,11 @@ export default function PengajuanSkAction() {
 
   const handleCheckboxChange = async (event, id) => {
     const { name, checked } = event.target;
-    if (name === "status_pem_1") {
+    if (name === "sk_status_pem_1") {
       setIsChecked1(checked);
-    } else if (name === "status_pem_2") {
+    } else if (name === "sk_status_pem_2") {
       setIsChecked2(checked);
-    } else if (name === "status_pem_3") {
+    } else if (name === "sk_status_pem_3") {
       setIsChecked3(checked);
     } else if (name === "status_kepala_lab") {
       setIsCheckedLab(checked);
@@ -64,9 +64,9 @@ export default function PengajuanSkAction() {
     try {
       const response = await axios.put(
         `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
-        // Gunakan form.id sebagai bagian dari URL
         {
           [name]: true,
+          db: "ta_pengajuan_sk",
         },
         {
           headers: {
@@ -99,13 +99,13 @@ export default function PengajuanSkAction() {
 
   useEffect(() => {
     if (form) {
-      if (form?.status_pem_1 == true) {
+      if (form?.sk_status_pem_1 == true) {
         setIsChecked1(true);
       }
-      if (form?.status_pem_2 == true) {
+      if (form?.sk_status_pem_2 == true) {
         setIsChecked2(true);
       }
-      if (form?.status_pem_3 == true) {
+      if (form?.sk_status_pem_3 == true) {
         setIsChecked3(true);
       }
       if (form?.status_kepala_lab == true) {
@@ -223,7 +223,7 @@ export default function PengajuanSkAction() {
         <div className="w-full max-w-md p-4 mt-4 mb-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 mx-auto">
           <div>
             <span>
-              <b>Catatan:</b> Silakan tandai kotak di bawah ini jika Anda
+              <b>Catatan:</b> Silahkan tandai kotak di bawah ini jika Anda
               menyetujui untuk diajukan sebagai Pembimbing / Kepala Lab
               mahasiswa terkait dalam Surat Keputusan (SK).
             </span>
@@ -256,7 +256,7 @@ export default function PengajuanSkAction() {
                         onChange={(event) =>
                           handleCheckboxChange(event, form.id)
                         }
-                        name="status_pem_1"
+                        name="sk_status_pem_1"
                         disabled={isChecked1}
                       />
                     </div>
@@ -289,7 +289,7 @@ export default function PengajuanSkAction() {
                         onChange={(event) =>
                           handleCheckboxChange(event, form.id)
                         }
-                        name="status_pem_2"
+                        name="sk_status_pem_2"
                         disabled={isChecked2}
                       />
                     </div>
@@ -322,7 +322,7 @@ export default function PengajuanSkAction() {
                         onChange={(event) =>
                           handleCheckboxChange(event, form.id)
                         }
-                        name="status_pem_3"
+                        name="sk_status_pem_3"
                         disabled={isChecked3}
                       />
                     </div>

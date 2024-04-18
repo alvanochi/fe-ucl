@@ -170,7 +170,9 @@ export default function TugasAkhirModule({ baseURL }) {
                   {row.semester}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.judul_skripsi}
+                  {`${row.judul_skripsi.split(" ").slice(0, 6).join(" ")}${
+                    row.judul_skripsi.split(" ").length > 6 ? "..." : ""
+                  }`}
                 </td>
 
                 <td className="text-sm border-2 border-white bg-gray-50">
@@ -187,31 +189,74 @@ export default function TugasAkhirModule({ baseURL }) {
                     </button>
                     {openedDropdownId === row.id && (
                       <div
-                        className="absolute right-14 mt-10 w-52 bg-white rounded-md shadow-lg z-50"
+                        className="absolute right-14 mt-10 w-56 bg-white rounded-md shadow-lg z-50"
                         ref={dropdownRef}
                       >
                         <div className="py-1">
                           <button
                             onClick={closeDropdown}
-                            className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+                            className={`w-full px-4 py-2 text-sm ${
+                              row.status === "pengajuan-sk" &&
+                              row.status_approved === false
+                                ? "text-black font-bold"
+                                : row.status === "menuju-kolokium" &&
+                                  row.status_approved === true
+                                ? "text-black font-semibold"
+                                : "text-gray-500"
+                            } hover:bg-gray-200`}
                           >
                             <Link
                               href={`${baseURL}/tugas-akhir/pengajuan_sk/${row.id}`}
                             >
                               Pengajuan SK
                             </Link>
+                            <input
+                              type="checkbox"
+                              className="ml-2"
+                              disabled
+                              checked={row.status_approved ? true : false}
+                            />
                           </button>
                           <button
                             onClick={closeDropdown}
-                            className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+                            className={`w-full px-4 py-2 text-sm ${
+                              row.status === "menuju-kolokium" &&
+                              row.status_approved_kolo === false
+                                ? "text-black font-bold"
+                                : row.status === "menuju-kolokium" &&
+                                  row.status_approved_kolo === true
+                                ? "text-black font-semibold"
+                                : "text-gray-500"
+                            } hover:bg-gray-200`}
                           >
-                            Pengajuan Kolokium
+                            <span>
+                              {row.status === "menuju-kolokium" ? (
+                                <Link
+                                  href={`${baseURL}/tugas-akhir/pengajuan_kolo/${row.id}`}
+                                >
+                                  Pengajuan Kolokium
+                                </Link>
+                              ) : (
+                                <span>Pengajuan Kolokium</span>
+                              )}
+                            </span>
+                            <input
+                              type="checkbox"
+                              className="ml-2"
+                              disabled
+                              checked={row.status_approved_kolo ? true : false}
+                            />
                           </button>
                           <button
                             onClick={closeDropdown}
-                            className="w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-200"
+                            className={`w-full px-4 py-2 text-sm ${
+                              row.status_approved_kolo === true
+                                ? "text-black font-bold"
+                                : "text-gray-500"
+                            } hover:bg-gray-200`}
                           >
-                            Pelaksanaan Kolokium
+                            <Link href="#">Pelaksanaan Kolokium</Link>
+                            <input type="checkbox" className="ml-2" />
                           </button>
                           <button
                             onClick={closeDropdown}
