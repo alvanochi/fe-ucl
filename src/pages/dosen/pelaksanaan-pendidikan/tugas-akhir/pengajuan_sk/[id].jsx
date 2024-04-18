@@ -157,9 +157,7 @@ export default function PengajuanSkAction() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Semester <span className="text-danger-600">*</span>
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Semester</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"

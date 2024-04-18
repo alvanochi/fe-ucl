@@ -373,7 +373,6 @@ export default function PengajuanKolo() {
               <tr>
                 <td className="text-sm border-2 border-white text-center font-bold">
                   <span>Pembimbing 1</span>{" "}
-                  <span className="text-danger-600">*</span>
                 </td>
                 <td className="text-sm border-2 border-white">
                   <Form.Group className="flex items-baseline gap-3">
@@ -411,7 +410,6 @@ export default function PengajuanKolo() {
               <tr>
                 <td className="text-sm border-2 border-white text-center font-bold">
                   <span>Pembimbing 2</span>
-                  <span className="text-danger-600">*</span>
                 </td>
                 <td className="text-sm border-2 border-white">
                   <Form.Group className="flex items-baseline gap-3">
