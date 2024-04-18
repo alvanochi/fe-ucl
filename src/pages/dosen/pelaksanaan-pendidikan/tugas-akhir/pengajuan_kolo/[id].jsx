@@ -13,6 +13,7 @@ import useCRUD from "../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../components/Loading";
 import axios from "axios";
 import { MySwal, toastAlert } from "../../../../../lib/sweetalert";
+import date from "../../../../../utils/date";
 
 export default function PengajuanKolo() {
   const router = useRouter();
@@ -275,7 +276,12 @@ export default function PengajuanKolo() {
                 Telah Menyelesaikan MK Kerja Praktik
               </Form.Label>
               <span>:</span>
-              <Form.Checkbox type="checkbox" name="status_kp" disabled />
+              <Form.Checkbox
+                type="checkbox"
+                name="status_kp"
+                checked={form.status_kp}
+                disabled
+              />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
@@ -283,7 +289,12 @@ export default function PengajuanKolo() {
                 <p>IPK ≥ 2.00</p>
               </Form.Label>
               <span>:</span>
-              <Form.Checkbox type="checkbox" name="status_sks_ipk" disabled />
+              <Form.Checkbox
+                type="checkbox"
+                name="status_sks_ipk"
+                checked={form.status_sks_ipk}
+                disabled
+              />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
