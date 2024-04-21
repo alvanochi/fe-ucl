@@ -226,7 +226,7 @@ export default function PengajuanKolo() {
                 name="link_dok_mhs_aktif"
                 value={form.link_dok_mhs_aktif}
                 onChange={inputHandler}
-                placeholder="link dokumen"
+                placeholder="link Google Drive"
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -241,7 +241,7 @@ export default function PengajuanKolo() {
                 name="link_dok_pembayaran"
                 value={form.link_dok_pembayaran}
                 onChange={inputHandler}
-                placeholder="link dokumen"
+                placeholder="link Google Drive"
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

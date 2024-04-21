@@ -61,8 +61,13 @@ export const APP_MENU = [
         ],
       },
       {
-        label: "TTD",
-        url: "#ttd",
+        label: "Wali",
+        url: "#wali",
+        allowedRoles: [ROLE_ID_MAHASISWA],
+      },
+      {
+        label: "Lainya",
+        url: "#lainya",
         allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
       },
       {

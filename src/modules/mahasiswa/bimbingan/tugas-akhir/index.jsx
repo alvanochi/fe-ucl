@@ -164,14 +164,17 @@ export default function TugasAkhirModule({ baseURL }) {
                                 row.status === "pengajuan-sk" &&
                                 row.status_approved === false
                                   ? "text-black font-bold"
-                                  : row.status === "menuju-kolokium" &&
+                                  : (row.status === "menuju-kolokium" ||
+                                      row.status === "menuju-sidang" ||
+                                      row.status === "menyelesaikan-revisi" ||
+                                      row.status === "selesai") &&
                                     row.status_approved === true
                                   ? "text-black font-semibold"
                                   : "text-gray-500"
                               } hover:bg-gray-200`}
                             >
                               <Link
-                                href={`${baseURL}/tugas-akhir/action/pengajuan_sk/${row.id}`}
+                                href={`${baseURL}/tugas-akhir/action/pengajuan_sk/${row.sk_id}`}
                               >
                                 Pengajuan SK
                               </Link>
@@ -182,22 +185,29 @@ export default function TugasAkhirModule({ baseURL }) {
                                 checked={row.status_approved ? true : false}
                               />
                             </button>
+
                             <button
                               onClick={closeDropdown}
                               className={`w-full px-4 py-2 text-sm ${
                                 row.status === "menuju-kolokium" &&
                                 row.status_approved_kolo === false
                                   ? "text-black font-bold"
-                                  : row.status === "menuju-kolokium" &&
+                                  : (row.status === "menuju-kolokium" ||
+                                      row.status === "menuju-sidang" ||
+                                      row.status === "menyelesaikan-revisi" ||
+                                      row.status === "selesai") &&
                                     row.status_approved_kolo === true
                                   ? "text-black font-semibold"
                                   : "text-gray-500"
                               } hover:bg-gray-200`}
                             >
                               <span>
-                                {row.status === "menuju-kolokium" ? (
+                                {row.status === "menuju-kolokium" ||
+                                row.status === "menuju-sidang" ||
+                                row.status === "menyelesaikan-revisi" ||
+                                row.status === "selesai" ? (
                                   <Link
-                                    href={`${baseURL}/tugas-akhir/action/pengajuan_kolo/${row.id}`}
+                                    href={`${baseURL}/tugas-akhir/action/pengajuan_kolo/${row.sk_id}`}
                                   >
                                     Pengajuan Kolokium
                                   </Link>
@@ -218,33 +228,153 @@ export default function TugasAkhirModule({ baseURL }) {
                             <button
                               onClick={closeDropdown}
                               className={`w-full px-4 py-2 text-sm ${
+                                row.status === "menuju-kolokium" &&
+                                row.status_penilaian === false &&
                                 row.status_approved_kolo === true
                                   ? "text-black font-bold"
+                                  : (row.status === "menuju-kolokium" ||
+                                      row.status === "menuju-sidang" ||
+                                      row.status === "menyelesaikan-revisi" ||
+                                      row.status === "selesai") &&
+                                    row.status_penilaian === true
+                                  ? "text-black font-semibold"
                                   : "text-gray-500"
                               } hover:bg-gray-200`}
                             >
-                              <Link href="#">Pelaksanaan Kolokium</Link>
-                              <input type="checkbox" className="ml-2" />
+                              <span>
+                                {(row.status === "menuju-kolokium" ||
+                                  row.status === "menuju-sidang" ||
+                                  row.status === "menyelesaikan-revisi" ||
+                                  row.status === "selesai") &&
+                                row.status_approved_kolo === true ? (
+                                  <Link
+                                    href={`${baseURL}/tugas-akhir/action/pelaks_kolo/${row.sk_id}`}
+                                  >
+                                    Pelaksanaan Kolokium
+                                  </Link>
+                                ) : (
+                                  <span>Pelaksanaan Kolokium</span>
+                                )}
+                              </span>
+                              <input
+                                type="checkbox"
+                                className="ml-2"
+                                disabled
+                                checked={row.status_penilaian ? true : false}
+                              />
                             </button>
+
                             <button
                               onClick={closeDropdown}
-                              className="w-full px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 pt-2"
+                              className={`w-full px-4 py-2 text-sm ${
+                                row.status === "menuju-sidang" &&
+                                row.status_approved_sidang === false
+                                  ? "text-black font-bold"
+                                  : (row.status === "menuju-kolokium" ||
+                                      row.status === "menuju-sidang" ||
+                                      row.status === "menyelesaikan-revisi" ||
+                                      row.status === "selesai") &&
+                                    row.status_approved_sidang === true
+                                  ? "text-black font-semibold"
+                                  : "text-gray-500"
+                              } hover:bg-gray-200`}
                             >
-                              <Link href="#">
-                                Pengajuan Pendaftaran dan Pelaksanaan Sidang
-                              </Link>
+                              <span>
+                                {(row.status === "selesai" ||
+                                  row.status === "menuju-sidang" ||
+                                  row.status === "menyelesaikan-revisi") &&
+                                row.status_penilaian === true ? (
+                                  <Link
+                                    href={`${baseURL}/tugas-akhir/action/pengajuan_sidang/${row.sk_id}`}
+                                  >
+                                    Pengajuan Pendaftaran dan Pelaksanaan Sidang
+                                  </Link>
+                                ) : (
+                                  <span>
+                                    Pengajuan Pendaftaran dan Pelaksanaan Sidang
+                                  </span>
+                                )}
+                              </span>
+                              <input
+                                type="checkbox"
+                                className="ml-2"
+                                disabled
+                                checked={
+                                  row.status_approved_sidang ? true : false
+                                }
+                              />
                             </button>
+
                             <button
                               onClick={closeDropdown}
-                              className="w-full px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 pt-2"
+                              className={`w-full px-4 py-2 text-sm ${
+                                row.status === "menuju-sidang" &&
+                                row.status_penilaian_sidang === false &&
+                                row.status_approved_sidang === true
+                                  ? "text-black font-bold"
+                                  : (row.status === "menuju-kolokium" ||
+                                      row.status === "menuju-sidang" ||
+                                      row.status === "menyelesaikan-revisi" ||
+                                      row.status === "selesai") &&
+                                    row.status_penilaian_sidang === true
+                                  ? "text-black font-semibold"
+                                  : "text-gray-500"
+                              } hover:bg-gray-200`}
                             >
-                              <Link href="#">Pelaksanaan Sidang</Link>
+                              <span>
+                                {(row.status === "selesai" ||
+                                  row.status === "menuju-sidang" ||
+                                  row.status === "menyelesaikan-revisi") &&
+                                row.status_approved_sidang === true ? (
+                                  <Link
+                                    href={`${baseURL}/tugas-akhir/action/pelaks_sidang/${row.sk_id}`}
+                                  >
+                                    Pelaksanaan Sidang
+                                  </Link>
+                                ) : (
+                                  <span>Pelaksanaan Sidang</span>
+                                )}
+                              </span>
+                              <input
+                                type="checkbox"
+                                className="ml-2"
+                                disabled
+                                checked={
+                                  row.status_penilaian_sidang ? true : false
+                                }
+                              />
                             </button>
+
                             <button
                               onClick={closeDropdown}
-                              className="w-full px-4 py-2 text-sm text-gray-500 hover:bg-gray-200 pt-2"
+                              className={`w-full px-4 py-2 text-sm ${
+                                row.status === "menyelesaikan-revisi"
+                                  ? "text-black font-bold"
+                                  : row.status === "selesai"
+                                  ? "text-black font-semibold"
+                                  : "text-gray-500"
+                              } hover:bg-gray-200`}
                             >
-                              <Link href="#">Pengumpulan Revisi</Link>
+                              <span>
+                                {row.status === "menyelesaikan-revisi" ||
+                                row.status === "selesai" ? (
+                                  <Link
+                                    href={`${baseURL}/tugas-akhir/action/pengumpulan_revisi/${row.sk_id}`}
+                                  >
+                                    Pengumpulan Revisi
+                                  </Link>
+                                ) : (
+                                  <span>Pengumpulan Revisi</span>
+                                )}
+                              </span>
+                              <input
+                                type="checkbox"
+                                className="ml-2"
+                                disabled
+                                checked={
+                                  row.status === "selesai" ? true : false
+                                }
+                              />
                             </button>
                           </div>
                         </div>
