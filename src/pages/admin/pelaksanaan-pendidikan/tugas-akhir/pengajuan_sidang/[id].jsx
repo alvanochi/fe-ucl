@@ -324,7 +324,7 @@ export default function PengajuanSidang() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
-                Maksimal Nilai "D" Berjumlah 1{" "}
+                Maksimal Nilai D Berjumlah 1{" "}
                 <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
@@ -402,7 +402,7 @@ export default function PengajuanSidang() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
-                Photocopy Sertifikat Ta'aruf{" "}
+                Photocopy Sertifikat Ta aruf{" "}
               </Form.Label>
               <span>:</span>
               <Form.Input
