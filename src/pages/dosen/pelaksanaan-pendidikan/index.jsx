@@ -30,9 +30,6 @@ export default function PelaksanaanPendidikan() {
           <BimbinganModule baseURL={prefix + menu.url} />
         )}
         {active.url === "#kp" && <KpModule baseURL={prefix + menu.url} />}
-        {active.url === "#skripsi" && (
-          <SkripsiModule baseURL={prefix + menu.url} />
-        )}
         {active.url === "#bahan-ajar" && (
           <BahanAjarModule baseURL={prefix + menu.url} />
         )}
