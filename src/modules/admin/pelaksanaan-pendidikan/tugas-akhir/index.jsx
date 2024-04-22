@@ -57,7 +57,7 @@ export default function TugasAkhirModule({ baseURL }) {
         <div className="mr-4">
           <Button
             as="a"
-            href={`${baseURL}/skripsi/nota-dinas/create`}
+            href={`${baseURL}/tugas-akhir/nota-dinas/create`}
             icon={<Icon icon="oi:book" width={20} height={20} />}
             variant="info"
             pill
