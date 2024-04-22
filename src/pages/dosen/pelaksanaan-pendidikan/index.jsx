@@ -6,7 +6,6 @@ import BimbinganModule from "../../../modules/pelaksanaan-pendidikan/bimbingan";
 import BahanAjarModule from "../../../modules/pelaksanaan-pendidikan/bahan-ajar";
 import { DevelopmentPage } from "../../../components/DevelopmentPage";
 import KpModule from "../../../modules/pelaksanaan-pendidikan/kp";
-import SkripsiModule from "../../../modules/pelaksanaan-pendidikan/skripsi";
 import AkademikModule from "../../../modules/pelaksanaan-pendidikan/akademik";
 import { Loading } from "../../../components/Loading";
 import TugasAkhirModule from "../../../modules/pelaksanaan-pendidikan/tugas-akhir";
