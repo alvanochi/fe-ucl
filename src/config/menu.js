@@ -154,22 +154,22 @@ export const APP_MENU = [
     label: "Pelaksanaan Penelitian",
     url: "/pelaksanaan-penelitian",
     icon: "fa:flask",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
     submenus: [
       {
         label: "Penelitian",
         url: "#penelitian",
-        allowedRoles: [],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN],
       },
       {
         label: "Publikasi Karya",
         url: "#publikasi-karya",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
       },
       {
         label: "HKI",
         url: "#hki",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
       },
     ],
   },
@@ -177,17 +177,17 @@ export const APP_MENU = [
     label: "Pelaksanaan Pengabdian",
     url: "/pelaksanaan-pengabdian",
     icon: "fa6-solid:hand-holding-hand",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
     submenus: [
       {
         label: "Pengabdian",
         url: "#pengabdian",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
       },
       {
         label: "Pembicara",
         url: "#pembicara",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
       },
     ],
   },

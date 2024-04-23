@@ -141,6 +141,7 @@ export default function CreateNotaDinas() {
                   fontWeight: "bold",
                   fontFamily: "Times New Roman",
                   fontSize: "12px",
+                  paddingLeft: "2px",
                 }}
               >
                 Ketua Program Studi Teknik Informatika
@@ -277,44 +278,6 @@ export default function CreateNotaDinas() {
             </div>
           </div>
         </div>
-        {/* {data.peserta_mahasiswa.length > 0 && (
-          <div>
-            <h2
-              style={{
-                textAlign: "center",
-                fontWeight: "bold",
-                fontSize: "16px",
-                margin: "20px 0",
-                fontFamily: "Times New Roman",
-                textDecoration: "underline",
-              }}
-            >
-              Peserta Mahasiswa
-            </h2>
-            <table style={{ width: "100%" }}>
-              <thead>
-                <tr>
-                  <th>Nama</th>
-                  <th>NPM</th>
-                  <th>Judul Skripsi</th>
-                  <th>Pembimbing 1</th>
-                  <th>Pembimbing 2</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.peserta_mahasiswa.map((mahasiswa, index) => (
-                  <tr key={index}>
-                    <td>{mahasiswa.nama}</td>
-                    <td>{mahasiswa.npm}</td>
-                    <td>{mahasiswa.judul_skripsi}</td>
-                    <td>{mahasiswa.pembimbing_1}</td>
-                    <td>{mahasiswa.pembimbing_2}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )} */}
       </>
     );
   };
@@ -542,7 +505,7 @@ export default function CreateNotaDinas() {
                       fontSize: "12px",
                     }}
                   >
-                    Kepada Yth &nbsp;&nbsp;:
+                    Kepada Yth &nbsp;&nbsp;&nbsp;:&nbsp;
                   </span>
                   <span
                     style={{
