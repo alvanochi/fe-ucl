@@ -181,7 +181,7 @@ export default function CreateNotaDinas() {
                   marginRight: "35px",
                 }}
               >
-                Assalamu’alaikumwr. wb.
+                Assalamu’alaikum Wr. Wb.
               </p>
               <p
                 style={{
@@ -191,7 +191,7 @@ export default function CreateNotaDinas() {
                   marginTop: "20px",
                 }}
               >
-                Semoga Allah S.W.T selalu melimpahkan rahmat dan hidayah-Nya
+                Semoga Allah S.W.T Selalu melimpahkan rahmat dan hidayah-Nya
                 kepada kita semua dalam menjalankan aktivitas sehari-hari.
                 Aamiin.
               </p>
@@ -203,9 +203,10 @@ export default function CreateNotaDinas() {
                   marginTop: "20px",
                 }}
               >
-                Semoga Allah S.W.T selalu melimpahkan rahmat dan hidayah-Nya
-                kepada kita semua dalam menjalankan aktivitas sehari-hari.
-                Aamiin.
+                Sehubungan dengan tugas akhir mahasiswa Program Studi Teknik
+                Informatika, maka dengan ini kami bermaksud untuk mengajukan SK
+                Tugas Akhir Mahasiswa, adapun daftar nama Mahasiswa, Judul Tugas
+                Akhir, dan Dosen Pembimbing terlampir.
               </p>
               <p
                 style={{
@@ -215,9 +216,8 @@ export default function CreateNotaDinas() {
                   marginTop: "20px",
                 }}
               >
-                Demikian surat usulan ini kami sampaikan agar dapat ditindak
-                lanjuti sebagaimana mestinya. Atas perhatian dan kerjasamanya
-                kami ucapkan terimakasih.
+                Demikian surat ini kami sampaikan, atas perhatian dan perkenan
+                Bapak, kami ucapkan terima kasih.
               </p>
               <p
                 style={{
@@ -229,7 +229,7 @@ export default function CreateNotaDinas() {
                   marginRight: "35px",
                 }}
               >
-                Wassalamu’alaikumWr. Wb.
+                Wassalamu’alaikum Wr. Wb.
               </p>
               <p
                 style={{
@@ -455,6 +455,7 @@ export default function CreateNotaDinas() {
             </Form.Group>
           </Card.Body>
         </Card>
+
         <Card className="mt-4">
           <Card.Header className="text-center">Nota Dinas</Card.Header>
           <Card.Body className="space-y-4">
@@ -556,7 +557,7 @@ export default function CreateNotaDinas() {
                       marginRight: "35px",
                     }}
                   >
-                    Assalamu’alaikumwr. wb.
+                    Assalamu’alaikum Wr. Wb.
                   </p>
                   <p
                     style={{
@@ -566,7 +567,7 @@ export default function CreateNotaDinas() {
                       marginTop: "20px",
                     }}
                   >
-                    Semoga Allah S.W.T selalu melimpahkan rahmat dan hidayah-Nya
+                    Semoga Allah S.W.T Selalu melimpahkan rahmat dan hidayah-Nya
                     kepada kita semua dalam menjalankan aktivitas sehari-hari.
                     Aamiin.
                   </p>
@@ -578,9 +579,10 @@ export default function CreateNotaDinas() {
                       marginTop: "20px",
                     }}
                   >
-                    Bermaksud untuk mengajukan SK Tugas Akhir Mahasiswa, adapun
-                    daftar nama Mahasiswa, Judul Tugas Akhir, dan Dosen
-                    Pembimbing terlampir.
+                    Sehubungan dengan tugas akhir mahasiswa Program Studi Teknik
+                    Informatika, maka dengan ini kami bermaksud untuk mengajukan
+                    SK Tugas Akhir Mahasiswa, adapun daftar nama Mahasiswa,
+                    Judul Tugas Akhir, dan Dosen Pembimbing terlampir.
                   </p>
                   <p
                     style={{
@@ -590,9 +592,8 @@ export default function CreateNotaDinas() {
                       marginTop: "20px",
                     }}
                   >
-                    Demikian surat usulan ini kami sampaikan agar dapat ditindak
-                    lanjuti sebagaimana mestinya. Atas perhatian dan
-                    kerjasamanya kami ucapkan terimakasih.
+                    Demikian surat ini kami sampaikan, atas perhatian dan
+                    perkenan Bapak, kami ucapkan terima kasih.
                   </p>
                   <p
                     style={{
@@ -604,7 +605,7 @@ export default function CreateNotaDinas() {
                       marginRight: "35px",
                     }}
                   >
-                    Wassalamu’alaikumWr. Wb.
+                    Wassalamu’alaikum Wr. Wb
                   </p>
                   <p
                     style={{
