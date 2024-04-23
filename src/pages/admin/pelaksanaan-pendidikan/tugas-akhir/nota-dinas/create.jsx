@@ -22,12 +22,13 @@ export default function CreateNotaDinas() {
   const FILE_URL = `${process.env.API_ENDPOINT}/ttd`;
 
   const [data, setData] = useState({
-    nomorNota: "",
     lampiran: "",
     perihal: "",
     isi: "",
     peserta_mahasiswa: [],
   });
+
+  const [nomorNota, setNomorNota] = useState("020/K.3.1/TI-FTS/I/2024");
 
   const handleInputChange = (e) => {
     const { name, value, attributes } = e.target;
@@ -423,8 +424,8 @@ export default function CreateNotaDinas() {
                 type="text"
                 className="flex-1"
                 name="nomorNota"
-                value={data.nomorNota}
-                onChange={handleInputChange}
+                value={nomorNota}
+                disable
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
