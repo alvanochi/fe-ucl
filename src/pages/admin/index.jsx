@@ -125,7 +125,7 @@ export default function Home() {
     },
     {
       id: 12,
-      title: "Jabatan Struktural (ambil dari organisasi)",
+      title: "Jabatan Struktural",
       icon: "solar:bill-bold",
       data: 0,
     },
