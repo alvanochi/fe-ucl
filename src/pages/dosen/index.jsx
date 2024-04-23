@@ -10,6 +10,7 @@ import useUser from "../../hooks/useUser";
 import useDatatable from "../../hooks/useDatatable";
 import Link from "next/link";
 import { Loading } from "../../components/Loading";
+import Accordion from "../../components/Accordion";
 
 const AreaChart = dynamic(() => import("../../components/Chart/area"), {
   ssr: false,
@@ -41,6 +42,209 @@ export default function Home() {
       userData?.no_hp == null
     );
   }
+
+  const dataCardPembelajaran = [
+    {
+      id: 1,
+      title: "SKS yang diajar",
+      icon: "icon-park-outline:certificate",
+      data: data?.sks,
+    },
+    {
+      id: 8,
+      title: "Buku Ajar (Jumlah Buku Ajar)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 14,
+      title: "Total Pertemuan Perkuliahan",
+      icon: "icon-park-outline:certificate",
+      data: data?.pertemuanPerkuliahan,
+    },
+    {
+      id: 2,
+      title: "Presentase kehadiran (gasal dan genap)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+  ];
+
+  const dataCardBimbinganTugasAkhir = [
+    {
+      id: 3,
+      title: "ketua pembimbing (Pembimbing 1)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 4,
+      title: "Pembimbing Pendamping (Pembimbing 2)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 6,
+      title: "Ketua Penguji (Penguji 1)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 7,
+      title: "Anggota Penguji (Penguji 2)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 15,
+      title: "Jumlah Mahasiswa Mengajukan SK",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 16,
+      title: "Jumlah Mahasiswa Menuju Kolokium",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 17,
+      title: "Jumlah Menyelesaikan Revisi",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+  ];
+
+  const dataCardBimbingan = [
+    {
+      id: 18,
+      title: "Jumlah Mahasiswa Kp Sudah Selesai",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 18,
+      title: "Jumlah Mahasiswa Bimbingan Kademik",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+  ];
+
+  const dataCardPengembanganDiri = [
+    {
+      id: 9,
+      title: "Diktat/ Modul Praktikum (jumlah diktat/modul praktikum)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 10,
+      title: "Orasi Ilmiah (Jumlah Orasi Ilmiah)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 12,
+      title: "Jabatan Struktural (ambil dari organisasi)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 13,
+      title: "Melakukan kegiatan pengembangan diri (jam)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 11,
+      title: "Membimbing kegiatan mahasiswa, (jumlah kegiatan mahasiswa)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+  ];
+
+  const dataCardPenelitian = [
+    {
+      id: 1,
+      title: "Publikasi",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 2,
+      title: "Seminar",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 3,
+      title: "Publikasi Koran/Majalah",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 4,
+      title: "Menyadur Buku Ilmiah",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 4,
+      title: "Paten Nasional",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 4,
+      title: "Karya Monumental Lokal",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 4,
+      title: "Karya Monumental Nasional",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 4,
+      title: "Karya Monumental Internasional",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+  ];
+  const dataCardPengabdian = [
+    {
+      id: 1,
+      title: "Publikasi",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 2,
+      title: "Pembicara?Penyuluhan",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 3,
+      title: "Editor Jurnal Nasional",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 4,
+      title: "Editor Jurnal Internasional",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 5,
+      title: "Pelayanan Masyarakat",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+  ];
 
   if ([menu, user].some((item) => item == null)) return <Loading />;
   return (
@@ -116,181 +320,209 @@ export default function Home() {
           </span>
         </div>
       </div>
-      <Card className="mb-4">
-        <Card.Header className="bg-primary-600 text-white text-center text-sm">
-          Summary
-        </Card.Header>
-        <Card.Body className="mx-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+
+      {/* Pendidikan */}
+      <div className="flex-1 block">
+        <div className="space-y-2 mt-2">
+          <Accordion title="Pelaksanaan Pendidikan">
             <Card>
-              <Card.Body>
-                <Link href="#">
-                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="icon-park-outline:certificate"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
-                  </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.sks}
-                  </p>
-                  <p className="block text-sm">Jumlah SKS yang di ajar</p>
-                </Link>
+              <Card.Body className="mx-6">
+                <h2 className="text-lg font-semibold mb-2">Pembelajaran</h2>
+                <hr />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                  {dataCardPembelajaran.map((row, index) => {
+                    return (
+                      <>
+                        <Card key={`row-${index}`}>
+                          <Card.Body>
+                            <Link href="#">
+                              <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                                <Icon
+                                  icon={row.icon}
+                                  width={24}
+                                  height={24}
+                                  className="text-white"
+                                />
+                              </div>
+                              <p className="block text-2xl font-bold leading-relaxed">
+                                {row.data}
+                              </p>
+                              <p className="block text-sm">{row.title}</p>
+                            </Link>
+                          </Card.Body>
+                        </Card>
+                      </>
+                    );
+                  })}
+                </div>
+
+                <h2 className="text-lg font-semibold mb-2 mt-8">Tugas AKhir</h2>
+                <hr />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                  {dataCardBimbinganTugasAkhir.map((row, index) => {
+                    return (
+                      <>
+                        <Card key={`row-${index}`}>
+                          <Card.Body>
+                            <Link href="#">
+                              <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                                <Icon
+                                  icon={row.icon}
+                                  width={24}
+                                  height={24}
+                                  className="text-white"
+                                />
+                              </div>
+                              <p className="block text-2xl font-bold leading-relaxed">
+                                {row.data}
+                              </p>
+                              <p className="block text-sm">{row.title}</p>
+                            </Link>
+                          </Card.Body>
+                        </Card>
+                      </>
+                    );
+                  })}
+                </div>
+                <h2 className="text-lg font-semibold mb-2 mt-8">Bimbingan</h2>
+                <hr />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                  {dataCardBimbingan.map((row, index) => {
+                    return (
+                      <>
+                        <Card key={`row-${index}`}>
+                          <Card.Body>
+                            <Link href="#">
+                              <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                                <Icon
+                                  icon={row.icon}
+                                  width={24}
+                                  height={24}
+                                  className="text-white"
+                                />
+                              </div>
+                              <p className="block text-2xl font-bold leading-relaxed">
+                                {row.data}
+                              </p>
+                              <p className="block text-sm">{row.title}</p>
+                            </Link>
+                          </Card.Body>
+                        </Card>
+                      </>
+                    );
+                  })}
+                </div>
+                <h2 className="text-lg font-semibold mb-2 mt-8">
+                  Pengembangan Diri
+                </h2>
+                <hr />
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                  {dataCardPengembanganDiri.map((row, index) => {
+                    return (
+                      <>
+                        <Card key={`row-${index}`}>
+                          <Card.Body>
+                            <Link href="#">
+                              <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                                <Icon
+                                  icon={row.icon}
+                                  width={24}
+                                  height={24}
+                                  className="text-white"
+                                />
+                              </div>
+                              <p className="block text-2xl font-bold leading-relaxed">
+                                {row.data}
+                              </p>
+                              <p className="block text-sm">{row.title}</p>
+                            </Link>
+                          </Card.Body>
+                        </Card>
+                      </>
+                    );
+                  })}
+                </div>
               </Card.Body>
             </Card>
+          </Accordion>
+        </div>
+      </div>
+
+      {/* Penelitian */}
+      <div className="flex-1 block">
+        <div className="space-y-2 mt-2">
+          <Accordion title="Pelaksanaan Penelitian">
             <Card>
-              <Card.Body>
-                <Link href="#">
-                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="icon-park-outline:certificate"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
-                  </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.pertemuanPerkuliahan}
-                  </p>
-                  <p className="block text-sm">Total Pertemuan Perkuliahan</p>
-                </Link>
+              <Card.Body className="mx-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                  {dataCardPenelitian.map((row, index) => {
+                    return (
+                      <>
+                        <Card key={`row-${index}`}>
+                          <Card.Body>
+                            <Link href="#">
+                              <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                                <Icon
+                                  icon={row.icon}
+                                  width={24}
+                                  height={24}
+                                  className="text-white"
+                                />
+                              </div>
+                              <p className="block text-2xl font-bold leading-relaxed">
+                                {row.data}
+                              </p>
+                              <p className="block text-sm">{row.title}</p>
+                            </Link>
+                          </Card.Body>
+                        </Card>
+                      </>
+                    );
+                  })}
+                </div>
               </Card.Body>
             </Card>
+          </Accordion>
+        </div>
+      </div>
+
+      {/* Pengabdian */}
+      <div className="flex-1 block">
+        <div className="space-y-2 mt-2">
+          <Accordion title="Pelaksanaan Pengabdian">
             <Card>
-              <Card.Body>
-                <Link href="#">
-                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="fa6-solid:hand-holding-hand"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
-                  </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.belum_kolo}
-                  </p>
-                  <p className="block text-sm">
-                    Jumlah Mahasiswa Bimbingan Skripsi Belum Kolokium
-                  </p>
-                </Link>
+              <Card.Body className="mx-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                  {dataCardPengabdian.map((row, index) => {
+                    return (
+                      <>
+                        <Card key={`row-${index}`}>
+                          <Card.Body>
+                            <Link href="#">
+                              <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                                <Icon
+                                  icon={row.icon}
+                                  width={24}
+                                  height={24}
+                                  className="text-white"
+                                />
+                              </div>
+                              <p className="block text-2xl font-bold leading-relaxed">
+                                {row.data}
+                              </p>
+                              <p className="block text-sm">{row.title}</p>
+                            </Link>
+                          </Card.Body>
+                        </Card>
+                      </>
+                    );
+                  })}
+                </div>
               </Card.Body>
             </Card>
-            <Card>
-              <Card.Body>
-                <Link href="#">
-                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="fa6-solid:hand-holding-hand"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
-                  </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.besum_sidang}
-                  </p>
-                  <p className="block text-sm">
-                    Jumlah Mahasiswa Bimbingan Skripsi Belum Sidang
-                  </p>
-                </Link>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Body>
-                <Link href="#">
-                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="solar:users-group-two-rounded-bold-duotone"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
-                  </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.belum_revisi}
-                  </p>
-                  <p className="block text-sm">
-                    Jumlah Mahasiswa Bimbingan Skripsi Belum Revisi
-                  </p>
-                </Link>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Body>
-                <Link href="#">
-                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="fa:flask"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
-                  </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.kp_selesai}
-                  </p>
-                  <p className="block text-sm">
-                    Jumlah Mahasiswa Kp Belum Selesai
-                  </p>
-                </Link>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Body>
-                <Link href="#">
-                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="fa:flask"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
-                  </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.kp_selesai}
-                  </p>
-                  <p className="block text-sm">
-                    Jumlah Mahasiswa Kp Sudah Selesai
-                  </p>
-                </Link>
-              </Card.Body>
-            </Card>
-            <Card>
-              <Card.Body>
-                <Link href="#">
-                  <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="fa:flask"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
-                  </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.kp_selesai}
-                  </p>
-                  <p className="block text-sm">
-                    Jumlah Mahasiswa Bimbingan Kademik
-                  </p>
-                </Link>
-              </Card.Body>
-            </Card>
-          </div>
-        </Card.Body>
-      </Card>
-      {/* <div className="flex gap-4 mb-4">
-        <Card className="grow">
-          <Card.Header className="bg-primary-600 text-white text-center text-sm">
-            Detail Publikasi per Tahun
-          </Card.Header>
-          <Card.Body className="-mx-4">
-            <AreaChart />
-          </Card.Body>
-        </Card>
-      </div> */}
+          </Accordion>
+        </div>
+      </div>
     </Layout>
   );
 }

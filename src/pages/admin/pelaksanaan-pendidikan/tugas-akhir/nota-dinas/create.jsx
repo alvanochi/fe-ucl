@@ -22,13 +22,11 @@ export default function CreateNotaDinas() {
   const FILE_URL = `${process.env.API_ENDPOINT}/ttd`;
 
   const [data, setData] = useState({
+    nomorNota: "",
     lampiran: "",
     perihal: "",
-    isi: "",
     peserta_mahasiswa: [],
   });
-
-  const [nomorNota, setNomorNota] = useState("020/K.3.1/TI-FTS/I/2024");
 
   const handleInputChange = (e) => {
     const { name, value, attributes } = e.target;
@@ -135,18 +133,21 @@ export default function CreateNotaDinas() {
                   fontSize: "12px",
                 }}
               >
-                Kepada Yth &nbsp;&nbsp;:
+                Kepada Yth &nbsp;&nbsp;&nbsp;: Dekan Fakultas Teknik dan Sains
               </span>
-              <span
+
+              <p
                 style={{
-                  fontWeight: "bold",
+                  textIndent: "0",
                   fontFamily: "Times New Roman",
                   fontSize: "12px",
-                  paddingLeft: "2px",
+                  marginRight: "35px",
                 }}
               >
-                Ketua Program Studi Teknik Informatika
-              </span>
+                Dari
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                : Ketua Program Studi Teknik Informatika
+              </p>
               <p
                 style={{
                   textIndent: "0",
@@ -202,7 +203,9 @@ export default function CreateNotaDinas() {
                   marginTop: "20px",
                 }}
               >
-                {data.isi}
+                Semoga Allah S.W.T selalu melimpahkan rahmat dan hidayah-Nya
+                kepada kita semua dalam menjalankan aktivitas sehari-hari.
+                Aamiin.
               </p>
               <p
                 style={{
@@ -424,8 +427,8 @@ export default function CreateNotaDinas() {
                 type="text"
                 className="flex-1"
                 name="nomorNota"
-                value={nomorNota}
-                disable
+                value={data.nomorNota}
+                onChange={handleInputChange}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -447,17 +450,6 @@ export default function CreateNotaDinas() {
                 className="flex-1"
                 name="perihal"
                 value={data.perihal}
-                onChange={handleInputChange}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[12rem]">Isi Surat</Form.Label>
-              <span>:</span>
-              <Form.Textarea
-                className="flex-1"
-                rows="5"
-                name="isi"
-                value={data.isi}
                 onChange={handleInputChange}
               />
             </Form.Group>
@@ -489,7 +481,7 @@ export default function CreateNotaDinas() {
                     marginBottom: "40px",
                   }}
                 >
-                  Nomor: 020/K.3.1/TI-FTS/I/2024
+                  Nomor: {data.nomorNota}
                 </p>
                 <div
                   style={{
@@ -515,8 +507,20 @@ export default function CreateNotaDinas() {
                       fontSize: "12px",
                     }}
                   >
-                    Ketua Program Studi Teknik Informatika
+                    Dekan Fakultas Teknik dan Sains
                   </span>
+                  <p
+                    style={{
+                      textIndent: "0",
+                      fontFamily: "Times New Roman",
+                      fontSize: "12px",
+                      marginRight: "35px",
+                    }}
+                  >
+                    Dari
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    : Ketua Program Studi Teknik Informatika
+                  </p>
                   <p
                     style={{
                       textIndent: "0",
@@ -537,9 +541,10 @@ export default function CreateNotaDinas() {
                     }}
                   >
                     Perihal
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    : {data.perihal}
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    :{data.perihal}
                   </p>
+
                   <p
                     style={{
                       textIndent: "0",
@@ -573,7 +578,9 @@ export default function CreateNotaDinas() {
                       marginTop: "20px",
                     }}
                   >
-                    {data.isi}
+                    Bermaksud untuk mengajukan SK Tugas Akhir Mahasiswa, adapun
+                    daftar nama Mahasiswa, Judul Tugas Akhir, dan Dosen
+                    Pembimbing terlampir.
                   </p>
                   <p
                     style={{

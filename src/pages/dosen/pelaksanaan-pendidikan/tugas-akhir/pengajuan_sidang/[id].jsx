@@ -624,7 +624,7 @@ export default function PengajuanSidang() {
 
         <Card className="mt-4">
           <Card.Header className="text-center">
-            <div>Pengajuan Pendaftaran dan Pelaksanaan Sidang </div>
+            <div>Pendaftaran Sidang </div>
           </Card.Header>
 
           <Card.Body className="space-y-4">

@@ -322,12 +322,10 @@ export default function TugasAkhirModule({ baseURL }) {
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pengajuan_sidang/${row.id}`}
                                 >
-                                  Pengajuan Pendaftaran dan Pelaksanaan Sidang
+                                  Pendaftaran Sidang
                                 </Link>
                               ) : (
-                                <span>
-                                  Pengajuan Pendaftaran dan Pelaksanaan Sidang
-                                </span>
+                                <span>Pendaftaran Sidang</span>
                               )}
                             </span>
                             <input
