@@ -402,19 +402,21 @@ export default function Home() {
       <div className="mt-8 mb-4 w-2/4">
         <Form className="grid grid-cols-2 gap-4">
           <Form.Group>
+            <Form.Label className="pb-2">Tahun Akademik :</Form.Label>
             <Form.Select
               name="Tahu_akademik"
               options={[
-                { value: "2024/2023", label: "2024/2023" },
-                { value: "2023/2022", label: "2023/2022" },
-                { value: "2022/2021", label: "2022/2021" },
-                { value: "2021/2020", label: "2021/2020" },
-                { value: "2019/2018", label: "2019/2018" },
-                { value: "2018/2017", label: "2018/2017" },
+                { value: "2023/2024", label: "2023/2024" },
+                { value: "2022/2023", label: "2022/2023" },
+                { value: "2021/2022", label: "2021/2022" },
+                { value: "2020/2021", label: "2020/2021" },
+                { value: "2018/2019", label: "2018/2019" },
+                { value: "2017/2018", label: "2017/2018" },
               ]}
             />
           </Form.Group>
           <Form.Group>
+            <Form.Label className="pb-2">Semester :</Form.Label>
             <Form.Select
               name="Tahu_akademik"
               options={[
