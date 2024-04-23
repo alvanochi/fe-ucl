@@ -11,6 +11,7 @@ import useDatatable from "../../hooks/useDatatable";
 import Link from "next/link";
 import { Loading } from "../../components/Loading";
 import Accordion from "../../components/Accordion";
+import Form from "../../components/Form";
 
 const AreaChart = dynamic(() => import("../../components/Chart/area"), {
   ssr: false,
@@ -128,6 +129,12 @@ export default function Home() {
       icon: "icon-park-outline:certificate",
       data: 0,
     },
+    {
+      id: 11,
+      title: "Membimbing kegiatan mahasiswa, (jumlah kegiatan mahasiswa)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
   ];
 
   const dataCardPengembanganDiri = [
@@ -152,12 +159,6 @@ export default function Home() {
     {
       id: 13,
       title: "Melakukan kegiatan pengembangan diri (jam)",
-      icon: "icon-park-outline:certificate",
-      data: 0,
-    },
-    {
-      id: 11,
-      title: "Membimbing kegiatan mahasiswa, (jumlah kegiatan mahasiswa)",
       icon: "icon-park-outline:certificate",
       data: 0,
     },
@@ -213,6 +214,7 @@ export default function Home() {
       data: 0,
     },
   ];
+
   const dataCardPengabdian = [
     {
       id: 1,
@@ -241,6 +243,82 @@ export default function Home() {
     {
       id: 5,
       title: "Pelayanan Masyarakat",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+  ];
+
+  const dataCardPenunjangTugasDosen = [
+    {
+      id: 1,
+      title:
+        "Ketua/Wakil Panitia Kegiatan (PT/Pemerintah Pusat/Pemerintah Daerah)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 2,
+      title: "Anggota Panitia Kegiatan (PT/Pemerintah Pusat/Pemerintah Daerah)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 3,
+      title: "Pengurus (Nasional/Internasional)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 4,
+      title: "Anggota Atas Permintaan (Nasional/Internasional)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 5,
+      title: "Anggota (Nasional/Internasional)",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 6,
+      title: "Mewakili PT/Lembaga Pemerintah",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 7,
+      title: "Ketua Delegasi Pertemuan Internsional",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 8,
+      title: "Anggota Delegasi Pertemuan Internasional",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 9,
+      title: "Penghargaan",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 10,
+      title: "Menulis Buku SLTA kebawah",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 11,
+      title: "Prestasi Olahraga",
+      icon: "icon-park-outline:certificate",
+      data: 0,
+    },
+    {
+      id: 12,
+      title: "Asesor PAK, BKD, Hibah dan Pengabdian",
       icon: "icon-park-outline:certificate",
       data: 0,
     },
@@ -319,6 +397,33 @@ export default function Home() {
             SINGKATAN : {data.userData?.singkat_name}
           </span>
         </div>
+      </div>
+
+      <div className="mt-8 mb-4 w-2/4">
+        <Form className="grid grid-cols-2 gap-4">
+          <Form.Group>
+            <Form.Select
+              name="Tahu_akademik"
+              options={[
+                { value: "2024/2023", label: "2024/2023" },
+                { value: "2023/2022", label: "2023/2022" },
+                { value: "2022/2021", label: "2022/2021" },
+                { value: "2021/2020", label: "2021/2020" },
+                { value: "2019/2018", label: "2019/2018" },
+                { value: "2018/2017", label: "2018/2017" },
+              ]}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Select
+              name="Tahu_akademik"
+              options={[
+                { value: "GASAL", label: "GASAL" },
+                { value: "GENAP", label: "GENAP" },
+              ]}
+            />
+          </Form.Group>
+        </Form>
       </div>
 
       {/* Pendidikan */}
@@ -494,6 +599,44 @@ export default function Home() {
               <Card.Body className="mx-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
                   {dataCardPengabdian.map((row, index) => {
+                    return (
+                      <>
+                        <Card key={`row-${index}`}>
+                          <Card.Body>
+                            <Link href="#">
+                              <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
+                                <Icon
+                                  icon={row.icon}
+                                  width={24}
+                                  height={24}
+                                  className="text-white"
+                                />
+                              </div>
+                              <p className="block text-2xl font-bold leading-relaxed">
+                                {row.data}
+                              </p>
+                              <p className="block text-sm">{row.title}</p>
+                            </Link>
+                          </Card.Body>
+                        </Card>
+                      </>
+                    );
+                  })}
+                </div>
+              </Card.Body>
+            </Card>
+          </Accordion>
+        </div>
+      </div>
+
+      {/* Penunjangg Tugas Dosen */}
+      <div className="flex-1 block">
+        <div className="space-y-2 mt-2">
+          <Accordion title="Penunjang Tugas Dosen">
+            <Card>
+              <Card.Body className="mx-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+                  {dataCardPenunjangTugasDosen.map((row, index) => {
                     return (
                       <>
                         <Card key={`row-${index}`}>
