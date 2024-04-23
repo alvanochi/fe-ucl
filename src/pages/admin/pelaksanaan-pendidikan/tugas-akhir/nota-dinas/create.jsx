@@ -349,11 +349,42 @@ export default function CreateNotaDinas() {
                 .map(
                   (mahasiswa, index) => `
                 <tr key=${index}>
-                  <td style="border: 1px solid black; padding: 8px;">${mahasiswa.nama}</td>
-                  <td style="border: 1px solid black; padding: 8px;">${mahasiswa.npm}</td>
-                  <td style="border: 1px solid black; padding: 8px;">${mahasiswa.judul_skripsi}</td>
-                  <td style="border: 1px solid black; padding: 8px;">${mahasiswa.pembimbing_1}</td>
-                  <td style="border: 1px solid black; padding: 8px;">${mahasiswa.pembimbing_2}</td>
+                  <td style="border: 1px solid black; padding: 8px;">${
+                    mahasiswa.nama
+                  }</td>
+                  <td style="border: 1px solid black; padding: 8px;">${
+                    mahasiswa.npm
+                  }</td>
+                  <td style="border: 1px solid black; padding: 8px;">${
+                    mahasiswa.judul_skripsi
+                  }</td>
+                  <td style="border: 1px solid black; padding: 8px;">
+                  ${
+                    mahasiswa.pembimbing_1
+                      ? `<span>
+                        ${
+                          listDosen.find(
+                            (dosen) => dosen.user_id === mahasiswa.pembimbing_1
+                          )?.nama_lengkap || ""
+                        }
+                      </span>`
+                      : ""
+                  }
+                </td>
+                
+                <td style="border: 1px solid black; padding: 8px;">
+                ${
+                  mahasiswa.pembimbing_2
+                    ? `<span>
+                      ${
+                        listDosen.find(
+                          (dosen) => dosen.user_id === mahasiswa.pembimbing_2
+                        )?.nama_lengkap || ""
+                      }
+                    </span>`
+                    : ""
+                }
+              </td>
                 </tr>
               `
                 )
