@@ -489,7 +489,7 @@ export default function CreateNotaDinas() {
                     marginBottom: "40px",
                   }}
                 >
-                  Nomor: {nomorNota}
+                  Nomor: "020/K.3.1/TI-FTS/I/2024"
                 </p>
                 <div
                   style={{
