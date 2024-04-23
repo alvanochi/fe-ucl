@@ -489,7 +489,7 @@ export default function CreateNotaDinas() {
                     marginBottom: "40px",
                   }}
                 >
-                  Nomor: {data.nomorNota}
+                  Nomor: {nomorNota}
                 </p>
                 <div
                   style={{
