@@ -19,6 +19,7 @@ import { ROLE_ID_ADMIN } from "../../../config/role";
 import { Icon } from "@iconify-icon/react";
 import _ from "underscore";
 import { Loading } from "../../../components/Loading";
+import useGroup from "../../../repo/group";
 
 export default function CreateJadwal() {
   const router = useRouter();
@@ -42,6 +43,7 @@ export default function CreateJadwal() {
     status_ruangan: "",
     tanggal: "",
     waktu: "",
+    id_group_tias: "",
     peserta_dosen: [],
     peserta_mahasiswa: [],
   };
@@ -76,6 +78,7 @@ export default function CreateJadwal() {
 
   const { form, inputHandler, setForm } = formdata;
 
+  const { data: listGroup, isLoading: isGroupLoading } = useGroup([user]);
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
     user,
@@ -184,6 +187,33 @@ export default function CreateJadwal() {
                 onChange={inputHandler}
                 value={form.waktu}
                 required
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">
+                Invite By Group <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Combobox
+                name="id_group_tias"
+                onChange={(selected) =>
+                  inputHandler({
+                    target: {
+                      name: "id_group_tias",
+                      value: selected?.value,
+                    },
+                  })
+                }
+                value={form.id_group_tias}
+                options={
+                  listGroup &&
+                  Array.isArray(listGroup) &&
+                  listGroup.map((group) => ({
+                    label: group.nama_group,
+                    value: group.id,
+                  }))
+                }
+                menuTarget={document.body}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

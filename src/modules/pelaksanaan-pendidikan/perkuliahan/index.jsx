@@ -13,21 +13,6 @@ import Form from "../../../components/Form";
 export default function PerkuliahanModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/help/skpi-perkuliahan`;
 
-  // const {
-  //   data,
-  //   loading,
-  //   page,
-  //   pageCount,
-  //   filter,
-  //   setPage,
-  //   setFilter,
-  //   canPrev,
-  //   canNext,
-  //   refresh,
-  //   sortBy,
-  //   getSortBy,
-  // } = useDatatable(DATA_URL);
-
   const [searchValue, setSearchValue] = useState("");
 
   const {
@@ -64,31 +49,56 @@ export default function PerkuliahanModule({ baseURL }) {
               <div className="flex items-center gap-2 cursor-pointer">No</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("name")}
+              >
                 Matakuliah
+                <SortIcon sort={getSortByNew("name")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">SKS</div>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("name")}
+              >
+                SKS <SortIcon sort={getSortByNew("name")} />
+              </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("class")}
+              >
                 Kelas
+                <SortIcon sort={getSortByNew("class")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("dosen")}
+              >
                 Dosen
+                <SortIcon sort={getSortByNew("dosen")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("day")}
+              >
                 Hari Jam/Tgl
+                <SortIcon sort={getSortByNew("day")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("class_room")}
+              >
                 Ruangan
+                <SortIcon sort={getSortByNew("class_room")} />
               </div>
             </th>
           </tr>
