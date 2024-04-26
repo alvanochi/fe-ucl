@@ -34,6 +34,9 @@ export default function CreateJadwal() {
   const INITIAL_PESERTA_MHS = {
     npm: "",
   };
+  const INITIAL_GROUPS = {
+    id: "",
+  };
 
   const INITIAL_FORM = {
     nm_pengundang: "",
@@ -43,9 +46,9 @@ export default function CreateJadwal() {
     status_ruangan: "",
     tanggal: "",
     waktu: "",
-    id_group_tias: "",
     peserta_dosen: [],
     peserta_mahasiswa: [],
+    groups: [],
   };
 
   const { formdata, submitHandler } = useCRUD(STORE_URL, INITIAL_FORM, {
@@ -69,9 +72,10 @@ export default function CreateJadwal() {
             peserta_dosen: data.peserta_dosen.map((item) =>
               _.omit(item, ["role"])
             ),
+            groups: data.groups.map((item) => _.omit(item, ["role"])),
           }),
         },
-        ["peserta_dosen", "peserta_mahasiswa"]
+        ["peserta_dosen", "peserta_mahasiswa", "groups"]
       ),
     success: () => router.push(prefix + menu.url),
   });
@@ -93,7 +97,7 @@ export default function CreateJadwal() {
     }));
 
   if (
-    [user, menu, isDosenLoading, isMahasiswaLoading].some(
+    [user, menu, isDosenLoading, isMahasiswaLoading, isGroupLoading].some(
       (item) => item == null
     )
   )
@@ -190,31 +194,6 @@ export default function CreateJadwal() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[14rem]">Invite By Group</Form.Label>
-              <span>:</span>
-              <Form.Combobox
-                name="id_group_tias"
-                onChange={(selected) =>
-                  inputHandler({
-                    target: {
-                      name: "id_group_tias",
-                      value: selected?.value,
-                    },
-                  })
-                }
-                value={form.id_group_tias}
-                options={
-                  listGroup &&
-                  Array.isArray(listGroup) &&
-                  listGroup.map((group) => ({
-                    label: group.nama_group,
-                    value: group.id,
-                  }))
-                }
-                menuTarget={document.body}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
                 Status <span className="text-danger-600">*</span>
               </Form.Label>
@@ -250,6 +229,116 @@ export default function CreateJadwal() {
         </Card>
 
         <div className="flex justify-between">
+          <div className="flex-grow">
+            <table
+              className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+              cellPadding={10}
+            >
+              <colgroup>
+                <col style={{ width: "80%" }} />
+                <col style={{ width: "20%" }} />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th
+                    colSpan={4}
+                    className="text-sm border-2 border-white bg-gray-50"
+                  >
+                    Undang Group
+                  </th>
+                </tr>
+                <tr>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    Nama Group
+                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {form.groups.map((item, index) => (
+                  <tr key={`group-${index}`}>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      <Form.Combobox
+                        index={index}
+                        name="groups.id"
+                        onChange={(selected) =>
+                          inputHandler({
+                            target: {
+                              attributes: {
+                                index: {
+                                  value: index,
+                                },
+                              },
+                              name: "groups.id",
+                              value: selected?.value,
+                            },
+                          })
+                        }
+                        value={form.groups[index].id}
+                        options={
+                          listGroup &&
+                          Array.isArray(listGroup) &&
+                          listGroup.map((group) => ({
+                            label: group.nama_group,
+                            value: group.id,
+                          }))
+                        }
+                        menuTarget={document.body}
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      <div className="flex items-stretch gap-1">
+                        <Button.Icon
+                          type="button"
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() =>
+                            removeFromUser("groups", index, "Groups")
+                          }
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="text-sm border-2 border-white bg-gray-50"
+                  >
+                    <Button
+                      type="button"
+                      variant="primary"
+                      className="mx-auto"
+                      onClick={() =>
+                        setForm((state) => ({
+                          ...state,
+                          groups: [
+                            ...state.groups,
+                            { ...INITIAL_GROUPS, role: "Admin" },
+                          ],
+                        }))
+                      }
+                    >
+                      Tambah Group
+                    </Button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+
+        <div className="flex justify-between">
           <div className="mr-4 flex-grow">
             <table
               className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
@@ -265,7 +354,7 @@ export default function CreateJadwal() {
                     colSpan={4}
                     className="text-sm border-2 border-white bg-gray-50"
                   >
-                    Peserta Rapat Pendidik(Dosen)
+                    Undang Peserta Rapat Pendidik(Dosen)
                   </th>
                 </tr>
                 <tr>
@@ -372,7 +461,7 @@ export default function CreateJadwal() {
                     colSpan={4}
                     className="text-sm border-2 border-white bg-gray-50"
                   >
-                    Peserta Rapat Mahasiswa
+                    Undang Peserta Rapat Mahasiswa
                   </th>
                 </tr>
                 <tr>
