@@ -127,6 +127,11 @@ export default function TugasAkhirModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Status Dospem
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
               Action
             </th>
           </tr>
@@ -173,6 +178,9 @@ export default function TugasAkhirModule({ baseURL }) {
                   {`${row.judul_skripsi.split(" ").slice(0, 6).join(" ")}${
                     row.judul_skripsi.split(" ").length > 6 ? "..." : ""
                   }`}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">
+                  {row.statusDospem}
                 </td>
 
                 <td className="text-sm border-2 border-white bg-gray-50">

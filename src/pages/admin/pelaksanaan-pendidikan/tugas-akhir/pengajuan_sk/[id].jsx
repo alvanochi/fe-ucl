@@ -40,6 +40,7 @@ export default function PengajuanSkAction() {
     status_kepala_lab: "",
     nama_lengkap: "",
     npm: "",
+    nomor_nota_dinas: "",
   };
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
@@ -97,7 +98,7 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
                 disabled
@@ -108,7 +109,7 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="npm"
                 value={form.npm}
                 disabled
@@ -119,7 +120,7 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="judul_skripsi"
                 value={form.judul_skripsi}
                 disabled
@@ -130,7 +131,7 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="semester"
                 value={form.semester}
                 disabled
@@ -141,9 +142,22 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="lokasi_kegiatan"
                 value={form.lokasi_kegiatan}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nomor Nota Dinas
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="link"
+                className="flex-1 border-none"
+                name="nomor_nota_dinas"
+                value={form.nomor_nota_dinas || "-"}
                 disabled
               />
             </Form.Group>

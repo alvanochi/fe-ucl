@@ -20,6 +20,7 @@ export default function CreateNotaDinas() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
   const FILE_URL = `${process.env.API_ENDPOINT}/ttd`;
+  const FILE_URL_KOP = `${process.env.API_ENDPOINT}/img`;
 
   const [data, setData] = useState({
     nomorNota: "",
@@ -48,6 +49,7 @@ export default function CreateNotaDinas() {
             judul_skripsi: selectedStudent.judul_skripsi,
             pembimbing_1: selectedStudent.sk_pembimbing_1,
             pembimbing_2: selectedStudent.sk_pembimbing_2,
+            mhs_id: selectedStudent.mhs_id,
           };
         }
       }
@@ -93,6 +95,16 @@ export default function CreateNotaDinas() {
   const content = () => {
     return (
       <>
+        <div className="flex items-center justify-center gap-2 mb-8">
+          <div style={{ margin: "0 auto" }}>
+            <img
+              src={`${FILE_URL_KOP}/kop_surat.png`}
+              alt="Kop Surat"
+              style={{ width: "100%", marginBottom: "20px" }}
+            />
+          </div>
+        </div>
+
         <div className="flex items-center justify-center gap-2 mb-8">
           <div style={{ margin: "0 auto", maxWidth: "600px" }}>
             <h1
@@ -275,11 +287,58 @@ export default function CreateNotaDinas() {
                   textIndent: "295px",
                   fontFamily: "Times New Roman",
                   fontSize: "12px",
+                  fontWeight: "bold",
+                  textDecoration: "underline",
                 }}
               >
                 {dataKaprodi.nama_lengkap}
               </p>
+              <p
+                style={{
+                  textIndent: "295px",
+                  fontFamily: "Times New Roman",
+                  fontSize: "12px",
+                  paddingTop: "-6px",
+                }}
+              >
+                NIK: {dataKaprodi.nip}
+              </p>
+              <div>
+                <p
+                  style={{
+                    fontFamily: "Times New Roman",
+                    fontSize: "12px",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Tembusan :
+                </p>
+              </div>
+              <div
+                style={{
+                  fontFamily: "Times New Roman",
+                  fontSize: "12px",
+                  margin: "0",
+                }}
+              >
+                <ul style={{ listStyleType: "none" }}>
+                  <li>1. Wakil Dekan Bidang Akademik</li>
+                  <li>2. Wakil Dekan Bidang Sumber Daya</li>
+                  <li>
+                    3. Wakil Dekan Bidang Kemahasiswaan, Kerjasama dan Dakwah
+                  </li>
+                </ul>
+              </div>
             </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-center gap-2 mb-16">
+          <div style={{ margin: "0 auto" }}>
+            <img
+              src={`${FILE_URL_KOP}/foot_kop.png`}
+              alt="Kop Surat"
+              style={{ width: "100%", marginTop: "50px" }}
+            />
           </div>
         </div>
       </>
@@ -298,82 +357,129 @@ export default function CreateNotaDinas() {
     `;
 
     const pesertaMahasiswa = `
-      <div style="page-break-before: always;">
-        <div style="margin: 0 auto; max-width: 600px;">
-          <h2 style="text-align: center; font-weight: bold; font-size: 16px; margin: 20px 0; font-family: 'Times New Roman'; text-decoration: underline;">Mahasiswa</h2>
-          <table style="width: 100%; border-collapse: collapse;">
-            <thead>
-              <tr>
-                <th style="border: 1px solid black; padding: 8px; font-size: 12px;">Nama</th>
-                <th style="border: 1px solid black; padding: 8px; font-size: 12px;">NPM</th>
-                <th style="border: 1px solid black; padding: 8px; font-size: 12px;">Judul Skripsi</th>
-                <th style="border: 1px solid black; padding: 8px; font-size: 12px;">Usulan Dosen 1</th>
-                <th style="border: 1px solid black; padding: 8px; font-size: 12px;">Usulan Dosen 2</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${data.peserta_mahasiswa
-                .map(
-                  (mahasiswa, index) => `
-                <tr key=${index}>
-                  <td style="border: 1px solid black; padding: 8px;">${
-                    mahasiswa.nama
-                  }</td>
-                  <td style="border: 1px solid black; padding: 8px;">${
-                    mahasiswa.npm
-                  }</td>
-                  <td style="border: 1px solid black; padding: 8px;">${
-                    mahasiswa.judul_skripsi
-                  }</td>
-                  <td style="border: 1px solid black; padding: 8px;">
-                  ${
-                    mahasiswa.pembimbing_1
-                      ? `<span>
-                        ${
-                          listDosen.find(
-                            (dosen) => dosen.user_id === mahasiswa.pembimbing_1
-                          )?.nama_lengkap || ""
-                        }
-                      </span>`
-                      : ""
-                  }
-                </td>
-                
-                <td style="border: 1px solid black; padding: 8px;">
-                ${
+      <div style="margin: 0 auto; max-width: 1000px; margin-top: 500px;">
+      <h3 style="font-size: 12px;"><em>Lampiran Nota Dinas Nomor: ${
+        data.nomorNota
+      }</em></h3>
+
+      <div style="margin: 0 auto; max-width: 400px;">
+        <h2 style="text-align: center; font-weight: bold; font-size: 16px; margin: 20px 0; font-family: 'Times New Roman'; ">
+          DAFTAR MAHASISWA PENGAJUAN TUGAS AKHIR
+          PROGRAM STUDI TEKNIK INFORMATIKA
+          FTS – UIKA BOGOR
+        </h2>
+      </div>
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr>
+              <th style="border: 1px solid black; padding: 8px; font-size: 12px;">Nama</th>
+              <th style="border: 1px solid black; padding: 8px; font-size: 12px;">NPM</th>
+              <th style="border: 1px solid black; padding: 8px; font-size: 12px;">Judul Skripsi</th>
+              <th style="border: 1px solid black; padding: 8px; font-size: 12px;">Usulan Dosen 1</th>
+              <th style="border: 1px solid black; padding: 8px; font-size: 12px;">Usulan Dosen 2</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.peserta_mahasiswa
+              .map(
+                (mahasiswa, index) => `
+              <tr key=${index}>
+                <td style="border: 1px solid black; padding: 8px;">${
+                  mahasiswa.nama
+                }</td>
+                <td style="border: 1px solid black; padding: 8px;">${
+                  mahasiswa.npm
+                }</td>
+                <td style="border: 1px solid black; padding: 8px;">${
+                  mahasiswa.judul_skripsi
+                }</td>
+                <td style="border: 1px solid black; padding: 8px;">${
+                  mahasiswa.pembimbing_1
+                    ? `<span>${
+                        listDosen.find(
+                          (dosen) => dosen.user_id === mahasiswa.pembimbing_1
+                        )?.nama_lengkap || ""
+                      }</span>`
+                    : ""
+                }</td>
+                <td style="border: 1px solid black; padding: 8px;">${
                   mahasiswa.pembimbing_2
-                    ? `<span>
-                      ${
+                    ? `<span>${
                         listDosen.find(
                           (dosen) => dosen.user_id === mahasiswa.pembimbing_2
                         )?.nama_lengkap || ""
-                      }
-                    </span>`
+                      }</span>`
                     : ""
-                }
-              </td>
-                </tr>
-              `
-                )
-                .join("")}
-            </tbody>
-          </table>
-        </div>
+                }</td>
+              </tr>
+            `
+              )
+              .join("")}
+          </tbody>
+        </table>
       </div>
     `;
 
-    var opt = {
-      margin: 0,
-      filename: "nota_dinas.pdf",
-      image: { type: "jpeg", quality: 0.2 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: "in", format: "a4", orientation: "p" },
-    };
+    const combinedContent = surat + pesertaMahasiswa;
 
-    html2pdf()
-      .set(opt)
-      .from(surat + pesertaMahasiswa)
-      .save();
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+
+    const blob = new Blob([combinedContent], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+
+    iframe.src = url;
+
+    document.body.appendChild(iframe);
+
+    iframe.onload = () => {
+      const iframeWindow = iframe.contentWindow;
+      const iframeDocument = iframeWindow.document;
+
+      const style = iframeDocument.createElement("style");
+      style.innerHTML = `
+        @page {
+          size: portrait;
+        }
+      `;
+      iframeDocument.head.appendChild(style);
+
+      const landscapeStyle = `
+        <style>
+          @media print {
+            @page :first {
+              size: portrait;
+            }
+            @page {
+              size: landscape;
+            }
+          }
+        </style>
+      `;
+      iframeDocument.head.insertAdjacentHTML("beforeend", landscapeStyle);
+
+      iframeWindow.print();
+
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+        URL.revokeObjectURL(url);
+      }, 100);
+    };
+  };
+
+  const handleSubmit = async () => {
+    const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/get-nomor-nota`;
+
+    await axios.post(API_URL, {
+      nomorNota: data.nomorNota,
+      data: data.peserta_mahasiswa,
+    });
+  };
+
+  const handleButton = (e) => {
+    e.preventDefault();
+    handlePrint();
+    handleSubmit();
   };
 
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } =
@@ -461,6 +567,15 @@ export default function CreateNotaDinas() {
           <Card.Body className="space-y-4">
             <div className="flex items-center justify-center gap-2 mb-8">
               <div style={{ margin: "0 auto", maxWidth: "600px" }}>
+                <div className="flex items-center justify-center gap-2 mb-8">
+                  <div style={{ margin: "0 auto" }}>
+                    <img
+                      src={`${FILE_URL_KOP}/kop_surat.png`}
+                      alt="Kop Surat"
+                      style={{ width: "100%", marginBottom: "20px" }}
+                    />
+                  </div>
+                </div>
                 <h1
                   style={{
                     textAlign: "center",
@@ -656,6 +771,51 @@ export default function CreateNotaDinas() {
                     {dataKaprodi.nama_lengkap}
                   </p>
                 </div>
+                <p
+                  style={{
+                    textIndent: "330px",
+                    fontFamily: "Times New Roman",
+                    fontSize: "12px",
+                    paddingTop: "-6px",
+                  }}
+                >
+                  NIK: {dataKaprodi.nip}
+                </p>
+                <div>
+                  <p
+                    style={{
+                      fontFamily: "Times New Roman",
+                      fontSize: "12px",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Tembusan :
+                  </p>
+                </div>
+                <div
+                  style={{
+                    fontFamily: "Times New Roman",
+                    fontSize: "12px",
+                    margin: "0",
+                  }}
+                >
+                  <ul style={{ listStyleType: "none" }}>
+                    <li>1. Wakil Dekan Bidang Akademik</li>
+                    <li>2. Wakil Dekan Bidang Sumber Daya</li>
+                    <li>
+                      3. Wakil Dekan Bidang Kemahasiswaan, Kerjasama dan Dakwah
+                    </li>
+                  </ul>
+                </div>
+                <div className="flex items-center justify-center gap-2 mb-16">
+                  <div style={{ margin: "0 auto" }}>
+                    <img
+                      src={`${FILE_URL_KOP}/foot_kop.png`}
+                      alt="Kop Surat"
+                      style={{ width: "100%", marginTop: "50px" }}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </Card.Body>
@@ -723,6 +883,7 @@ export default function CreateNotaDinas() {
                           judul_skripsi: mahasiswa.judul_skripsi,
                           pembimbing_1: mahasiswa.sk_pembimbing_1,
                           pembimbing_2: mahasiswa.sk_pembimbing_2,
+                          mhs_id: mahasiswa.user_id,
                         }))
                       }
                       menuTarget={document.body}
@@ -821,10 +982,7 @@ export default function CreateNotaDinas() {
         <Button
           variant="info"
           className="w-full h-12 mb-4"
-          onClick={(e) => {
-            e.preventDefault();
-            handlePrint();
-          }}
+          onClick={handleButton}
         >
           Cetak Nota Dinas
         </Button>

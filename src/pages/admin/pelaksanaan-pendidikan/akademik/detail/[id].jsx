@@ -76,6 +76,40 @@ export default function DetailBimbinganAkademik() {
     }
   };
 
+  const handleSubmit = async (event, id) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
+
+    try {
+      await axios.patch(
+        `${process.env.API_ENDPOINT}/bimbingan-akademik/edit-mhs/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (router.query.id) {
+        const response = await axios.get(`${API_URL}/${router.query.id}`);
+
+        setDataBimbingan(response.data.data.dataBimbingan);
+        setMhsBimbingan(response.data.data.mhsBimbingan);
+      }
+
+      toastAlert("success", "Updated!");
+      event.target.reset();
+    } catch (error) {
+      console.error("Terjadi kesalahan saat mengunggah dokumen FRS:", error);
+      if (error.name === "AxiosError") {
+        toastAlert("warning", error.response.data.message);
+        return;
+      }
+      toastAlert("error", error);
+    }
+  };
+
   const formatDate = (dateString) => {
     if (!dateString) return "";
     return dateString.substring(0, 10);
@@ -378,17 +412,41 @@ export default function DetailBimbinganAkademik() {
                                   }}
                                 />
                               </Form.Group>
-                              <Form.Group className="flex items-baseline pt-2 gap-3">
-                                <Form.Label className="min-w-[18rem]">
-                                  Dokumen FRS
-                                  <span className="text-danger-600">*</span>
-                                </Form.Label>
-                                <span>:</span>
-                                <embed
-                                  src={`${FILE_URL}/${semester.dok_frs}`}
-                                  className="w-full h-[256px]"
-                                />
-                              </Form.Group>
+                              <Form
+                                onSubmit={(event) =>
+                                  handleSubmit(event, semester.id)
+                                }
+                              >
+                                <Form.Group className="flex items-baseline pt-2 gap-3">
+                                  <Form.Label className="min-w-[18rem]">
+                                    Dokumen FRS
+                                    <span className="text-danger-600">*</span>
+                                  </Form.Label>
+                                  <span>:</span>
+                                  <Form.Input
+                                    type="file"
+                                    className="flex-1"
+                                    name="dok_frs"
+                                  />
+
+                                  <Button.Icon
+                                    variant="secondary"
+                                    icon={
+                                      <Icon
+                                        icon="bx:edit"
+                                        width={20}
+                                        height={20}
+                                      />
+                                    }
+                                    type="submit"
+                                  />
+                                </Form.Group>
+                              </Form>
+
+                              <embed
+                                src={`${FILE_URL}/${semester.dok_frs}`}
+                                className="w-full h-[256px] mt-8"
+                              />
                             </>
                           )}
                         </div>

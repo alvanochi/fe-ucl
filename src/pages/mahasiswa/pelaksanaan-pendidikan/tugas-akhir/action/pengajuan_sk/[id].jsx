@@ -67,7 +67,7 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
                 disabled
@@ -78,7 +78,7 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="npm"
                 value={form.npm}
                 disabled
@@ -89,7 +89,7 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="judul_skripsi"
                 value={form.judul_skripsi}
                 disabled
@@ -102,7 +102,7 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="semester"
                 value={form.semester}
                 disabled
@@ -113,9 +113,22 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="lokasi_kegiatan"
                 value={form.lokasi_kegiatan}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nomor Nota Dinas
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="link"
+                className="flex-1 border-none"
+                name="nomor_nota_dinas"
+                value={form.nomor_nota_dinas || "-"}
                 disabled
               />
             </Form.Group>
@@ -126,7 +139,7 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="nomor_sk"
                 value={form.nomor_sk || "-"}
                 disabled
@@ -137,20 +150,31 @@ export default function PengajuanSkAction() {
                 Tanggal SK Penugasan
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="date"
-                className="flex-1"
-                name="tgl_sk"
-                value={form.tgl_sk}
-                disabled
-              />
+              {form.tgl_sk && (
+                <Form.Input
+                  type="date"
+                  className="flex-1 border-none"
+                  name="tgl_sk"
+                  value={form.tgl_sk}
+                  disabled
+                />
+              )}
+              {!form.tgl_sk && (
+                <Form.Input
+                  type="text"
+                  className="flex-1 border-none"
+                  name="tgl_sk"
+                  value="-"
+                  disabled
+                />
+              )}
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">Link Dokumen SK</Form.Label>
               <span>:</span>
               <Form.Input
                 type="link"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="link_dokumen_sk"
                 value={form.link_dokumen_sk || "-"}
                 disabled
