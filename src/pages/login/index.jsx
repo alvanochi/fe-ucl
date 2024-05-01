@@ -11,6 +11,7 @@ import styles from "./login.module.css";
 import Link from "next/link";
 import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
 import { useEffect, useState } from "react";
+import { Icon } from "@iconify-icon/react/dist/iconify.js";
 
 export const Login = () => {
   const [stylesPage, setStylesPage] = useState({
@@ -122,6 +123,11 @@ export const Login = () => {
     }
   }
 
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <>
       <Head>
@@ -206,7 +212,7 @@ export const Login = () => {
                 required
               />
             </div>
-            <div className="block mb-6">
+            <div className="block relative mb-6">
               <div className="flex items-baseline justify-between">
                 <label className="block text-sm font-medium mb-1">
                   Kata Sandi
@@ -219,13 +225,23 @@ export const Login = () => {
                 </Link>
               </div>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 className="form-input"
                 name="password"
                 onChange={inputHandler}
                 value={form.password}
                 required
               />
+              <div
+                className="absolute right-3 top-12 transform -translate-y-1/2 cursor-pointer"
+                onClick={togglePassword}
+              >
+                {showPassword ? (
+                  <Icon icon="solar:eye-bold" width={20} height={20} />
+                ) : (
+                  <Icon icon="solar:eye-closed-bold" width={20} height={20} />
+                )}
+              </div>
             </div>
             <Button variant="primary" className="w-full h-12">
               Masuk
