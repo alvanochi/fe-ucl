@@ -93,6 +93,7 @@ export default function PengajuanKolo() {
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [isChecked3, setIsChecked3] = useState(false);
+  const [isCheckedLab, setIsCheckedLab] = useState(false);
 
   useEffect(() => {
     if (form) {
@@ -104,6 +105,9 @@ export default function PengajuanKolo() {
       }
       if (form?.kolo_status_pem_3 == true) {
         setIsChecked3(true);
+      }
+      if (form?.kolo_status_kepala_lab == true) {
+        setIsCheckedLab(true);
       }
     }
   }, [form]);
@@ -461,8 +465,8 @@ export default function PengajuanKolo() {
                   <input
                     className="cursor-pointer"
                     type="checkbox"
-                    checked={isChecked2}
-                    name="kolo_status_pem_2"
+                    checked={isCheckedLab}
+                    name="kolo_status_kepala_lab"
                     disabled
                   />
                 </Form.Group>
