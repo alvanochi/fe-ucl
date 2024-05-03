@@ -20,7 +20,7 @@ export default function PengajuanKolo() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const [defaultData, setDefaultData] = useState({});
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-pengajuan-kolo`;
@@ -40,9 +40,11 @@ export default function PengajuanKolo() {
     kolo_pembimbing_1: "",
     kolo_pembimbing_2: "",
     kolo_pembimbing_3: null,
+    kolo_kepala_lab: "",
     kolo_status_pem_1: "",
     kolo_status_pem_2: "",
     kolo_status_pem_3: "",
+    kolo_status_kepala_lab: "",
     evaluator_1: "",
     evaluator_2: "",
     jadwal_pelaksanaan: "",
@@ -50,6 +52,8 @@ export default function PengajuanKolo() {
     status_kp: "",
     status_sks_ipk: "",
     statusDosen: "",
+    ipk: "",
+    jumlah_sks: "",
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -78,6 +82,7 @@ export default function PengajuanKolo() {
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [isChecked3, setIsChecked3] = useState(false);
+  const [isCheckedLab, setIsCheckedLab] = useState(false);
 
   const handleCheckboxChange = async (event, id) => {
     const { name, checked } = event.target;
@@ -87,6 +92,8 @@ export default function PengajuanKolo() {
       setIsChecked2(checked);
     } else if (name === "kolo_status_pem_3") {
       setIsChecked3(checked);
+    } else if (name == "kolo_status_kepala_lab") {
+      setIsCheckedLab(checked);
     }
 
     try {
@@ -126,6 +133,9 @@ export default function PengajuanKolo() {
       if (form?.kolo_status_pem_3 == true) {
         setIsChecked3(true);
       }
+      if (form?.kolo_status_kepala_lab == true) {
+        setIsCheckedLab(true);
+      }
     }
   }, [form]);
 
@@ -148,7 +158,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
                 disabled
@@ -161,7 +171,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="npm"
                 value={form.npm}
                 disabled
@@ -174,7 +184,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="judul_skripsi"
                 value={form.judul_skripsi}
                 disabled
@@ -187,7 +197,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="semester"
                 value={form.semester}
                 disabled
@@ -200,7 +210,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="email"
                 value={form.email}
                 disabled
@@ -213,7 +223,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="ho_hp"
                 value={form.no_hp}
                 disabled
@@ -230,7 +240,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="url"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="link_dok_mhs_aktif"
                 value={form.link_dok_mhs_aktif}
                 onChange={inputHandler}
@@ -246,8 +256,8 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="url"
-                className="flex-1"
-                name="link_dok_pembayaran"
+                className="flex-1 border-none"
+                name="link_dok_pembayaran border-none"
                 value={form.link_dok_pembayaran}
                 onChange={inputHandler}
                 placeholder="link dokumen"
@@ -295,6 +305,7 @@ export default function PengajuanKolo() {
                 checked={form.status_sks_ipk}
                 disabled
               />
+              <span>SKS: {form.jumlah_sks}</span>|<span>IPK: {form.ipk}</span>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
@@ -303,7 +314,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="date"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="jadwal_pelaksanaan"
                 value={form.jadwal_pelaksanaan}
                 placeholder="Diisi oleh admin"
@@ -314,6 +325,7 @@ export default function PengajuanKolo() {
               <Form.Label className="min-w-[20rem]">Evaluator 1</Form.Label>
               <span>:</span>
               <Form.Select
+                className="border-none"
                 name="evaluator_1"
                 onChange={inputHandler}
                 value={form.evaluator_1}
@@ -331,6 +343,7 @@ export default function PengajuanKolo() {
               <Form.Label className="min-w-[20rem]">Evaluator 2</Form.Label>
               <span>:</span>
               <Form.Select
+                className="border-none"
                 name="evaluator_2"
                 onChange={inputHandler}
                 value={form.evaluator_2}
@@ -458,7 +471,7 @@ export default function PengajuanKolo() {
             {form.statusDosen === 3 && (
               <tr>
                 <td className="text-sm border-2 border-white text-center font-bold">
-                  <span>Pembimbing 3 (optional)</span>
+                  <span>Pembimbing 3</span>
                 </td>
                 <td className="text-sm border-2 border-white">
                   <Form.Group className="flex items-baseline gap-3">
@@ -487,6 +500,44 @@ export default function PengajuanKolo() {
                       }
                       name="kolo_status_pem_3"
                       disabled={isChecked3}
+                    />
+                  </Form.Group>
+                </td>
+              </tr>
+            )}
+
+            {form.statusDosen === "kepala_lab" && (
+              <tr>
+                <td className="text-sm border-2 border-white text-center font-bold">
+                  <span>Kepala Lab</span>
+                </td>
+                <td className="text-sm border-2 border-white">
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Select
+                      name="kolo_kepala_lab"
+                      value={form.kolo_kepala_lab}
+                      options={
+                        listDosen &&
+                        listDosen.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                        }))
+                      }
+                      disabled
+                    />
+                  </Form.Group>
+                </td>
+                <td className="text-sm border-2 border-white">
+                  <Form.Group className="flex items-center justify-center gap-3">
+                    <input
+                      className="cursor-pointer"
+                      type="checkbox"
+                      checked={isCheckedLab}
+                      onChange={(event) =>
+                        handleCheckboxChange(event, form.kolo_id)
+                      }
+                      name="kolo_status_kepala_lab"
+                      disabled={isCheckedLab}
                     />
                   </Form.Group>
                 </td>

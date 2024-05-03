@@ -17,15 +17,15 @@ export const Footer = () => {
                       <p>Follow Us</p>
                       <Icon
                         icon="ri:facebook-fill"
-                        class="cursor-pointer hover:text-color-secondary"
+                        className="cursor-pointer hover:text-color-secondary"
                       />
                       <Icon
                         icon="bi:youtube"
-                        class="cursor-pointer hover:text-color-secondary"
+                        className="cursor-pointer hover:text-color-secondary"
                       />
                       <Icon
                         icon="fa:instagram"
-                        class="cursor-pointer hover:text-color-secondary"
+                        className="cursor-pointer hover:text-color-secondary"
                       />
                       <i className="fa-brands fa-facebook-f cursor-pointer hover:text-color-secondary"></i>
                       <i className="fa-brands fa-twitter cursor-pointer hover:text-color-secondary"></i>

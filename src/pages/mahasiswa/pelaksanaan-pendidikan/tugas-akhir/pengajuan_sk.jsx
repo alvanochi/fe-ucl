@@ -216,7 +216,7 @@ export default function BimbinganMahasiswaCreate() {
             </tr>
             <tr>
               <td className="text-sm border-2 border-white text-center font-bold">
-                <span>Pembimbing 3</span>
+                <span>Pembimbing 3 (Optional)</span>
               </td>
               <td className="text-sm border-2 border-white">
                 <Form.Group className="flex items-baseline gap-3">

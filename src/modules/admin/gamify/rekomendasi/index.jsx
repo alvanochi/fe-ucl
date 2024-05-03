@@ -6,7 +6,6 @@ import SortIcon from "../../../../components/SortIcon";
 import Form from "../../../../components/Form";
 import useCRUD from "../../../../hooks/useCRUD";
 
-
 export default function RekomendasiGamifyModule({ baseURL }) {
   const API_URL = `${process.env.API_ENDPOINT}/kategori/rekomendasi`;
 
@@ -26,12 +25,10 @@ export default function RekomendasiGamifyModule({ baseURL }) {
   } = useDatatable(API_URL);
   const { destroy } = useCRUD(API_URL);
 
-
-
   return (
     <>
       <div className="flex justify-center gap-2 mb-8">
-      <Button
+        <Button
           as="a"
           href={`${baseURL}/rekomendasi/create`}
           variant="primary"
@@ -57,9 +54,7 @@ export default function RekomendasiGamifyModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Kode
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Kode</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
@@ -110,40 +105,40 @@ export default function RekomendasiGamifyModule({ baseURL }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.status === 1 ? (
-                      <button
-                        class="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 bg-green-500 text-white shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none rounded-full"
-                        type="button">
-                        DIGUNAKAN
-                      </button>
+                    <button
+                      className="align-middle select-none font-sans font-bold text-center uppercase transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 px-6 bg-green-500 text-white shadow-md shadow-green-500/20 hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none rounded-full"
+                      type="button"
+                    >
+                      DIGUNAKAN
+                    </button>
                   ) : (
                     <button
-                        class="select-none border border-gray-900 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none rounded-full"
-                        type="button">
-                        TIDAK DIGUNAKAN
-                      </button>
-                  ) }
+                      className="select-none border border-gray-900 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-gray-900 transition-all hover:opacity-75 focus:ring focus:ring-gray-300 active:opacity-[0.85] disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none rounded-full"
+                      type="button"
+                    >
+                      TIDAK DIGUNAKAN
+                    </button>
+                  )}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
-                      <Button.Icon
-                        as="a"
-                        href={`${baseURL}/rekomendasi/edit/${row.id}`}
-                        variant="secondary"
-                        icon={<Icon icon="bx:edit" width={20} height={20} />}
-                      />
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.id).then(() => refresh())
-                        }
-                      />
+                    <Button.Icon
+                      as="a"
+                      href={`${baseURL}/rekomendasi/edit/${row.id}`}
+                      variant="secondary"
+                      icon={<Icon icon="bx:edit" width={20} height={20} />}
+                    />
+                    <Button.Icon
+                      variant="danger"
+                      icon={
+                        <Icon
+                          icon="solar:trash-bin-2-bold-duotone"
+                          width={20}
+                          height={20}
+                        />
+                      }
+                      onClick={() => destroy(row.id).then(() => refresh())}
+                    />
                   </div>
                 </td>
               </tr>

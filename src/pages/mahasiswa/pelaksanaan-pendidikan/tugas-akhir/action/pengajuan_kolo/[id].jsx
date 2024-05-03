@@ -18,9 +18,8 @@ export default function PengajuanKolo() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
-  const [defaultData, setDefaultData] = useState({});
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-pengajuan-kolo`;
   const FILE_URL = `${process.env.API_ENDPOINT}/tugas-akhir/makalah-kolokium`;
 
@@ -38,15 +37,19 @@ export default function PengajuanKolo() {
     kolo_pembimbing_1: "",
     kolo_pembimbing_2: "",
     kolo_pembimbing_3: null,
+    kolo_kepala_lab: "",
     kolo_status_pem_1: "",
     kolo_status_pem_2: "",
     kolo_status_pem_3: "",
+    kolo_status_kepala_lab: "",
     evaluator_1: "",
     evaluator_2: "",
     jadwal_pelaksanaan: "",
     file_makalah: "",
     status_kp: "",
     status_sks_ipk: "",
+    ipk: "",
+    jumlah_sks: "",
   };
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -78,6 +81,12 @@ export default function PengajuanKolo() {
     });
   };
 
+  const handleKoloKepalaLab = (selected) => {
+    inputHandler({
+      target: { name: "kolo_kepala_lab", value: selected?.value },
+    });
+  };
+
   const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/pengajuan-kolokium`;
   const EDIT_OPTION = { url: `${EDIT_URL}/${form.kolo_id}`, method: "PATCH" };
 
@@ -96,6 +105,7 @@ export default function PengajuanKolo() {
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [isChecked3, setIsChecked3] = useState(false);
+  const [isCheckedLab, setIsCheckedLab] = useState(false);
 
   useEffect(() => {
     if (form) {
@@ -107,6 +117,9 @@ export default function PengajuanKolo() {
       }
       if (form?.kolo_status_pem_3 == true) {
         setIsChecked3(true);
+      }
+      if (form?.kolo_status_kepala_lab == true) {
+        setIsCheckedLab(true);
       }
     }
   }, [form]);
@@ -277,7 +290,7 @@ export default function PengajuanKolo() {
                 type="checkbox"
                 name="status_kp"
                 disabled
-                checked={form.status_kp}
+                checked={form.status_kp ? true : false}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -292,6 +305,7 @@ export default function PengajuanKolo() {
                 disabled
                 checked={form.status_sks_ipk}
               />
+              <span>SKS: {form.jumlah_sks}</span>|<span>IPK: {form.ipk}</span>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
@@ -300,7 +314,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="date"
-                className="flex-1"
+                className="flex-1 border-none"
                 name="jadwal_pelaksanaan"
                 value={form.jadwal_pelaksanaan}
                 placeholder="Diisi oleh admin"
@@ -312,6 +326,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Select
                 name="evaluator_1"
+                className="border-none"
                 onChange={inputHandler}
                 value={form.evaluator_1}
                 options={
@@ -331,6 +346,7 @@ export default function PengajuanKolo() {
                 name="evaluator_2"
                 onChange={inputHandler}
                 value={form.evaluator_2}
+                className="border-none"
                 options={
                   listDosen &&
                   listDosen.map((dosen) => ({
@@ -462,6 +478,37 @@ export default function PengajuanKolo() {
                     type="checkbox"
                     checked={isChecked3}
                     name="kolo_status_pem_3"
+                    disabled
+                  />
+                </Form.Group>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-sm border-2 border-white text-center font-bold">
+                <span>Kepala Lab</span>{" "}
+                <span className="text-danger-600">*</span>
+              </td>
+              <td className="text-sm border-2 border-white">
+                <Form.Group className="flex items-baseline gap-3">
+                  <Form.Combobox
+                    name="kolo_kepala_lab"
+                    onChange={handleKoloKepalaLab}
+                    value={form.kolo_kepala_lab}
+                    options={listDosen?.map((dosen) => ({
+                      label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                      value: dosen.user_id,
+                    }))}
+                    menuTarget={document.body}
+                  />
+                </Form.Group>
+              </td>
+              <td className="text-sm border-2 border-white">
+                <Form.Group className="flex items-center justify-center gap-3">
+                  <input
+                    className="cursor-pointer"
+                    type="checkbox"
+                    checked={isCheckedLab}
+                    name="kolo_status_kepala_lab"
                     disabled
                   />
                 </Form.Group>

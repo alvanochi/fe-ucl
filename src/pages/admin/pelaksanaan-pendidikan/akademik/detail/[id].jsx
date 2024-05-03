@@ -174,10 +174,13 @@ export default function DetailBimbinganAkademik() {
                     key={`mhs-${mhsIndex}`}
                     title={`${mhsIndex + 1}. ${mhs.nama_lengkap} - ${mhs.npm}`}
                   >
-                    <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
-                      <ul class="flex flex-wrap -mb-px">
+                    <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+                      <ul className="flex flex-wrap -mb-px">
                         {[1, 2, 3, 4, 5, 6, 7, 8].map((semesterNum) => (
-                          <li class="me-2" key={`semester-tab-${semesterNum}`}>
+                          <li
+                            className="me-2"
+                            key={`semester-tab-${semesterNum}`}
+                          >
                             <button
                               onClick={() => setActiveSemester(semesterNum)}
                               className={`inline-block p-4 border-b-2 ${
