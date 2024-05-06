@@ -12,7 +12,6 @@ import useDosen from "../../../../../../repo/dosen";
 import useCRUD from "../../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../../components/Loading";
 import date from "../../../../../../utils/date";
-import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 
 export default function PengajuanSidang() {
   const router = useRouter();
