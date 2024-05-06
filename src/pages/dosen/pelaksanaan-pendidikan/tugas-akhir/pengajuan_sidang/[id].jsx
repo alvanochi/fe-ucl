@@ -78,6 +78,7 @@ export default function PengajuanSidang() {
     peminatan: "",
     statusDosen: "",
     link_draft_final_skripsi: "",
+    judul: "",
   };
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -706,8 +707,8 @@ export default function PengajuanSidang() {
               <Form.Input
                 type="text"
                 className="flex-1"
-                name="judul_skripsi"
-                value={form.judul_skripsi}
+                name="judul"
+                value={form.judul}
                 disabled
               />
             </Form.Group>

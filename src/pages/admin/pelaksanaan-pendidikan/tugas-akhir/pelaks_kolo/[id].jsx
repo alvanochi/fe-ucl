@@ -59,6 +59,7 @@ export default function PelaksanaanKolo() {
     dosen_id: "",
     penilaian_kolo: null,
     nilai_akhir: {},
+    judul: "",
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {

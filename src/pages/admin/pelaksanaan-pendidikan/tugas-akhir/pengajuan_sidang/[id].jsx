@@ -76,6 +76,7 @@ export default function PengajuanSidang() {
     peminatan_lab: "",
     link_draft_final_skripsi: "",
     ipk: "",
+    judul: "",
   };
 
   const handlePenguji1 = (selected) => {
@@ -612,8 +613,8 @@ export default function PengajuanSidang() {
               <Form.Input
                 type="text"
                 className="flex-1 border-gray-500"
-                name="judul_skripsi"
-                value={form.judul_skripsi}
+                name="judul"
+                value={form.judul}
                 disabled
               />
             </Form.Group>

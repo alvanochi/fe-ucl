@@ -51,6 +51,7 @@ export default function PengajuanKolo() {
     jumlah_sks: "",
     ipk: "",
     link_dok_makalah: "",
+    judul: "",
   };
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -181,8 +182,8 @@ export default function PengajuanKolo() {
               <Form.Input
                 type="text"
                 className="flex-1 border-gray-500"
-                name="judul_skripsi"
-                value={form.judul_skripsi}
+                name="judul"
+                value={form.judul}
                 disabled
               />
             </Form.Group>
