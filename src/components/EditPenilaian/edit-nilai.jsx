@@ -7,7 +7,7 @@ import useModal from "../../hooks/useModal";
 import { Icon } from "@iconify-icon/react";
 import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
 
-const EditNilai = ({ title, data, name, id, onSuccess }) => {
+const EditNilai = ({ title, data, name, id, onSuccess, db }) => {
   const { show, toggle, close } = useModal();
 
   const [formData, setFormData] = useState(0);
@@ -26,7 +26,7 @@ const EditNilai = ({ title, data, name, id, onSuccess }) => {
 
     try {
       const dataToEdit = {
-        db: "ta_penilaian_kolokium",
+        db: db,
         [name]: formData,
       };
 

@@ -315,10 +315,9 @@ export default function TugasAkhirModule({ baseURL }) {
                             } hover:bg-gray-200`}
                           >
                             <span>
-                              {(row.status === "selesai" ||
-                                row.status === "menuju-sidang" ||
-                                row.status === "menyelesaikan-revisi") &&
-                              row.status_penilaian === true ? (
+                              {row.status === "selesai" ||
+                              row.status === "menuju-sidang" ||
+                              row.status === "menyelesaikan-revisi" ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pengajuan_sidang/${row.id}`}
                                 >

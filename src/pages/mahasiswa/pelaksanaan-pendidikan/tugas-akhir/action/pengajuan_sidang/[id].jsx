@@ -12,13 +12,14 @@ import useDosen from "../../../../../../repo/dosen";
 import useCRUD from "../../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../../components/Loading";
 import date from "../../../../../../utils/date";
+import DocViewer, { DocViewerRenderers } from "react-doc-viewer";
 
 export default function PengajuanSidang() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const [defaultData, setDefaultData] = useState({});
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-pengajuan-sidang`;
@@ -63,14 +64,18 @@ export default function PengajuanSidang() {
     sidang_pembimbing_1: "",
     sidang_pembimbing_2: "",
     sidang_pembimbing_3: null,
+    sidang_kepala_lab: "",
     sidang_status_pem_1: "",
     sidang_status_pem_2: "",
     sidang_status_pem_3: "",
+    sidang_status_kepala_lab: "",
+    jadwal_pelaksanaan: "",
     penguji_1: "",
     penguji_2: "",
     judul_skripsi: "",
     program_studi: "",
-    peminatan_lab: "",
+    peminatan: "",
+    link_draft_final_skripsi: "",
   };
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -118,7 +123,8 @@ export default function PengajuanSidang() {
       { field: "penguji_1", label: "Penguji 1" },
       { field: "penguji_2", label: "Penguji 2" },
       { field: "program_studi", label: "Program Studi" },
-      { field: "peminatan_lab", label: "Peminatan Lab" },
+      { field: "peminatan", label: "Peminatan Lab" },
+      { field: "link_draft_final_skripsi", label: "Link Draft Final Skripsi" },
     ],
     success: () => router.push(prefix + menu.url),
   });
@@ -143,6 +149,12 @@ export default function PengajuanSidang() {
     });
   };
 
+  const handleKepalaLab = (selected) => {
+    inputHandler({
+      target: { name: "sidang_kepala_lab", value: selected?.value },
+    });
+  };
+
   const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/pengajuan-sidang`;
   const EDIT_OPTION = { url: `${EDIT_URL}/${form.sidang_id}`, method: "PATCH" };
 
@@ -158,11 +170,43 @@ export default function PengajuanSidang() {
     });
   }, [router, user]);
 
+  const handleDownload = () => {
+    const downloadLink = document.createElement("a");
+    downloadLink.href = `${FILE_DRAFT_SKRIPSI}/${form.draft_final_skripsi}`;
+    downloadLink.target = "_blank";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
+
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+
+      <div
+        className="flex items-center p-4 mb-4  mt-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+        role="alert"
+      >
+        <svg
+          className="flex-shrink-0 inline w-4 h-4 me-3"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span className="sr-only">Info</span>
+        <div>
+          <span className="font-medium">Catatan!</span> Silahkan isi form yang
+          dibintangi saja (<span className="text-danger-600">*</span>), data
+          akan dilengkapi oleh Tata Usaha Program Studi jika status approved
+          dosen pembimbing sudah diceklis. dan pastikan semua link google drive
+          bisa di akses oleh siapa saja yang memiliki link!
+        </div>
+      </div>
       <Form
         onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
         type="formdata"
@@ -170,14 +214,6 @@ export default function PengajuanSidang() {
         <Card className="mt-4">
           <Card.Header className="text-center">
             <div>Permohonan Pelaksanaan Ujian Skripsi Pada Sidang Sarjana</div>
-            <div className="mt-2">
-              <span className="font-normal">
-                <b>Catatan:</b> Silahkan isi form yang dibintangi saja (
-                <span className="text-danger-600">*</span>), data akan
-                dilengkapi oleh Tata Usaha Program Studi jika status approved
-                dosen pembimbing sudah diceklis.
-              </span>
-            </div>
           </Card.Header>
 
           <Card.Body className="space-y-4">
@@ -330,41 +366,9 @@ export default function PengajuanSidang() {
         <Card className="mt-4">
           <Card.Header className="text-center">
             <div>Administrasi AKademik</div>
-            <div className="mt-2">
-              <span className="font-normal">
-                <b>Catatan:</b> Silahkan isi form yang dibintangi saja (
-                <span className="text-danger-600">*</span>), data akan
-                dilengkapi oleh Tata Usaha Program Studi jika status approved
-                dosen pembimbing sudah diceklis.
-              </span>
-            </div>
           </Card.Header>
 
           <Card.Body className="space-y-4">
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Lulus Semua Matakuliah Lokal
-              </Form.Label>
-              <span>:</span>
-              <Form.Checkbox
-                type="checkbox"
-                name="status_mk"
-                disabled
-                checked={form.status_mk}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Maksimal Nilai D Berjumlah 1
-              </Form.Label>
-              <span>:</span>
-              <Form.Checkbox
-                type="checkbox"
-                name="max_nilai_d"
-                disabled
-                checked={form.max_nilai_d}
-              />
-            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 <p>Melampirkan KHS Kumulatif/Transkip </p>
@@ -384,20 +388,16 @@ export default function PengajuanSidang() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
-                Minimal IPK ≥ 2,00
-              </Form.Label>
-              <span>:</span>
-              <Form.Checkbox
-                type="checkbox"
-                name="status_min_ipk"
-                disabled
-                checked={form.status_min_ipk}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Pas Foto Berwarna
-                <span className="text-danger-600">*</span>
+                <p>
+                  Pas Foto Berwarna<span className="text-danger-600">*</span>
+                </p>
+                <p className="text-sm font-normal">
+                  (Background biru untuk tahun
+                </p>
+                <p className="text-sm font-normal">
+                  kelahiran genap dan merah untuk
+                </p>
+                <p className="text-sm font-normal">tahun kelahiran ganjil)</p>
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -477,21 +477,6 @@ export default function PengajuanSidang() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
-                5 Eksemblar Skripsi
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="lima_eksemlar_skripsi"
-                value={form.lima_eksemlar_skripsi}
-                onChange={inputHandler}
-                placeholder="Otomatis"
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
                 2 Sertifikat Kompetensi{" "}
                 <span className="text-danger-600">*</span>
               </Form.Label>
@@ -554,9 +539,7 @@ export default function PengajuanSidang() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Lainya <span className="text-danger-600">*</span>
-              </Form.Label>
+              <Form.Label className="min-w-[20rem]">Lainya</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -565,6 +548,57 @@ export default function PengajuanSidang() {
                 value={form.link_lainya}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
+              />
+            </Form.Group>
+            {/* <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                5 Eksemblar Skripsi
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="file"
+                className="flex-1"
+                name="lima_eksemlar_skripsi"
+                value={form.lima_eksemlar_skripsi}
+                onChange={inputHandler}
+                placeholder="Otomatis"
+                disabled
+              />
+            </Form.Group> */}
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Lulus Semua Matakuliah Lokal
+              </Form.Label>
+              <span>:</span>
+              <Form.Checkbox
+                type="checkbox"
+                name="status_mk"
+                disabled
+                checked={form.status_mk}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Maksimal Nilai D Berjumlah 1
+              </Form.Label>
+              <span>:</span>
+              <Form.Checkbox
+                type="checkbox"
+                name="max_nilai_d"
+                disabled
+                checked={form.max_nilai_d}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Minimal IPK ≥ 2,00
+              </Form.Label>
+              <span>:</span>
+              <Form.Checkbox
+                type="checkbox"
+                name="status_min_ipk"
+                disabled
+                checked={form.status_min_ipk}
               />
             </Form.Group>
           </Card.Body>
@@ -621,7 +655,6 @@ export default function PengajuanSidang() {
                 name="program_studi"
                 value={form.program_studi}
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -632,10 +665,9 @@ export default function PengajuanSidang() {
               <Form.Input
                 type="text"
                 className="flex-1"
-                name="pemintan_lab"
-                value={form.peminatan_lab}
+                name="peminatan"
+                value={form.peminatan}
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -651,18 +683,7 @@ export default function PengajuanSidang() {
                 disabled
               />
             </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Telah Mengerjakan Kerja Praktik (KP)
-              </Form.Label>
-              <span>:</span>
-              <Form.Checkbox
-                type="checkbox"
-                name="status_kp"
-                checked={form.status_kp}
-                disabled
-              />
-            </Form.Group>
+
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 Jumlah SKS Kumulatif Selain Skripsi
@@ -675,6 +696,7 @@ export default function PengajuanSidang() {
                 name="jumlah_sks"
                 value={form.jumlah_sks}
                 onChange={inputHandler}
+                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -725,14 +747,45 @@ export default function PengajuanSidang() {
             </Form.Group>
             {form.draft_final_skripsi &&
               typeof form.draft_final_skripsi !== "object" && (
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Label className="min-w-[20rem]"></Form.Label>
-                  <embed
-                    src={`${FILE_DRAFT_SKRIPSI}/${form.draft_final_skripsi}`}
-                    className="w-full h-[256px]"
-                  />
-                </Form.Group>
+                <Button
+                  variant="info"
+                  icon={
+                    <Icon icon="material-symbols:save" width={20} height={20} />
+                  }
+                  type="button"
+                  className="ml-[350px]"
+                  onClick={handleDownload}
+                >
+                  Download Dokumen
+                </Button>
               )}
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Link Dokumen Draft Final Skripsi{" "}
+                <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="link_draft_final_skripsi"
+                value={form.link_draft_final_skripsi}
+                onChange={inputHandler}
+                placeholder="Link Google Drive"
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Telah Mengerjakan Kerja Praktik (KP)
+              </Form.Label>
+              <span>:</span>
+              <Form.Checkbox
+                type="checkbox"
+                name="status_kp"
+                checked={form.status_kp}
+                disabled
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 <p>Mengisi Formulir Permohonan</p>
@@ -748,9 +801,24 @@ export default function PengajuanSidang() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Jadwal Pelaksanaan
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="date"
+                className="flex-1 border-none"
+                name="jadwal_pelaksanaan"
+                value={form.jadwal_pelaksanaan}
+                placeholder="Diisi oleh admin"
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">Penguji 1</Form.Label>
               <span>:</span>
               <Form.Select
+                className="border-none"
                 name="penguji_1"
                 onChange={inputHandler}
                 value={form.penguji_1}
@@ -768,6 +836,7 @@ export default function PengajuanSidang() {
               <Form.Label className="min-w-[20rem]">Penguji 2</Form.Label>
               <span>:</span>
               <Form.Select
+                className="border-none"
                 name="penguji_2"
                 onChange={inputHandler}
                 value={form.penguji_2}
@@ -902,6 +971,37 @@ export default function PengajuanSidang() {
                     type="checkbox"
                     checked={form.sidang_status_pem_3 ? true : false}
                     name="sidang_status_pem_3"
+                    disabled
+                  />
+                </Form.Group>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-sm border-2 border-white text-center font-bold">
+                <span>Kepala Lab</span>
+                <span className="text-danger-600">*</span>
+              </td>
+              <td className="text-sm border-2 border-white">
+                <Form.Group className="flex items-baseline gap-3">
+                  <Form.Combobox
+                    name="sidang_kepala_lab"
+                    onChange={handleKepalaLab}
+                    value={form.sidang_kepala_lab}
+                    options={listDosen?.map((dosen) => ({
+                      label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                      value: dosen.user_id,
+                    }))}
+                    menuTarget={document.body}
+                  />
+                </Form.Group>
+              </td>
+              <td className="text-sm border-2 border-white">
+                <Form.Group className="flex items-center justify-center gap-3">
+                  <input
+                    className="cursor-pointer"
+                    type="checkbox"
+                    checked={form.sidang_status_kepala_lab ? true : false}
+                    name="sidang_status_kepala_lab"
                     disabled
                   />
                 </Form.Group>

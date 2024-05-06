@@ -243,12 +243,26 @@ export default function PengajuanSkAction() {
         </Card>
 
         <div className="w-full max-w-md p-4 mt-4 mb-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 mx-auto">
-          <div>
-            <span>
-              <b>Catatan:</b> Silahkan tandai kotak di bawah ini jika Anda
-              menyetujui untuk diajukan sebagai Pembimbing / Kepala Lab
-              mahasiswa terkait dalam Surat Keputusan (SK).
-            </span>
+          <div
+            className="flex items-center p-4 mb-4  mt-2 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+            role="alert"
+          >
+            <svg
+              className="flex-shrink-0 inline w-4 h-4 me-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span className="sr-only">Info</span>
+            <div>
+              <span className="font-medium">Catatan!</span> Silahkan tandai
+              kotak di bawah ini jika Anda menyetujui untuk diajukan sebagai
+              Pembimbing / Kepala Lab mahasiswa terkait dalam Surat Keputusan
+              (SK)
+            </div>
           </div>
           <div className="flow-root">
             <ul role="list" className="divide-y divide-gray-200">

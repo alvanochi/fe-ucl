@@ -282,6 +282,7 @@ export default function PelaksanaanKolo() {
                       name="penilaian_1"
                       id={item.id}
                       onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_kolokium"
                     />
                   </td>
                 </tr>
@@ -307,6 +308,7 @@ export default function PelaksanaanKolo() {
                       name="penilaian_2"
                       id={item.id}
                       onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_kolokium"
                     />
                   </td>
                 </tr>
@@ -330,6 +332,7 @@ export default function PelaksanaanKolo() {
                       name="penilaian_3"
                       id={item.id}
                       onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_kolokium"
                     />
                   </td>
                 </tr>
@@ -353,6 +356,7 @@ export default function PelaksanaanKolo() {
                       name="penilaian_4"
                       id={item.id}
                       onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_kolokium"
                     />
                   </td>
                 </tr>
@@ -376,6 +380,7 @@ export default function PelaksanaanKolo() {
                       name="penilaian_5"
                       id={item.id}
                       onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_kolokium"
                     />
                   </td>
                 </tr>

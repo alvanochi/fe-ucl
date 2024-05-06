@@ -50,6 +50,7 @@ export default function PengajuanKolo() {
     status_sks_ipk: "",
     jumlah_sks: "",
     ipk: "",
+    link_dok_makalah: "",
   };
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -112,6 +113,15 @@ export default function PengajuanKolo() {
     }
   }, [form]);
 
+  const handleDownload = () => {
+    const downloadLink = document.createElement("a");
+    downloadLink.href = `${FILE_URL}/${form.file_makalah}`;
+    downloadLink.target = "_blank";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
+
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
   return (
@@ -121,21 +131,34 @@ export default function PengajuanKolo() {
         <Card className="mt-4">
           <Card.Header className="text-center">
             <div>Form Pengajuan Kolokium</div>
-            <div className="mt-2">
-              <span className="font-normal">
-                <b>Catatan:</b> Silahkan isi form yang dibintangi saja, jika
-                status approved dosen pembimbing sudah diceklis.
-              </span>
-            </div>
           </Card.Header>
-
+          <div
+            className="flex items-center p-4 mb-4  mt-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+            role="alert"
+          >
+            <svg
+              className="flex-shrink-0 inline w-4 h-4 me-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span className="sr-only">Info</span>
+            <div>
+              <span className="font-medium">Catatan!</span> Silahkan isi form
+              yang dibintangi saja (<span className="text-danger-600">*</span>),
+              jika status approved dosen pembimbing sudah ACC/terceklis.
+            </div>
+          </div>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">Nama</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1 border-gray-500"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
                 disabled
@@ -146,7 +169,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1 border-gray-500"
                 name="npm"
                 value={form.npm}
                 disabled
@@ -157,7 +180,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1 border-gray-500"
                 name="judul_skripsi"
                 value={form.judul_skripsi}
                 disabled
@@ -168,7 +191,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1 border-gray-500"
                 name="semester"
                 value={form.semester}
                 disabled
@@ -179,7 +202,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1 border-gray-500"
                 name="email"
                 value={form.email}
                 disabled
@@ -190,7 +213,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1 border-gray-500"
                 name="ho_hp"
                 value={form.no_hp}
                 disabled
@@ -204,7 +227,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="url"
-                className="flex-1 border-none"
+                className="flex-1 border-gray-500"
                 name="link_dok_mhs_aktif"
                 value={form.link_dok_mhs_aktif}
                 onChange={inputHandler}
@@ -218,7 +241,7 @@ export default function PengajuanKolo() {
               <span>:</span>
               <Form.Input
                 type="url"
-                className="flex-1 border-none"
+                className="flex-1 border-gray-500"
                 name="link_dok_pembayaran"
                 value={form.link_dok_pembayaran}
                 onChange={inputHandler}
@@ -230,17 +253,35 @@ export default function PengajuanKolo() {
                 5 Eksternal Proposal Makalah Kolokium{" "}
               </Form.Label>
               <span>:</span>
+              {form.file_makalah && (
+                <Button
+                  variant="info"
+                  icon={
+                    <Icon icon="material-symbols:save" width={20} height={20} />
+                  }
+                  type="button"
+                  onClick={handleDownload}
+                >
+                  Download Dokumen
+                </Button>
+              )}
             </Form.Group>
-            {form.file_makalah && (
-              <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[20rem]"></Form.Label>
-                <embed
-                  src={`${FILE_URL}/${form.file_makalah}`}
-                  className="w-full h-[256px]"
-                />
-              </Form.Group>
-            )}
 
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Link Dokumen Makalah
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="url"
+                className="flex-1 border-gray-500"
+                name="link_dok_makalah"
+                value={form.link_dok_makalah}
+                onChange={inputHandler}
+                placeholder="link Google Drive"
+                disabled
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 Telah Menyelesaikan MK Kerja Praktik{" "}
@@ -287,6 +328,7 @@ export default function PengajuanKolo() {
               </Form.Label>
               <span>:</span>
               <Form.Combobox
+                className="border-primary-500"
                 name="evaluator_1"
                 onChange={handleEvaluator1}
                 value={form.evaluator_1}
@@ -303,6 +345,7 @@ export default function PengajuanKolo() {
               </Form.Label>
               <span>:</span>
               <Form.Combobox
+                className="border-yellow-500"
                 name="evaluator_2"
                 onChange={handleEvaluator2}
                 value={form.evaluator_2}
@@ -349,6 +392,7 @@ export default function PengajuanKolo() {
               <td className="text-sm border-2 border-white">
                 <Form.Group className="flex items-baseline gap-3">
                   <Form.Select
+                    className="border-gray-500"
                     name="kolo_pembimbing_1"
                     value={form.kolo_pembimbing_1}
                     options={
@@ -381,6 +425,7 @@ export default function PengajuanKolo() {
               <td className="text-sm border-2 border-white">
                 <Form.Group className="flex items-baseline gap-3">
                   <Form.Select
+                    className="border-gray-500"
                     name="kolo_pembimbing_2"
                     value={form.kolo_pembimbing_2}
                     options={
@@ -414,6 +459,7 @@ export default function PengajuanKolo() {
                 <td className="text-sm border-2 border-white">
                   <Form.Group className="flex items-baseline gap-3">
                     <Form.Select
+                      className="border-gray-500"
                       name="kolo_pembimbing_3"
                       value={form.kolo_pembimbing_3}
                       options={

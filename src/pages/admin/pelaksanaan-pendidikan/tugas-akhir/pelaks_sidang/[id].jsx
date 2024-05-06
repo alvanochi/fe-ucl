@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import useDosen from "../../../../../repo/dosen";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../components/Loading";
+import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
 
 export default function PelaksanaanSidang() {
   const router = useRouter();
@@ -50,6 +51,7 @@ export default function PelaksanaanSidang() {
     komentar_singkat: "",
     dosen_id: "",
     penilaian_sidang: null,
+    nilai_akhir: {},
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -83,6 +85,101 @@ export default function PelaksanaanSidang() {
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+      <table
+        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
+        cellPadding={10}
+        style={{ marginTop: "20px" }}
+      >
+        <thead>
+          <tr>
+            <th
+              colSpan={4}
+              className="text-sm border-2 border-white bg-gray-50"
+            >
+              Nilai Akhir
+            </th>
+          </tr>
+          <tr>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">No</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Aspek Penilaian
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="gap-2 cursor-pointer">Presentase (%)</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="gap-2 cursor-pointer">Nilai</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">1</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Subtansi dan Orientasi Topik Penilitian
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              20%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_1}
+            </td>
+          </tr>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">2</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
+              Penelitian
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              40%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_2}
+            </td>
+          </tr>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">3</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Organisasi, kelengkapan dan Teknik Penulisan Makalah
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              10%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_3}
+            </td>
+          </tr>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">4</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Penyajian Makalah dan Tampilan Slide
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              10%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_4}
+            </td>
+          </tr>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">5</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Argumentasi
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              20%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_5}
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">
@@ -147,6 +244,9 @@ export default function PelaksanaanSidang() {
                   <th className="text-sm border-2 border-white bg-gray-200">
                     <div className="gap-2 cursor-pointer">Nilai</div>
                   </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    <div className="gap-2 cursor-pointer">Action</div>
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -163,6 +263,16 @@ export default function PelaksanaanSidang() {
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_1}
                   </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
+                    <EditNilai
+                      title="Subtansi dan Orientasi Topik Penilitian"
+                      data={item.penilaian_1}
+                      name="penilaian_1"
+                      id={item.id}
+                      onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_sidang"
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td className="text-sm border-2 border-white bg-gray-50">
@@ -178,6 +288,16 @@ export default function PelaksanaanSidang() {
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_2}
                   </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
+                    <EditNilai
+                      title="Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi Penelitian"
+                      data={item.penilaian_2}
+                      name="penilaian_2"
+                      id={item.id}
+                      onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_sidang"
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td className="text-sm border-2 border-white bg-gray-50">
@@ -191,6 +311,16 @@ export default function PelaksanaanSidang() {
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_3}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
+                    <EditNilai
+                      title="Organisasi, kelengkapan dan Teknik Penulisan Makalah"
+                      data={item.penilaian_3}
+                      name="penilaian_3"
+                      id={item.id}
+                      onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_sidang"
+                    />
                   </td>
                 </tr>
                 <tr>
@@ -206,6 +336,16 @@ export default function PelaksanaanSidang() {
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_4}
                   </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
+                    <EditNilai
+                      title="Penyajian Makalah dan Tampilan Slide"
+                      data={item.penilaian_4}
+                      name="penilaian_4"
+                      id={item.id}
+                      onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_sidang"
+                    />
+                  </td>
                 </tr>
                 <tr>
                   <td className="text-sm border-2 border-white bg-gray-50">
@@ -219,6 +359,16 @@ export default function PelaksanaanSidang() {
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_5}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
+                    <EditNilai
+                      title="Argumentasi"
+                      data={item.penilaian_5}
+                      name="penilaian_5"
+                      id={item.id}
+                      onSuccess={() => show(router.query.id)}
+                      db="ta_penilaian_sidang"
+                    />
                   </td>
                 </tr>
               </tbody>

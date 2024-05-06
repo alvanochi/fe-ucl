@@ -367,6 +367,7 @@ export default function PelaksanaanKolo() {
                     name="penilaian_1"
                     id={form.penilaian_kolo?.id}
                     onSuccess={() => show(router.query.id)}
+                    db="ta_penilaian_kolo"
                   />
                 </td>
               </tr>
@@ -390,6 +391,7 @@ export default function PelaksanaanKolo() {
                     name="penilaian_2"
                     id={form.penilaian_kolo?.id}
                     onSuccess={() => show(router.query.id)}
+                    db="ta_penilaian_kolo"
                   />
                 </td>
               </tr>
@@ -411,6 +413,7 @@ export default function PelaksanaanKolo() {
                     name="penilaian_3"
                     id={form.penilaian_kolo?.id}
                     onSuccess={() => show(router.query.id)}
+                    db="ta_penilaian_kolo"
                   />
                 </td>
               </tr>
@@ -432,6 +435,7 @@ export default function PelaksanaanKolo() {
                     name="penilaian_4"
                     id={form.penilaian_kolo?.id}
                     onSuccess={() => show(router.query.id)}
+                    db="ta_penilaian_kolo"
                   />
                 </td>
               </tr>
@@ -453,6 +457,7 @@ export default function PelaksanaanKolo() {
                     name="penilaian_5"
                     id={form.penilaian_kolo?.id}
                     onSuccess={() => show(router.query.id)}
+                    db="ta_penilaian_kolo"
                   />
                 </td>
               </tr>
@@ -490,6 +495,7 @@ export default function PelaksanaanKolo() {
                 name="komentar_singkat"
                 id={form.penilaian_kolo?.id}
                 onSuccess={() => show(router.query.id)}
+                db="ta_penilaian_kolo"
               />
             </div>
           </div>

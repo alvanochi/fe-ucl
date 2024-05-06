@@ -53,6 +53,7 @@ export default function PelaksanaanSidang() {
     komentar_singkat: "",
     dosen_id: "",
     penilaian_sidang: null,
+    nilai_akhir: {},
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -86,7 +87,101 @@ export default function PelaksanaanSidang() {
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-
+      <table
+        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
+        cellPadding={10}
+        style={{ marginTop: "20px" }}
+      >
+        <thead>
+          <tr>
+            <th
+              colSpan={4}
+              className="text-sm border-2 border-white bg-gray-50"
+            >
+              Nilai Akhir
+            </th>
+          </tr>
+          <tr>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">No</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Aspek Penilaian
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="gap-2 cursor-pointer">Presentase (%)</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="gap-2 cursor-pointer">Nilai</div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">1</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Subtansi dan Orientasi Topik Penilitian
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              20%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_1}
+            </td>
+          </tr>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">2</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
+              Penelitian
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              40%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_2}
+            </td>
+          </tr>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">3</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Organisasi, kelengkapan dan Teknik Penulisan Makalah
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              10%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_3}
+            </td>
+          </tr>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">4</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Penyajian Makalah dan Tampilan Slide
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              10%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_4}
+            </td>
+          </tr>
+          <tr>
+            <td className="text-sm border-2 border-white bg-gray-50">5</td>
+            <td className="text-sm border-2 border-white bg-gray-50">
+              Argumentasi
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              20%
+            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">
+              {form?.nilai_akhir.penilaian_5}
+            </td>
+          </tr>
+        </tbody>
+      </table>
       <div className="sm:hidden">
         <label htmlFor="tabs" className="sr-only">
           Select

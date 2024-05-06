@@ -237,7 +237,12 @@ export const Login = () => {
                 onClick={togglePassword}
               >
                 {showPassword ? (
-                  <Icon icon="solar:eye-bold" width={20} height={20} />
+                  <Icon
+                    icon="solar:eye-bold"
+                    className="text-gray-600"
+                    width={20}
+                    height={20}
+                  />
                 ) : (
                   <Icon icon="solar:eye-closed-bold" width={20} height={20} />
                 )}

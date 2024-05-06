@@ -18,7 +18,7 @@ export default function PengajuanSidang() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-pengajuan-sidang`;
   const FILE_URL = `${process.env.API_ENDPOINT}/tugas-akhir/pas-foto`;
@@ -62,14 +62,20 @@ export default function PengajuanSidang() {
     sidang_pembimbing_1: "",
     sidang_pembimbing_2: "",
     sidang_pembimbing_3: null,
+    sidang_kepala_lab: "",
     sidang_status_pem_1: "",
     sidang_status_pem_2: "",
     sidang_status_pem_3: "",
+    sidang_status_kepala_lab: "",
+    jadwal_pelaksanaan: "",
     penguji_1: "",
     penguji_2: "",
     judul_skripsi: "",
     program_studi: "",
+    peminatan: "",
     peminatan_lab: "",
+    link_draft_final_skripsi: "",
+    ipk: "",
   };
 
   const handlePenguji1 = (selected) => {
@@ -151,21 +157,44 @@ export default function PengajuanSidang() {
     });
   }, [router, user]);
 
+  const handleDownload = () => {
+    const downloadLink = document.createElement("a");
+    downloadLink.href = `${FILE_DRAFT_SKRIPSI}/${form.draft_final_skripsi}`;
+    downloadLink.target = "_blank";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
+
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+      <div
+        className="flex items-center p-4 mb-4  mt-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+        role="alert"
+      >
+        <svg
+          className="flex-shrink-0 inline w-4 h-4 me-3"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span className="sr-only">Info</span>
+        <div>
+          <span className="font-medium">Catatan!</span> Silahkan isi form yang
+          dibintangi saja (<span className="text-danger-600">*</span>), jika
+          status approved dosen pembimbing sudah ACC/terceklis.
+        </div>
+      </div>
       <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
         <Card className="mt-4">
           <Card.Header className="text-center">
             <div>Permohonan Pelaksanaan Ujian Skripsi Pada Sidang Sarjana</div>
-            <div className="mt-2">
-              <span className="font-normal">
-                <b>Catatan:</b> Silahkan Lengkapi Form yang dibintangi (
-                <span className="text-danger-600">*</span>)
-              </span>
-            </div>
           </Card.Header>
 
           <Card.Body className="space-y-4">
@@ -174,7 +203,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
                 disabled
@@ -185,7 +214,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="npm"
                 value={form.npm}
                 disabled
@@ -196,7 +225,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="date"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="tanggal_lahior"
                 value={form.tanggal_lahir}
                 disabled
@@ -207,7 +236,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="alamat"
                 value={form.alamat}
                 disabled
@@ -218,7 +247,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="email"
                 value={form.email}
                 disabled
@@ -229,7 +258,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="no_hp"
                 value={form.no_hp}
                 disabled
@@ -240,7 +269,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="pekerjaan"
                 value={form.pekerjaan}
                 disabled
@@ -253,7 +282,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="alamat_pekerjaan"
                 value={form.alamat_pekerjaan}
                 disabled
@@ -264,7 +293,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="wali"
                 value={form.wali}
                 disabled
@@ -277,7 +306,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="telp_wali"
                 value={form.telp_wali}
                 disabled
@@ -288,7 +317,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="alamat_wali"
                 value={form.alamat_wali}
                 disabled
@@ -300,15 +329,187 @@ export default function PengajuanSidang() {
         <Card className="mt-4">
           <Card.Header className="text-center">
             <div>Administrasi AKademik</div>
-            <div className="mt-2">
-              <span className="font-normal">
-                <b>Catatan:</b> Silahkan Lengkapi Form yang dibintangi (
-                <span className="text-danger-600">*</span>)
-              </span>
-            </div>
           </Card.Header>
 
           <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                <p>Melampirkan KHS Kumulatif/Transkip </p>
+                <p>Nilai Sementara</p>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_khs"
+                value={form.link_khs}
+                placeholder="Link Google Drive"
+                onChange={inputHandler}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Pas Foto Berwarna
+              </Form.Label>
+              <span>:</span>
+              {form.pas_foto && typeof form.pas_foto !== "object" && (
+                <Form.Group>
+                  <Form.Label className="min-w-[20rem]"></Form.Label>
+                  <embed
+                    src={`${FILE_URL}/${form.pas_foto}`}
+                    className="w-65 h-[256px]"
+                  />
+                </Form.Group>
+              )}
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Ijazah Terakhir 1 Lembar{" "}
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_ijazah_terakhir"
+                value={form.link_ijazah_terakhir}
+                placeholder="Link Google Drive"
+                onChange={inputHandler}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Photocopy Sertifikat Ta aruf{" "}
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_serti_taaruf"
+                value={form.link_serti_taaruf}
+                placeholder="Link Google Drive"
+                onChange={inputHandler}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Sertifikat Leadership Camp(LKKM) FTS{" "}
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_serti_lkkm"
+                value={form.link_serti_lkkm}
+                onChange={inputHandler}
+                placeholder="Link Google Drive"
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">Sertifikat KKN</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_serti_kkn"
+                value={form.link_serti_kkn}
+                onChange={inputHandler}
+                placeholder="Link Google Drive"
+                disabled
+              />
+            </Form.Group>
+            {/* <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                5 Eksemblar Skripsi
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="lima_eksemlar_skripsi"
+                value={form.lima_eksemlar_skripsi}
+                onChange={inputHandler}
+                placeholder="Otomatis"
+                disabled
+              />
+            </Form.Group> */}
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                2 Sertifikat Kompetensi{" "}
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="link_serti_kompetensi border-gray-500"
+                value={form.link_serti_kompetensi}
+                onChange={inputHandler}
+                placeholder="Link Google Drive"
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Bukti Upload Jurnal/LOA{" "}
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_bukti_upload_jurnal"
+                value={form.link_bukti_upload_jurnal}
+                onChange={inputHandler}
+                placeholder="Link Google Drive"
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Photocopy Sertifikat TOFL{" "}
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_serti_toefl"
+                value={form.link_serti_toefl}
+                onChange={inputHandler}
+                placeholder="Link Google Drive"
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                <p>Telah Melunasi Administrasi Keuangan</p>
+                <p>(SPP, SKS, Konversi) </p>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_bukti_keuangan"
+                value={form.link_bukti_keuangan}
+                onChange={inputHandler}
+                placeholder="Link Google Drive"
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">Lainya</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_lainya"
+                value={form.link_lainya}
+                onChange={inputHandler}
+                placeholder="Link Google Drive"
+                disabled
+              />
+            </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 Lulus Semua Matakuliah Lokal{" "}
@@ -337,22 +538,6 @@ export default function PengajuanSidang() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
-                <p>Melampirkan KHS Kumulatif/Transkip </p>
-                <p>Nilai Sementara</p>
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_khs"
-                value={form.link_khs}
-                placeholder="Link Google Drive"
-                onChange={inputHandler}
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
                 Minimal IPK ≥ 2,00 <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
@@ -362,175 +547,7 @@ export default function PengajuanSidang() {
                 checked={form.status_min_ipk}
                 onChange={inputHandler}
               />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Pas Foto Berwarna
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="file"
-                className="flex-1"
-                name="pas_foto"
-                onChange={inputHandler}
-                disabled
-              />
-            </Form.Group>
-            {form.pas_foto && typeof form.pas_foto !== "object" && (
-              <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[20rem]"></Form.Label>
-                <embed
-                  src={`${FILE_URL}/${form.pas_foto}`}
-                  className="w-65 h-[256px]"
-                />
-              </Form.Group>
-            )}
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Ijazah Terakhir 1 Lembar{" "}
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_ijazah_terakhir"
-                value={form.link_ijazah_terakhir}
-                placeholder="Link Google Drive"
-                onChange={inputHandler}
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Photocopy Sertifikat Ta aruf{" "}
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_serti_taaruf"
-                value={form.link_serti_taaruf}
-                placeholder="Link Google Drive"
-                onChange={inputHandler}
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Sertifikat Leadership Camp(LKKM) FTS{" "}
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_serti_lkkm"
-                value={form.link_serti_lkkm}
-                onChange={inputHandler}
-                placeholder="Link Google Drive"
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">Sertifikat KKN</Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_serti_kkn"
-                value={form.link_serti_kkn}
-                onChange={inputHandler}
-                placeholder="Link Google Drive"
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                5 Eksemblar Skripsi
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="lima_eksemlar_skripsi"
-                value={form.lima_eksemlar_skripsi}
-                onChange={inputHandler}
-                placeholder="Otomatis"
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                2 Sertifikat Kompetensi{" "}
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_serti_kompetensi"
-                value={form.link_serti_kompetensi}
-                onChange={inputHandler}
-                placeholder="Link Google Drive"
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Bukti Upload Jurnal/LOA{" "}
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_bukti_upload_jurnal"
-                value={form.link_bukti_upload_jurnal}
-                onChange={inputHandler}
-                placeholder="Link Google Drive"
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Photocopy Sertifikat TOFL{" "}
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_serti_toefl"
-                value={form.link_serti_toefl}
-                onChange={inputHandler}
-                placeholder="Link Google Drive"
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                <p>Telah Melunasi Administrasi Keuangan</p>
-                <p>(SPP, SKS, Konversi) </p>
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_bukti_keuangan"
-                value={form.link_bukti_keuangan}
-                onChange={inputHandler}
-                placeholder="Link Google Drive"
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">Lainya</Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="link_lainya"
-                value={form.link_lainya}
-                onChange={inputHandler}
-                placeholder="Link Google Drive"
-                disabled
-              />
+              <span>IPK: {form.ipk}</span>
             </Form.Group>
           </Card.Body>
         </Card>
@@ -538,12 +555,6 @@ export default function PengajuanSidang() {
         <Card className="mt-4">
           <Card.Header className="text-center">
             <div>Pendaftaran Sidang </div>
-            <div className="mt-2">
-              <span className="font-normal">
-                <b>Catatan:</b> Silahkan Lengkapi Form yang dibintangi (
-                <span className="text-danger-600">*</span>)
-              </span>
-            </div>
           </Card.Header>
 
           <Card.Body className="space-y-4">
@@ -552,7 +563,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
                 disabled
@@ -563,7 +574,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="npm"
                 value={form.npm}
                 disabled
@@ -574,7 +585,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="program_studi"
                 value={form.program_studi}
                 onChange={inputHandler}
@@ -588,9 +599,9 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
-                name="pemintan_lab"
-                value={form.peminatan_lab}
+                className="flex-1 border-gray-500"
+                name="pemintan"
+                value={form.peminatan}
                 onChange={inputHandler}
                 disabled
               />
@@ -600,7 +611,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="judul_skripsi"
                 value={form.judul_skripsi}
                 disabled
@@ -626,7 +637,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="number"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="jumlah_sks"
                 value={form.jumlah_sks}
                 onChange={inputHandler}
@@ -640,7 +651,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="link_administrasi_sidang"
                 value={form.link_administrasi_sidang}
                 onChange={inputHandler}
@@ -656,7 +667,7 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
+                className="flex-1 border-gray-500"
                 name="link_transkip_nilai"
                 value={form.link_transkip_nilai}
                 onChange={inputHandler}
@@ -669,24 +680,40 @@ export default function PengajuanSidang() {
                 Draft Final Skripsi Satu Eksemlar
               </Form.Label>
               <span>:</span>
+              {form.draft_final_skripsi &&
+                typeof form.draft_final_skripsi !== "object" && (
+                  <Button
+                    variant="info"
+                    icon={
+                      <Icon
+                        icon="material-symbols:save"
+                        width={20}
+                        height={20}
+                      />
+                    }
+                    type="button"
+                    onClick={handleDownload}
+                  >
+                    Download Dokumen
+                  </Button>
+                )}
+            </Form.Group>
+
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Link Dokumen Draft Final Skripsi{" "}
+              </Form.Label>
+              <span>:</span>
               <Form.Input
-                type="file"
-                className="flex-1"
-                name="draft_final_skripsi"
+                type="text"
+                className="flex-1 border-gray-500"
+                name="link_draft_final_skripsi"
+                value={form.link_draft_final_skripsi}
                 onChange={inputHandler}
+                placeholder="Link Google Drive"
                 disabled
               />
             </Form.Group>
-            {form.draft_final_skripsi &&
-              typeof form.draft_final_skripsi !== "object" && (
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Label className="min-w-[20rem]"></Form.Label>
-                  <embed
-                    src={`${FILE_DRAFT_SKRIPSI}/${form.draft_final_skripsi}`}
-                    className="w-full h-[256px]"
-                  />
-                </Form.Group>
-              )}
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 <p>Mengisi Formulir Permohonan</p>
@@ -701,6 +728,19 @@ export default function PengajuanSidang() {
                 name="status_form_sidang"
                 checked={form.status_form_sidang}
                 onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Jadwal Pelaksanaan <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="date"
+                className="flex-1"
+                name="jadwal_pelaksanaan"
+                value={form.jadwal_pelaksanaan}
+                placeholder="Diisi oleh admin"
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -823,6 +863,38 @@ export default function PengajuanSidang() {
                     type="checkbox"
                     checked={form.sidang_status_pem_2}
                     name="sidang_status_pem_2"
+                    disabled
+                  />
+                </Form.Group>
+              </td>
+            </tr>
+            <tr>
+              <td className="text-sm border-2 border-white text-center font-bold">
+                <span>Kepala Lab</span>
+              </td>
+              <td className="text-sm border-2 border-white">
+                <Form.Group className="flex items-baseline gap-3">
+                  <Form.Select
+                    name="sidang_kepala_lab"
+                    value={form.sidang_kepala_lab}
+                    options={
+                      listDosen &&
+                      listDosen.map((dosen) => ({
+                        label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                        value: dosen.user_id,
+                      }))
+                    }
+                    disabled
+                  />
+                </Form.Group>
+              </td>
+              <td className="text-sm border-2 border-white">
+                <Form.Group className="flex items-center justify-center gap-3">
+                  <input
+                    className="cursor-pointer"
+                    type="checkbox"
+                    checked={form.sidang_status_kepala_lab}
+                    name="sidang_status_kepala_lab"
                     disabled
                   />
                 </Form.Group>

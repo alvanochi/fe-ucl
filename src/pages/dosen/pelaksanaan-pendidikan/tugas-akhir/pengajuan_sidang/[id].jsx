@@ -65,15 +65,19 @@ export default function PengajuanSidang() {
     sidang_pembimbing_1: "",
     sidang_pembimbing_2: "",
     sidang_pembimbing_3: null,
+    sidang_kepala_lab: "",
     sidang_status_pem_1: "",
     sidang_status_pem_2: "",
     sidang_status_pem_3: "",
+    sidang_status_kepala_lab: "",
+    jadwal_pelaksanaan: "",
     penguji_1: "",
     penguji_2: "",
     judul_skripsi: "",
     program_studi: "",
-    peminatan_lab: "",
+    peminatan: "",
     statusDosen: "",
+    link_draft_final_skripsi: "",
   };
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -128,24 +132,6 @@ export default function PengajuanSidang() {
 
   const { form, inputHandler } = formdata;
 
-  const handlePembimbing1 = (selected) => {
-    inputHandler({
-      target: { name: "sidang_pembimbing_1", value: selected?.value },
-    });
-  };
-
-  const handlePembimbing2 = (selected) => {
-    inputHandler({
-      target: { name: "sidang_pembimbing_2", value: selected?.value },
-    });
-  };
-
-  const handlePembimbing3 = (selected) => {
-    inputHandler({
-      target: { name: "sidang_pembimbing_3", value: selected?.value },
-    });
-  };
-
   const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/pengajuan-sidang`;
   const EDIT_OPTION = { url: `${EDIT_URL}/${form.sidang_id}`, method: "PATCH" };
 
@@ -164,6 +150,7 @@ export default function PengajuanSidang() {
   const [isChecked1, setIsChecked1] = useState(false);
   const [isChecked2, setIsChecked2] = useState(false);
   const [isChecked3, setIsChecked3] = useState(false);
+  const [isCheckedLab, setIsCheckedLab] = useState(false);
 
   const handleCheckboxChange = async (event, id) => {
     const { name, checked } = event.target;
@@ -173,6 +160,8 @@ export default function PengajuanSidang() {
       setIsChecked2(checked);
     } else if (name === "sidang_status_pem_3") {
       setIsChecked3(checked);
+    } else if (name === "sidang_status_kepala_lab") {
+      setIsCheckedLab(checked);
     }
 
     try {
@@ -212,14 +201,47 @@ export default function PengajuanSidang() {
       if (form?.sidang_status_pem_3 == true) {
         setIsChecked3(true);
       }
+      if (form?.sidang_status_kepala_lab == true) {
+        setIsCheckedLab(true);
+      }
     }
   }, [form]);
+
+  const handleDownload = () => {
+    const downloadLink = document.createElement("a");
+    downloadLink.href = `${FILE_DRAFT_SKRIPSI}/${form.draft_final_skripsi}`;
+    downloadLink.target = "_blank";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+  };
 
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+      <div
+        className="flex items-center p-4 mb-4  mt-2 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+        role="alert"
+      >
+        <svg
+          className="flex-shrink-0 inline w-4 h-4 me-3"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+        >
+          <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+        </svg>
+        <span className="sr-only">Info</span>
+        <div>
+          <span className="font-medium">Catatan!</span> Silahkan Scroll ke
+          bagian paling bawah, tandai kotak tersebut jika Anda menyetujui untuk
+          diajukan sebagai Pembimbing / Kepala Lab mahasiswa terkait untuk
+          pelaksanaan sidang
+        </div>
+      </div>
       <Form
         onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
         type="formdata"
@@ -442,23 +464,17 @@ export default function PengajuanSidang() {
                 <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="file"
-                className="flex-1"
-                name="pas_foto"
-                onChange={inputHandler}
-                disabled
-              />
+              {form.pas_foto && typeof form.pas_foto !== "object" && (
+                <Form.Group className="">
+                  <Form.Label className="min-w-[20rem]"></Form.Label>
+                  <embed
+                    src={`${FILE_URL}/${form.pas_foto}`}
+                    className="w-65 h-[256px]"
+                  />
+                </Form.Group>
+              )}
             </Form.Group>
-            {form.pas_foto && typeof form.pas_foto !== "object" && (
-              <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[20rem]"></Form.Label>
-                <embed
-                  src={`${FILE_URL}/${form.pas_foto}`}
-                  className="w-65 h-[256px]"
-                />
-              </Form.Group>
-            )}
+
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 Ijazah Terakhir 1 Lembar{" "}
@@ -676,8 +692,8 @@ export default function PengajuanSidang() {
               <Form.Input
                 type="text"
                 className="flex-1"
-                name="pemintan_lab"
-                value={form.peminatan_lab}
+                name="pemintan"
+                value={form.peminatan}
                 onChange={inputHandler}
                 disabled
               />
@@ -763,24 +779,40 @@ export default function PengajuanSidang() {
                 <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
+              {form.draft_final_skripsi &&
+                typeof form.draft_final_skripsi !== "object" && (
+                  <Button
+                    variant="info"
+                    icon={
+                      <Icon
+                        icon="material-symbols:save"
+                        width={20}
+                        height={20}
+                      />
+                    }
+                    type="button"
+                    onClick={handleDownload}
+                  >
+                    Download Dokumen
+                  </Button>
+                )}
+            </Form.Group>
+
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Link Dokumen Draft Final Skripsi{" "}
+                <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
               <Form.Input
-                type="file"
+                type="text"
                 className="flex-1"
-                name="draft_final_skripsi"
+                name="link_draft_final_skripsi"
+                value={form.link_draft_final_skripsi}
                 onChange={inputHandler}
-                disabled
+                placeholder="Link Google Drive"
               />
             </Form.Group>
-            {form.draft_final_skripsi &&
-              typeof form.draft_final_skripsi !== "object" && (
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Label className="min-w-[20rem]"></Form.Label>
-                  <embed
-                    src={`${FILE_DRAFT_SKRIPSI}/${form.draft_final_skripsi}`}
-                    className="w-full h-[256px]"
-                  />
-                </Form.Group>
-              )}
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 <p>Mengisi Formulir Permohonan</p>
@@ -792,6 +824,20 @@ export default function PengajuanSidang() {
                 type="checkbox"
                 name="status_form_sidang"
                 checked={form.status_form_sidang}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Jadwal Pelaksanaan
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="date"
+                className="flex-1 border-none"
+                name="jadwal_pelaksanaan"
+                value={form.jadwal_pelaksanaan}
+                placeholder="Diisi oleh admin"
                 disabled
               />
             </Form.Group>
@@ -843,13 +889,6 @@ export default function PengajuanSidang() {
                 className="text-sm border-2 border-white bg-gray-50"
               >
                 <div>Mengetahui</div>
-                <div className="mt-2">
-                  <span className="font-normal">
-                    <b>Catatan:</b> Silahkan tandai kotak status di bawah ini
-                    jika Anda menyetujui untuk diajukan sebagai Pembimbing
-                    mahasiswa terkait untuk menuju kolokium.
-                  </span>
-                </div>
               </th>
             </tr>
             <tr>
@@ -939,7 +978,6 @@ export default function PengajuanSidang() {
                 </td>
               </tr>
             )}
-
             {form.statusDosen === 3 && (
               <tr>
                 <td className="text-sm border-2 border-white text-center font-bold">
@@ -971,6 +1009,43 @@ export default function PengajuanSidang() {
                         handleCheckboxChange(event, form.sidang_id)
                       }
                       name="sidang_status_pem_3"
+                      disabled={isChecked3}
+                    />
+                  </Form.Group>
+                </td>
+              </tr>
+            )}
+            {form.statusDosen === "kepala_lab" && (
+              <tr>
+                <td className="text-sm border-2 border-white text-center font-bold">
+                  <span>Kepala Lab</span>
+                </td>
+                <td className="text-sm border-2 border-white">
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Select
+                      name="sidang_kepala_lab"
+                      value={form.sidang_kepala_lab}
+                      options={
+                        listDosen &&
+                        listDosen.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                        }))
+                      }
+                      disabled
+                    />
+                  </Form.Group>
+                </td>
+                <td className="text-sm border-2 border-white">
+                  <Form.Group className="flex items-center justify-center gap-3">
+                    <input
+                      className="cursor-pointer"
+                      type="checkbox"
+                      checked={isCheckedLab}
+                      onChange={(event) =>
+                        handleCheckboxChange(event, form.sidang_id)
+                      }
+                      name="sidang_status_kepala_lab"
                       disabled={isChecked3}
                     />
                   </Form.Group>
