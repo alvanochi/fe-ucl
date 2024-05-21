@@ -1,12 +1,10 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../components/Button";
-import date from "../../../utils/date";
 import Form from "../../../components/Form";
-import useCRUD from "../../../hooks/useCRUD";
-import useNewDataTable from "../../../hooks/useNewDataTable";
 import { useEffect, useRef, useState } from "react";
 import SortIcon from "../../../components/SortIcon";
 import Link from "next/link";
+import useNewDataTableForMainApi from "../../../hooks/useNewDataTableForMainApi";
 
 export default function TugasAkhirModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/tugas-akhir/get-for-dosen`;
@@ -20,7 +18,7 @@ export default function TugasAkhirModule({ baseURL }) {
     setPageNew,
     sortByNew,
     getSortByNew,
-  } = useNewDataTable(DATA_URL, {}, searchValue);
+  } = useNewDataTableForMainApi(DATA_URL, {}, searchValue);
 
   const [openedDropdownId, setOpenedDropdownId] = useState(null);
   const dropdownRef = useRef(null);

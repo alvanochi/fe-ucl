@@ -9,9 +9,15 @@ import useUser from "../../../../../hooks/useUser";
 import { useRouter } from "next/router";
 import useCRUD from "../../../../../hooks/useCRUD";
 import useDosen from "../../../../../repo/dosen";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Loading } from "../../../../../components/Loading";
 import date from "../../../../../utils/date";
+import {
+  MySwal,
+  loadingAlert,
+  toastAlert,
+} from "../../../../../lib/sweetalert";
+import axios from "axios";
 
 export default function PengajuanSkAction() {
   const router = useRouter();
@@ -83,6 +89,66 @@ export default function PengajuanSkAction() {
       }),
     });
   }, [router, user]);
+
+  const [isChecked1, setIsChecked1] = useState(false);
+  const [isChecked2, setIsChecked2] = useState(false);
+  const [isChecked3, setIsChecked3] = useState(false);
+  const [isCheckedLab, setIsCheckedLab] = useState(false);
+
+  const handleCheckboxChange = async (event, id) => {
+    const { name, checked } = event.target;
+    if (name === "sk_status_pem_1") {
+      setIsChecked1(checked);
+    } else if (name === "sk_status_pem_2") {
+      setIsChecked2(checked);
+    } else if (name === "sk_status_pem_3") {
+      setIsChecked3(checked);
+    } else if (name === "status_kepala_lab") {
+      setIsCheckedLab(checked);
+    }
+
+    try {
+      const response = await axios.put(
+        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        {
+          [name]: true,
+          db: "ta_pengajuan_sk",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toastAlert("success", "Successfully approved");
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      if (error.name === "AxiosError") {
+        toastAlert("error", error.message);
+        return;
+      }
+      loadingAlert();
+      MySwal.close();
+      toastAlert("error", error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (form) {
+      if (form?.sk_status_pem_1 == true) {
+        setIsChecked1(true);
+      }
+      if (form?.sk_status_pem_2 == true) {
+        setIsChecked2(true);
+      }
+      if (form?.sk_status_pem_3 == true) {
+        setIsChecked3(true);
+      }
+      if (form?.status_kepala_lab == true) {
+        setIsCheckedLab(true);
+      }
+    }
+  }, [form]);
 
   if ([user, menu, form, isDosenLoading].some((item) => item == null))
     return <Loading />;
@@ -250,8 +316,9 @@ export default function PengajuanSkAction() {
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
                     <input
                       type="checkbox"
-                      checked={form?.sk_status_pem_1 ? true : false}
-                      disabled
+                      checked={isChecked1}
+                      onChange={(event) => handleCheckboxChange(event, form.id)}
+                      name="sk_status_pem_1"
                     />
                   </div>
                 </div>
@@ -276,8 +343,9 @@ export default function PengajuanSkAction() {
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
                     <input
                       type="checkbox"
-                      checked={form?.sk_status_pem_2 ? true : false}
-                      disabled
+                      checked={isChecked2}
+                      onChange={(event) => handleCheckboxChange(event, form.id)}
+                      name="sk_status_pem_2"
                     />
                   </div>
                 </div>
@@ -303,8 +371,11 @@ export default function PengajuanSkAction() {
                     <div className="inline-flex items-center text-base font-semibold text-gray-900">
                       <input
                         type="checkbox"
-                        checked={form?.sk_status_pem_3 ? true : false}
-                        disabled
+                        checked={isChecked3}
+                        onChange={(event) =>
+                          handleCheckboxChange(event, form.id)
+                        }
+                        name="sk_status_pem_1"
                       />
                     </div>
                   </div>
@@ -331,8 +402,9 @@ export default function PengajuanSkAction() {
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
                     <input
                       type="checkbox"
-                      checked={form?.status_kepala_lab ? true : false}
-                      disabled
+                      checked={isCheckedLab}
+                      onChange={(event) => handleCheckboxChange(event, form.id)}
+                      name="status_kepala_lab"
                     />
                   </div>
                 </div>

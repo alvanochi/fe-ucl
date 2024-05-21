@@ -132,7 +132,7 @@ export const Register = () => {
     }
 
     // Check Password Length
-    if (form?.password.length > 5) {
+    if (form?.password.length > 7) {
       setPassLength(true);
     } else {
       setPassLength(false);
@@ -356,7 +356,7 @@ export const Register = () => {
                   <li>
                     <span className="text-sm">
                       {switchIcon(passLength)}
-                      &nbsp; At least 6 Character
+                      &nbsp; At least 8 Character
                     </span>
                   </li>
                 </ul>

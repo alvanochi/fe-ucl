@@ -12,6 +12,12 @@ import useDosen from "../../../../../repo/dosen";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../components/Loading";
 import date from "../../../../../utils/date";
+import axios from "axios";
+import {
+  MySwal,
+  loadingAlert,
+  toastAlert,
+} from "../../../../../lib/sweetalert";
 
 export default function PengajuanSidang() {
   const router = useRouter();
@@ -166,6 +172,66 @@ export default function PengajuanSidang() {
     downloadLink.click();
     document.body.removeChild(downloadLink);
   };
+
+  const [isChecked1, setIsChecked1] = useState(false);
+  const [isChecked2, setIsChecked2] = useState(false);
+  const [isChecked3, setIsChecked3] = useState(false);
+  const [isCheckedLab, setIsCheckedLab] = useState(false);
+
+  const handleCheckboxChange = async (event, id) => {
+    const { name, checked } = event.target;
+    if (name === "sidang_status_pem_1") {
+      setIsChecked1(checked);
+    } else if (name === "sidang_status_pem_2") {
+      setIsChecked2(checked);
+    } else if (name === "sidang_status_pem_3") {
+      setIsChecked3(checked);
+    } else if (name === "sidang_status_kepala_lab") {
+      setIsCheckedLab(checked);
+    }
+
+    try {
+      const response = await axios.put(
+        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        {
+          [name]: true,
+          db: "ta_pendaftaran_sidang",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toastAlert("success", "Successfully approved");
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      if (error.name === "AxiosError") {
+        toastAlert("error", error.message);
+        return;
+      }
+      loadingAlert();
+      MySwal.close();
+      toastAlert("error", error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (form) {
+      if (form?.sidang_status_pem_1 == true) {
+        setIsChecked1(true);
+      }
+      if (form?.sidang_status_pem_2 == true) {
+        setIsChecked2(true);
+      }
+      if (form?.sidang_status_pem_3 == true) {
+        setIsChecked3(true);
+      }
+      if (form?.sidang_status_kepala_lab == true) {
+        setIsCheckedLab(true);
+      }
+    }
+  }, [form]);
 
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
@@ -830,9 +896,11 @@ export default function PengajuanSidang() {
                   <input
                     className="cursor-pointer"
                     type="checkbox"
-                    checked={form.sidang_status_pem_1}
+                    checked={isChecked1}
                     name="sidang_status_pem_1"
-                    disabled
+                    onChange={(event) =>
+                      handleCheckboxChange(event, form.sidang_id)
+                    }
                   />
                 </Form.Group>
               </td>
@@ -862,9 +930,11 @@ export default function PengajuanSidang() {
                   <input
                     className="cursor-pointer"
                     type="checkbox"
-                    checked={form.sidang_status_pem_2}
+                    checked={isChecked2}
                     name="sidang_status_pem_2"
-                    disabled
+                    onChange={(event) =>
+                      handleCheckboxChange(event, form.sidang_id)
+                    }
                   />
                 </Form.Group>
               </td>
@@ -885,7 +955,9 @@ export default function PengajuanSidang() {
                         value: dosen.user_id,
                       }))
                     }
-                    disabled
+                    onChange={(event) =>
+                      handleCheckboxChange(event, form.sidang_id)
+                    }
                   />
                 </Form.Group>
               </td>
@@ -894,9 +966,11 @@ export default function PengajuanSidang() {
                   <input
                     className="cursor-pointer"
                     type="checkbox"
-                    checked={form.sidang_status_kepala_lab}
+                    checked={isCheckedLab}
                     name="sidang_status_kepala_lab"
-                    disabled
+                    onChange={(event) =>
+                      handleCheckboxChange(event, form.sidang_id)
+                    }
                   />
                 </Form.Group>
               </td>
@@ -927,9 +1001,11 @@ export default function PengajuanSidang() {
                     <input
                       className="cursor-pointer"
                       type="checkbox"
-                      checked={form.sidang_status_pem_3}
+                      checked={isChecked3}
                       name="sidang_status_pem_3"
-                      disabled
+                      onChange={(event) =>
+                        handleCheckboxChange(event, form.sidang_id)
+                      }
                     />
                   </Form.Group>
                 </td>

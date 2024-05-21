@@ -12,6 +12,8 @@ import useDosen from "../../../../../repo/dosen";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../components/Loading";
 import date from "../../../../../utils/date";
+import axios from "axios";
+import { MySwal, toastAlert } from "../../../../../lib/sweetalert";
 
 export default function PengajuanKolo() {
   const router = useRouter();
@@ -96,6 +98,44 @@ export default function PengajuanKolo() {
   const [isChecked2, setIsChecked2] = useState(false);
   const [isChecked3, setIsChecked3] = useState(false);
   const [isCheckedLab, setIsCheckedLab] = useState(false);
+
+  const handleCheckboxChange = async (event, id) => {
+    const { name, checked } = event.target;
+    if (name === "kolo_status_pem_1") {
+      setIsChecked1(checked);
+    } else if (name === "kolo_status_pem_2") {
+      setIsChecked2(checked);
+    } else if (name === "kolo_status_pem_3") {
+      setIsChecked3(checked);
+    } else if (name == "kolo_status_kepala_lab") {
+      setIsCheckedLab(checked);
+    }
+
+    try {
+      const response = await axios.put(
+        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        {
+          [name]: true,
+          db: "ta_pendaftaran_kolokium",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toastAlert("success", "Successfully approved");
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      if (error.name === "AxiosError") {
+        toastAlert("error", error.message);
+        return;
+      }
+      loadingAlert();
+      MySwal.close();
+      toastAlert("error", error.message);
+    }
+  };
 
   useEffect(() => {
     if (form) {
@@ -414,7 +454,9 @@ export default function PengajuanKolo() {
                     type="checkbox"
                     checked={isChecked1}
                     name="kolo_status_pem_1"
-                    disabled={isChecked1}
+                    onChange={(event) =>
+                      handleCheckboxChange(event, form.kolo_id)
+                    }
                   />
                 </Form.Group>
               </td>
@@ -447,7 +489,9 @@ export default function PengajuanKolo() {
                     type="checkbox"
                     checked={isChecked2}
                     name="kolo_status_pem_2"
-                    disabled
+                    onChange={(event) =>
+                      handleCheckboxChange(event, form.kolo_id)
+                    }
                   />
                 </Form.Group>
               </td>
@@ -470,7 +514,9 @@ export default function PengajuanKolo() {
                           value: dosen.user_id,
                         }))
                       }
-                      disabled
+                      onChange={(event) =>
+                        handleCheckboxChange(event, form.kolo_id)
+                      }
                     />
                   </Form.Group>
                 </td>
@@ -481,7 +527,9 @@ export default function PengajuanKolo() {
                       type="checkbox"
                       checked={isChecked3}
                       name="kolo_status_pem_3"
-                      disabled
+                      onChange={(event) =>
+                        handleCheckboxChange(event, form.kolo_id)
+                      }
                     />
                   </Form.Group>
                 </td>
@@ -514,7 +562,9 @@ export default function PengajuanKolo() {
                     type="checkbox"
                     checked={isCheckedLab}
                     name="kolo_status_kepala_lab"
-                    disabled
+                    onChange={(event) =>
+                      handleCheckboxChange(event, form.kolo_id)
+                    }
                   />
                 </Form.Group>
               </td>
