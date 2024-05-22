@@ -55,8 +55,7 @@ export default function PenghargaanModule({ baseURL }) {
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-            as="a"
-            href={`${baseURL}/penghargaan/create`}
+            onClick={() => window.open(`${`${baseURL}/penghargaan/create`}`,'_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -214,8 +213,7 @@ export default function PenghargaanModule({ baseURL }) {
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        as="a"
-                        href={`${baseURL}/penghargaan/detail/${row.penghargaan_id}`}
+                        onClick={() => window.open(`${baseURL}/penghargaan/detail/${row.penghargaan_id}`,'_blank')}
                         variant="info"
                         icon={
                           <Icon
@@ -228,8 +226,7 @@ export default function PenghargaanModule({ baseURL }) {
                       {(row.status === 0 || row.status === 2) && (
                         <>
                           <Button.Icon
-                            as="a"
-                            href={`${baseURL}/penghargaan/edit/${row.penghargaan_id}`}
+                            onClick={() => window.open(`${baseURL}/penghargaan/edit/${row.penghargaan_id}`,'_blank')}
                             variant="secondary"
                             icon={
                               <Icon icon="bx:edit" width={20} height={20} />

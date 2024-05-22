@@ -96,8 +96,7 @@ export default function AnggotaProfesiEdit() {
       />
       <div className="flex justify-center mt-4">
         <Button
-          as="a"
-          href={`${prefix + menu.url}/pembicara/edit/${form.pembicara_id}`}
+          onClick={() => window.open(`${prefix + menu.url}/pembicara/edit/${form.pembicara_id}`,'_blank')}
           variant="secondary"
           icon={<Icon icon="bx:edit" width={20} height={20} />}
           pill

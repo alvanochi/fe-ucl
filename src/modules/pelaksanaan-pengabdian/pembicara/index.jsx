@@ -35,8 +35,7 @@ export default function PembicaraModule({ baseURL }) {
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-            as="a"
-            href={`${baseURL}/pembicara/create`}
+            onClick={() => window.open(`${`${baseURL}/pembicara/create`}`,'_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -164,8 +163,7 @@ export default function PembicaraModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
-                      as="a"
-                      href={`${baseURL}/pembicara/detail/${row.pembicara_id}`}
+                      onClick={() => window.open(`${baseURL}/pembicara/detail/${row.pembicara_id}`,'_blank')}
                       variant="info"
                       icon={
                         <Icon
@@ -182,8 +180,7 @@ export default function PembicaraModule({ baseURL }) {
                         />
 
                         <Button.Icon
-                          as="a"
-                          href={`${baseURL}/pembicara/edit/${row.pembicara_id}`}
+                          onClick={() => window.open(`${baseURL}/pembicara/edit/${row.pembicara_id}`,'_blank')}
                           variant="secondary"
                           icon={<Icon icon="bx:edit" width={20} height={20} />}
                         />

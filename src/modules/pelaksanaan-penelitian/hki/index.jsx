@@ -35,8 +35,7 @@ export default function HKIModule({ baseURL }) {
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-            as="a"
-            href={`${baseURL}/hki/create`}
+            onClick={() => window.open(`${`${baseURL}/hki/create`}`,'_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -164,8 +163,7 @@ export default function HKIModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
-                      as="a"
-                      href={`${baseURL}/hki/detail/${row.hki_id}`}
+                      onClick={() => window.open(`${`${baseURL}/hki/detail/${row.hki_id}`}`,'_blank')}
                       variant="info"
                       icon={
                         <Icon
@@ -180,8 +178,7 @@ export default function HKIModule({ baseURL }) {
                         <CreateDokumen id={{ hki_id: row.hki_id }} />
 
                         <Button.Icon
-                          as="a"
-                          href={`${baseURL}/hki/edit/${row.hki_id}`}
+                          onClick={() => window.open(`${baseURL}/hki/edit/${row.hki_id}`,'_blank')}
                           variant="secondary"
                           icon={<Icon icon="bx:edit" width={20} height={20} />}
                         />

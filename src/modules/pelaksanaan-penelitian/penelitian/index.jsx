@@ -34,8 +34,8 @@ export default function PenelitianModule({ baseURL }) {
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-            as="a"
-            href={`${baseURL}/penelitian/create`}
+           
+            onClick={() => window.open(`${`${baseURL}/penelitian/create`}`,'_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill

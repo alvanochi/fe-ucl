@@ -68,8 +68,7 @@ export default function PenghargaanDetail() {
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <div className="flex justify-center mt-4">
         <Button
-          as="a"
-          href={`${prefix + menu.url}/penghargaan/edit/${form.penghargaan_id}`}
+          onClick={() => window.open(`${prefix + menu.url}/penghargaan/edit/${form.penghargaan_id}`,'_blank')}
           variant="secondary"
           icon={<Icon icon="bx:edit" width={20} height={20} />}
           pill
