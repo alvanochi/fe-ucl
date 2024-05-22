@@ -57,8 +57,7 @@ export default function TesModule({ baseURL }) {
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-            as="a"
-            href={`${baseURL}/tes/create`}
+            onClick={() => window.open(`${`${baseURL}/tes/create`}`,'_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -197,8 +196,7 @@ export default function TesModule({ baseURL }) {
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        as="a"
-                        href={`${baseURL}/tes/detail/${row.tes_id}`}
+                        onClick={() => window.open(`${baseURL}/tes/detail/${row.tes_id}`,'_blank')}
                         variant="info"
                         icon={
                           <Icon
@@ -211,8 +209,7 @@ export default function TesModule({ baseURL }) {
                       {(row.status === 0 || row.status === 2) && (
                         <>
                           <Button.Icon
-                            as="a"
-                            href={`${baseURL}/tes/edit/${row.tes_id}`}
+                            onClick={() => window.open(`${baseURL}/tes/edit/${row.tes_id}`,'_blank')}
                             variant="secondary"
                             icon={
                               <Icon icon="bx:edit" width={20} height={20} />

@@ -76,8 +76,7 @@ export default function AnggotaProfesiDetail() {
       />
       <div className="flex justify-center mt-4">
         <Button
-          as="a"
-          href={`${prefix + menu.url}/anggota-profesi/edit/${form.prof_id}`}
+          onClick={() => window.open(`${prefix + menu.url}/anggota-profesi/edit/${form.prof_id}`,'_blank')}
           variant="secondary"
           icon={<Icon icon="bx:edit" width={20} height={20} />}
           pill

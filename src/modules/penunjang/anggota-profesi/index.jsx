@@ -55,8 +55,7 @@ export default function AnggotaProfesiModule({ baseURL }) {
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-            as="a"
-            href={`${baseURL}/anggota-profesi/create`}
+            onClick={() => window.open(`${`${baseURL}/anggota-profesi/create`}`,'_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -194,8 +193,7 @@ export default function AnggotaProfesiModule({ baseURL }) {
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        as="a"
-                        href={`${baseURL}/anggota-profesi/detail/${row.prof_id}`}
+                        onClick={() => window.open(`${baseURL}/anggota-profesi/detail/${row.prof_id}`,'_blank')}
                         variant="info"
                         icon={
                           <Icon
@@ -208,8 +206,7 @@ export default function AnggotaProfesiModule({ baseURL }) {
                       {(row.status === 0 || row.status === 2) && (
                         <>
                           <Button.Icon
-                            as="a"
-                            href={`${baseURL}/anggota-profesi/edit/${row.prof_id}`}
+                            onClick={() => window.open(`${baseURL}/anggota-profesi/edit/${row.prof_id}`,'_blank')}
                             variant="secondary"
                             icon={
                               <Icon icon="bx:edit" width={20} height={20} />
