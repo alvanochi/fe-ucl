@@ -11,6 +11,7 @@ import useMenu from "../../../../hooks/useMenu";
 import PageHeader from "../../../../components/PageHeader";
 import { toastAlert } from "../../../../lib/sweetalert";
 import { Loading } from "../../../../components/Loading";
+import UploadSk from "./upload-sk";
 
 export default function RekapKehadiran() {
   const router = useRouter();
@@ -22,17 +23,19 @@ export default function RekapKehadiran() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [academicYear, setAcademicYear] = useState("2023/2024");
+
   useEffect(() => {
     if (router.isReady === false || !user) return;
     if (router.query.nip) {
       const fetchDataGasal = async () => {
         try {
-          const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/list-pertemuan`;
+          const DATA_URL = `${process.env.API_ENDPOINT}/absensi/rekap-perkuliahan`;
           const response = await axios.get(DATA_URL, {
             params: {
               dataTable: true,
-              filter: ["semester", "curr_code"],
-              filterValue: ["gasal", "TIF2021"],
+              filter: ["semester", "curr_code", "academic_year"],
+              filterValue: ["gasal", "TIF2021", academicYear],
               code: router.query.nip,
             },
           });
@@ -46,12 +49,12 @@ export default function RekapKehadiran() {
 
       const fetchDataGenap = async () => {
         try {
-          const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/list-pertemuan`;
+          const DATA_URL = `${process.env.API_ENDPOINT}/absensi/rekap-perkuliahan`;
           const response = await axios.get(DATA_URL, {
             params: {
               dataTable: true,
-              filter: ["semester", "curr_code"],
-              filterValue: ["genap", "TIF2021"],
+              filter: ["semester", "curr_code", "academic_year"],
+              filterValue: ["genap", "TIF2021", academicYear],
               code: router.query.nip,
             },
           });
@@ -66,9 +69,14 @@ export default function RekapKehadiran() {
       fetchDataGasal();
       fetchDataGenap();
     }
-  }, [router, user]);
+  }, [router, user, academicYear]);
+
+  const handleYearChange = (event) => {
+    setAcademicYear(event.target.value);
+  };
 
   const GENERATE_URL = `${process.env.API_ENDPOINT}/absensi/list-pertemuan/excel`;
+  const GENERATE_URL_REKAP = `${process.env.API_ENDPOINT}/absensi/rekap-pertemuan/excel`;
 
   async function generate(semester) {
     try {
@@ -107,9 +115,6 @@ export default function RekapKehadiran() {
       toastAlert("error", error);
     }
   }
-
-  const GENERATE_URL_REKAP = `${process.env.API_ENDPOINT}/absensi/rekap-pertemuan/excel`;
-
   async function generateRekap(id_matkul, kelas) {
     try {
       if (id_matkul && kelas) {
@@ -183,15 +188,39 @@ export default function RekapKehadiran() {
         </ul>
       </div>
 
-      <div className="flex justify-between items-start">
-        <span className="mt-6">Semester: GASAL</span>
-        <Button.Icon
-          className="mb-2"
-          variant="success"
-          icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
-          onClick={() => generate("gasal")}
+      <div className="flex flex-col w-1/3">
+        <Form.Label className="mb-4">Tahun Ajaran</Form.Label>
+        <Form.Select
+          value={academicYear}
+          onChange={handleYearChange}
+          options={[
+            { value: "2023/2024", label: "2023/2024" },
+            { value: "2022/2023", label: "2022/2023" },
+            { value: "2021/2022", label: "2021/2022" },
+            { value: "2020/2021", label: "2020/2021" },
+            { value: "2018/2019", label: "2018/2019" },
+            { value: "2017/2018", label: "2017/2018" },
+          ]}
         />
       </div>
+
+      <div className="flex justify-between items-start">
+        <span className="mt-6">Semester: GASAL</span>
+        <div className="flex space-x-2">
+          <UploadSk
+            nip={router.query.nip}
+            academic_year={academicYear}
+            semester={"GASAL"}
+          />
+          <Button.Icon
+            className="mb-2"
+            variant="success"
+            icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
+            onClick={() => generate("gasal")}
+          />
+        </div>
+      </div>
+
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
@@ -338,12 +367,19 @@ export default function RekapKehadiran() {
 
       <div className="flex justify-between items-start mt-8">
         <span className="mt-6">Semester: GENAP</span>
-        <Button.Icon
-          className="mb-2"
-          variant="success"
-          icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
-          onClick={() => generate("genap")}
-        />
+        <div className="flex space-x-2">
+          <UploadSk
+            nip={router.query.nip}
+            academic_year={academicYear}
+            semester={"GENAP"}
+          />
+          <Button.Icon
+            className="mb-2"
+            variant="success"
+            icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
+            onClick={() => generate("genap")}
+          />
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"

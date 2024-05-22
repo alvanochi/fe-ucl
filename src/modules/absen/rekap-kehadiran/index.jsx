@@ -5,22 +5,36 @@ import Link from "next/link";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toastAlert } from "../../../lib/sweetalert";
+import UploadSk from "./upload-sk";
 
 export default function RekapKehadiran({ baseURL, user }) {
   const [dataGasal, setDataGasal] = useState(null);
   const [dataGenap, setDataGenap] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [academicYear, setAcademicYear] = useState("2023/2024");
+  const [nip, setNip] = useState(null);
+
+  const handleYearChange = (event) => {
+    setAcademicYear(event.target.value);
+  };
 
   useEffect(() => {
+    if (!user) return;
+
+    const cleanedNip = user.nip.trim();
+
+    setNip(cleanedNip);
+
     const fetchDataGasal = async () => {
       try {
-        const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/list-pertemuan`;
+        const DATA_URL = `${process.env.API_ENDPOINT}/absensi/rekap-perkuliahan`;
+
         const response = await axios.get(DATA_URL, {
           params: {
             dataTable: true,
-            filter: ["semester", "curr_code"],
-            filterValue: ["gasal", "TIF2021"],
+            filter: ["semester", "curr_code", "academic_year"],
+            filterValue: ["gasal", "TIF2021", academicYear],
             code: user && user.nip,
           },
         });
@@ -34,12 +48,13 @@ export default function RekapKehadiran({ baseURL, user }) {
 
     const fetchDataGenap = async () => {
       try {
-        const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/list-pertemuan`;
+        const DATA_URL = `${process.env.API_ENDPOINT}/absensi/rekap-perkuliahan`;
+
         const response = await axios.get(DATA_URL, {
           params: {
             dataTable: true,
-            filter: ["semester", "curr_code"],
-            filterValue: ["genap", "TIF2021"],
+            filter: ["semester", "curr_code", "academic_year"],
+            filterValue: ["genap", "TIF2021", academicYear],
             code: user && user.nip,
           },
         });
@@ -53,7 +68,7 @@ export default function RekapKehadiran({ baseURL, user }) {
 
     fetchDataGenap();
     fetchDataGasal();
-  }, [user]);
+  }, [user, academicYear]);
 
   const GENERATE_URL = `${process.env.API_ENDPOINT}/absensi/list-pertemuan/excel`;
 
@@ -161,14 +176,33 @@ export default function RekapKehadiran({ baseURL, user }) {
         </ul>
       </div>
 
+      <div className="flex flex-col w-1/3">
+        <Form.Label className="mb-4">Tahun Ajaran</Form.Label>
+        <Form.Select
+          value={academicYear}
+          onChange={handleYearChange}
+          options={[
+            { value: "2023/2024", label: "2023/2024" },
+            { value: "2022/2023", label: "2022/2023" },
+            { value: "2021/2022", label: "2021/2022" },
+            { value: "2020/2021", label: "2020/2021" },
+            { value: "2018/2019", label: "2018/2019" },
+            { value: "2017/2018", label: "2017/2018" },
+          ]}
+        />
+      </div>
+
       <div className="flex justify-between items-start">
         <span className="mt-6">Semester: GASAL</span>
-        <Button.Icon
-          className="mb-2"
-          variant="success"
-          icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
-          onClick={() => generate("gasal")}
-        />
+        <div className="flex space-x-2">
+          <UploadSk nip={nip} academic_year={academicYear} semester={"GASAL"} />
+          <Button.Icon
+            className="mb-2"
+            variant="success"
+            icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
+            onClick={() => generate("gasal")}
+          />
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
@@ -314,12 +348,15 @@ export default function RekapKehadiran({ baseURL, user }) {
 
       <div className="flex justify-between items-start mt-8">
         <span className="mt-6">Semester: GENAP</span>
-        <Button.Icon
-          className="mb-2"
-          variant="success"
-          icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
-          onClick={() => generate("genap")}
-        />
+        <div className="flex space-x-2">
+          <UploadSk nip={nip} academic_year={academicYear} semester={"GENAP"} />
+          <Button.Icon
+            className="mb-2"
+            variant="success"
+            icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
+            onClick={() => generate("genap")}
+          />
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
