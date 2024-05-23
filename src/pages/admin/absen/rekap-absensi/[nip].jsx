@@ -34,9 +34,10 @@ export default function RekapKehadiran() {
           const response = await axios.get(DATA_URL, {
             params: {
               dataTable: true,
-              filter: ["semester", "curr_code", "academic_year"],
-              filterValue: ["gasal", "TIF2021", academicYear],
+              filter: ["semester"],
+              filterValue: ["gasal"],
               code: router.query.nip,
+              academic_year: academicYear,
             },
           });
           setDataGasal(response.data.data);
@@ -53,9 +54,10 @@ export default function RekapKehadiran() {
           const response = await axios.get(DATA_URL, {
             params: {
               dataTable: true,
-              filter: ["semester", "curr_code", "academic_year"],
-              filterValue: ["genap", "TIF2021", academicYear],
+              filter: ["semester"],
+              filterValue: ["genap"],
               code: router.query.nip,
+              academic_year: academicYear,
             },
           });
           setDataGenap(response.data.data);
