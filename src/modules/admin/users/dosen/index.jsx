@@ -109,8 +109,7 @@ export default function DosenModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
-                      as="a"
-                      href={`${baseURL}/detail-dosen/${row.user_id}`}
+                      onClick={() => window.open(`${baseURL}/detail-dosen/${row.user_id}`,'_blank')}
                       variant="info"
                       icon={
                         <Icon
@@ -121,8 +120,7 @@ export default function DosenModule({ baseURL }) {
                       }
                     />
                     <Button.Icon
-                      as="a"
-                      href={`${baseURL}/change-password/${row.user_id}`}
+                      onClick={() => window.open(`${baseURL}/change-password/${row.user_id}`,'_blank')}
                       variant="secondary"
                       icon={<Icon icon="bx:edit" width={20} height={20} />}
                     />

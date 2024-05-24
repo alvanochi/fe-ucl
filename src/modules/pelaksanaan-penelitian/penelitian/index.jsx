@@ -156,8 +156,7 @@ export default function PenelitianModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                   <Button.Icon
-                        as="a"
-                        href={`${baseURL}/penelitian/detail/${row.penelitian_id}`}
+                        onClick={() => window.open(`${baseURL}/penelitian/detail/${row.penelitian_id}`,'_blank')}
                         variant="info"
                         icon={
                           <Icon
@@ -173,8 +172,7 @@ export default function PenelitianModule({ baseURL }) {
                         id={{ penelitian_id: row.penelitian_id }}
                       />
                       <Button.Icon
-                        as="a"
-                        href={`${baseURL}/penelitian/edit/${row.penelitian_id}`}
+                        onClick={() => window.open(`${baseURL}/penelitian/edit/${row.penelitian_id}`,'_blank')}
                         variant="secondary"
                         icon={<Icon icon="bx:edit" width={20} height={20} />}
                       />

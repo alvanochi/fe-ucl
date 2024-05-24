@@ -125,8 +125,7 @@ export default function MahasiswaModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
-                      as="a"
-                      href={`${baseURL}/detail-mhs/${row.user_id}`}
+                      onClick={() => window.open(`${baseURL}/detail-mhs/${row.user_id}`,'_blank')}
                       variant="info"
                       icon={
                         <Icon
@@ -137,8 +136,7 @@ export default function MahasiswaModule({ baseURL }) {
                       }
                     />
                     <Button.Icon
-                      as="a"
-                      href={`${baseURL}/change-password/${row.user_id}`}
+                      onClick={() => window.open(`${baseURL}/change-password/${row.user_id}`,'_blank')}
                       variant="secondary"
                       icon={<Icon icon="bx:edit" width={20} height={20} />}
                     />
