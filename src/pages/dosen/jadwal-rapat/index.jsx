@@ -144,8 +144,7 @@ export default function JadwalRapat() {
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        as="a"
-                        href={`${prefix + menu.url}/invite/${row.id}`}
+                        onClick={() => window.open(`${`${prefix + menu.url}/invite/${row.id}`}`,'_blank')}
                         variant="primary"
                         icon={<Icon icon="bi:person-fill-add" width={15} height={15} />}
                       />
@@ -153,8 +152,7 @@ export default function JadwalRapat() {
                         data={{ token: row.token, kegiatan: row.nm_kegiatan }}
                       />
                       <Button.Icon
-                        as="a"
-                        href={`${prefix + menu.url}/detail-list/${row.id}`}
+                        onClick={() => window.open(`${`${prefix + menu.url}/detail-list/${row.id}`}`,'_blank')}
                         variant="primary"
                         icon={<Icon icon="bxs:message-square-edit" width={15} height={15} />}
                       />

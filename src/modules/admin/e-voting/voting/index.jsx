@@ -29,8 +29,7 @@ export default function VotingModule({ baseURL }) {
       <div className="flex mb-8 justify-end items-center">
         <div className="mr-4">
           <Button
-            as="a"
-            href={`${baseURL}/create`}
+            onClick={() => window.open(`${`${baseURL}/create`}`,'_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill

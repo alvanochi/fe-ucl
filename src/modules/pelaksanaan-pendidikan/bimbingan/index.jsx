@@ -30,8 +30,7 @@ export default function BimbinganModule({ baseURL }) {
     <>
       <div className="flex items-center justify-center gap-2 mb-8">
         <Button
-          as="a"
-          href={`${baseURL}/bimbingan/create`}
+          onClick={() => window.open(`${`${baseURL}/bimbingan/create`}`,'_blank')}
           variant="primary"
           icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
           pill
@@ -164,8 +163,7 @@ export default function BimbinganModule({ baseURL }) {
                   ) : (
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        as="a"
-                        href={`${baseURL}/bimbingan/detail/${row.bimbingan_id}`}
+                        onClick={() => window.open(`${baseURL}/bimbingan/detail/${row.bimbingan_id}`,'_blank')}
                         variant="info"
                         icon={
                           <Icon
@@ -176,8 +174,7 @@ export default function BimbinganModule({ baseURL }) {
                         }
                       />
                       <Button.Icon
-                        as="a"
-                        href={`${baseURL}/bimbingan/edit/${row.bimbingan_id}`}
+                        onClick={() => window.open(`${baseURL}/bimbingan/edit/${row.bimbingan_id}`,'_blank')}
                         variant="secondary"
                         icon={<Icon icon="bx:edit" width={20} height={20} />}
                       />

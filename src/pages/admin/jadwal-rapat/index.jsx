@@ -47,8 +47,7 @@ export default function JadwalRapat() {
       <div className="my-8">
         <div className="flex items-center justify-center gap-2 mb-8 mt-8">
           <Button
-            as="a"
-            href={`${prefix + menu.url}/create`}
+            onClick={() => window.open(`${`${prefix + menu.url}/create`}`,'_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -149,8 +148,7 @@ export default function JadwalRapat() {
                     <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                       <div className="flex items-stretch gap-1">
                         <Button.Icon
-                          as="a"
-                          href={`${prefix + menu.url}/invite/${row.id}`}
+                          onClick={() => window.open(`${`${prefix + menu.url}/invite/${row.id}`}`,'_blank')}
                           variant="primary"
                           icon={
                             <Icon
@@ -164,8 +162,7 @@ export default function JadwalRapat() {
                           data={{ token: row.token, kegiatan: row.nm_kegiatan }}
                         />
                         <Button.Icon
-                          as="a"
-                          href={`${prefix + menu.url}/detail-list/${row.id}`}
+                          onClick={() => window.open(`${`${prefix + menu.url}/detail-list/${row.id}`}`,'_blank')}
                           variant="primary"
                           icon={
                             <Icon
