@@ -29,8 +29,7 @@ export default function AkademikModule({ baseURL }) {
       <div className="flex mb-8 justify-end items-center">
         <div className="mr-4">
           <Button
-            as="a"
-            href={`${baseURL}/akademik/create`}
+            onClick={() => window.open(`${`${baseURL}/akademik/create`}`,'_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -114,8 +113,7 @@ export default function AkademikModule({ baseURL }) {
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        as="a"
-                        href={`${baseURL}/akademik/detail/${row.id}`}
+                        onClick={() => window.open(`${baseURL}/akademik/detail/${row.id}`,'_blank')}
                         variant="info"
                         icon={
                           <Icon
@@ -126,8 +124,7 @@ export default function AkademikModule({ baseURL }) {
                         }
                       />
                       <Button.Icon
-                        as="a"
-                        href={`${baseURL}/akademik/edit/${row.id}`}
+                        onClick={() => window.open(`${baseURL}/akademik/edit/${row.id}`,'_blank')}
                         variant="secondary"
                         icon={<Icon icon="bx:edit" width={20} height={20} />}
                       />

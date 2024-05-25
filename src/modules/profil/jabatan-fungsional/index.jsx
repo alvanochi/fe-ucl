@@ -31,8 +31,7 @@ export default function JabatanFungsionalModule({ baseURL }) {
     <>
       <div className="flex items-center justify-center gap-2 my-8">
         <Button
-          as="a"
-          href={`${baseURL}/jabatan-fungsional/create`}
+          onClick={() => window.open(`${baseURL}/jabatan-fungsional/create`,'_blank')}
           variant="primary"
           icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
           pill
