@@ -12,8 +12,7 @@ export default function AlamatDanKontakModule({ baseURL }) {
     <>
       <div className="flex items-center justify-center gap-2 mb-8">
         <Button
-          as="a"
-          href={`${baseURL}/alamat-dan-kontak/edit`}
+          onClick={() => window.open(`${baseURL}/alamat-dan-kontak/edit`,'_blank')}
           variant="secondary"
           icon={<Icon icon="bx:edit" width={20} height={20} />}
           pill

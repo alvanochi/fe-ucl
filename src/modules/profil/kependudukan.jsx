@@ -12,8 +12,7 @@ export default function KependudukanModule({ baseURL }) {
 		<>
 			<div className="flex items-center justify-center gap-2 mb-8">
 				<Button
-					as="a"
-					href={`${baseURL}/kependudukan/edit`}
+					onClick={() => window.open(`${baseURL}/kependudukan/edit`,'_blank')}
 					variant="secondary"
 					icon={<Icon icon="bx:edit" width={20} height={20} />}
 					pill

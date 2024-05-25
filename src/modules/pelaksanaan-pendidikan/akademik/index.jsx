@@ -94,8 +94,7 @@ export default function AkademikModule({ baseURL }) {
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        as="a"
-                        href={`${baseURL}/akademik/detail/${row.id}`}
+                        onClick={() => window.open(`${baseURL}/akademik/detail/${row.id}`,'_blank')}
                         variant="info"
                         icon={
                           <Icon
