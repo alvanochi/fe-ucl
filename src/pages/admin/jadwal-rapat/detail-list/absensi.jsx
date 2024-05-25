@@ -1,4 +1,3 @@
-import { useState } from "react";
 import axios from "axios";
 import Button from "../../../../components/Button";
 import Modal from "../../../../components/Modal";
@@ -7,18 +6,22 @@ import useModal from "../../../../hooks/useModal";
 import { Icon } from "@iconify-icon/react";
 import useForm from "../../../../hooks/useForm";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { use, useState } from "react";
+import useUsers from "../../../../repo/users";
 
 const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
   const { show, toggle, close } = useModal();
+  const [code, setCode] = useState("");
+  const [name, setName] = useState("");
+
+  const { data: listUser } = useUsers();
 
   const INITIAL_FORM = {
     id_meeting: data && data.id ? data.id : "",
-    code: "",
-    name_absen: "",
     status_absen: "1",
-  }
+  };
 
-  const {form, inputHandler} = useForm(INITIAL_FORM, {
+  const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
       { field: "id_meeting", label: "ID Meeting" },
       { field: "code", label: "code" },
@@ -26,16 +29,22 @@ const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
       { field: "status_absen", label: "status_absen" },
     ],
   });
-  
+
+  const handlePesertaChange = (selected) => {
+    setCode(selected?.value);
+    setName(selected?.name);
+  };
 
   async function submitHandler(event) {
     event.preventDefault();
     try {
       const requestData = {
         ...form,
-      }
+        name_absen: name,
+        code,
+      };
 
-      if(!requestData.status_absen || !requestData.code){
+      if (!requestData.status_absen || !requestData.code) {
         toastAlert("error", "Pleas fill in all the required fields.");
 
         return;
@@ -86,28 +95,22 @@ const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
             onChange={inputHandler}
             value={form.id_meeting}
           />
-          <Form.Group>
-            <Form.Label>
-              Nama <span className="text-danger-600">*</span>
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[10rem]">
+              Peserta <span className="text-danger-600">*</span>
             </Form.Label>
-            <Form.Input
-              type="text"
-              name="name_absen"
-              value={form.name_absen}
-              onChange={inputHandler}
-              required
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>
-              NPM/NIK <span className="text-danger-600">*</span>
-            </Form.Label>
-            <Form.Input
-              type="number"
+            <span>:</span>
+            <Form.Combobox
               name="code"
-              value={form.code}
-              onChange={inputHandler}
-              required
+              onChange={handlePesertaChange}
+              value={code}
+              options={listUser?.map((user) => ({
+                label: `${user.nama_lengkap} - ${
+                  user.npm ? user.npm : user.nip
+                }`,
+                value: user.npm ? user.npm : user.nip,
+                name: user.nama_lengkap,
+              }))}
             />
           </Form.Group>
           <Form.Group className="flex items-baseline gap-2">
@@ -116,33 +119,33 @@ const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
             </Form.Label>
             <span>:</span>
             <div className="flex gap-6">
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
-                value={1}
-                onChange={inputHandler}
-                checked={form.status_absen == 1}
-              />
-              Masuk
-            </Form.Label>
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
-                value={2}
-                onChange={inputHandler}
-                checked={form.status_absen == 2}
-              />
-              Sakit / Izin
-            </Form.Label>
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
-                value={0}
-                onChange={inputHandler}
-                checked={form.status_absen == 0}
-              />
-              Alfa
-            </Form.Label>
+              <Form.Label>
+                <Form.Radio
+                  name="status_absen"
+                  value={1}
+                  onChange={inputHandler}
+                  checked={form.status_absen == 1}
+                />
+                Masuk
+              </Form.Label>
+              <Form.Label>
+                <Form.Radio
+                  name="status_absen"
+                  value={2}
+                  onChange={inputHandler}
+                  checked={form.status_absen == 2}
+                />
+                Sakit / Izin
+              </Form.Label>
+              <Form.Label>
+                <Form.Radio
+                  name="status_absen"
+                  value={0}
+                  onChange={inputHandler}
+                  checked={form.status_absen == 0}
+                />
+                Alfa
+              </Form.Label>
             </div>
           </Form.Group>
           <div className="flex gap-4 mt-12">

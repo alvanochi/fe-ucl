@@ -311,7 +311,7 @@ export default function DetailList() {
                   />
                   <img
                     src={FILE_URL}
-                    className="w-full h-[256px]"
+                    className="w-full h-full"
                     alt="dokumentasi"
                   />
                 </div>
