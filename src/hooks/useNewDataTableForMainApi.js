@@ -49,7 +49,9 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
     };
 
     try {
-      const response = await axios.get(url, { params: query });
+      const response = await axios.get(url, {
+        params: { ...query, search: searchValue },
+      });
       setLoading(false);
 
       const finalData =
@@ -58,63 +60,17 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
           ? response.data.data.map((data) => options.transformResponse(data))
           : response.data.data;
 
-      let filteredData = finalData;
+      const totalRecords = searchValue
+        ? finalData.length
+        : response.data.recordsTotal;
 
-      if (searchValue) {
-        const searchText = searchValue.toLowerCase();
-        filteredData = finalData.filter((row) => {
-          for (const key in row) {
-            if (Object.prototype.hasOwnProperty.call(row, key)) {
-              const cellValue = row[key];
-              if (
-                typeof cellValue === "string" &&
-                cellValue.toLowerCase().includes(searchText)
-              ) {
-                return true;
-              }
-              if (
-                typeof cellValue === "number" ||
-                typeof cellValue === "boolean"
-              ) {
-                if (cellValue.toString().toLowerCase().includes(searchText)) {
-                  return true;
-                }
-              }
-              if (typeof cellValue === "object" && cellValue !== null) {
-                for (const innerKey in cellValue) {
-                  if (
-                    Object.prototype.hasOwnProperty.call(cellValue, innerKey)
-                  ) {
-                    const innerValue = cellValue[innerKey];
-                    if (
-                      typeof innerValue === "string" &&
-                      innerValue.toLowerCase().includes(searchText)
-                    ) {
-                      return true;
-                    }
-                  }
-                }
-              }
-            }
-          }
-          return false;
-        });
-      }
+      const calculatedPageCount = Math.ceil(totalRecords / pageSize);
 
-      const totalFilteredRecords = filteredData.length;
-      setRecordsTotal(
-        searchValue ? totalFilteredRecords : response.data.recordsTotal
-      );
-
-      const calculatedPageCount = Math.ceil(
-        (searchValue ? totalFilteredRecords : response.data.recordsTotal) /
-          pageSize
-      );
-      setPageCount(calculatedPageCount);
-
-      const currentPageData = filteredData;
+      const currentPageData = finalData.slice(0, pageSize);
 
       setData(currentPageData);
+      setRecordsTotal(totalRecords);
+      setPageCount(calculatedPageCount);
 
       options?.onLoad &&
         typeof options.onLoad === "function" &&
@@ -137,7 +93,7 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
 
   useEffect(() => {
     fetchData();
-  }, [page, user, searchValue, sort]);
+  }, [page, user, sort, searchValue]);
 
   return {
     dataNew: data,
@@ -153,7 +109,7 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
     canPrevNew: canPrev,
     sortByNew: sortBy,
     getSortByNew: getSortBy,
-    setPageSizeNew: setPageSize, // Add this to update page size if needed
+    setPageSizeNew: setPageSize,
   };
 };
 

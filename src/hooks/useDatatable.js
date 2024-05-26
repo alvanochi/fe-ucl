@@ -72,7 +72,7 @@ export const useDatatable = (url, options = {}) => {
         typeof options.onLoad == "function" &&
         options.onLoad(finalData);
     } catch (error) {
-      if (error.response.statusText == "Unauthorized") {
+      if (error) {
         toastAlert("error", "session expired");
         logout();
       } else {
