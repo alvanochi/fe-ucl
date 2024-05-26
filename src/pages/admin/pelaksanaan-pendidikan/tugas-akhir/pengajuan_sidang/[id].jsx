@@ -685,6 +685,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="judul"
                 value={form.judul}
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
