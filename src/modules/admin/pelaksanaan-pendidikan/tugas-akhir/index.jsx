@@ -77,7 +77,7 @@ export default function TugasAkhirModule({ baseURL }) {
         </div>
       </div>
       <table
-        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
+        className="w-full border-collapse rounded-2xl shadow table-auto"
         cellPadding={10}
       >
         <thead>
@@ -189,7 +189,7 @@ export default function TugasAkhirModule({ baseURL }) {
                   </td>
 
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    <div className="flex items-stretch gap-1">
+                    <div className="relative flex items-stretch gap-1">
                       <button
                         onClick={() => toggleDropdown(row.id)}
                         className="flex items-center gap-2 bg-blue-500 text-white px-3 py-2 rounded-md focus:outline-none z-10"
@@ -202,7 +202,7 @@ export default function TugasAkhirModule({ baseURL }) {
                       </button>
                       {openedDropdownId === row.id && (
                         <div
-                          className="absolute right-14 mt-10 w-56 bg-white rounded-md shadow-lg z-50"
+                          className="absolute right-0 mt-10 w-56 bg-white rounded-md shadow-lg z-[1000]"
                           ref={dropdownRef}
                         >
                           <div className="py-1">
