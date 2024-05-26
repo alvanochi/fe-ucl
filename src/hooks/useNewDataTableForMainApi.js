@@ -19,39 +19,33 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
     fetchData();
   };
 
-  const canNext = () => page + 1 < pageCount;
-  const canPrev = () => page - 1 > pageCount;
+  const canNext = () => page < pageCount;
+  const canPrev = () => page > 1;
   const getSortBy = (key) => sort[key] ?? null;
   const sortBy = (key) => {
     setSort((state) => {
       const isSameAsBefore = state[key] ?? false;
-      return { [key]: isSameAsBefore && state[key] == "desc" ? "asc" : "desc" };
+      return {
+        [key]: isSameAsBefore && state[key] === "desc" ? "asc" : "desc",
+      };
     });
   };
-
-  const adjustedPage = page - 1;
 
   const fetchData = async () => {
     setLoading(true);
 
-    let keySort;
-    let valueObjSort;
-    const keys = Object.keys(sort);
-
-    keys.forEach((key) => {
-      const value = sort[key];
-      keySort = key;
-      valueObjSort = value;
-    });
+    const [keySort, valueObjSort] = Object.entries(sort)[0] || ["id", "desc"];
 
     const query = {
       dataTable: true,
-      orderField: keySort || "id",
-      orderValue: valueObjSort || "desc",
+      orderField: keySort,
+      orderValue: valueObjSort,
       filter: options.filter || [],
       filterValue: options.filterValue || [],
       page: page,
-      start: pageSize,
+      perPage: pageSize,
+      start: (page - 1) * pageSize,
+      length: pageSize,
     };
 
     try {
@@ -64,53 +58,63 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
           ? response.data.data.map((data) => options.transformResponse(data))
           : response.data.data;
 
-      const filteredData = finalData.filter((row) => {
+      let filteredData = finalData;
+
+      if (searchValue) {
         const searchText = searchValue.toLowerCase();
-        for (const key in row) {
-          if (Object.prototype.hasOwnProperty.call(row, key)) {
-            const cellValue = row[key];
-            if (
-              typeof cellValue === "string" &&
-              cellValue.toLowerCase().includes(searchText)
-            ) {
-              return true;
-            }
-            if (
-              typeof cellValue === "number" ||
-              typeof cellValue === "boolean"
-            ) {
-              if (cellValue.toString().toLowerCase().includes(searchText)) {
+        filteredData = finalData.filter((row) => {
+          for (const key in row) {
+            if (Object.prototype.hasOwnProperty.call(row, key)) {
+              const cellValue = row[key];
+              if (
+                typeof cellValue === "string" &&
+                cellValue.toLowerCase().includes(searchText)
+              ) {
                 return true;
               }
-            }
-            if (typeof cellValue === "object" && cellValue !== null) {
-              for (const innerKey in cellValue) {
-                if (Object.prototype.hasOwnProperty.call(cellValue, innerKey)) {
-                  const innerValue = cellValue[innerKey];
+              if (
+                typeof cellValue === "number" ||
+                typeof cellValue === "boolean"
+              ) {
+                if (cellValue.toString().toLowerCase().includes(searchText)) {
+                  return true;
+                }
+              }
+              if (typeof cellValue === "object" && cellValue !== null) {
+                for (const innerKey in cellValue) {
                   if (
-                    typeof innerValue === "string" &&
-                    innerValue.toLowerCase().includes(searchText)
+                    Object.prototype.hasOwnProperty.call(cellValue, innerKey)
                   ) {
-                    return true;
+                    const innerValue = cellValue[innerKey];
+                    if (
+                      typeof innerValue === "string" &&
+                      innerValue.toLowerCase().includes(searchText)
+                    ) {
+                      return true;
+                    }
                   }
                 }
               }
             }
           }
-        }
-        return false;
-      });
+          return false;
+        });
+      }
 
-      setRecordsTotal(filteredData.length);
-
-      const calculatedPageCount = Math.ceil(
-        parseInt(response.data.recordsTotal) / pageSize
+      const totalFilteredRecords = filteredData.length;
+      setRecordsTotal(
+        searchValue ? totalFilteredRecords : response.data.recordsTotal
       );
 
-      console.log(calculatedPageCount);
-
-      setData(filteredData);
+      const calculatedPageCount = Math.ceil(
+        (searchValue ? totalFilteredRecords : response.data.recordsTotal) /
+          pageSize
+      );
       setPageCount(calculatedPageCount);
+
+      const currentPageData = filteredData;
+
+      setData(currentPageData);
 
       options?.onLoad &&
         typeof options.onLoad === "function" &&
@@ -126,6 +130,10 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
       setPageCount(0);
     }
   };
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchValue]);
 
   useEffect(() => {
     fetchData();
@@ -145,6 +153,7 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
     canPrevNew: canPrev,
     sortByNew: sortBy,
     getSortByNew: getSortBy,
+    setPageSizeNew: setPageSize, // Add this to update page size if needed
   };
 };
 

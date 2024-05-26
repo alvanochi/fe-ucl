@@ -258,7 +258,10 @@ export default function PengajuanSidang() {
           status approved dosen pembimbing sudah ACC/terceklis.
         </div>
       </div>
-      <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+      <Form
+        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
+        type="formdata"
+      >
         <Card className="mt-4">
           <Card.Header className="text-center">
             <div>Permohonan Pelaksanaan Ujian Skripsi Pada Sidang Sarjana</div>
@@ -273,7 +276,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -284,7 +287,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="npm"
                 value={form.npm}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -295,7 +298,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="tanggal_lahior"
                 value={form.tanggal_lahir}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -306,7 +309,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="alamat"
                 value={form.alamat}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -317,7 +320,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="email"
                 value={form.email}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -328,7 +331,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="no_hp"
                 value={form.no_hp}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -339,7 +342,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="pekerjaan"
                 value={form.pekerjaan}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -352,7 +355,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="alamat_pekerjaan"
                 value={form.alamat_pekerjaan}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -363,7 +366,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="wali"
                 value={form.wali}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -376,7 +379,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="telp_wali"
                 value={form.telp_wali}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -387,7 +390,7 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="alamat_wali"
                 value={form.alamat_wali}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
           </Card.Body>
@@ -412,24 +415,38 @@ export default function PengajuanSidang() {
                 value={form.link_khs}
                 placeholder="Link Google Drive"
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
-                Pas Foto Berwarna
+                <p>
+                  Pas Foto Berwarna<span className="text-danger-600">*</span>
+                </p>
+                <p className="text-sm font-normal">
+                  (Background biru untuk tahun
+                </p>
+                <p className="text-sm font-normal">
+                  kelahiran genap dan merah untuk
+                </p>
+                <p className="text-sm font-normal">tahun kelahiran ganjil)</p>
               </Form.Label>
               <span>:</span>
-              {form.pas_foto && typeof form.pas_foto !== "object" && (
-                <Form.Group>
-                  <Form.Label className="min-w-[20rem]"></Form.Label>
-                  <embed
-                    src={`${FILE_URL}/${form.pas_foto}`}
-                    className="w-65 h-[256px]"
-                  />
-                </Form.Group>
-              )}
+              <Form.Input
+                type="file"
+                className="flex-1"
+                name="pas_foto"
+                onChange={inputHandler}
+              />
             </Form.Group>
+            {form.pas_foto && typeof form.pas_foto !== "object" && (
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]"></Form.Label>
+                <embed
+                  src={`${FILE_URL}/${form.pas_foto}`}
+                  className="w-65 h-[256px]"
+                />
+              </Form.Group>
+            )}
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 Ijazah Terakhir 1 Lembar{" "}
@@ -442,7 +459,6 @@ export default function PengajuanSidang() {
                 value={form.link_ijazah_terakhir}
                 placeholder="Link Google Drive"
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -457,7 +473,6 @@ export default function PengajuanSidang() {
                 value={form.link_serti_taaruf}
                 placeholder="Link Google Drive"
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -472,7 +487,6 @@ export default function PengajuanSidang() {
                 value={form.link_serti_lkkm}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -485,7 +499,6 @@ export default function PengajuanSidang() {
                 value={form.link_serti_kkn}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             {/* <Form.Group className="flex items-baseline gap-3">
@@ -510,12 +523,11 @@ export default function PengajuanSidang() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1"
-                name="link_serti_kompetensi border-gray-500"
+                className="flex-1 border-gray-500"
+                name="link_serti_kompetensi"
                 value={form.link_serti_kompetensi}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -530,7 +542,6 @@ export default function PengajuanSidang() {
                 value={form.link_bukti_upload_jurnal}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -545,7 +556,6 @@ export default function PengajuanSidang() {
                 value={form.link_serti_toefl}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -561,7 +571,6 @@ export default function PengajuanSidang() {
                 value={form.link_bukti_keuangan}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -574,7 +583,6 @@ export default function PengajuanSidang() {
                 value={form.link_lainya}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -633,7 +641,6 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -644,7 +651,6 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="npm"
                 value={form.npm}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -656,7 +662,6 @@ export default function PengajuanSidang() {
                 name="program_studi"
                 value={form.program_studi}
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -667,10 +672,9 @@ export default function PengajuanSidang() {
               <Form.Input
                 type="text"
                 className="flex-1 border-gray-500"
-                name="pemintan"
+                name="peminatan"
                 value={form.peminatan}
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -681,7 +685,6 @@ export default function PengajuanSidang() {
                 className="flex-1 border-gray-500"
                 name="judul"
                 value={form.judul}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -708,7 +711,6 @@ export default function PengajuanSidang() {
                 name="jumlah_sks"
                 value={form.jumlah_sks}
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -723,7 +725,6 @@ export default function PengajuanSidang() {
                 value={form.link_administrasi_sidang}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -739,32 +740,35 @@ export default function PengajuanSidang() {
                 value={form.link_transkip_nilai}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 Draft Final Skripsi Satu Eksemlar
+                <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              {form.draft_final_skripsi &&
-                typeof form.draft_final_skripsi !== "object" && (
-                  <Button
-                    variant="info"
-                    icon={
-                      <Icon
-                        icon="material-symbols:save"
-                        width={20}
-                        height={20}
-                      />
-                    }
-                    type="button"
-                    onClick={handleDownload}
-                  >
-                    Download Dokumen
-                  </Button>
-                )}
+              <Form.Input
+                type="file"
+                className="flex-1"
+                name="draft_final_skripsi"
+                onChange={inputHandler}
+              />
             </Form.Group>
+            {form.draft_final_skripsi &&
+              typeof form.draft_final_skripsi !== "object" && (
+                <Button
+                  variant="info"
+                  icon={
+                    <Icon icon="material-symbols:save" width={20} height={20} />
+                  }
+                  type="button"
+                  className="ml-[350px]"
+                  onClick={handleDownload}
+                >
+                  Download Dokumen
+                </Button>
+              )}
 
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
@@ -778,7 +782,6 @@ export default function PengajuanSidang() {
                 value={form.link_draft_final_skripsi}
                 onChange={inputHandler}
                 placeholder="Link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -808,6 +811,7 @@ export default function PengajuanSidang() {
                 name="jadwal_pelaksanaan"
                 value={form.jadwal_pelaksanaan}
                 placeholder="Diisi oleh admin"
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

@@ -168,7 +168,11 @@ export default function PengajuanKolo() {
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+
+      <Form
+        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
+        type="formdata"
+      >
         <Card className="mt-4">
           <Card.Header className="text-center">
             <div>Form Pengajuan Kolokium</div>
@@ -202,7 +206,6 @@ export default function PengajuanKolo() {
                 className="flex-1 border-gray-500"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -213,7 +216,6 @@ export default function PengajuanKolo() {
                 className="flex-1 border-gray-500"
                 name="npm"
                 value={form.npm}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -224,7 +226,6 @@ export default function PengajuanKolo() {
                 className="flex-1 border-gray-500"
                 name="judul"
                 value={form.judul}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -235,7 +236,6 @@ export default function PengajuanKolo() {
                 className="flex-1 border-gray-500"
                 name="semester"
                 value={form.semester}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -246,7 +246,6 @@ export default function PengajuanKolo() {
                 className="flex-1 border-gray-500"
                 name="email"
                 value={form.email}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -257,7 +256,6 @@ export default function PengajuanKolo() {
                 className="flex-1 border-gray-500"
                 name="ho_hp"
                 value={form.no_hp}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -272,7 +270,6 @@ export default function PengajuanKolo() {
                 name="link_dok_mhs_aktif"
                 value={form.link_dok_mhs_aktif}
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -286,7 +283,6 @@ export default function PengajuanKolo() {
                 name="link_dok_pembayaran"
                 value={form.link_dok_pembayaran}
                 onChange={inputHandler}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -294,6 +290,12 @@ export default function PengajuanKolo() {
                 5 Eksternal Proposal Makalah Kolokium{" "}
               </Form.Label>
               <span>:</span>
+              <Form.Input
+                type="file"
+                className="flex-1"
+                name="file_makalah"
+                onChange={inputHandler}
+              />
               {form.file_makalah && (
                 <Button
                   variant="info"
@@ -320,7 +322,6 @@ export default function PengajuanKolo() {
                 value={form.link_dok_makalah}
                 onChange={inputHandler}
                 placeholder="link Google Drive"
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -332,7 +333,6 @@ export default function PengajuanKolo() {
                 type="checkbox"
                 name="status_kp"
                 checked={form.status_kp ? true : false}
-                disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -345,7 +345,6 @@ export default function PengajuanKolo() {
                 name="status_sks_ipk"
                 value={form.status_sks_ipk}
                 checked={form.status_sks_ipk}
-                disabled
               />
               <span>SKS: {form.jumlah_sks}</span>|<span>IPK: {form.ipk}</span>
             </Form.Group>
