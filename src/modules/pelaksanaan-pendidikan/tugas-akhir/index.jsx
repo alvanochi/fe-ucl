@@ -210,6 +210,8 @@ export default function TugasAkhirModule({ baseURL }) {
                           >
                             <Link
                               href={`${baseURL}/tugas-akhir/pengajuan_sk/${row.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
                             >
                               Pengajuan SK
                             </Link>
@@ -243,6 +245,8 @@ export default function TugasAkhirModule({ baseURL }) {
                               row.status === "selesai" ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pengajuan_kolo/${row.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   Pengajuan Kolokium
                                 </Link>
@@ -282,6 +286,8 @@ export default function TugasAkhirModule({ baseURL }) {
                               row.status_approved_kolo === true ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pelaks_kolo/${row.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   Pelaksanaan Kolokium
                                 </Link>
@@ -318,6 +324,8 @@ export default function TugasAkhirModule({ baseURL }) {
                               row.status === "menyelesaikan-revisi" ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pengajuan_sidang/${row.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   Pendaftaran Sidang
                                 </Link>
@@ -359,6 +367,8 @@ export default function TugasAkhirModule({ baseURL }) {
                               row.status_approved_sidang === true ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pelaks_sidang/${row.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   Pelaksanaan Sidang
                                 </Link>
@@ -391,6 +401,8 @@ export default function TugasAkhirModule({ baseURL }) {
                               row.status === "selesai" ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pengumpulan_revisi/${row.id}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
                                 >
                                   Pengumpulan Revisi
                                 </Link>

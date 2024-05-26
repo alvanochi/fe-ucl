@@ -17,7 +17,7 @@ export default function BimbinganMahasiswaCreate() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir`;
 

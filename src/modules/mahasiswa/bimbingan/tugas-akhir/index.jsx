@@ -56,8 +56,7 @@ export default function TugasAkhirModule({ baseURL }) {
     <>
       <div className="flex items-center justify-center gap-2 mb-8">
         <Button
-          as="a"
-          href={`${baseURL}/tugas-akhir/pengajuan_sk`}
+          onClick={() => window.open(`${baseURL}/tugas-akhir/pengajuan_sk`,'_blank')}
           variant="primary"
           icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
           pill
@@ -175,6 +174,8 @@ export default function TugasAkhirModule({ baseURL }) {
                             >
                               <Link
                                 href={`${baseURL}/tugas-akhir/action/pengajuan_sk/${row.sk_id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
                               >
                                 Pengajuan SK
                               </Link>
@@ -208,6 +209,8 @@ export default function TugasAkhirModule({ baseURL }) {
                                 row.status === "selesai" ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pengajuan_kolo/${row.sk_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                   >
                                     Pengajuan Kolokium
                                   </Link>
@@ -249,6 +252,8 @@ export default function TugasAkhirModule({ baseURL }) {
                                 row.status_approved_kolo === true ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pelaks_kolo/${row.sk_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                   >
                                     Pelaksanaan Kolokium
                                   </Link>
@@ -286,6 +291,8 @@ export default function TugasAkhirModule({ baseURL }) {
                                 row.status_penilaian === true ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pengajuan_sidang/${row.sk_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                   >
                                     Pendaftaran Sidang
                                   </Link>
@@ -326,6 +333,8 @@ export default function TugasAkhirModule({ baseURL }) {
                                 row.status_approved_sidang === true ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pelaks_sidang/${row.sk_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                   >
                                     Pelaksanaan Sidang
                                   </Link>
@@ -358,6 +367,8 @@ export default function TugasAkhirModule({ baseURL }) {
                                 row.status === "selesai" ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pengumpulan_revisi/${row.sk_id}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                   >
                                     Pengumpulan Revisi
                                   </Link>
