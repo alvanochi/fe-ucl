@@ -747,7 +747,6 @@ export default function PengajuanSidang() {
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 Draft Final Skripsi Satu Eksemlar
-                <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
