@@ -81,8 +81,6 @@ export default function PelaksanaanSidang() {
     });
   }, [router, user]);
 
-  console.log(form.link_draft_final_skripsi);
-
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
   return (
@@ -281,8 +279,7 @@ export default function PelaksanaanSidang() {
                   </Form.Group>
                   <Form.Group className="flex items-baseline gap-3">
                     <Form.Label className="min-w-[20rem]">
-                      Komentar Singkat{" "}
-                      <span className="text-danger-600">*</span>
+                      Komentar Singkat
                     </Form.Label>
                     <span>:</span>
                     <Form.Textarea
