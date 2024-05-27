@@ -83,6 +83,7 @@ export default function PengajuanSidang() {
     link_draft_final_skripsi: "",
     ipk: "",
     judul: "",
+    status: "",
   };
 
   const handlePenguji1 = (selected) => {
@@ -810,7 +811,7 @@ export default function PengajuanSidang() {
                 type="date"
                 className="flex-1"
                 name="jadwal_pelaksanaan"
-                value={form.jadwal_pelaksanaan}
+                value={date.formatToInput(form.jadwal_pelaksanaan)}
                 placeholder="Diisi oleh admin"
                 onChange={inputHandler}
               />
@@ -845,6 +846,27 @@ export default function PengajuanSidang() {
                   value: dosen.user_id,
                 }))}
                 menuTarget={document.body}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Status <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
+                name="status"
+                onChange={inputHandler}
+                value={form.status}
+                options={[
+                  { label: "pengajuan-sk", value: "pengajuan-sk" },
+                  { label: "menuju-kolokium", value: "menuju-kolokium" },
+                  { label: "menuju-sidang", value: "menuju-sidang" },
+                  {
+                    label: "menyelesaikan-revisi",
+                    value: "menyelesaikan-revisi",
+                  },
+                  { label: "selesai", value: "selesai" },
+                ]}
               />
             </Form.Group>
           </Card.Body>

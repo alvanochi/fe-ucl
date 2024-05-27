@@ -47,6 +47,7 @@ export default function PengajuanSkAction() {
     nama_lengkap: "",
     npm: "",
     nomor_nota_dinas: "",
+    status: "",
   };
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
@@ -283,6 +284,27 @@ export default function PengajuanSkAction() {
                 name="link_dokumen_sk"
                 value={form.link_dokumen_sk}
                 onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Status <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
+                name="status"
+                onChange={inputHandler}
+                value={form.status}
+                options={[
+                  { label: "pengajuan-sk", value: "pengajuan-sk" },
+                  { label: "menuju-kolokium", value: "menuju-kolokium" },
+                  { label: "menuju-sidang", value: "menuju-sidang" },
+                  {
+                    label: "menyelesaikan-revisi",
+                    value: "menyelesaikan-revisi",
+                  },
+                  { label: "selesai", value: "selesai" },
+                ]}
               />
             </Form.Group>
           </Card.Body>

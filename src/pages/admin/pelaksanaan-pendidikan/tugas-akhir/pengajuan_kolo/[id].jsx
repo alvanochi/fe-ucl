@@ -54,6 +54,7 @@ export default function PengajuanKolo() {
     ipk: "",
     link_dok_makalah: "",
     judul: "",
+    status: "",
   };
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -394,6 +395,27 @@ export default function PengajuanKolo() {
                   value: dosen.user_id,
                 }))}
                 menuTarget={document.body}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Status <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
+                name="status"
+                onChange={inputHandler}
+                value={form.status}
+                options={[
+                  { label: "pengajuan-sk", value: "pengajuan-sk" },
+                  { label: "menuju-kolokium", value: "menuju-kolokium" },
+                  { label: "menuju-sidang", value: "menuju-sidang" },
+                  {
+                    label: "menyelesaikan-revisi",
+                    value: "menyelesaikan-revisi",
+                  },
+                  { label: "selesai", value: "selesai" },
+                ]}
               />
             </Form.Group>
           </Card.Body>
