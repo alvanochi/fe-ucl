@@ -14,6 +14,7 @@ import { Loading } from "../../../../../../components/Loading";
 import axios from "axios";
 import { MySwal, toastAlert } from "../../../../../../lib/sweetalert";
 import date from "../../../../../../utils/date";
+import Link from "next/link";
 
 export default function PelaksanaanKolo() {
   const router = useRouter();
@@ -58,6 +59,7 @@ export default function PelaksanaanKolo() {
     dosen_id: "",
     penilaian_kolo: null,
     nilai_akhir: {},
+    link_dok_makalah: "",
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -96,6 +98,27 @@ export default function PelaksanaanKolo() {
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+      <Card className="mt-4">
+        <Card.Header className="text-center">
+          <div>Penilaian Seminar Proposal Dan Kolokium</div>
+        </Card.Header>
+
+        <Card.Body className="space-y-4">
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[20rem]">Link Dokumen</Form.Label>
+            <span>:</span>
+            <Link
+              href={`${form.link_dok_makalah}`}
+              passHref
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 underline"
+            >
+              Link Dokumen
+            </Link>
+          </Form.Group>
+        </Card.Body>
+      </Card>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}

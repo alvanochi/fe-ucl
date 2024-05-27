@@ -12,6 +12,7 @@ import useDosen from "../../../../../repo/dosen";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../components/Loading";
 import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
+import Link from "next/link";
 
 export default function PelaksanaanSidang() {
   const router = useRouter();
@@ -52,6 +53,7 @@ export default function PelaksanaanSidang() {
     dosen_id: "",
     penilaian_sidang: null,
     nilai_akhir: {},
+    link_draft_final_skripsi: "",
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -85,6 +87,27 @@ export default function PelaksanaanSidang() {
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+      <Card className="mt-4">
+        <Card.Header className="text-center">
+          <div>Penilaian Sidang</div>
+        </Card.Header>
+
+        <Card.Body className="space-y-4">
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[20rem]">Link Dokumen</Form.Label>
+            <span>:</span>
+            <Link
+              href={`${form.link_draft_final_skripsi}`}
+              passHref
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 underline"
+            >
+              Link Dokumen
+            </Link>
+          </Form.Group>
+        </Card.Body>
+      </Card>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
