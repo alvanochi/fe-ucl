@@ -477,11 +477,7 @@ export default function PelaksanaanSidang() {
               <Form.Textarea
                 className="mt-2"
                 rows="5"
-                value={`Komentar Singkat : ${
-                  form.penilaian_sidang?.komentar_singkat
-                    ? form.penilaian_sidang?.komentar_singkat
-                    : ""
-                }`}
+                value={`Komentar Singkat : ${form.penilaian_sidang?.komentar_singkat}`}
                 disabled
               />
             </div>
