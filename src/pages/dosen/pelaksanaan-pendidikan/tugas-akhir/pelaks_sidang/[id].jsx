@@ -16,6 +16,7 @@ import { MySwal, toastAlert } from "../../../../../lib/sweetalert";
 import date from "../../../../../utils/date";
 import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
 import EditKomentar from "../../../../../components/EditPenilaian/edit-komentar";
+import Link from "next/link";
 
 export default function PelaksanaanSidang() {
   const router = useRouter();
@@ -56,6 +57,7 @@ export default function PelaksanaanSidang() {
     dosen_id: "",
     penilaian_sidang: null,
     statusDosen: "",
+    link_draft_final_skripsi: "",
   };
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -78,6 +80,8 @@ export default function PelaksanaanSidang() {
       }),
     });
   }, [router, user]);
+
+  console.log(form.link_draft_final_skripsi);
 
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
@@ -162,6 +166,19 @@ export default function PelaksanaanSidang() {
               }
               disabled
             />
+          </Form.Group>
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[20rem]">Link Dokumen</Form.Label>
+            <span>:</span>
+            <Link
+              href={`${form.link_dok_makalah}`}
+              passHref
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 underline"
+            >
+              Link Dokumen
+            </Link>
           </Form.Group>
         </Card.Body>
       </Card>
