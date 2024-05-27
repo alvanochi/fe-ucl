@@ -184,10 +184,10 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1"
                 name="nama_lengkap"
                 value={form.nama_lengkap}
-                disabled
+                disable
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -195,10 +195,10 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1"
                 name="npm"
                 value={form.npm}
-                disabled
+                disable
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -206,10 +206,10 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1"
                 name="judul_skripsi"
                 value={form.judul_skripsi}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -217,10 +217,10 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1"
                 name="semester"
                 value={form.semester}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -228,10 +228,10 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="text"
-                className="flex-1 border-none"
+                className="flex-1"
                 name="lokasi_kegiatan"
                 value={form.lokasi_kegiatan}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -241,10 +241,10 @@ export default function PengajuanSkAction() {
               <span>:</span>
               <Form.Input
                 type="link"
-                className="flex-1 border-none"
+                className="flex-1"
                 name="nomor_nota_dinas"
                 value={form.nomor_nota_dinas || "-"}
-                disabled
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">

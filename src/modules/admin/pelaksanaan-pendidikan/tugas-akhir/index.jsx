@@ -1,12 +1,12 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
-import date from "../../../../utils/date";
 import Form from "../../../../components/Form";
 import useCRUD from "../../../../hooks/useCRUD";
 import { useEffect, useRef, useState } from "react";
 import SortIcon from "../../../../components/SortIcon";
 import Link from "next/link";
 import useNewDataTableForMainApi from "../../../../hooks/useNewDataTableForMainApi";
+import Filter from "./filter";
 
 export default function TugasAkhirModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/tugas-akhir/get-for-admin`;
@@ -20,6 +20,9 @@ export default function TugasAkhirModule({ baseURL }) {
     setPageNew,
     sortByNew,
     getSortByNew,
+    refreshNew,
+    filterNew,
+    setFilterNew,
   } = useNewDataTableForMainApi(DATA_URL, {}, searchValue);
 
   const [openedDropdownId, setOpenedDropdownId] = useState(null);
@@ -51,19 +54,28 @@ export default function TugasAkhirModule({ baseURL }) {
     setOpenedDropdownId(null);
   };
 
+  const DELETE_URL = `${process.env.API_ENDPOINT}/tugas-akhir`;
+
+  const { destroy } = useCRUD(DELETE_URL);
+
   return (
     <>
       <div className="flex mb-8 justify-end items-center">
-        <div className="mr-4">
+        <div className="flex items-center mr-4">
+          <Filter filter={filterNew} handler={setFilterNew} />
           <Button
-            onClick={() => window.open(`${baseURL}/tugas-akhir/nota-dinas/create`,'_blank')}
+            onClick={() =>
+              window.open(`${baseURL}/tugas-akhir/nota-dinas/create`, "_blank")
+            }
             icon={<Icon icon="oi:book" width={20} height={20} />}
             variant="info"
             pill
+            className="ml-4"
           >
             Cetak Nota Dinas
           </Button>
         </div>
+
         <div className="flex-shrink">
           <Form.Input
             type="text"
@@ -436,6 +448,18 @@ export default function TugasAkhirModule({ baseURL }) {
                           </div>
                         </div>
                       )}
+
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() => destroy(row.id).then(() => refreshNew())}
+                      />
                     </div>
                   </td>
                 </tr>

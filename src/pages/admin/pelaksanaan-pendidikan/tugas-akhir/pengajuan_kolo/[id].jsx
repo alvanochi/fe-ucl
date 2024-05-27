@@ -334,6 +334,7 @@ export default function PengajuanKolo() {
                 type="checkbox"
                 name="status_kp"
                 checked={form.status_kp ? true : false}
+                onChange={inputHandler}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -346,6 +347,7 @@ export default function PengajuanKolo() {
                 name="status_sks_ipk"
                 value={form.status_sks_ipk}
                 checked={form.status_sks_ipk}
+                onChange={inputHandler}
               />
               <span>SKS: {form.jumlah_sks}</span>|<span>IPK: {form.ipk}</span>
             </Form.Group>

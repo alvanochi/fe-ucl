@@ -13,6 +13,7 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
   const [pageCount, setPageCount] = useState(1);
   const [recordsTotal, setRecordsTotal] = useState(0);
   const [sort, setSort] = useState({});
+  const [filter, setFilter] = useState({});
 
   const refresh = () => {
     toastAlert("info", "Mengambil Data!", 1000);
@@ -40,8 +41,7 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
       dataTable: true,
       orderField: keySort,
       orderValue: valueObjSort,
-      filter: options.filter || [],
-      filterValue: options.filterValue || [],
+      ...filter,
       page: page,
       perPage: pageSize,
       start: (page - 1) * pageSize,
@@ -93,7 +93,7 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
 
   useEffect(() => {
     fetchData();
-  }, [page, user, sort, searchValue]);
+  }, [page, user, filter, sort, searchValue]);
 
   return {
     dataNew: data,
@@ -110,6 +110,8 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
     sortByNew: sortBy,
     getSortByNew: getSortBy,
     setPageSizeNew: setPageSize,
+    setFilterNew: setFilter,
+    filterNew: filter,
   };
 };
 
