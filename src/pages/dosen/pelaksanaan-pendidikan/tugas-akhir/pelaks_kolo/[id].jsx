@@ -501,11 +501,7 @@ export default function PelaksanaanKolo() {
               <Form.Textarea
                 className="mt-2"
                 rows="5"
-                value={`Komentar Singkat : ${
-                  form.penilaian_kolo?.komentar_singkat
-                    ? form.penilaian_kolo?.komentar_singkat
-                    : ""
-                }`}
+                value={`Komentar Singkat : ${form.penilaian_kolo?.komentar_singkat}`}
                 disabled
               />
             </div>

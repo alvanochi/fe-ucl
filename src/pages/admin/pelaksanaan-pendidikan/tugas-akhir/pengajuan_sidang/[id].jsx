@@ -744,7 +744,7 @@ export default function PengajuanSidang() {
                 placeholder="Link Google Drive"
               />
             </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
+            {/* <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 Draft Final Skripsi Satu Eksemlar
               </Form.Label>
@@ -769,7 +769,7 @@ export default function PengajuanSidang() {
                 >
                   Download Dokumen
                 </Button>
-              )}
+              )} */}
 
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">

@@ -286,7 +286,7 @@ export default function PengajuanKolo() {
                 onChange={inputHandler}
               />
             </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
+            {/* <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 5 Eksternal Proposal Makalah Kolokium{" "}
               </Form.Label>
@@ -309,7 +309,7 @@ export default function PengajuanKolo() {
                   Download Dokumen
                 </Button>
               )}
-            </Form.Group>
+            </Form.Group> */}
 
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
