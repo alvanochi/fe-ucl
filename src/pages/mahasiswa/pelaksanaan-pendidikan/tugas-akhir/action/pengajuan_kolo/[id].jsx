@@ -284,7 +284,7 @@ export default function PengajuanKolo() {
                 placeholder="link Google Drive"
               />
             </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
+            {/* <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 5 Eksternal Proposal Makalah Kolokium{" "}
                 <span className="text-danger-600">*</span>
@@ -309,7 +309,7 @@ export default function PengajuanKolo() {
               >
                 Download Dokumen
               </Button>
-            )}
+            )} */}
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 Link Dokumen Makalah

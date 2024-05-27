@@ -81,8 +81,6 @@ export default function PelaksanaanSidang() {
     });
   }, [router, user]);
 
-  console.log(form.link_draft_final_skripsi);
-
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
   return (
@@ -187,112 +185,115 @@ export default function PelaksanaanSidang() {
         form.statusDosen !== "" &&
         form.statusDosen !== "kepala_lab" && (
           <Form onSubmit={(event) => submitHandler(event, CREATE_OPTION)}>
-            <Card className="mt-4">
-              <Card.Header className="text-center">
-                <div>Penilaian (0-100) </div>
-              </Card.Header>
+            <div className="flex justify-center">
+              <Card className="mt-4 w-1/2">
+                <Card.Header className="text-center">
+                  <div>Penilaian (0-100) </div>
+                </Card.Header>
 
-              <Card.Body className="space-y-4">
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Label className="min-w-[20rem]">
-                    Substansi dan Orientasi Topik Penelitian{" "}
-                    <span className="text-danger-600">*</span>
-                  </Form.Label>
-                  <span>:</span>
-                  <Form.Input
-                    type="number"
-                    className="flex-1"
-                    name="penilaian_1"
-                    value={form.penilaian_1}
-                    onChange={inputHandler}
-                    min={1}
-                    max={100}
-                  />
-                </Form.Group>
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Label className="min-w-[20rem]">
-                    <p>Konsistensi Antara Masalah, Tujuan</p>
-                    <p>
-                      Penelitian dan Metodologi Penelitian{" "}
+                <Card.Body className="space-y-4">
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Label className="min-w-[20rem]">
+                      Substansi dan Orientasi Topik Penelitian{" "}
                       <span className="text-danger-600">*</span>
-                    </p>
-                  </Form.Label>
-                  <span>:</span>
-                  <Form.Input
-                    type="number"
-                    className="flex-1"
-                    name="penilaian_2"
-                    value={form.penilaian_2}
-                    onChange={inputHandler}
-                    min={1}
-                    max={100}
-                  />
-                </Form.Group>
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Label className="min-w-[20rem]">
-                    <p>Organisasi, Kelengkapan dan Teknis </p>
-                    <p>
-                      Penulisan Makalah{" "}
+                    </Form.Label>
+                    <span>:</span>
+                    <Form.Input
+                      type="number"
+                      className="flex-1"
+                      name="penilaian_1"
+                      value={form.penilaian_1}
+                      onChange={inputHandler}
+                      min={1}
+                      max={100}
+                    />
+                  </Form.Group>
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Label className="min-w-[20rem]">
+                      <p>Konsistensi Antara Masalah, Tujuan</p>
+                      <p>
+                        Penelitian dan Metodologi Penelitian{" "}
+                        <span className="text-danger-600">*</span>
+                      </p>
+                    </Form.Label>
+                    <span>:</span>
+                    <Form.Input
+                      type="number"
+                      className="flex-1"
+                      name="penilaian_2"
+                      value={form.penilaian_2}
+                      onChange={inputHandler}
+                      min={1}
+                      max={100}
+                    />
+                  </Form.Group>
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Label className="min-w-[20rem]">
+                      <p>Organisasi, Kelengkapan dan Teknis </p>
+                      <p>
+                        Penulisan Makalah{" "}
+                        <span className="text-danger-600">*</span>
+                      </p>
+                    </Form.Label>
+                    <span>:</span>
+                    <Form.Input
+                      type="number"
+                      className="flex-1"
+                      name="penilaian_3"
+                      value={form.penilaian_3}
+                      onChange={inputHandler}
+                      min={1}
+                      max={100}
+                    />
+                  </Form.Group>
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Label className="min-w-[20rem]">
+                      Penyajian Makalah dan Tampilan Slide{" "}
                       <span className="text-danger-600">*</span>
-                    </p>
-                  </Form.Label>
-                  <span>:</span>
-                  <Form.Input
-                    type="number"
-                    className="flex-1"
-                    name="penilaian_3"
-                    value={form.penilaian_3}
-                    onChange={inputHandler}
-                    min={1}
-                    max={100}
-                  />
-                </Form.Group>
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Label className="min-w-[20rem]">
-                    Penyajian Makalah dan Tampilan Slide{" "}
-                    <span className="text-danger-600">*</span>
-                  </Form.Label>
-                  <span>:</span>
-                  <Form.Input
-                    type="number"
-                    className="flex-1"
-                    name="penilaian_4"
-                    value={form.penilaian_4}
-                    onChange={inputHandler}
-                    min={1}
-                    max={100}
-                  />
-                </Form.Group>
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Label className="min-w-[20rem]">
-                    Argumentasi <span className="text-danger-600">*</span>
-                  </Form.Label>
-                  <span>:</span>
-                  <Form.Input
-                    type="number"
-                    className="flex-1"
-                    name="penilaian_5"
-                    value={form.penilaian_5}
-                    onChange={inputHandler}
-                    min={1}
-                    max={100}
-                  />
-                </Form.Group>
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Label className="min-w-[20rem]">
-                    Komentar Singkat <span className="text-danger-600">*</span>
-                  </Form.Label>
-                  <span>:</span>
-                  <Form.Textarea
-                    className="flex-1"
-                    rows="5"
-                    name="komentar_singkat"
-                    value={form.komentar_singkat}
-                    onChange={inputHandler}
-                  />
-                </Form.Group>
-              </Card.Body>
-            </Card>
+                    </Form.Label>
+                    <span>:</span>
+                    <Form.Input
+                      type="number"
+                      className="flex-1"
+                      name="penilaian_4"
+                      value={form.penilaian_4}
+                      onChange={inputHandler}
+                      min={1}
+                      max={100}
+                    />
+                  </Form.Group>
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Label className="min-w-[20rem]">
+                      Argumentasi <span className="text-danger-600">*</span>
+                    </Form.Label>
+                    <span>:</span>
+                    <Form.Input
+                      type="number"
+                      className="flex-1"
+                      name="penilaian_5"
+                      value={form.penilaian_5}
+                      onChange={inputHandler}
+                      min={1}
+                      max={100}
+                    />
+                  </Form.Group>
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Label className="min-w-[20rem]">
+                      Komentar Singkat{" "}
+                      <span className="text-danger-600">*</span>
+                    </Form.Label>
+                    <span>:</span>
+                    <Form.Textarea
+                      className="flex-1"
+                      rows="5"
+                      name="komentar_singkat"
+                      value={form.komentar_singkat}
+                      onChange={inputHandler}
+                    />
+                  </Form.Group>
+                </Card.Body>
+              </Card>
+            </div>
             <div className="flex gap-4 mt-4">
               <Button
                 as="a"
@@ -477,7 +478,11 @@ export default function PelaksanaanSidang() {
               <Form.Textarea
                 className="mt-2"
                 rows="5"
-                value={`Komentar Singkat : ${form.penilaian_sidang?.komentar_singkat}`}
+                value={`Komentar Singkat : ${
+                  form.penilaian_sidang?.komentar_singkat
+                    ? form.penilaian_sidang?.komentar_singkat
+                    : ""
+                }`}
                 disabled
               />
             </div>
