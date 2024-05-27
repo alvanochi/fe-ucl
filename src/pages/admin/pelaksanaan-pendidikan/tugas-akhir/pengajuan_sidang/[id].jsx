@@ -811,7 +811,10 @@ export default function PengajuanSidang() {
                 type="date"
                 className="flex-1"
                 name="jadwal_pelaksanaan"
-                value={date.formatToInput(form.jadwal_pelaksanaan)}
+                value={
+                  form?.jadwal_pelaksanaan &&
+                  date.formatToInput(form.jadwal_pelaksanaan)
+                }
                 placeholder="Diisi oleh admin"
                 onChange={inputHandler}
               />
