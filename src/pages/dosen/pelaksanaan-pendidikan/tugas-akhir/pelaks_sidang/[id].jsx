@@ -81,6 +81,8 @@ export default function PelaksanaanSidang() {
     });
   }, [router, user]);
 
+  console.log(form.link_draft_final_skripsi);
+
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
   return (
@@ -169,7 +171,7 @@ export default function PelaksanaanSidang() {
             <Form.Label className="min-w-[20rem]">Link Dokumen</Form.Label>
             <span>:</span>
             <Link
-              href={`${form.link_dok_makalah}`}
+              href={`${form.link_draft_final_skripsi}`}
               passHref
               target="_blank"
               rel="noopener noreferrer"
