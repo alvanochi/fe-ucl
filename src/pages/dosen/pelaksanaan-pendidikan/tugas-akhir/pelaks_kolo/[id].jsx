@@ -210,7 +210,7 @@ export default function PelaksanaanKolo() {
           <>
             <Form onSubmit={(event) => submitHandler(event, CREATE_OPTION)}>
               <div className="flex justify-center">
-                <Card className="mt-4 w-1/2">
+                <Card className="mt-4 w-full">
                   <Card.Header className="text-center">
                     <div>Penilaian (0 - 100)</div>
                   </Card.Header>
@@ -224,7 +224,6 @@ export default function PelaksanaanKolo() {
                       <span>:</span>
                       <Form.Input
                         type="number"
-                        className="w-96"
                         name="penilaian_1"
                         value={form.penilaian_1}
                         onChange={inputHandler}
@@ -243,7 +242,6 @@ export default function PelaksanaanKolo() {
                       <span>:</span>
                       <Form.Input
                         type="number"
-                        className="w-96"
                         name="penilaian_2"
                         value={form.penilaian_2}
                         onChange={inputHandler}
@@ -262,7 +260,6 @@ export default function PelaksanaanKolo() {
                       <span>:</span>
                       <Form.Input
                         type="number"
-                        className="w-96"
                         name="penilaian_3"
                         value={form.penilaian_3}
                         onChange={inputHandler}
@@ -278,7 +275,6 @@ export default function PelaksanaanKolo() {
                       <span>:</span>
                       <Form.Input
                         type="number"
-                        className="w-96"
                         name="penilaian_4"
                         value={form.penilaian_4}
                         onChange={inputHandler}
@@ -293,7 +289,6 @@ export default function PelaksanaanKolo() {
                       <span>:</span>
                       <Form.Input
                         type="number"
-                        className="w-96"
                         name="penilaian_5"
                         value={form.penilaian_5}
                         onChange={inputHandler}
@@ -307,7 +302,6 @@ export default function PelaksanaanKolo() {
                       </Form.Label>
                       <span>:</span>
                       <Form.Textarea
-                        className="w-96"
                         rows="5"
                         name="komentar_singkat"
                         value={form.komentar_singkat}

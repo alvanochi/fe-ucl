@@ -7,7 +7,7 @@ import PageHeader from "../../../../../components/PageHeader";
 import useMenu from "../../../../../hooks/useMenu";
 import useUser from "../../../../../hooks/useUser";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import useDosen from "../../../../../repo/dosen";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../components/Loading";
@@ -16,16 +16,16 @@ import { MySwal, toastAlert } from "../../../../../lib/sweetalert";
 import date from "../../../../../utils/date";
 import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
 import Link from "next/link";
+import Accordion from "../../../../../components/Accordion";
 
 export default function PelaksanaanKolo() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-penilaian-kolo`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/tugas-akhir/makalah-kolokium`;
 
   const INITIAL_FORM = {
     pengajuan_sk_id: "",
@@ -62,9 +62,21 @@ export default function PelaksanaanKolo() {
     nilai_akhir: {},
     judul: "",
     link_dok_makalah: "",
+    nama: "",
+    npm: "",
+    tempat: "",
+    judul: "",
+    tanggal: "",
+    waktu: "",
+    tempat: "",
+    pembimbing_1: "",
+    pembimbing_2: "",
+    evaluator_1: "",
+    evaluator_2: "",
+    komentar: "",
   };
 
-  const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
+  const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
       { field: "link_dok_mhs_aktif", label: "Link Dokumen Mahasiswa Aktif" },
       { field: "link_dok_pembayaran", label: "Link Dokumen Pembayaran" },
@@ -73,7 +85,37 @@ export default function PelaksanaanKolo() {
     success: () => router.push(prefix + menu.url),
   });
 
-  const { form } = formdata;
+  const { form, inputHandler } = formdata;
+
+  const handlePembimbing1 = (selected) => {
+    inputHandler({
+      target: { name: "pembimbing_1", value: selected?.value },
+    });
+  };
+
+  const handlePembimbing2 = (selected) => {
+    inputHandler({
+      target: { name: "pembimbing_2", value: selected?.value },
+    });
+  };
+
+  const handleEvaluator1 = (selected) => {
+    inputHandler({
+      target: { name: "evaluator_1", value: selected?.value },
+    });
+  };
+
+  const handleEvaluator2 = (selected) => {
+    inputHandler({
+      target: { name: "evaluator_2", value: selected?.value },
+    });
+  };
+
+  const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/nilai-akhir-kolo`;
+  const EDIT_OPTION = {
+    url: `${EDIT_URL}/${form.kolo_id}`,
+    method: "PUT",
+  };
 
   useEffect(() => {
     if (router.isReady === false || !user) return;
@@ -83,6 +125,17 @@ export default function PelaksanaanKolo() {
         jadwal_pelaksanaan: data.jadwal_pelaksanaan
           ? date.formatToInput(data.jadwal_pelaksanaan)
           : "",
+        pembimbing_1: data.nilai_akhir.pembimbing_1,
+        pembimbing_2: data.nilai_akhir.pembimbing_2,
+        evaluator_1: data.nilai_akhir.evaluator_1,
+        evaluator_2: data.nilai_akhir.evaluator_2,
+        komentar: data.nilai_akhir.komentar,
+        nama: data.nilai_akhir.nama,
+        judu: data.nilai_akhir.judul,
+        npm: data.nilai_akhir.npm,
+        tempat: data.nilai_akhir.tempat,
+        waktu: data.nilai_akhir.waktu,
+        tanggal: data.nilai_akhir.tanggal,
       }),
     });
   }, [router, user]);
@@ -102,25 +155,155 @@ export default function PelaksanaanKolo() {
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <Card className="mt-4">
         <Card.Header className="text-center">
-          <div>Penilaian Seminar Proposal Dan Kolokium</div>
+          <div>
+            BERITA ACARA DAN PENILAIAN SEMINAR PROPOSAL / KOLOKIUM SKRIPSI
+            MAHASISWA
+          </div>
         </Card.Header>
-
-        <Card.Body className="space-y-4">
-          <Form.Group className="flex items-baseline gap-3">
-            <Form.Label className="min-w-[20rem]">Link Dokumen</Form.Label>
-            <span>:</span>
-            <Link
-              href={`${form.link_dok_makalah}`}
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 underline"
-            >
-              Link Dokumen
-            </Link>
-          </Form.Group>
-        </Card.Body>
       </Card>
+      <div className="flex-1 block">
+        <div className="space-y-2 mt-4">
+          <Accordion title="Summary">
+            <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+              <Card.Body className="mx-6">
+                <Form.Group className="flex items-baseline gap-3 mt-4">
+                  <Form.Label className="min-w-[14rem]">Nama</Form.Label>
+                  <span>:</span>
+                  <Form.Input
+                    type="text"
+                    className="flex-1"
+                    name="nama"
+                    value={form.nama}
+                    onChange={inputHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="flex items-baseline gap-3 mt-4">
+                  <Form.Label className="min-w-[14rem]">NPM</Form.Label>
+                  <span>:</span>
+                  <Form.Input
+                    type="text"
+                    className="flex-1"
+                    name="npm"
+                    value={form.npm}
+                    onChange={inputHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="flex items-baseline gap-3 mt-4">
+                  <Form.Label className="min-w-[14rem]">Judul</Form.Label>
+                  <span>:</span>
+                  <Form.Input
+                    type="text"
+                    className="flex-1"
+                    name="judul"
+                    value={form.judul}
+                    onChange={inputHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="flex items-baseline gap-3 mt-4">
+                  <Form.Label className="min-w-[14rem]">
+                    Jadwal Pelaksanaan
+                  </Form.Label>
+                  <span>:</span>
+                  <Form.Input
+                    type="date"
+                    className="flex-1"
+                    name="tanggal"
+                    value={form.tanggal && date.formatToInput(form.tanggal)}
+                    placeholder="Diisi oleh admin"
+                  />
+                  <Form.Input
+                    type="time"
+                    className="flex-1"
+                    name="waktu"
+                    value={form.waktu}
+                    placeholder="Diisi oleh admin"
+                    onChange={inputHandler}
+                  />
+                  <Form.Input
+                    type="text"
+                    className="flex-1"
+                    name="tempat"
+                    value={form.tempat}
+                    onChange={inputHandler}
+                  />
+                </Form.Group>
+                <Form.Group className="flex items-baseline gap-3 mt-4">
+                  <Form.Label className="min-w-[14rem]">
+                    Pembimbing yang diusulkan
+                  </Form.Label>
+                  <span>:</span>
+                  <Form.Combobox
+                    name="pembimbing_1"
+                    value={form.pembimbing_1}
+                    options={listDosen?.map((dosen) => ({
+                      label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                      value: dosen.user_id,
+                    }))}
+                    menuTarget={document.body}
+                    onChange={handlePembimbing1}
+                  />
+                  <Form.Combobox
+                    name="pembimbing_2"
+                    value={form.pembimbing_2}
+                    options={listDosen?.map((dosen) => ({
+                      label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                      value: dosen.user_id,
+                    }))}
+                    menuTarget={document.body}
+                    onChange={handlePembimbing2}
+                  />
+                </Form.Group>
+                <Form.Group className="flex items-baseline gap-3 mt-4">
+                  <Form.Label className="min-w-[14rem]">Evaluator</Form.Label>
+                  <span>:</span>
+                  <Form.Combobox
+                    name="evaluator_1"
+                    value={form.evaluator_1}
+                    options={listDosen?.map((dosen) => ({
+                      label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                      value: dosen.user_id,
+                    }))}
+                    menuTarget={document.body}
+                    onChange={handleEvaluator1}
+                  />
+                  <Form.Combobox
+                    name="evaluator_2"
+                    value={form.evaluator_2}
+                    options={listDosen?.map((dosen) => ({
+                      label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                      value: dosen.user_id,
+                    }))}
+                    menuTarget={document.body}
+                    onChange={handleEvaluator2}
+                  />
+                </Form.Group>
+                <Form.Group className="flex items-baseline gap-3 mt-4">
+                  <Form.Label className="min-w-[14rem]">
+                    Komentar Singkat
+                  </Form.Label>
+                  <span>:</span>
+                  <Form.Textarea
+                    className="flex-1 mt-2"
+                    rows="5"
+                    name="komentar"
+                    value={form.komentar}
+                    onChange={inputHandler}
+                  />
+                </Form.Group>
+                <div className="flex justify-center">
+                  <Button
+                    type="submit"
+                    variant="info"
+                    className="w-1/2 h-12 mt-4"
+                  >
+                    Save
+                  </Button>
+                </div>
+              </Card.Body>
+            </Form>
+          </Accordion>
+        </div>
+      </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
@@ -132,23 +315,37 @@ export default function PelaksanaanKolo() {
               colSpan={4}
               className="text-sm border-2 border-white bg-gray-50"
             >
-              Nilai Akhir
+              REKAPITULASI SEMINAR PROPOSAL
+              <Form.Group className="flex items-baseline gap-3 mt-4 mb-4">
+                <Form.Label className="min-w-[6rem] ml-4">
+                  Link Dokumen
+                </Form.Label>
+                <span>:</span>
+                <Link
+                  href={`${form.link_dok_makalah}`}
+                  passHref
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 underline"
+                >
+                  Link Dokumen
+                </Link>
+              </Form.Group>
             </th>
           </tr>
           <tr>
+            <th className="text-sm border-2 border-white bg-gray-200 w-12">
+              <div className="flex gap-2">No</div>
+            </th>
+
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No</div>
+              <div className="flex items-center gap-2 ">Aspek Penilaian</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Aspek Penilaian
-              </div>
+              <div className="gap-2 ">Presentase (%)</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="gap-2 cursor-pointer">Presentase (%)</div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="gap-2 cursor-pointer">Nilai</div>
+              <div className="gap-2 ">Nilai</div>
             </th>
           </tr>
         </thead>
@@ -218,14 +415,14 @@ export default function PelaksanaanKolo() {
       </table>
       <Card className="mt-2">
         <div className="p-4 flex flex-col">
-          <div class="flex justify-end">
-            <div class="text-sm font-bold pr-10">
+          <div className="flex justify-end">
+            <div className="text-sm font-bold pr-10">
               <span className="mr-2">Nilai Akhir :</span>{" "}
               <span>{form?.nilai_akhir.nilai_akhir}</span>
             </div>
           </div>
-          <div class="flex justify-end mt-2">
-            <div class="text-sm font-bold pr-10">
+          <div className="flex justify-end mt-2">
+            <div className="text-sm font-bold pr-10">
               <span className="mr-2">Huruf Mutu :</span>{" "}
               <span>{form?.nilai_akhir.huruf_mutu}</span>
             </div>
@@ -428,14 +625,14 @@ export default function PelaksanaanKolo() {
             </table>
             <Card className="mt-2">
               <div className="p-4 flex flex-col">
-                <div class="flex justify-end">
-                  <div class="text-sm font-bold pr-10">
+                <div className="flex justify-end">
+                  <div className="text-sm font-bold pr-10">
                     <span className="mr-2">Nilai Akhir :</span>{" "}
                     <span>{item.final_nilai}</span>
                   </div>
                 </div>
-                <div class="flex justify-end mt-2">
-                  <div class="text-sm font-bold pr-10">
+                <div className="flex justify-end mt-2">
+                  <div className="text-sm font-bold pr-10">
                     <span className="mr-2">Huruf Mutu :</span>{" "}
                     <span>{item.huruf_mutu}</span>
                   </div>

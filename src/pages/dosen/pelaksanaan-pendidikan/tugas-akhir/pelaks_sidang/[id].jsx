@@ -7,12 +7,10 @@ import PageHeader from "../../../../../components/PageHeader";
 import useMenu from "../../../../../hooks/useMenu";
 import useUser from "../../../../../hooks/useUser";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import useDosen from "../../../../../repo/dosen";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../components/Loading";
-import axios from "axios";
-import { MySwal, toastAlert } from "../../../../../lib/sweetalert";
 import date from "../../../../../utils/date";
 import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
 import EditKomentar from "../../../../../components/EditPenilaian/edit-komentar";
@@ -58,6 +56,7 @@ export default function PelaksanaanSidang() {
     penilaian_sidang: null,
     statusDosen: "",
     link_draft_final_skripsi: "",
+    jadwal_pelaksanaan: "",
   };
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -166,6 +165,23 @@ export default function PelaksanaanSidang() {
             />
           </Form.Group>
           <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[20rem]">
+              Jadwal Pelaksanaan
+            </Form.Label>
+            <span>:</span>
+            <Form.Input
+              type="date"
+              className="flex-1"
+              name="jadwal_pelaksanaan"
+              value={
+                form?.jadwal_pelaksanaan &&
+                date.formatToInput(form.jadwal_pelaksanaan)
+              }
+              placeholder="Diisi oleh admin"
+              disabled
+            />
+          </Form.Group>
+          <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[20rem]">Link Dokumen</Form.Label>
             <span>:</span>
             <Link
@@ -186,7 +202,7 @@ export default function PelaksanaanSidang() {
         form.statusDosen !== "kepala_lab" && (
           <Form onSubmit={(event) => submitHandler(event, CREATE_OPTION)}>
             <div className="flex justify-center">
-              <Card className="mt-4 w-1/2">
+              <Card className="mt-4 w-full">
                 <Card.Header className="text-center">
                   <div>Penilaian (0-100) </div>
                 </Card.Header>

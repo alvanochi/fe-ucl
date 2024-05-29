@@ -13,15 +13,18 @@ import useCRUD from "../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../components/Loading";
 import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
 import Link from "next/link";
+import Accordion from "../../../../../components/Accordion";
+import date from "../../../../../utils/date";
 
 export default function PelaksanaanSidang() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-penilaian-sidang`;
+  const FILE_URL = `${process.env.API_ENDPOINT}/ttd`;
 
   const INITIAL_FORM = {
     pengajuan_sk_id: "",
@@ -54,22 +57,127 @@ export default function PelaksanaanSidang() {
     penilaian_sidang: null,
     nilai_akhir: {},
     link_draft_final_skripsi: "",
+    nama: "",
+    npm: "",
+    judul: "",
+    tanggal: "",
+    waktu: "",
+    tempat: "",
+    ketua_penguji: "",
+    pembimbing_1: "",
+    pembimbing_2: "",
+    penguji_1: "",
+    penguji_2: "",
+    sekertaris_sidang: "",
+    status_kelulusan: "",
+    komentar: "",
+    tanggal_lahir: "",
+    tempat_lahir: "",
+    status_kelulusan: "",
   };
 
-  const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
+  const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     success: () => router.push(prefix + menu.url),
   });
 
-  const { form } = formdata;
+  const { form, inputHandler } = formdata;
+
+  const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/nilai-akhir-sidang`;
+  const EDIT_OPTION = {
+    url: `${EDIT_URL}/${form.sidang_id}`,
+    method: "PUT",
+  };
+
+  const [ttd, setTtd] = useState({
+    pembimbing_1: "",
+    pembimbing_2: "",
+    penguji_1: "",
+    penguji_2: "",
+    ketua_penguji: "",
+    sekertaris_sidang: "",
+  });
+
+  const handlePembimbing1 = (selected) => {
+    setTtd((prevState) => ({
+      ...prevState,
+      pembimbing_1: selected?.ttd,
+    }));
+    inputHandler({
+      target: { name: "pembimbing_1", value: selected?.value },
+    });
+  };
+
+  const handlePembimbing2 = (selected) => {
+    setTtd((prevState) => ({
+      ...prevState,
+      pembimbing_2: selected?.ttd,
+    }));
+    inputHandler({
+      target: { name: "pembimbing_2", value: selected?.value },
+    });
+  };
+
+  const handlePenguji1 = (selected) => {
+    setTtd((prevState) => ({
+      ...prevState,
+      penguji_1: selected?.ttd,
+    }));
+    inputHandler({
+      target: { name: "penguji_1", value: selected?.value },
+    });
+  };
+
+  const handlePenguji2 = (selected) => {
+    setTtd((prevState) => ({
+      ...prevState,
+      penguji_2: selected?.ttd,
+    }));
+    inputHandler({
+      target: { name: "penguji_2", value: selected?.value },
+    });
+  };
+
+  const handleKetuaPenguji = (selected) => {
+    console.log(selected);
+
+    setTtd((prevState) => ({
+      ...prevState,
+      ketua_penguji: selected?.ttd,
+    }));
+    inputHandler({
+      target: { name: "ketua_penguji", value: selected?.value },
+    });
+  };
+
+  const handleSekertarisSidang = (selected) => {
+    setTtd((prevState) => ({
+      ...prevState,
+      sekertaris_sidang: selected?.ttd,
+    }));
+    inputHandler({
+      target: { name: "sekertaris_sidang", value: selected?.value },
+    });
+  };
 
   useEffect(() => {
     if (router.isReady === false || !user) return;
     show(router.query.id, {
       transformData: (data) => ({
         ...data,
-        // jadwal_pelaksanaan: data.jadwal_pelaksanaan
-        //   ? date.formatToInput(data.jadwal_pelaksanaan)
-        //   : "",
+        nama: data.nilai_akhir.nama,
+        npm: data.nilai_akhir.npm,
+        judul: data.nilai_akhir.judul,
+        tanggal: data.nilai_akhir.tanggal,
+        waktu: data.nilai_akhir.waktu,
+        tempat: data.nilai_akhir.tempat,
+        ketua_penguji: data.nilai_akhir.ketua_penguji,
+        pembimbing_1: data.nilai_akhir.pembimbing_1,
+        pembimbing_2: data.nilai_akhir.pembimbing_2,
+        penguji_1: data.nilai_akhir.penguji_1,
+        penguji_2: data.nilai_akhir.penguji_2,
+        sekertaris_sidang: data.nilai_akhir.sekertaris_sidang,
+        status_kelulusan: data.nilai_akhir.status_kelulusan,
+        komentar: data.nilai_akhir.komentar,
       }),
     });
   }, [router, user]);
@@ -89,24 +197,343 @@ export default function PelaksanaanSidang() {
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <Card className="mt-4">
         <Card.Header className="text-center">
-          <div>Penilaian Sidang</div>
+          <div>BERITA ACARA PELAKSANAAN UJIAN SKRIPSI</div>
         </Card.Header>
 
-        <Card.Body className="space-y-4">
-          <Form.Group className="flex items-baseline gap-3">
-            <Form.Label className="min-w-[20rem]">Link Dokumen</Form.Label>
-            <span>:</span>
-            <Link
-              href={`${form.link_draft_final_skripsi}`}
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 underline"
-            >
-              Link Dokumen
-            </Link>
-          </Form.Group>
-        </Card.Body>
+        <Accordion title="Summary" className="mt-4">
+          <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+            <Card.Body className="mx-6">
+              <h1>
+                Pada tanggal {form.tanggal && date.formatToInput(form.tanggal)},
+                pukul {form.waktu} WIB sampai dengan selesai bertempat di Ruang
+                Sidang Fakultas Teknik UIKA Bogor telah berlangsung Ujian
+                Skripsi (Tugas Akhir) pada Sidang Sarjana Jurusan/PS Teknik
+                Informatika Fakultas Teknik dan Sains UIKA Bogor dengan
+                Kandidat:
+              </h1>
+              <Form.Group className="flex items-baseline gap-3 mt-4">
+                <Form.Label className="min-w-[14rem]">Nama</Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1"
+                  name="nama"
+                  value={form.nama}
+                  onChange={inputHandler}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3 mt-4">
+                <Form.Label className="min-w-[14rem]">
+                  Tempat, Tanggal Lahir
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1"
+                  name="tempat_lahir"
+                  value={form.tempat_lahir}
+                  disabled
+                />
+                <Form.Input
+                  type="date"
+                  className="flex-1"
+                  name="tanggal_lahir"
+                  value={
+                    form.tanggal_lahir && date.formatToInput(form.tanggal_lahir)
+                  }
+                  disabled
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3 mt-4">
+                <Form.Label className="min-w-[14rem]">NPM</Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1"
+                  name="npm"
+                  value={form.npm}
+                  onChange={inputHandler}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3 mt-4">
+                <Form.Label className="min-w-[14rem]">
+                  Judul Tugas Akhir
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1"
+                  name="judul"
+                  value={form.judul}
+                  onChange={inputHandler}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3 mt-4">
+                <Form.Label className="min-w-[14rem]">
+                  Jadwal Pelaksanaan
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="date"
+                  className="flex-1"
+                  name="tanggal"
+                  value={form.tanggal && date.formatToInput(form.tanggal)}
+                  placeholder="Diisi oleh admin"
+                />
+                <Form.Input
+                  type="time"
+                  className="flex-1"
+                  name="waktu"
+                  value={form.waktu}
+                  placeholder="Diisi oleh admin"
+                  onChange={inputHandler}
+                />
+                <Form.Input
+                  type="text"
+                  className="flex-1"
+                  name="tempat"
+                  value={form.tempat}
+                  onChange={inputHandler}
+                />
+              </Form.Group>
+
+              <table
+                className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
+                cellPadding={10}
+                style={{ marginTop: "20px" }}
+              >
+                <thead>
+                  <tr>
+                    <th
+                      colSpan={4}
+                      className="text-sm border-2 border-white bg-gray-50"
+                    >
+                      Susunan Tim Penguji Ujian Skripsi (Tugas Akhir) pada
+                      Sidang Sarjana
+                    </th>
+                  </tr>
+                  <tr>
+                    <th className="text-sm border-2 border-white bg-gray-200">
+                      <div className="flex items-center gap-2 cursor-pointer">
+                        Nama
+                      </div>
+                    </th>
+                    <th className="text-sm border-2 border-white bg-gray-200">
+                      <div className="gap-2 cursor-pointer">Jabatan</div>
+                    </th>
+                    <th className="text-sm border-2 border-white bg-gray-200">
+                      <div className="gap-2 cursor-pointer">TTD</div>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td className="text-sm border-2 border-white bg-gray-50 font-bold">
+                      <Form.Combobox
+                        name="ketua_penguji"
+                        value={form.ketua_penguji}
+                        options={listDosen?.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                          ttd: dosen.ttd,
+                        }))}
+                        menuTarget={document.body}
+                        onChange={handleKetuaPenguji}
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      Ketua Sidang
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      <img
+                        src={`${FILE_URL}/${ttd.ketua_penguji}`}
+                        alt="TTD"
+                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-sm border-2 border-white bg-gray-50 font-bold">
+                      <Form.Combobox
+                        name="pembimbing_1"
+                        value={form.pembimbing_1}
+                        options={listDosen?.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                          ttd: dosen.ttd,
+                        }))}
+                        menuTarget={document.body}
+                        onChange={handlePembimbing1}
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      Pembimbing Utama
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      <img
+                        src={`${FILE_URL}/${ttd.pembimbing_1}`}
+                        alt="TTD"
+                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-sm border-2 border-white bg-gray-50 font-bold">
+                      <Form.Combobox
+                        name="pembimbing_2"
+                        value={form.pembimbing_2}
+                        options={listDosen?.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                          ttd: dosen.ttd,
+                        }))}
+                        menuTarget={document.body}
+                        onChange={handlePembimbing2}
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      Pembimbing Pendamping
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      <img
+                        src={`${FILE_URL}/${ttd.pembimbing_2}`}
+                        alt="TTD"
+                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-sm border-2 border-white bg-gray-50 font-bold">
+                      <Form.Combobox
+                        name="penguji_1"
+                        value={form.penguji_1}
+                        options={listDosen?.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                          ttd: dosen.ttd,
+                        }))}
+                        menuTarget={document.body}
+                        onChange={handlePenguji1}
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      Penguji 1
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      <img
+                        src={`${FILE_URL}/${ttd.penguji_1}`}
+                        alt="TTD"
+                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-sm border-2 border-white bg-gray-50 font-bold">
+                      <Form.Combobox
+                        name="penguji_2"
+                        value={form.penguji_2}
+                        options={listDosen?.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                          ttd: dosen.ttd,
+                        }))}
+                        menuTarget={document.body}
+                        onChange={handlePenguji2}
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      Penguji 2
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      <img
+                        src={`${FILE_URL}/${ttd.penguji_2}`}
+                        alt="TTD"
+                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="text-sm border-2 border-white bg-gray-50 font-bold">
+                      <Form.Combobox
+                        name="sekertaris_sidang"
+                        value={form.sekertaris_sidang}
+                        options={listDosen?.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                          ttd: dosen.ttd,
+                        }))}
+                        menuTarget={document.body}
+                        onChange={handleSekertarisSidang}
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      Sekertaris sidang sebagai notulis
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 text-center">
+                      <img
+                        src={`${FILE_URL}/${ttd.sekertaris_sidang}`}
+                        alt="TTD"
+                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <h1 className="mt-2">
+                Kandidat tersebut memperoleh angka mutu: yang dikonversi ke
+                huruf mutu: , sehingga{" "}
+                <Form.Label className="mt-2">
+                  <Form.Radio
+                    name="status_kelulusan"
+                    value="LULUS"
+                    onChange={inputHandler}
+                    checked={form.status_kelulusan === "LULUS" ? true : false}
+                  />
+                  Lulus
+                </Form.Label>
+                <Form.Label className="mt-2">
+                  <Form.Radio
+                    name="status_kelulusan"
+                    value="LULUS BERSYARAT"
+                    onChange={inputHandler}
+                    checked={
+                      form.status_kelulusan === "LULUS BERSYARAT" ? true : false
+                    }
+                  />
+                  Lulus Bersyarat
+                </Form.Label>
+                <Form.Label className="mt-2">
+                  <Form.Radio
+                    name="status_kelulusan"
+                    value="TIDAK LULUS"
+                    checked={
+                      form.status_kelulusan === "TIDAK LULUS" ? true : false
+                    }
+                    onChange={inputHandler}
+                  />
+                  Tidak Lulus
+                </Form.Label>
+                dengan catatan:
+                <Form.Textarea
+                  className="flex-1 mt-2"
+                  rows="5"
+                  name="komentar"
+                  value={form.komentar}
+                  onChange={inputHandler}
+                />
+              </h1>
+              <div className="flex justify-center">
+                <Button
+                  type="submit"
+                  variant="info"
+                  className="w-1/2 h-12 mt-4"
+                >
+                  Save
+                </Button>
+              </div>
+            </Card.Body>
+          </Form>
+        </Accordion>
       </Card>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -119,7 +546,22 @@ export default function PelaksanaanSidang() {
               colSpan={4}
               className="text-sm border-2 border-white bg-gray-50"
             >
-              Nilai Akhir
+              REKAPITULASI UJIAN SKRIPSI
+              <Form.Group className="flex items-baseline gap-3 mt-4 mb-4">
+                <Form.Label className="min-w-[6rem] ml-4">
+                  Link Dokumen
+                </Form.Label>
+                <span>:</span>
+                <Link
+                  href={`${form.link_draft_final_skripsi}`}
+                  passHref
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-400 underline"
+                >
+                  Link Dokumen
+                </Link>
+              </Form.Group>
             </th>
           </tr>
           <tr>

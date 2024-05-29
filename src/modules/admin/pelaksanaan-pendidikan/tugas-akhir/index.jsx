@@ -222,7 +222,7 @@ export default function TugasAkhirModule({ baseURL }) {
                               className={`w-full px-4 py-2 text-sm ${
                                 row.status === "pengajuan-sk" &&
                                 row.status_approved === false
-                                  ? "text-black font-bold"
+                                  ? "text-blue-500 underline font-bold"
                                   : (row.status === "menuju-kolokium" ||
                                       row.status === "menuju-sidang" ||
                                       row.status === "menyelesaikan-revisi" ||
@@ -239,12 +239,16 @@ export default function TugasAkhirModule({ baseURL }) {
                               >
                                 Pengajuan SK
                               </Link>
-                              <input
-                                type="checkbox"
-                                className="ml-2"
-                                disabled
-                                checked={row.status_approved ? true : false}
-                              />
+                              {row.status_approved === true ? (
+                                <Icon
+                                  icon="ph:check-fat-fill"
+                                  width={20}
+                                  height={20}
+                                  className="text-green-400 "
+                                />
+                              ) : (
+                                ""
+                              )}
                             </button>
 
                             <button
@@ -252,7 +256,7 @@ export default function TugasAkhirModule({ baseURL }) {
                               className={`w-full px-4 py-2 text-sm ${
                                 row.status === "menuju-kolokium" &&
                                 row.status_approved_kolo === false
-                                  ? "text-black font-bold"
+                                  ? "text-blue-500 underline font-bold"
                                   : (row.status === "menuju-kolokium" ||
                                       row.status === "menuju-sidang" ||
                                       row.status === "menyelesaikan-revisi" ||
@@ -278,14 +282,16 @@ export default function TugasAkhirModule({ baseURL }) {
                                   <span>Pengajuan Kolokium</span>
                                 )}
                               </span>
-                              <input
-                                type="checkbox"
-                                className="ml-2"
-                                disabled
-                                checked={
-                                  row.status_approved_kolo ? true : false
-                                }
-                              />
+                              {row.status_approved_kolo === true ? (
+                                <Icon
+                                  icon="ph:check-fat-fill"
+                                  width={20}
+                                  height={20}
+                                  className="text-green-400"
+                                />
+                              ) : (
+                                ""
+                              )}
                             </button>
 
                             <button
@@ -294,7 +300,7 @@ export default function TugasAkhirModule({ baseURL }) {
                                 row.status === "menuju-kolokium" &&
                                 row.status_penilaian === false &&
                                 row.status_approved_kolo === true
-                                  ? "text-black font-bold"
+                                  ? "text-blue-500 underline font-bold"
                                   : (row.status === "menuju-kolokium" ||
                                       row.status === "menuju-sidang" ||
                                       row.status === "menyelesaikan-revisi" ||
@@ -321,12 +327,16 @@ export default function TugasAkhirModule({ baseURL }) {
                                   <span>Pelaksanaan Kolokium</span>
                                 )}
                               </span>
-                              <input
-                                type="checkbox"
-                                className="ml-2"
-                                disabled
-                                checked={row.status_penilaian ? true : false}
-                              />
+                              {row.status_penilaian === true ? (
+                                <Icon
+                                  icon="ph:check-fat-fill"
+                                  width={20}
+                                  height={20}
+                                  className="text-green-400"
+                                />
+                              ) : (
+                                ""
+                              )}
                             </button>
 
                             <button
@@ -334,7 +344,7 @@ export default function TugasAkhirModule({ baseURL }) {
                               className={`w-full px-4 py-2 text-sm ${
                                 row.status === "menuju-sidang" &&
                                 row.status_approved_sidang === false
-                                  ? "text-black font-bold"
+                                  ? "text-blue-500 underline font-bold"
                                   : (row.status === "menuju-kolokium" ||
                                       row.status === "menuju-sidang" ||
                                       row.status === "menyelesaikan-revisi" ||
@@ -360,14 +370,16 @@ export default function TugasAkhirModule({ baseURL }) {
                                   <span>Pendaftaran Sidang</span>
                                 )}
                               </span>
-                              <input
-                                type="checkbox"
-                                className="ml-2"
-                                disabled
-                                checked={
-                                  row.status_approved_sidang ? true : false
-                                }
-                              />
+                              {row.status_approved_sidang === true ? (
+                                <Icon
+                                  icon="ph:check-fat-fill"
+                                  width={20}
+                                  height={20}
+                                  className="text-green-400"
+                                />
+                              ) : (
+                                ""
+                              )}
                             </button>
 
                             <button
@@ -376,7 +388,7 @@ export default function TugasAkhirModule({ baseURL }) {
                                 row.status === "menuju-sidang" &&
                                 row.status_penilaian_sidang === false &&
                                 row.status_approved_sidang === true
-                                  ? "text-black font-bold"
+                                  ? "text-blue-500 underline font-bold"
                                   : (row.status === "menuju-kolokium" ||
                                       row.status === "menuju-sidang" ||
                                       row.status === "menyelesaikan-revisi" ||
@@ -402,21 +414,23 @@ export default function TugasAkhirModule({ baseURL }) {
                                   <span>Pelaksanaan Sidang</span>
                                 )}
                               </span>
-                              <input
-                                type="checkbox"
-                                className="ml-2"
-                                disabled
-                                checked={
-                                  row.status_penilaian_sidang ? true : false
-                                }
-                              />
+                              {row.status_penilaian_sidang === true ? (
+                                <Icon
+                                  icon="ph:check-fat-fill"
+                                  width={20}
+                                  height={20}
+                                  className="text-green-400"
+                                />
+                              ) : (
+                                ""
+                              )}
                             </button>
 
                             <button
                               onClick={closeDropdown}
                               className={`w-full px-4 py-2 text-sm ${
                                 row.status === "menyelesaikan-revisi"
-                                  ? "text-black font-bold"
+                                  ? "text-blue-500 underline font-bold"
                                   : row.status === "selesai"
                                   ? "text-black font-semibold"
                                   : "text-gray-500"
@@ -436,14 +450,16 @@ export default function TugasAkhirModule({ baseURL }) {
                                   <span>Pengumpulan Revisi</span>
                                 )}
                               </span>
-                              <input
-                                type="checkbox"
-                                className="ml-2"
-                                disabled
-                                checked={
-                                  row.status === "selesai" ? true : false
-                                }
-                              />
+                              {row.status === "selesai" ? (
+                                <Icon
+                                  icon="ph:check-fat-fill"
+                                  width={20}
+                                  height={20}
+                                  className="text-green-400"
+                                />
+                              ) : (
+                                ""
+                              )}
                             </button>
                           </div>
                         </div>
