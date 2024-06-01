@@ -30,6 +30,7 @@ export default function DetailBimbinganAkademik() {
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   useEffect(() => {
+    if (!user) return;
     const fetchData = async () => {
       try {
         if (router.query.id) {
@@ -49,7 +50,7 @@ export default function DetailBimbinganAkademik() {
     };
 
     fetchData();
-  }, [router.query]);
+  }, [router.query, user]);
 
   const handleChange = (mhsIndex, semesterIndex, fieldName, value) => {
     const updatedMhsBimbingan = [...mhsBimbingan];

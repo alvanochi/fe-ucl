@@ -139,7 +139,7 @@ export default function Home() {
       id: 18,
       title: "Jumlah Mahasiswa Bimbingan Kademik",
       icon: "solar:bill-bold",
-      data: 0,
+      data: data?.bimbingan_akademik,
     },
     {
       id: 11,
@@ -236,7 +236,7 @@ export default function Home() {
     },
     {
       id: 2,
-      title: "Pembicara?Penyuluhan",
+      title: "Pembicara/Penyuluhan",
       icon: "solar:bill-bold",
       data: 0,
     },
