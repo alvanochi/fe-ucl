@@ -138,8 +138,6 @@ export default function PelaksanaanSidang() {
   };
 
   const handleKetuaPenguji = (selected) => {
-    console.log(selected);
-
     setTtd((prevState) => ({
       ...prevState,
       ketua_penguji: selected?.ttd,
@@ -181,6 +179,35 @@ export default function PelaksanaanSidang() {
       }),
     });
   }, [router, user]);
+
+  useEffect(() => {
+    const updateTtd = (role, formValue) => {
+      if (listDosen && formValue) {
+        const dosen = listDosen.find((item) => item?.user_id === formValue);
+        if (dosen) {
+          setTtd((prev) => ({
+            ...prev,
+            [role]: dosen.ttd,
+          }));
+        }
+      }
+    };
+
+    updateTtd("ketua_penguji", form.ketua_penguji);
+    updateTtd("pembimbing_1", form.pembimbing_1);
+    updateTtd("pembimbing_2", form.pembimbing_2);
+    updateTtd("penguji_1", form.penguji_1);
+    updateTtd("penguji_2", form.penguji_2);
+    updateTtd("sekertaris_sidang", form.sekertaris_sidang);
+  }, [
+    listDosen,
+    form.ketua_penguji,
+    form.pembimbing_1,
+    form.pembimbing_2,
+    form.penguji_1,
+    form.penguji_2,
+    form.sekertaris_sidang,
+  ]);
 
   const [selectedPeran, setSelectedPeran] = useState("");
   const peranUnik = [
@@ -346,9 +373,9 @@ export default function PelaksanaanSidang() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 text-center">
                       <img
-                        src={`${FILE_URL}/${ttd.ketua_penguji}`}
+                        src={`${FILE_URL}/${ttd?.ketua_penguji}`}
                         alt="TTD"
-                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                        className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
                     </td>
                   </tr>
@@ -373,7 +400,7 @@ export default function PelaksanaanSidang() {
                       <img
                         src={`${FILE_URL}/${ttd.pembimbing_1}`}
                         alt="TTD"
-                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                        className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
                     </td>
                   </tr>
@@ -398,7 +425,7 @@ export default function PelaksanaanSidang() {
                       <img
                         src={`${FILE_URL}/${ttd.pembimbing_2}`}
                         alt="TTD"
-                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                        className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
                     </td>
                   </tr>
@@ -423,7 +450,7 @@ export default function PelaksanaanSidang() {
                       <img
                         src={`${FILE_URL}/${ttd.penguji_1}`}
                         alt="TTD"
-                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                        className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
                     </td>
                   </tr>
@@ -448,7 +475,7 @@ export default function PelaksanaanSidang() {
                       <img
                         src={`${FILE_URL}/${ttd.penguji_2}`}
                         alt="TTD"
-                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                        className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
                     </td>
                   </tr>
@@ -473,7 +500,7 @@ export default function PelaksanaanSidang() {
                       <img
                         src={`${FILE_URL}/${ttd.sekertaris_sidang}`}
                         alt="TTD"
-                        className="w-100 h-100 object-cover border-2 border-primary-600"
+                        className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
                     </td>
                   </tr>
