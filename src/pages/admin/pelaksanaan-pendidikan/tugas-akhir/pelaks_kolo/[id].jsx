@@ -316,21 +316,16 @@ export default function PelaksanaanKolo() {
               className="text-sm border-2 border-white bg-gray-50"
             >
               REKAPITULASI SEMINAR PROPOSAL
-              <Form.Group className="flex items-baseline gap-3 mt-4 mb-4">
-                <Form.Label className="min-w-[6rem] ml-4">
-                  Link Dokumen
-                </Form.Label>
-                <span>:</span>
-                <Link
-                  href={`${form.link_dok_makalah}`}
-                  passHref
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-400 underline"
-                >
-                  Link Dokumen
-                </Link>
-              </Form.Group>
+              <Button
+                onClick={() =>
+                  window.open(`${form.link_dok_makalah}`, "_blank")
+                }
+                variant="primary"
+                icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
+                pill
+              >
+                Link Dokumen Makalah
+              </Button>
             </th>
           </tr>
           <tr>

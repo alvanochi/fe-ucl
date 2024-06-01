@@ -191,15 +191,14 @@ export default function PelaksanaanKolo() {
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[20rem]">Link Dokumen</Form.Label>
             <span>:</span>
-            <Link
-              href={`${form.link_dok_makalah}`}
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 underline"
+            <Button
+              onClick={() => window.open(`${form.link_dok_makalah}`, "_blank")}
+              variant="primary"
+              icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
+              pill
             >
-              Link Dokumen
-            </Link>
+              Link Dokumen Makalah
+            </Button>
           </Form.Group>
         </Card.Body>
       </Card>

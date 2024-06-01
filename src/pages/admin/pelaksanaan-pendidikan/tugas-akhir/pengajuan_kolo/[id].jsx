@@ -164,129 +164,173 @@ export default function PengajuanKolo() {
     document.body.removeChild(downloadLink);
   };
 
+  const [activeTab, setActiveTab] = useState("form");
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+  };
+
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
 
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
-        <Card className="mt-4">
-          <Card.Header className="text-center">
-            <div>Form Pengajuan Kolokium</div>
-          </Card.Header>
-          <div
-            className="flex items-center p-4 mb-4  mt-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
-            role="alert"
+      <div className="sm:hidden">
+        <select
+          id="tabs"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 mt-8"
+          onChange={(e) => handleTabClick(e.target.value)}
+        >
+          <option value="form">Form Pengajuan Kolokium</option>
+          <option value="link">Link Dokumen</option>
+        </select>
+      </div>
+      <ul className="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 mt-8">
+        <li className="w-full focus-within:z-10">
+          <span
+            onClick={() => handleTabClick("form")}
+            className={`inline-block w-full p-4 border-r border-gray-200 hover:text-gray-700 hover:bg-gray-50 focus:ring-4  focus:outline-none cursor-pointer ${
+              activeTab === "form"
+                ? "bg-white text-gray-700 font-bold"
+                : "bg-gray-150"
+            }`}
           >
-            <svg
-              className="flex-shrink-0 inline w-4 h-4 me-3"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="currentColor"
-              viewBox="0 0 20 20"
+            Form Pengajuan Kolokium
+          </span>
+        </li>
+        <li className="w-full focus-within:z-10">
+          <span
+            onClick={() => handleTabClick("link")}
+            className={`inline-block w-full p-4 border-r border-gray-200 hover:text-gray-700 hover:bg-gray-50 focus:ring-4  focus:outline-none cursor-pointer ${
+              activeTab === "link"
+                ? "bg-white text-gray-700 font-bold"
+                : "bg-gray-50"
+            }`}
+          >
+            Link Dokumen
+          </span>
+        </li>
+      </ul>
+
+      {activeTab === "form" && (
+        <Form
+          onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
+          type="formdata"
+        >
+          <Card className="mt-4">
+            <Card.Header className="text-center">
+              <div>Form Pengajuan Kolokium</div>
+            </Card.Header>
+            <div
+              className="flex items-center p-4 mb-4  mt-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+              role="alert"
             >
-              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-            </svg>
-            <span className="sr-only">Info</span>
-            <div>
-              <span className="font-medium">Catatan!</span> Silahkan isi form
-              yang dibintangi saja (<span className="text-danger-600">*</span>),
-              jika status approved dosen pembimbing sudah ACC/terceklis.
+              <svg
+                className="flex-shrink-0 inline w-4 h-4 me-3"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+              </svg>
+              <span className="sr-only">Info</span>
+              <div>
+                <span className="font-medium">Catatan!</span> Silahkan isi form
+                yang dibintangi saja (<span className="text-danger-600">*</span>
+                ), jika status approved dosen pembimbing sudah ACC/terceklis.
+              </div>
             </div>
-          </div>
-          <Card.Body className="space-y-4">
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">Nama</Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1 border-gray-500"
-                name="nama_lengkap"
-                value={form.nama_lengkap}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">NPM</Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1 border-gray-500"
-                name="npm"
-                value={form.npm}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">Judul Skripsi</Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1 border-gray-500"
-                name="judul"
-                value={form.judul}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">Semester</Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1 border-gray-500"
-                name="semester"
-                value={form.semester}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">Email</Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1 border-gray-500"
-                name="email"
-                value={form.email}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">No Handphone</Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1 border-gray-500"
-                name="ho_hp"
-                value={form.no_hp}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                <p>Terdaftar sebagai mahasiswa aktif </p>
-                <p>dilengkapi dengan bukti pembayaran </p>
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="url"
-                className="flex-1 border-gray-500"
-                name="link_dok_mhs_aktif"
-                value={form.link_dok_mhs_aktif}
-                onChange={inputHandler}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Telah Melakukan Pembayaran Kolokium{" "}
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="url"
-                className="flex-1 border-gray-500"
-                name="link_dok_pembayaran"
-                value={form.link_dok_pembayaran}
-                onChange={inputHandler}
-              />
-            </Form.Group>
-            {/* <Form.Group className="flex items-baseline gap-3">
+            <Card.Body className="space-y-4">
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">Nama</Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1 border-gray-500"
+                  name="nama_lengkap"
+                  value={form.nama_lengkap}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">NPM</Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1 border-gray-500"
+                  name="npm"
+                  value={form.npm}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">Judul Skripsi</Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1 border-gray-500"
+                  name="judul"
+                  value={form.judul}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">Semester</Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1 border-gray-500"
+                  name="semester"
+                  value={form.semester}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">Email</Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1 border-gray-500"
+                  name="email"
+                  value={form.email}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">No Handphone</Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1 border-gray-500"
+                  name="ho_hp"
+                  value={form.no_hp}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">
+                  <p>Terdaftar sebagai mahasiswa aktif </p>
+                  <p>dilengkapi dengan bukti pembayaran </p>
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="url"
+                  className="flex-1 border-gray-500"
+                  name="link_dok_mhs_aktif"
+                  value={form.link_dok_mhs_aktif}
+                  onChange={inputHandler}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">
+                  Telah Melakukan Pembayaran Kolokium{" "}
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="url"
+                  className="flex-1 border-gray-500"
+                  name="link_dok_pembayaran"
+                  value={form.link_dok_pembayaran}
+                  onChange={inputHandler}
+                />
+              </Form.Group>
+              {/* <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 5 Eksternal Proposal Makalah Kolokium{" "}
               </Form.Label>
@@ -311,225 +355,154 @@ export default function PengajuanKolo() {
               )}
             </Form.Group> */}
 
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Link Dokumen Makalah
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="url"
-                className="flex-1 border-gray-500"
-                name="link_dok_makalah"
-                value={form.link_dok_makalah}
-                onChange={inputHandler}
-                placeholder="link Google Drive"
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Telah Menyelesaikan MK Kerja Praktik{" "}
-              </Form.Label>
-              <span>:</span>
-              <Form.Checkbox
-                type="checkbox"
-                name="status_kp"
-                checked={form.status_kp ? true : false}
-                onChange={inputHandler}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                <p>Telah Menyelesaikan 138 SKS Dengan</p> <p>IPK ≥ 2.00</p>
-              </Form.Label>
-              <span>:</span>
-              <Form.Checkbox
-                type="checkbox"
-                name="status_sks_ipk"
-                value={form.status_sks_ipk}
-                checked={form.status_sks_ipk}
-                onChange={inputHandler}
-              />
-              <span>SKS: {form.jumlah_sks}</span>|<span>IPK: {form.ipk}</span>
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Jadwal Pelaksanaan <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="date"
-                className="flex-1"
-                name="jadwal_pelaksanaan"
-                value={form.jadwal_pelaksanaan}
-                placeholder="Diisi oleh admin"
-                onChange={inputHandler}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Evaluator 1 <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Combobox
-                className="border-primary-500"
-                name="evaluator_1"
-                onChange={handleEvaluator1}
-                value={form.evaluator_1}
-                options={listDosen?.map((dosen) => ({
-                  label: `${dosen.nama_lengkap} - ${dosen.nip}`,
-                  value: dosen.user_id,
-                }))}
-                menuTarget={document.body}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Evaluator 2 <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Combobox
-                className="border-yellow-500"
-                name="evaluator_2"
-                onChange={handleEvaluator2}
-                value={form.evaluator_2}
-                options={listDosen?.map((dosen) => ({
-                  label: `${dosen.nama_lengkap} - ${dosen.nip}`,
-                  value: dosen.user_id,
-                }))}
-                menuTarget={document.body}
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Status <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Select
-                name="status"
-                onChange={inputHandler}
-                value={form.status}
-                options={[
-                  { label: "pengajuan-sk", value: "pengajuan-sk" },
-                  { label: "menuju-kolokium", value: "menuju-kolokium" },
-                  { label: "menuju-sidang", value: "menuju-sidang" },
-                  {
-                    label: "menyelesaikan-revisi",
-                    value: "menyelesaikan-revisi",
-                  },
-                  { label: "selesai", value: "selesai" },
-                ]}
-              />
-            </Form.Group>
-          </Card.Body>
-        </Card>
-        {/* Dosen Pembimbing table */}
-        <table
-          className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
-          cellPadding={10}
-        >
-          <thead>
-            <tr>
-              <th
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
-                <div>Mengetahui</div>
-              </th>
-            </tr>
-            <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Dosen
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                status
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td className="text-sm border-2 border-white text-center font-bold">
-                <span>Pembimbing 1</span>{" "}
-              </td>
-              <td className="text-sm border-2 border-white">
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Select
-                    className="border-gray-500"
-                    name="kolo_pembimbing_1"
-                    value={form.kolo_pembimbing_1}
-                    options={
-                      listDosen &&
-                      listDosen.map((dosen) => ({
-                        label: `${dosen.nama_lengkap} - ${dosen.nip}`,
-                        value: dosen.user_id,
-                      }))
-                    }
-                    disabled
-                  />
-                </Form.Group>
-              </td>
-              <td className="text-sm border-2 border-white">
-                <Form.Group className="flex items-center justify-center gap-3">
-                  <input
-                    className="cursor-pointer"
-                    type="checkbox"
-                    checked={isChecked1}
-                    name="kolo_status_pem_1"
-                    onChange={(event) =>
-                      handleCheckboxChange(event, form.kolo_id)
-                    }
-                  />
-                </Form.Group>
-              </td>
-            </tr>
-            <tr>
-              <td className="text-sm border-2 border-white text-center font-bold">
-                <span>Pembimbing 2</span>
-              </td>
-              <td className="text-sm border-2 border-white">
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Select
-                    className="border-gray-500"
-                    name="kolo_pembimbing_2"
-                    value={form.kolo_pembimbing_2}
-                    options={
-                      listDosen &&
-                      listDosen.map((dosen) => ({
-                        label: `${dosen.nama_lengkap} - ${dosen.nip}`,
-                        value: dosen.user_id,
-                      }))
-                    }
-                    disabled
-                  />
-                </Form.Group>
-              </td>
-              <td className="text-sm border-2 border-white">
-                <Form.Group className="flex items-center justify-center gap-3">
-                  <input
-                    className="cursor-pointer"
-                    type="checkbox"
-                    checked={isChecked2}
-                    name="kolo_status_pem_2"
-                    onChange={(event) =>
-                      handleCheckboxChange(event, form.kolo_id)
-                    }
-                  />
-                </Form.Group>
-              </td>
-            </tr>
-            {form.kolo_status_pem_3 && (
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">
+                  Link Dokumen Makalah
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="url"
+                  className="flex-1 border-gray-500"
+                  name="link_dok_makalah"
+                  value={form.link_dok_makalah}
+                  onChange={inputHandler}
+                  placeholder="link Google Drive"
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">
+                  Telah Menyelesaikan MK Kerja Praktik{" "}
+                </Form.Label>
+                <span>:</span>
+                <Form.Checkbox
+                  type="checkbox"
+                  name="status_kp"
+                  checked={form.status_kp ? true : false}
+                  onChange={inputHandler}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">
+                  <p>Telah Menyelesaikan 138 SKS Dengan</p> <p>IPK ≥ 2.00</p>
+                </Form.Label>
+                <span>:</span>
+                <Form.Checkbox
+                  type="checkbox"
+                  name="status_sks_ipk"
+                  value={form.status_sks_ipk}
+                  checked={form.status_sks_ipk}
+                  onChange={inputHandler}
+                />
+                <span>SKS: {form.jumlah_sks}</span>|<span>IPK: {form.ipk}</span>
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">
+                  Jadwal Pelaksanaan <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="date"
+                  className="flex-1"
+                  name="jadwal_pelaksanaan"
+                  value={form.jadwal_pelaksanaan}
+                  placeholder="Diisi oleh admin"
+                  onChange={inputHandler}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">
+                  Evaluator 1 <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Combobox
+                  className="border-primary-500"
+                  name="evaluator_1"
+                  onChange={handleEvaluator1}
+                  value={form.evaluator_1}
+                  options={listDosen?.map((dosen) => ({
+                    label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                    value: dosen.user_id,
+                  }))}
+                  menuTarget={document.body}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">
+                  Evaluator 2 <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Combobox
+                  className="border-yellow-500"
+                  name="evaluator_2"
+                  onChange={handleEvaluator2}
+                  value={form.evaluator_2}
+                  options={listDosen?.map((dosen) => ({
+                    label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                    value: dosen.user_id,
+                  }))}
+                  menuTarget={document.body}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[20rem]">
+                  Status <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Select
+                  name="status"
+                  onChange={inputHandler}
+                  value={form.status}
+                  options={[
+                    { label: "pengajuan-sk", value: "pengajuan-sk" },
+                    { label: "menuju-kolokium", value: "menuju-kolokium" },
+                    { label: "menuju-sidang", value: "menuju-sidang" },
+                    {
+                      label: "menyelesaikan-revisi",
+                      value: "menyelesaikan-revisi",
+                    },
+                    { label: "selesai", value: "selesai" },
+                  ]}
+                />
+              </Form.Group>
+            </Card.Body>
+          </Card>
+          {/* Dosen Pembimbing table */}
+          <table
+            className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+            cellPadding={10}
+          >
+            <thead>
+              <tr>
+                <th
+                  colSpan={3}
+                  className="text-sm border-2 border-white bg-gray-50"
+                >
+                  <div>Mengetahui</div>
+                </th>
+              </tr>
+              <tr>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  Peran
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  Dosen
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
               <tr>
                 <td className="text-sm border-2 border-white text-center font-bold">
-                  <span>Pembimbing 3 (optional)</span>
+                  <span>Pembimbing 1</span>{" "}
                 </td>
                 <td className="text-sm border-2 border-white">
                   <Form.Group className="flex items-baseline gap-3">
                     <Form.Select
                       className="border-gray-500"
-                      name="kolo_pembimbing_3"
-                      value={form.kolo_pembimbing_3}
+                      name="kolo_pembimbing_1"
+                      value={form.kolo_pembimbing_1}
                       options={
                         listDosen &&
                         listDosen.map((dosen) => ({
@@ -537,9 +510,7 @@ export default function PengajuanKolo() {
                           value: dosen.user_id,
                         }))
                       }
-                      onChange={(event) =>
-                        handleCheckboxChange(event, form.kolo_id)
-                      }
+                      disabled
                     />
                   </Form.Group>
                 </td>
@@ -548,8 +519,8 @@ export default function PengajuanKolo() {
                     <input
                       className="cursor-pointer"
                       type="checkbox"
-                      checked={isChecked3}
-                      name="kolo_status_pem_3"
+                      checked={isChecked1}
+                      name="kolo_status_pem_1"
                       onChange={(event) =>
                         handleCheckboxChange(event, form.kolo_id)
                       }
@@ -557,66 +528,200 @@ export default function PengajuanKolo() {
                   </Form.Group>
                 </td>
               </tr>
-            )}
-            <tr>
-              <td className="text-sm border-2 border-white text-center font-bold">
-                <span>Kepala Lab</span>
-              </td>
-              <td className="text-sm border-2 border-white">
-                <Form.Group className="flex items-baseline gap-3">
-                  <Form.Select
-                    name="kolo_kepala_lab"
-                    value={form.kolo_kepala_lab}
-                    options={
-                      listDosen &&
-                      listDosen.map((dosen) => ({
-                        label: `${dosen.nama_lengkap} - ${dosen.nip}`,
-                        value: dosen.user_id,
-                      }))
-                    }
-                    disabled
-                  />
-                </Form.Group>
-              </td>
-              <td className="text-sm border-2 border-white">
-                <Form.Group className="flex items-center justify-center gap-3">
-                  <input
-                    className="cursor-pointer"
-                    type="checkbox"
-                    checked={isCheckedLab}
-                    name="kolo_status_kepala_lab"
-                    onChange={(event) =>
-                      handleCheckboxChange(event, form.kolo_id)
-                    }
-                  />
-                </Form.Group>
-              </td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <td
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              ></td>
-            </tr>
-          </tfoot>
-        </table>
+              <tr>
+                <td className="text-sm border-2 border-white text-center font-bold">
+                  <span>Pembimbing 2</span>
+                </td>
+                <td className="text-sm border-2 border-white">
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Select
+                      className="border-gray-500"
+                      name="kolo_pembimbing_2"
+                      value={form.kolo_pembimbing_2}
+                      options={
+                        listDosen &&
+                        listDosen.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                        }))
+                      }
+                      disabled
+                    />
+                  </Form.Group>
+                </td>
+                <td className="text-sm border-2 border-white">
+                  <Form.Group className="flex items-center justify-center gap-3">
+                    <input
+                      className="cursor-pointer"
+                      type="checkbox"
+                      checked={isChecked2}
+                      name="kolo_status_pem_2"
+                      onChange={(event) =>
+                        handleCheckboxChange(event, form.kolo_id)
+                      }
+                    />
+                  </Form.Group>
+                </td>
+              </tr>
+              {form.kolo_status_pem_3 && (
+                <tr>
+                  <td className="text-sm border-2 border-white text-center font-bold">
+                    <span>Pembimbing 3 (optional)</span>
+                  </td>
+                  <td className="text-sm border-2 border-white">
+                    <Form.Group className="flex items-baseline gap-3">
+                      <Form.Select
+                        className="border-gray-500"
+                        name="kolo_pembimbing_3"
+                        value={form.kolo_pembimbing_3}
+                        options={
+                          listDosen &&
+                          listDosen.map((dosen) => ({
+                            label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                            value: dosen.user_id,
+                          }))
+                        }
+                        onChange={(event) =>
+                          handleCheckboxChange(event, form.kolo_id)
+                        }
+                      />
+                    </Form.Group>
+                  </td>
+                  <td className="text-sm border-2 border-white">
+                    <Form.Group className="flex items-center justify-center gap-3">
+                      <input
+                        className="cursor-pointer"
+                        type="checkbox"
+                        checked={isChecked3}
+                        name="kolo_status_pem_3"
+                        onChange={(event) =>
+                          handleCheckboxChange(event, form.kolo_id)
+                        }
+                      />
+                    </Form.Group>
+                  </td>
+                </tr>
+              )}
+              <tr>
+                <td className="text-sm border-2 border-white text-center font-bold">
+                  <span>Kepala Lab</span>
+                </td>
+                <td className="text-sm border-2 border-white">
+                  <Form.Group className="flex items-baseline gap-3">
+                    <Form.Select
+                      name="kolo_kepala_lab"
+                      value={form.kolo_kepala_lab}
+                      options={
+                        listDosen &&
+                        listDosen.map((dosen) => ({
+                          label: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                          value: dosen.user_id,
+                        }))
+                      }
+                      disabled
+                    />
+                  </Form.Group>
+                </td>
+                <td className="text-sm border-2 border-white">
+                  <Form.Group className="flex items-center justify-center gap-3">
+                    <input
+                      className="cursor-pointer"
+                      type="checkbox"
+                      checked={isCheckedLab}
+                      name="kolo_status_kepala_lab"
+                      onChange={(event) =>
+                        handleCheckboxChange(event, form.kolo_id)
+                      }
+                    />
+                  </Form.Group>
+                </td>
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td
+                  colSpan={3}
+                  className="text-sm border-2 border-white bg-gray-50"
+                ></td>
+              </tr>
+            </tfoot>
+          </table>
 
-        <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
-            Batal
-          </Button>
-          <Button type="submit" variant="primary" className="w-full h-12">
-            Konfirmasi
-          </Button>
-        </div>
-      </Form>
+          <div className="flex gap-4 mt-4">
+            <Button
+              as="a"
+              href={prefix + menu.url}
+              variant="secondary"
+              className="w-full h-12"
+            >
+              Batal
+            </Button>
+            <Button type="submit" variant="primary" className="w-full h-12">
+              Konfirmasi
+            </Button>
+          </div>
+        </Form>
+      )}
+
+      {activeTab === "link" && (
+        <Card className="mt-4">
+          <Card.Header className="text-center">
+            <div>Link Dokumen</div>
+          </Card.Header>
+          <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                <p>Terdaftar sebagai mahasiswa aktif </p>
+                <p>dilengkapi dengan bukti pembayaran </p>
+              </Form.Label>
+              <span>:</span>
+              <Button
+                onClick={() =>
+                  window.open(`${form.link_dok_mhs_aktif}`, "_blank")
+                }
+                variant="primary"
+                icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
+                pill
+              >
+                Link
+              </Button>
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Telah Melakukan Pembayaran Kolokium{" "}
+              </Form.Label>
+              <span>:</span>
+              <Button
+                onClick={() =>
+                  window.open(`${form.link_dok_pembayaran}`, "_blank")
+                }
+                variant="primary"
+                icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
+                pill
+              >
+                Link
+              </Button>
+            </Form.Group>
+
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[20rem]">
+                Link Dokumen Makalah
+              </Form.Label>
+              <span>:</span>
+              <Button
+                onClick={() =>
+                  window.open(`${form.link_dok_makalah}`, "_blank")
+                }
+                variant="primary"
+                icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
+                pill
+              >
+                Link
+              </Button>
+            </Form.Group>
+          </Card.Body>
+        </Card>
+      )}
     </Layout>
   );
 }
