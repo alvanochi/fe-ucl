@@ -99,7 +99,9 @@ export default function Group({ baseURL }) {
           {!loadingNew &&
             dataNew &&
             dataNew.map((row, index) => {
-              const rowNumber = (pageNew - 1) * pageCountNew + index + 1;
+              const startNumber = (pageNew - 1) * 10 + 1;
+
+              const rowNumber = startNumber + index;
               return (
                 <tr key={`row-${index}`}>
                   <td className="text-sm border-2 border-white bg-gray-50">
