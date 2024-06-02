@@ -475,14 +475,14 @@ export default function PelaksanaanKolo() {
           </table>
           <Card className="mt-2">
             <div className="p-4 flex flex-col">
-              <div class="flex justify-end">
-                <div class="text-sm font-bold pr-10">
+              <div className="flex justify-end">
+                <div className="text-sm font-bold pr-10">
                   <span className="mr-2">Nilai Akhir :</span>{" "}
                   <span>{form.penilaian_kolo?.final_nilai}</span>
                 </div>
               </div>
-              <div class="flex justify-end mt-2">
-                <div class="text-sm font-bold pr-10">
+              <div className="flex justify-end mt-2">
+                <div className="text-sm font-bold pr-10">
                   <span className="mr-2">Huruf Mutu :</span>{" "}
                   <span>{form.penilaian_kolo?.huruf_mutu}</span>
                 </div>

@@ -184,8 +184,8 @@ export default function PengajuanSkAction() {
         </Card>
 
         <div className="w-full max-w-md p-4 mt-4 mb-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 mx-auto">
-          <div class="flex items-center justify-between mb-4">
-            <h5 class="text-xl font-bold leading-none text-gray-900">
+          <div className="flex items-center justify-between mb-4">
+            <h5 className="text-xl font-bold leading-none text-gray-900">
               Mengetahui
             </h5>
           </div>
