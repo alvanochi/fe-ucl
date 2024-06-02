@@ -2,9 +2,12 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { toastAlert } from "../lib/sweetalert";
 import useUser from "./useUser";
+import useDebounce from "./useDebounce";
 
 export const useDataTableBk = (url, options = {}, searchValue) => {
   const { user } = useUser({ redirectTo: "/login" });
+
+  const { debounce } = useDebounce();
 
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -85,10 +88,16 @@ export const useDataTableBk = (url, options = {}, searchValue) => {
     }
   };
 
+  const performSearch = () => {
+    fetchData();
+  };
+
+  const debounceSearch = debounce(performSearch, 500);
+
   useEffect(() => {
     if (!user) return;
 
-    fetchData();
+    debounceSearch();
   }, [page, user, searchValue]);
 
   return {

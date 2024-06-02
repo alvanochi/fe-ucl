@@ -1,28 +1,29 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
-import useDatatableAbsensi from "../../../../hooks/useDataTableAbsensi";
 import useCRUD from "../../../../hooks/useCRUD";
 import Form from "../../../../components/Form";
 import EditJabatan from "./editJabatan";
 import CreateJabatan from "./createJabatan";
+import { useState } from "react";
+import useNewDataTableForMainApi from "../../../../hooks/useNewDataTableForMainApi";
+import SortIcon from "../../../../components/SortIcon";
 
 export default function JabatanModules({ baseURL }) {
   const API_URL = `${process.env.API_ENDPOINT}/jabatan`;
+  const [searchValue, setSearchValue] = useState("");
 
   const {
-    dataAbsensi,
-    loadingAbsensi,
-    pageAbsensi,
-    pageCountAbsensi,
-    filter,
-    setPageAbsensi,
-    setFilter,
-    canPrevAbsensi,
-    canNextAbsensi,
-    refreshAbsensi,
-    sortBy,
-    getSortBy,
-  } = useDatatableAbsensi(API_URL);
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    sortByNew,
+    getSortByNew,
+    refreshNew,
+    filterNew,
+    setFilterNew,
+  } = useNewDataTableForMainApi(API_URL, {}, searchValue);
 
   const { destroy } = useCRUD(API_URL);
 
@@ -32,8 +33,20 @@ export default function JabatanModules({ baseURL }) {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 my-8">
-        <CreateJabatan onAction={handleAction} />
+      <div className="flex mb-8 justify-end items-center">
+        <div className="mr-4">
+          <CreateJabatan onAction={handleAction} />
+        </div>
+        <div className="flex-shrink">
+          <Form.Input
+            type="text"
+            name="search"
+            placeholder="Search"
+            style={{ width: "400px" }}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
       </div>
 
       <table
@@ -43,11 +56,20 @@ export default function JabatanModules({ baseURL }) {
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No</div>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("id")}
+              >
+                No <SortIcon sort={getSortByNew("id")} />
+              </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("nama_jabatan")}
+              >
                 Nama Jabatan
+                <SortIcon sort={getSortByNew("nama_jabatan")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -56,7 +78,7 @@ export default function JabatanModules({ baseURL }) {
           </tr>
         </thead>
         <tbody>
-          {loadingAbsensi && (
+          {loadingNew && (
             <tr>
               <td
                 colSpan="6"
@@ -66,7 +88,7 @@ export default function JabatanModules({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
+          {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
               <td
                 colSpan="6"
@@ -76,36 +98,40 @@ export default function JabatanModules({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loadingAbsensi &&
-            dataAbsensi &&
-            dataAbsensi.map((row, index) => (
-              <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_jabatan}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <EditJabatan id={row.id} onAction={handleAction} />
-                    <Button.Icon
-                      variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() =>
-                        destroy(row.id).then(() => refreshAbsensi())
-                      }
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
+          {!loadingNew &&
+            dataNew &&
+            dataNew.map((row, index) => {
+              const rowNumber = (pageNew - 1) * pageCountNew + index + 1;
+
+              return (
+                <tr key={`row-${index}`}>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {rowNumber}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.nama_jabatan}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    <div className="flex items-stretch gap-1">
+                      <EditJabatan id={row.id} onAction={handleAction} />
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() =>
+                          destroy(row.id).then(() => refreshAbsensi())
+                        }
+                      />
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
 
@@ -121,8 +147,8 @@ export default function JabatanModules({ baseURL }) {
                 height={20}
               />
             }
-            onClick={() => setPageAbsensi(pageAbsensi - 1)}
-            disabled={pageAbsensi <= 1}
+            onClick={() => setPageNew(pageNew - 1)}
+            disabled={pageNew <= 1}
             pill
           />
           <Button
@@ -136,8 +162,8 @@ export default function JabatanModules({ baseURL }) {
               />
             }
             iconPosition="right"
-            onClick={() => setPageAbsensi(pageAbsensi + 1)}
-            disabled={pageAbsensi >= pageCountAbsensi}
+            onClick={() => setPageNew(pageNew + 1)}
+            disabled={pageNew >= pageCountNew}
             pill
           >
             Next Page
@@ -148,19 +174,19 @@ export default function JabatanModules({ baseURL }) {
           <Form.Input
             type="number"
             min="1"
-            max={pageCountAbsensi || 1}
+            max={pageCountNew || 1}
             className="w-20"
-            value={pageAbsensi}
+            value={pageNew}
             onChange={(event) =>
-              setPageAbsensi(
+              setPageNew(
                 Math.max(
                   1,
-                  Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)
+                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
                 )
               )
             }
           />
-          of {pageCountAbsensi || 1}
+          of {pageCountNew || 1}
         </div>
       </div>
     </>

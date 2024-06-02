@@ -1,13 +1,12 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../components/Button";
-import useNewDataTable from "../../../hooks/useNewDataTable";
 import useCRUD from "../../../hooks/useCRUD";
 import Form from "../../../components/Form";
 import { useState } from "react";
 import CreateStruktural from "./createStruktural";
 import EditStruktural from "./editStruktural";
-// import EditJabatan from "./editJabatan";
-// import CreateJabatan from "./createJabatan";
+import useNewDataTableForMainApi from "../../../hooks/useNewDataTableForMainApi";
+import SortIcon from "../../../components/SortIcon";
 
 export default function StrukturalProdiModule({ baseURL }) {
   const API_URL = `${process.env.API_ENDPOINT}/struktural`;
@@ -19,10 +18,12 @@ export default function StrukturalProdiModule({ baseURL }) {
     pageNew,
     pageCountNew,
     setPageNew,
-    refreshNew,
     sortByNew,
     getSortByNew,
-  } = useNewDataTable(API_URL, {}, searchValue);
+    refreshNew,
+    filterNew,
+    setFilterNew,
+  } = useNewDataTableForMainApi(API_URL, {}, searchValue);
 
   const { destroy } = useCRUD(API_URL);
 
@@ -55,21 +56,38 @@ export default function StrukturalProdiModule({ baseURL }) {
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No</div>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("id")}
+              >
+                No <SortIcon sort={getSortByNew("id")} />
+              </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("nama_lengkap")}
+              >
                 Dosen
+                <SortIcon sort={getSortByNew("nama_lengkap")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("kode_prodi")}
+              >
                 Departemen
+                <SortIcon sort={getSortByNew("kode_prodi")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("nama_jabatan")}
+              >
                 Nama Jabatan
+                <SortIcon sort={getSortByNew("nama_jabatan")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -100,38 +118,42 @@ export default function StrukturalProdiModule({ baseURL }) {
           )}
           {!loadingNew &&
             dataNew &&
-            dataNew.map((row, index) => (
-              <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.kode_prodi}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_jabatan}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <EditStruktural id={row.id} onAction={handleAction} />
-                    <Button.Icon
-                      variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() => destroy(row.id).then(() => refreshNew())}
-                    />
-                  </div>
-                </td>
-              </tr>
-            ))}
+            dataNew.map((row, index) => {
+              const rowNumber = (pageNew - 1) * pageCountNew + index + 1;
+
+              return (
+                <tr key={`row-${index}`}>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {rowNumber}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.nama_lengkap}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.kode_prodi}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.nama_jabatan}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    <div className="flex items-stretch gap-1">
+                      <EditStruktural id={row.id} onAction={handleAction} />
+                      <Button.Icon
+                        variant="danger"
+                        icon={
+                          <Icon
+                            icon="solar:trash-bin-2-bold-duotone"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                        onClick={() => destroy(row.id).then(() => refreshNew())}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
         </tbody>
       </table>
 
