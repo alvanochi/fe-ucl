@@ -15,6 +15,8 @@ import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
 import Link from "next/link";
 import Accordion from "../../../../../components/Accordion";
 import date from "../../../../../utils/date";
+import axios from "axios";
+import ReactDOMServer from "react-dom/server";
 
 export default function PelaksanaanSidang() {
   const router = useRouter();
@@ -25,6 +27,7 @@ export default function PelaksanaanSidang() {
 
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-penilaian-sidang`;
   const FILE_URL = `${process.env.API_ENDPOINT}/ttd`;
+  const FILE_URL_KOP = `${process.env.API_ENDPOINT}/img`;
 
   const INITIAL_FORM = {
     pengajuan_sk_id: "",
@@ -216,6 +219,373 @@ export default function PelaksanaanSidang() {
   const selectedContent = form?.penilaian_sidang?.filter(
     (item) => item.peran === selectedPeran
   );
+
+  const [dataKaprodi, setDataKaprodi] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const API_URL = `${process.env.API_ENDPOINT}/get-jabatan`;
+        const response = await axios.get(API_URL, {
+          params: {
+            nama_jabatan: "Ka Prodi",
+            prodi: "FT_TI",
+          },
+        });
+        setDataKaprodi(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [setDataKaprodi]);
+
+  const content = () => {
+    return (
+      <>
+        <div className="flex items-center justify-center gap-2 mb-8">
+          <div style={{ margin: "0 auto" }}>
+            <img
+              src={`${FILE_URL_KOP}/kop_surat.png`}
+              alt="Kop Surat"
+              style={{ width: "100%", marginBottom: "20px" }}
+            />
+          </div>
+        </div>
+
+        <h1
+          style={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: "18px",
+            margin: "10px 0",
+            fontFamily: "Times New Roman",
+          }}
+        >
+          BERITA ACARA PELAKSANAAN UJIAN SKRIPSI
+        </h1>
+
+        <p>
+          Pada tanggal {form.tanggal && date.formatToInput(form.tanggal)}, pukul{" "}
+          {form.waktu} WIB sampai dengan selesai bertempat di Ruang Sidang
+          Fakultas Teknik UIKA Bogor telah berlangsung Ujian Skripsi (Tugas
+          Akhir) pada Sidang Sarjana Jurusan/PS Teknik Informatika Fakultas
+          Teknik dan Sains UIKA Bogor dengan Kandidat:
+        </p>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            marginBottom: "2px",
+          }}
+        >
+          <label style={{ minWidth: "188px", margin: 0 }}>Nama</label>
+          <span>:</span>
+          <p style={{ flex: 1, marginRight: "10px", margin: 0 }}>{form.nama}</p>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            marginBottom: "2px",
+          }}
+        >
+          <label style={{ minWidth: "188px", margin: 0 }}>
+            Tempat, tanggal lahir
+          </label>
+          <span>:</span>
+          <p style={{ flex: 1, margin: 0 }}>
+            {form.tempat_lahir} / {date.formatToInput(form.tanggal_lahir)}
+          </p>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            marginBottom: "2px",
+          }}
+        >
+          <label style={{ minWidth: "188px", margin: 0 }}>NPM</label>
+          <span>:</span>
+          <p style={{ flex: 1, margin: 0 }}>{form.npm}</p>
+        </div>
+
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            marginBottom: "2px",
+          }}
+        >
+          <label style={{ minWidth: "188px", margin: 0 }}>
+            Judul Tugas Akhir
+          </label>
+          <span>:</span>
+          <p style={{ flex: 1, margin: 0 }}>{form.judul}</p>
+        </div>
+
+        <p>
+          Susunan Tim Penguji Ujian Skripsi (Tugas Akhir) pada Sidang Sarjana:
+        </p>
+
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            overflow: "hidden",
+            marginTop: "1rem",
+          }}
+        >
+          <thead>
+            <tr>
+              <th
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#f3f4f6",
+                  width: "40%",
+                  textAlign: "center",
+                }}
+              >
+                NAMA
+              </th>
+              <th
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#f3f4f6",
+                  width: "30%",
+                  textAlign: "center",
+                }}
+              >
+                JABATAN
+              </th>
+              <th
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#f3f4f6",
+                  width: "30%",
+                  textAlign: "center",
+                }}
+              >
+                TANDA TANGAN
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              {
+                role: "Ketua Sidang",
+                dosen: form.ketua_penguji,
+                ttd: ttd?.ketua_penguji,
+              },
+              {
+                role: "Pembimbing Utama",
+                dosen: form.pembimbing_1,
+                ttd: ttd?.pembimbing_1,
+              },
+              {
+                role: "Pembimbing Pendamping",
+                dosen: form.pembimbing_2,
+                ttd: ttd?.pembimbing_2,
+              },
+              { role: "Penguji 1", dosen: form.penguji_1, ttd: ttd?.penguji_1 },
+              { role: "Penguji 2", dosen: form.penguji_2, ttd: ttd?.penguji_2 },
+              {
+                role: "Sekertaris sidang sebagai notulis",
+                dosen: form.sekertaris_sidang,
+                ttd: ttd?.sekertaris_sidang,
+              },
+            ].map(({ role, dosen, ttd }, index) => (
+              <tr key={index}>
+                <td
+                  style={{
+                    border: "1px solid black",
+                    backgroundColor: "#edf2f7",
+                    textAlign: "center",
+                  }}
+                >
+                  {listDosen.find((d) => d.user_id === dosen)?.nama_lengkap ||
+                    ""}
+                </td>
+                <td
+                  style={{
+                    border: "1px solid black",
+                    backgroundColor: "#edf2f7",
+                    textAlign: "center",
+                  }}
+                >
+                  {role}
+                </td>
+                <td
+                  style={{
+                    border: "1px solid black",
+                    backgroundColor: "#edf2f7",
+                    textAlign: "center",
+                  }}
+                >
+                  {ttd && (
+                    <img
+                      src={`${FILE_URL}/${ttd}`}
+                      alt="TTD"
+                      style={{
+                        width: "100px",
+                        height: "45px",
+                        objectFit: "contain",
+                      }}
+                    />
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+        <p style={{ marginBottom: 0, marginTop: "8px" }}>
+          Kandidat tersebut memperoleh angka mutu:{" "}
+          {form?.nilai_akhir.nilai_akhir} yang dikonversi ke huruf mutu:{" "}
+          {form?.nilai_akhir.huruf_mutu}, sehingga dinyatakan:{" "}
+          {form.status_kelulusan} dengan catatan :
+        </p>
+        <span>{form.komentar}</span>
+
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: "1rem",
+          }}
+        >
+          <div
+            style={{
+              fontFamily: "Times New Roman",
+              fontSize: "12px",
+            }}
+          >
+            <p>Mengetahui</p>
+            <p>Dekan Fakultas Teknik,</p>
+            <div style={{ width: "100px", height: "100px" }}></div>
+            <p style={{ fontWeight: "bold", textDecoration: "underline" }}>
+              Dr. H. M. Nanang Prayudyanto, M.Sc
+            </p>
+            <p
+              style={{
+                fontFamily: "Times New Roman",
+                fontSize: "12px",
+              }}
+            >
+              NIK: 410 100 585
+            </p>
+          </div>
+
+          <div
+            style={{
+              textAlign: "right",
+              fontFamily: "Times New Roman",
+              fontSize: "12px",
+            }}
+          >
+            <p>Bogor,</p>
+            <p>Ketua Program Studi,</p>
+            <div
+              style={{
+                width: "100px",
+                height: "100px",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            ></div>
+            <p style={{ fontWeight: "bold", textDecoration: "underline" }}>
+              {dataKaprodi.nama_lengkap}
+            </p>
+            <p
+              style={{
+                textIndent: "295px",
+                fontFamily: "Times New Roman",
+                fontSize: "12px",
+                paddingTop: "-6px",
+              }}
+            >
+              NIK: {dataKaprodi.nip}
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center justify-center gap-2">
+          <div style={{ margin: "0 auto" }}>
+            <img
+              src={`${FILE_URL_KOP}/foot_kop.png`}
+              alt="Kop Surat"
+              style={{ width: "100%", marginTop: "50px" }}
+            />
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  const handlePrint = async () => {
+    const printContent = ReactDOMServer.renderToString(content());
+
+    const surat = `
+      <div style="margin: 0 auto; max-width: 600px;">
+        ${printContent}
+      </div>
+    `;
+
+    const combinedContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          @media print {
+            @page :first {
+              size: portrait;
+            }
+            @page {
+              size: landscape;
+            }
+          }
+        </style>
+  
+      </head>
+      <body>
+        ${surat}
+      </body>
+      </html>
+    `;
+
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+
+    const blob = new Blob([combinedContent], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+
+    iframe.src = url;
+
+    document.body.appendChild(iframe);
+
+    iframe.onload = () => {
+      const iframeWindow = iframe.contentWindow;
+
+      iframeWindow.print();
+
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+        URL.revokeObjectURL(url);
+      }, 100);
+    };
+  };
+
+  const handleButtonPrint = (e) => {
+    e.preventDefault();
+    handlePrint();
+  };
 
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
@@ -507,39 +877,41 @@ export default function PelaksanaanSidang() {
                 </tbody>
               </table>
               <h1 className="mt-2">
-                Kandidat tersebut memperoleh angka mutu: yang dikonversi ke
-                huruf mutu: , sehingga{" "}
-                <Form.Label className="mt-2">
-                  <Form.Radio
-                    name="status_kelulusan"
-                    value="LULUS"
-                    onChange={inputHandler}
-                    checked={form.status_kelulusan === "LULUS" ? true : false}
-                  />
-                  Lulus
-                </Form.Label>
-                <Form.Label className="mt-2">
-                  <Form.Radio
-                    name="status_kelulusan"
-                    value="LULUS BERSYARAT"
-                    onChange={inputHandler}
-                    checked={
-                      form.status_kelulusan === "LULUS BERSYARAT" ? true : false
-                    }
-                  />
-                  Lulus Bersyarat
-                </Form.Label>
-                <Form.Label className="mt-2">
-                  <Form.Radio
-                    name="status_kelulusan"
-                    value="TIDAK LULUS"
-                    checked={
-                      form.status_kelulusan === "TIDAK LULUS" ? true : false
-                    }
-                    onChange={inputHandler}
-                  />
-                  Tidak Lulus
-                </Form.Label>
+                Kandidat tersebut memperoleh angka mutu:{" "}
+                {form?.nilai_akhir.nilai_akhir} yang dikonversi ke huruf mutu:{" "}
+                {form?.nilai_akhir.huruf_mutu}, sehingga dinyatakan:
+                <div className="flex gap-4">
+                  <Form.Label className="mt-2 flex items-center">
+                    <Form.Radio
+                      name="status_kelulusan"
+                      value="LULUS"
+                      onChange={inputHandler}
+                      checked={form.status_kelulusan === "LULUS"}
+                      className="mr-2"
+                    />
+                    Lulus
+                  </Form.Label>
+                  <Form.Label className="mt-2 flex items-center">
+                    <Form.Radio
+                      name="status_kelulusan"
+                      value="LULUS BERSYARAT"
+                      onChange={inputHandler}
+                      checked={form.status_kelulusan === "LULUS BERSYARAT"}
+                      className="mr-2"
+                    />
+                    Lulus Bersyarat
+                  </Form.Label>
+                  <Form.Label className="mt-2 flex items-center">
+                    <Form.Radio
+                      name="status_kelulusan"
+                      value="TIDAK LULUS"
+                      onChange={inputHandler}
+                      checked={form.status_kelulusan === "TIDAK LULUS"}
+                      className="mr-2"
+                    />
+                    Tidak Lulus
+                  </Form.Label>
+                </div>
                 dengan catatan:
                 <Form.Textarea
                   className="flex-1 mt-2"
@@ -549,11 +921,19 @@ export default function PelaksanaanSidang() {
                   onChange={inputHandler}
                 />
               </h1>
-              <div className="flex justify-center">
+              <div className="flex justify-center space-x-4">
+                <Button
+                  type="button"
+                  variant="primary"
+                  className="w-1/4 h-12 mt-4"
+                  onClick={handleButtonPrint}
+                >
+                  Print
+                </Button>
                 <Button
                   type="submit"
                   variant="info"
-                  className="w-1/2 h-12 mt-4"
+                  className="w-1/4 h-12 mt-4"
                 >
                   Save
                 </Button>

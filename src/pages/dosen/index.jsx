@@ -4,8 +4,6 @@ import { Icon } from "@iconify-icon/react";
 import useMenu from "../../hooks/useMenu";
 import Layout from "../../components/Layout";
 import Card from "../../components/Card";
-import { useEffect, useState } from "react";
-import axios from "axios";
 import useUser from "../../hooks/useUser";
 import useDatatable from "../../hooks/useDatatable";
 import Link from "next/link";
@@ -179,9 +177,9 @@ export default function Home() {
   const dataCardPenelitian = [
     {
       id: 1,
-      title: "Publikasi",
+      title: "Penelitian",
       icon: "solar:bill-bold",
-      data: 0,
+      data: data?.penelitian,
     },
     {
       id: 2,
@@ -205,7 +203,7 @@ export default function Home() {
       id: 4,
       title: "Paten Nasional",
       icon: "solar:bill-bold",
-      data: 0,
+      data: data?.hki,
     },
     {
       id: 4,
@@ -232,13 +230,13 @@ export default function Home() {
       id: 1,
       title: "Publikasi",
       icon: "solar:bill-bold",
-      data: 0,
+      data: data?.publikasi,
     },
     {
       id: 2,
       title: "Pembicara/Penyuluhan",
       icon: "solar:bill-bold",
-      data: 0,
+      data: data?.pembicara,
     },
     {
       id: 3,

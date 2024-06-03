@@ -7,21 +7,22 @@ import PageHeader from "../../../../../components/PageHeader";
 import useMenu from "../../../../../hooks/useMenu";
 import useUser from "../../../../../hooks/useUser";
 import { useRouter } from "next/router";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useDosen from "../../../../../repo/dosen";
 import useCRUD from "../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../components/Loading";
-import axios from "axios";
-import { MySwal, toastAlert } from "../../../../../lib/sweetalert";
 import date from "../../../../../utils/date";
 import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
-import Link from "next/link";
 import Accordion from "../../../../../components/Accordion";
+import ReactDOMServer from "react-dom/server";
+import axios from "axios";
 
 export default function PelaksanaanKolo() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
+  const FILE_URL = `${process.env.API_ENDPOINT}/ttd`;
+  const FILE_URL_KOP = `${process.env.API_ENDPOINT}/img`;
 
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
@@ -147,6 +148,617 @@ export default function PelaksanaanKolo() {
   const selectedContent = form?.penilaian_kolo?.filter(
     (item) => item.peran === selectedPeran
   );
+
+  const [dataKaprodi, setDataKaprodi] = useState({});
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const API_URL = `${process.env.API_ENDPOINT}/get-jabatan`;
+        const response = await axios.get(API_URL, {
+          params: {
+            nama_jabatan: "Ka Prodi",
+            prodi: "FT_TI",
+          },
+        });
+        setDataKaprodi(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, [setDataKaprodi]);
+
+  const content = () => {
+    return (
+      <>
+        <div className="flex items-center justify-center gap-2 mb-8">
+          <div style={{ margin: "0 auto" }}>
+            <img
+              src={`${FILE_URL_KOP}/kop_surat.png`}
+              alt="Kop Surat"
+              style={{ width: "100%", marginBottom: "20px" }}
+            />
+          </div>
+        </div>
+        <h1
+          style={{
+            textAlign: "center",
+            fontWeight: "bold",
+            fontSize: "18px",
+            margin: "10px 0",
+            fontFamily: "Times New Roman",
+          }}
+        >
+          BERITA ACARA DAN PENILAIAN SEMINAR PROPOSAL / KOLOKIUM SKRIPSI
+          MAHASISWA
+        </h1>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "0.75rem",
+            marginTop: "1rem",
+          }}
+        >
+          <label style={{ minWidth: "188px" }}>Nama</label>
+          <span>:</span>
+          <input
+            type="text"
+            style={{ flex: 1 }}
+            name="nama"
+            value={form.nama}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "0.75rem",
+            marginTop: "1rem",
+          }}
+        >
+          <label style={{ minWidth: "188px" }}>NPM</label>
+          <span>:</span>
+          <input type="text" style={{ flex: 1 }} name="npm" value={form.npm} />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "0.75rem",
+            marginTop: "1rem",
+          }}
+        >
+          <label style={{ minWidth: "188px" }}>Judul</label>
+          <span>:</span>
+          <input
+            type="text"
+            style={{ flex: 1 }}
+            name="judul"
+            value={form.judul}
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "0.75rem",
+            marginTop: "1rem",
+          }}
+        >
+          <label style={{ minWidth: "188px" }}>Tanggal/Jam/Tempat</label>
+          <span>:</span>
+          <input
+            type="date"
+            name="tanggal"
+            defaultValue={form.tanggal && date.formatToInput(form.tanggal)}
+            placeholder="Diisi oleh admin"
+          />
+          <input
+            type="time"
+            name="waktu"
+            defaultValue={form.waktu}
+            placeholder="Diisi oleh admin"
+          />
+          <input type="text" name="tempat" defaultValue={form.tempat} />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "0.75rem",
+            marginTop: "1rem",
+          }}
+        >
+          <label style={{ minWidth: "188px" }}>Pembimbing yang diusulkan</label>
+          <span>:</span>
+          <input
+            type="text"
+            style={{ flex: 1 }}
+            name="tempat"
+            defaultValue={
+              listDosen.find((dosen) => dosen.user_id === form.pembimbing_1)
+                ?.nama_lengkap || ""
+            }
+          />
+          <input
+            type="text"
+            style={{ flex: 1 }}
+            name="tempat"
+            defaultValue={
+              listDosen.find((dosen) => dosen.user_id === form.pembimbing_2)
+                ?.nama_lengkap || ""
+            }
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "0.75rem",
+            marginTop: "1rem",
+          }}
+        >
+          <label style={{ minWidth: "188px" }}>Evaluator</label>
+          <span>:</span>
+          <input
+            type="text"
+            style={{ flex: 1 }}
+            name="tempat"
+            defaultValue={
+              listDosen.find((dosen) => dosen.user_id === form.evaluator_1)
+                ?.nama_lengkap || ""
+            }
+          />
+          <input
+            type="text"
+            style={{ flex: 1 }}
+            name="tempat"
+            defaultValue={
+              listDosen.find((dosen) => dosen.user_id === form.evaluator_2)
+                ?.nama_lengkap || ""
+            }
+          />
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            gap: "0.75rem",
+            marginTop: "1rem",
+          }}
+        >
+          <label style={{ minWidth: "188px" }}>Komentar Singkat</label>
+          <span>:</span>
+          <textarea style={{ flex: 1, marginTop: "0.25rem" }} name="komentar">
+            {form.komentar}
+          </textarea>
+        </div>
+
+        <table
+          style={{
+            width: "100%",
+            borderCollapse: "collapse",
+            overflow: "hidden",
+            marginTop: "1rem",
+          }}
+        >
+          <thead>
+            <tr>
+              <th
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#f3f4f6",
+                  textAlign: "center",
+                }}
+                colspan="4"
+              >
+                REKAPITULASI SEMINAR PROPOSAL
+              </th>
+            </tr>
+            <tr>
+              <th
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#f3f4f6",
+                  width: "3rem",
+                  textAlign: "center",
+                }}
+              >
+                No
+              </th>
+              <th
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#f3f4f6",
+                  textAlign: "center",
+                }}
+              >
+                Aspek Penilaian
+              </th>
+              <th
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#f3f4f6",
+                  textAlign: "center",
+                }}
+              >
+                Presentase (%)
+              </th>
+              <th
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#f3f4f6",
+                  textAlign: "center",
+                }}
+              >
+                Nilai
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                1
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                }}
+              >
+                Subtansi dan Orientasi Topik Penilitian
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                20%
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                {form?.nilai_akhir.penilaian_1}
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                2
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                }}
+              >
+                Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
+                Penelitian
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                40%
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                {form?.nilai_akhir.penilaian_2}
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                3
+              </td>
+
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                }}
+              >
+                Organisasi, kelengkapan dan Teknik Penulisan Makalah
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                10%
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                {form?.nilai_akhir.penilaian_3}
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                4
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                }}
+              >
+                Penyajian Makalah dan Tampilan Slide
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                10%
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                {form?.nilai_akhir.penilaian_4}
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                5
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                }}
+              >
+                Argumentasi
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                20%
+              </td>
+              <td
+                style={{
+                  border: "1px solid black",
+                  backgroundColor: "#edf2f7",
+                  textAlign: "center",
+                }}
+              >
+                {form?.nilai_akhir.penilaian_5}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div style={{ marginTop: "10px" }}>
+          <div
+            style={{
+              padding: "1rem",
+              display: "flex",
+              flexDirection: "column",
+            }}
+          >
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+              <div
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: 600,
+                  paddingRight: "1.625rem",
+                }}
+              >
+                <span style={{ marginRight: "0.5rem" }}>Nilai Akhir :</span>
+                <span>{form?.nilai_akhir.nilai_akhir}</span>
+              </div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: "0.625rem",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: 600,
+                  paddingRight: "1.625rem",
+                }}
+              >
+                <span style={{ marginRight: "0.5rem" }}>Huruf Mutu :</span>
+                <span>{form?.nilai_akhir.huruf_mutu}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p
+          style={{
+            textIndent: "295px",
+            fontFamily: "Times New Roman",
+            fontSize: "12px",
+            marginTop: "10px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <span style={{ marginRight: "120px" }}>Bogor,</span>
+        </p>
+        <p
+          style={{
+            textIndent: "295px",
+            fontFamily: "Times New Roman",
+            fontSize: "12px",
+            marginTop: "0px",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          Ketua Program Studi,
+        </p>
+        <div
+          style={{
+            width: "100px",
+            height: "100px",
+            float: "right",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <img
+            src={`${FILE_URL}/${dataKaprodi.ttd}`}
+            alt="TTD"
+            style={{
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+            }}
+          />
+        </div>
+        <div style={{ clear: "both" }}></div>
+        <p
+          style={{
+            textIndent: "295px",
+            fontFamily: "Times New Roman",
+            fontSize: "12px",
+            fontWeight: "bold",
+            textDecoration: "underline",
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          ({dataKaprodi.nama_lengkap})
+        </p>
+
+        <div className="flex items-center justify-center gap-2">
+          <div style={{ margin: "0 auto" }}>
+            <img
+              src={`${FILE_URL_KOP}/foot_kop.png`}
+              alt="Kop Surat"
+              style={{ width: "100%", marginTop: "50px" }}
+            />
+          </div>
+        </div>
+      </>
+    );
+  };
+
+  const handlePrint = async () => {
+    const printContent = ReactDOMServer.renderToString(content());
+
+    const surat = `
+      <div style="margin: 0 auto; max-width: 600px;">
+        ${printContent}
+      </div>
+    `;
+
+    const combinedContent = `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          @media print {
+            @page :first {
+              size: portrait;
+            }
+            @page {
+              size: landscape;
+            }
+          }
+        </style>
+  
+      </head>
+      <body>
+        ${surat}
+      </body>
+      </html>
+    `;
+
+    const iframe = document.createElement("iframe");
+    iframe.style.display = "none";
+
+    const blob = new Blob([combinedContent], { type: "text/html" });
+    const url = URL.createObjectURL(blob);
+
+    iframe.src = url;
+
+    document.body.appendChild(iframe);
+
+    iframe.onload = () => {
+      const iframeWindow = iframe.contentWindow;
+
+      iframeWindow.print();
+
+      setTimeout(() => {
+        document.body.removeChild(iframe);
+        URL.revokeObjectURL(url);
+      }, 100);
+    };
+  };
+
+  const handleButtonPrint = (e) => {
+    e.preventDefault();
+    handlePrint();
+  };
 
   if ([user, menu, isDosenLoading].some((item) => item == null))
     return <Loading />;
@@ -290,11 +902,19 @@ export default function PelaksanaanKolo() {
                     onChange={inputHandler}
                   />
                 </Form.Group>
-                <div className="flex justify-center">
+                <div className="flex justify-center space-x-4">
+                  <Button
+                    type="button"
+                    variant="primary"
+                    className="w-1/4 h-12 mt-4"
+                    onClick={handleButtonPrint}
+                  >
+                    Print
+                  </Button>
                   <Button
                     type="submit"
                     variant="info"
-                    className="w-1/2 h-12 mt-4"
+                    className="w-1/4 h-12 mt-4"
                   >
                     Save
                   </Button>

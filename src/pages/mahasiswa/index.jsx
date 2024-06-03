@@ -14,7 +14,6 @@ import resolveConfig from "tailwindcss/resolveConfig";
 import twConfig from "../../../tailwind.config.js";
 import { Loading } from "../../components/Loading";
 
-
 const AreaChart = dynamic(() => import("../../components/Chart/area"), {
   ssr: false,
 });
@@ -175,9 +174,9 @@ export default function Home() {
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                     >
                       <circle cx="12" cy="12" r="10" />
                       <line x1="12" y1="16" x2="12" y2="12" />
