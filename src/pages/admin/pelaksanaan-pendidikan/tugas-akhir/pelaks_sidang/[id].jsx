@@ -432,7 +432,7 @@ export default function PelaksanaanSidang() {
                       alt="TTD"
                       style={{
                         width: "100px",
-                        height: "45px",
+                        height: "35px",
                         objectFit: "contain",
                       }}
                     />

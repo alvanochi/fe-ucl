@@ -7,15 +7,20 @@ import PageHeader from "../../../../../../components/PageHeader";
 import useMenu from "../../../../../../hooks/useMenu";
 import useUser from "../../../../../../hooks/useUser";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import useDosen from "../../../../../../repo/dosen";
 import useCRUD from "../../../../../../hooks/useCRUD";
 import { Loading } from "../../../../../../components/Loading";
-import Link from "next/link";
+import axios from "axios";
+import { MySwal, toastAlert } from "../../../../../../lib/sweetalert";
+import date from "../../../../../../utils/date";
 
 export default function PelaksanaanSidang() {
   const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
+
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
 
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-penilaian-sidang`;
 
@@ -49,7 +54,6 @@ export default function PelaksanaanSidang() {
     dosen_id: "",
     penilaian_sidang: null,
     nilai_akhir: {},
-    link_draft_final_skripsi: "",
   };
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
@@ -70,31 +74,19 @@ export default function PelaksanaanSidang() {
     });
   }, [router, user]);
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  const [selectedPeran, setSelectedPeran] = useState("");
+  const peranUnik = [
+    ...new Set(form?.penilaian_sidang?.map((item) => item.peran)),
+  ];
+  const selectedContent = form?.penilaian_sidang?.filter(
+    (item) => item.peran === selectedPeran
+  );
+
+  if ([user, menu, isDosenLoading].some((item) => item == null))
+    return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Card className="mt-4">
-        <Card.Header className="text-center">
-          <div>Penilaian Sidang</div>
-        </Card.Header>
-
-        <Card.Body className="space-y-4">
-          <Form.Group className="flex items-baseline gap-3">
-            <Form.Label className="min-w-[20rem]">Link Dokumen</Form.Label>
-            <span>:</span>
-            <Link
-              href={`${form.link_draft_final_skripsi}`}
-              passHref
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-400 underline"
-            >
-              Link Dokumen
-            </Link>
-          </Form.Group>
-        </Card.Body>
-      </Card>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
@@ -192,20 +184,69 @@ export default function PelaksanaanSidang() {
       </table>
       <Card className="mt-2">
         <div className="p-4 flex flex-col">
-          <div className="flex justify-end">
-            <div className="text-sm font-bold pr-10">
+          <div class="flex justify-end">
+            <div class="text-sm font-bold pr-10">
               <span className="mr-2">Nilai Akhir :</span>{" "}
               <span>{form?.nilai_akhir.nilai_akhir}</span>
             </div>
           </div>
-          <div className="flex justify-end mt-2">
-            <div className="text-sm font-bold pr-10">
+          <div class="flex justify-end mt-2">
+            <div class="text-sm font-bold pr-10">
               <span className="mr-2">Huruf Mutu :</span>{" "}
               <span>{form?.nilai_akhir.huruf_mutu}</span>
             </div>
           </div>
         </div>
       </Card>
+      <div className="sm:hidden">
+        <label htmlFor="tabs" className="sr-only">
+          Select
+        </label>
+        <select
+          id="tabs"
+          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+          onChange={(e) => setSelectedPeran(e.target.value)}
+          value={selectedPeran}
+        >
+          <option value="">Select Peran</option>
+          {peranUnik.map((peran) => (
+            <option key={peran} value={peran}>
+              {peran}
+            </option>
+          ))}
+        </select>
+      </div>
+      <ul className="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex mt-8">
+        {peranUnik.map((peran) => (
+          <li className="w-full focus-within:z-10" key={peran}>
+            <a
+              href="#"
+              className={`inline-block w-full p-4 ${
+                peran === selectedPeran
+                  ? "text-gray-900 bg-gray-300 border-r border-gray-200 rounded-s-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none"
+                  : "bg-white border-r border-gray-200 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+              }`}
+              aria-current={peran === selectedPeran ? "page" : undefined}
+              onClick={() => setSelectedPeran(peran)}
+            >
+              {peran}
+            </a>
+          </li>
+        ))}
+      </ul>
+
+      <div className="content-tab">
+        {selectedContent?.map((item) => (
+          <div key={item.id}>
+            <Form.Textarea
+              className="flex-1 mt-4"
+              rows="8"
+              value={`Komentar Singkat : ${item.komentar_singkat}`}
+              disabled
+            />
+          </div>
+        ))}
+      </div>
 
       <div className="flex gap-4 mt-4">
         <Button
