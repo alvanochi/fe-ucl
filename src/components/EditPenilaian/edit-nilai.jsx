@@ -70,6 +70,8 @@ const EditNilai = ({ title, data, name, id, onSuccess, db }) => {
               value={formData}
               onChange={inputHandler}
               required
+              min={1}
+              max={100}
             />
           </Form.Group>
 
