@@ -74,6 +74,23 @@ export default function TugasAkhirModule({ baseURL }) {
           >
             Cetak Nota Dinas
           </Button>
+          <Button
+            variant="danger"
+            className="ml-4"
+            onClick={() =>
+              window.open(`${baseURL}/tugas-akhir/rekapitulasi-nilai`, "_blank")
+            }
+            icon={
+              <Icon
+                icon="material-symbols-light:assignment-rounded"
+                width={20}
+                height={20}
+              />
+            }
+            pill
+          >
+            Rekapitulasi Nilai
+          </Button>
         </div>
 
         <div className="flex-shrink">
