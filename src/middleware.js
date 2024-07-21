@@ -16,6 +16,7 @@ export const middleware = async (req) => {
     "/register-pmm",
     "/forgot-password",
     "/validasi-dokumen",
+    "/register-dosen-ext",
   ];
 
   // const universalRouteId = ["/resetPassword"]
@@ -45,6 +46,13 @@ export const middleware = async (req) => {
     !universalRoute.includes(url.pathname)
   )
     return NextResponse.redirect(new URL("/demo", req.url));
+
+  if (
+    user?.role == "Dosen_Ext" &&
+    url.pathname.startsWith("/dosen_ext") === false &&
+    !universalRoute.includes(url.pathname)
+  )
+    return NextResponse.redirect(new URL("/dosen_ext", req.url));
   if (
     user?.role == "Mahasiswa" &&
     url.pathname.startsWith("/mahasiswa") === false &&

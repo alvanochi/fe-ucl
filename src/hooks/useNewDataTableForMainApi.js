@@ -4,7 +4,13 @@ import { toastAlert } from "../lib/sweetalert";
 import useUser from "./useUser";
 import useDebounce from "./useDebounce";
 
-export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
+export const useNewDataTableForMainApi = (
+  url,
+  options = {},
+  searchValue,
+  initialSortField = "id",
+  initialSortOrder = "desc"
+) => {
   const { user } = useUser({ redirectTo: "/login" });
 
   const { debounce } = useDebounce();
@@ -15,7 +21,7 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
   const [loading, setLoading] = useState(true);
   const [pageCount, setPageCount] = useState(1);
   const [recordsTotal, setRecordsTotal] = useState(0);
-  const [sort, setSort] = useState({});
+  const [sort, setSort] = useState({ [initialSortField]: initialSortOrder });
   const [filter, setFilter] = useState({});
 
   const refresh = () => {
@@ -38,7 +44,10 @@ export const useNewDataTableForMainApi = (url, options = {}, searchValue) => {
   const fetchData = async () => {
     setLoading(true);
 
-    const [keySort, valueObjSort] = Object.entries(sort)[0] || ["id", "desc"];
+    const [keySort, valueObjSort] = Object.entries(sort)[0] || [
+      initialSortField,
+      initialSortOrder,
+    ];
 
     const query = {
       dataTable: true,

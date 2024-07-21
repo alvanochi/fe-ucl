@@ -3,6 +3,7 @@ import {
   ROLE_ID_MAHASISWA,
   ROLE_ID_ADMIN,
   ROLE_ID_DEMO,
+  ROLE_ID_DOSEN_EXT,
 } from "./role";
 
 export const APP_MENU = [
@@ -16,6 +17,7 @@ export const APP_MENU = [
       ROLE_ID_MAHASISWA,
       ROLE_ID_ADMIN,
       ROLE_ID_DEMO,
+      ROLE_ID_DOSEN_EXT,
     ],
     submenus: [],
   },
@@ -28,6 +30,7 @@ export const APP_MENU = [
       ROLE_ID_DOSEN,
       ROLE_ID_MAHASISWA,
       ROLE_ID_DEMO,
+      ROLE_ID_DOSEN_EXT,
     ],
     submenus: [
       {
@@ -38,6 +41,7 @@ export const APP_MENU = [
           ROLE_ID_DOSEN,
           ROLE_ID_MAHASISWA,
           ROLE_ID_DEMO,
+          ROLE_ID_DOSEN_EXT,
         ],
       },
       {
@@ -48,6 +52,7 @@ export const APP_MENU = [
           ROLE_ID_DOSEN,
           ROLE_ID_MAHASISWA,
           ROLE_ID_DEMO,
+          ROLE_ID_DOSEN_EXT,
         ],
       },
       {
@@ -121,7 +126,12 @@ export const APP_MENU = [
     label: "Pelaksanaan Pendidikan",
     url: "/pelaksanaan-pendidikan",
     icon: "mdi:bookshelf",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+    allowedRoles: [
+      ROLE_ID_ADMIN,
+      ROLE_ID_DOSEN,
+      ROLE_ID_MAHASISWA,
+      ROLE_ID_DOSEN_EXT,
+    ],
     submenus: [
       {
         label: "IP",
@@ -146,7 +156,12 @@ export const APP_MENU = [
       {
         label: "Tugas Akhir",
         url: "#tugas-akhir",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
+        allowedRoles: [
+          ROLE_ID_ADMIN,
+          ROLE_ID_MAHASISWA,
+          ROLE_ID_DOSEN,
+          ROLE_ID_DOSEN_EXT,
+        ],
       },
     ],
   },
@@ -356,8 +371,18 @@ export const APP_MENU = [
         allowedRoles: [ROLE_ID_ADMIN],
       },
       {
+        label: "Mahasiswa Beasiswa",
+        url: "#list-mhs-beasiswa",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
         label: "Dosen",
         url: "#list-dosen",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Dosen External",
+        url: "#list-dosen-ext",
         allowedRoles: [ROLE_ID_ADMIN],
       },
     ],

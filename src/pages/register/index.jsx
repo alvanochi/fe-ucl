@@ -368,13 +368,20 @@ export const Register = () => {
             <Button variant="primary" className="w-full h-12">
               Buat Akun
             </Button>
+            <div className="flex flex-row mt-2 items-center justify-center">
+              <Button
+                variant="secondary"
+                as="a"
+                href="/register-pmm"
+                className="mr-2"
+              >
+                Mahasiswa PMM
+              </Button>
+              <Button variant="info" as="a" href="/register-dosen-ext">
+                Dosen External
+              </Button>
+            </div>
             <div className={`block ${stylesForm.footer}`}>
-              <p className="block text-sm text-center font-medium text-gray-400">
-                Mahasiswa PMM?{" "}
-                <Link href="/register-pmm" className="text-primary-600">
-                  Daftar disini
-                </Link>
-              </p>
               <p className="block text-sm text-center font-medium text-gray-400">
                 Sudah punya akun?{" "}
                 <Link href="/login" className="text-primary-600">
