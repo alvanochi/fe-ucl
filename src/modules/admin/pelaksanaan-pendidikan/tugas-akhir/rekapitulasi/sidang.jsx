@@ -144,7 +144,7 @@ export default function RekapitulasiNilaiSidang() {
                 ) || {};
               const penguji2 =
                 row.penilaian_sidang?.find(
-                  (nilai) => nilai.peran === "evaluator_2"
+                  (nilai) => nilai.peran === "penguji_2"
                 ) || {};
 
               return (
