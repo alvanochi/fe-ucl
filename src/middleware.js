@@ -17,6 +17,8 @@ export const middleware = async (req) => {
     "/forgot-password",
     "/validasi-dokumen",
     "/register-dosen-ext",
+    "/register-pegawai",
+    "/oauth/callback",
   ];
 
   // const universalRouteId = ["/resetPassword"]
@@ -66,6 +68,13 @@ export const middleware = async (req) => {
     !universalRoute.includes(url.pathname)
   )
     return NextResponse.redirect(new URL("/admin", req.url));
+
+  if (
+    user?.role == "Pegawai" &&
+    url.pathname.startsWith("/pegawai") === false &&
+    !universalRoute.includes(url.pathname)
+  )
+    return NextResponse.redirect(new URL("/pegawai", req.url));
 
   return response;
 };

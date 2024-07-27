@@ -12,6 +12,7 @@ import Link from "next/link";
 import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify-icon/react/dist/iconify.js";
+import Swal from "sweetalert2";
 
 export const Login = () => {
   const [stylesPage, setStylesPage] = useState({
@@ -38,6 +39,19 @@ export const Login = () => {
       return () => {
         window.removeEventListener("resize", handleResize);
       };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const { error } = Router.query;
+      if (error) {
+        if (error === "invalid") {
+          toastAlert("error", "invalid email");
+        } else if (error === "not_verified") {
+          toastAlert("error", "account not verified");
+        }
+      }
     }
   }, []);
 
@@ -98,7 +112,6 @@ export const Login = () => {
         await setLoginSession(response.data);
         MySwal.close();
 
-        // return Router.push("/dashboard");
         return Router.reload();
       }
 
@@ -122,6 +135,18 @@ export const Login = () => {
       toastAlert("error", error);
     }
   }
+  const googleLogin = async () => {
+    try {
+      const API_URL_GOOLE = `${process.env.API_ENDPOINT}/auth/google`;
+      window.location.href = API_URL_GOOLE;
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Login Error",
+        text: error.message || "An unexpected error occurred.",
+      });
+    }
+  };
 
   const [showPassword, setShowPassword] = useState(false);
   const togglePassword = () => {
@@ -192,7 +217,7 @@ export const Login = () => {
           className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${stylesPage.formWidth}`}
         >
           <div className={`block ${stylesPage.formContainer}`}>
-            <div className="block mb-6">
+            <div className="block mb-2">
               <h1 className="block text-2xl font-bold text-primary-600">
                 Login
               </h1>
@@ -251,6 +276,18 @@ export const Login = () => {
             <Button variant="primary" className="w-full h-12">
               Masuk
             </Button>
+            <button
+              type="button"
+              onClick={() => googleLogin()}
+              className="flex items-center justify-center w-full mt-2 h-12 px-4 py-2 bg-white hover:bg-gray-100 text-gray-700 font-semibold rounded-lg shadow-md"
+            >
+              <img
+                src="/img/google.png"
+                alt="Google Logo"
+                className="w-6 h-6 mr-2"
+              />
+              <span className="text-center">Login dengan Google</span>
+            </button>
             <div className="block mt-12">
               <p className="block text-sm text-center font-medium text-gray-400">
                 Belum punya akun?{" "}

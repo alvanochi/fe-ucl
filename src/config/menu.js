@@ -4,6 +4,7 @@ import {
   ROLE_ID_ADMIN,
   ROLE_ID_DEMO,
   ROLE_ID_DOSEN_EXT,
+  ROLE_ID_PEGAWAI,
 } from "./role";
 
 export const APP_MENU = [
@@ -18,6 +19,7 @@ export const APP_MENU = [
       ROLE_ID_ADMIN,
       ROLE_ID_DEMO,
       ROLE_ID_DOSEN_EXT,
+      ROLE_ID_PEGAWAI,
     ],
     submenus: [],
   },
@@ -31,6 +33,7 @@ export const APP_MENU = [
       ROLE_ID_MAHASISWA,
       ROLE_ID_DEMO,
       ROLE_ID_DOSEN_EXT,
+      ROLE_ID_PEGAWAI,
     ],
     submenus: [
       {
@@ -42,6 +45,7 @@ export const APP_MENU = [
           ROLE_ID_MAHASISWA,
           ROLE_ID_DEMO,
           ROLE_ID_DOSEN_EXT,
+          ROLE_ID_PEGAWAI,
         ],
       },
       {
@@ -53,6 +57,7 @@ export const APP_MENU = [
           ROLE_ID_MAHASISWA,
           ROLE_ID_DEMO,
           ROLE_ID_DOSEN_EXT,
+          ROLE_ID_PEGAWAI,
         ],
       },
       {
@@ -63,6 +68,7 @@ export const APP_MENU = [
           ROLE_ID_DOSEN,
           ROLE_ID_MAHASISWA,
           ROLE_ID_DEMO,
+          ROLE_ID_PEGAWAI,
         ],
       },
       {
@@ -442,6 +448,7 @@ export const APP_MENU = [
       ROLE_ID_DOSEN,
       ROLE_ID_MAHASISWA,
       ROLE_ID_DEMO,
+      ROLE_ID_PEGAWAI,
     ],
     submenus: [
       {
@@ -452,6 +459,7 @@ export const APP_MENU = [
           ROLE_ID_DOSEN,
           ROLE_ID_MAHASISWA,
           ROLE_ID_DEMO,
+          ROLE_ID_PEGAWAI,
         ],
       },
       {
@@ -462,6 +470,7 @@ export const APP_MENU = [
           ROLE_ID_DOSEN,
           ROLE_ID_MAHASISWA,
           ROLE_ID_DEMO,
+          ROLE_ID_PEGAWAI,
         ],
       },
     ],

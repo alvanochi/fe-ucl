@@ -13,19 +13,19 @@ import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify-icon/react/dist/iconify.js";
 
-export const Register = () => {
+export const RegisterPegawai = () => {
   const [displayValue, setDisplayValue] = useState("flex");
   const [formWidth, setFormWidth] = useState("w-2/5");
   const [stylesForm, setStylesForm] = useState({
     container: "w-3/5",
-    head: "text-2xl",
+    head: "text-lg",
     subHead: "block",
     footer: "mt-6",
     formWidth: "w-2/5",
   });
 
   const INITIAL_FORM = {
-    npm_nidn: "",
+    nip: "",
     email: "",
     password: "",
     password2: "",
@@ -37,7 +37,7 @@ export const Register = () => {
         const screenWidth = window.innerWidth;
         setStylesForm({
           container: screenWidth <= 880 ? "w-4/5" : "w-3/5",
-          head: screenWidth <= 880 ? "text-base" : "text-2xl",
+          head: screenWidth <= 880 ? "text-base" : "text-xl",
           subHead: screenWidth <= 880 ? "none" : "block",
           footer: screenWidth <= 880 ? "mt-5" : "mt-6",
           formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
@@ -103,7 +103,7 @@ export const Register = () => {
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
-      { field: "npm_nidn", label: "NPM/NIDN" },
+      { field: "nip", label: "nip" },
       { field: "email", label: "E-Mail" },
       { field: "password", label: "Password" },
     ],
@@ -132,7 +132,7 @@ export const Register = () => {
     }
 
     // Check Password Length
-    if (form?.password.length > 7) {
+    if (form?.password.length > 5) {
       setPassLength(true);
     } else {
       setPassLength(false);
@@ -148,7 +148,7 @@ export const Register = () => {
 
     try {
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/auth/register`,
+        url: `${process.env.API_ENDPOINT}/auth/register-pegawai`,
         method: "POST",
         data: form,
       });
@@ -179,6 +179,7 @@ export const Register = () => {
   const togglePassword2 = () => {
     setShowPassword2(!showPassword2);
   };
+
   return (
     <>
       <Head>
@@ -247,7 +248,8 @@ export const Register = () => {
               <h1
                 className={`block font-bold text-primary-600 ${stylesForm.head}`}
               >
-                Buat Akun Pribadimu
+                Buat Akun
+                <span className="text-xl"> Pegawai</span>
               </h1>
               {/* <p
                 className=" text-gray-600 text-sm"
@@ -258,15 +260,13 @@ export const Register = () => {
               </p> */}
             </div>
             <div className="block mb-4">
-              <label className="block text-sm font-medium mb-1">
-                NPM/NIDN/NIP
-              </label>
+              <label className="block text-sm font-medium mb-1">NIP</label>
               <input
                 type="text"
                 className="form-input"
-                name="npm_nidn"
+                name="nip"
                 onChange={inputHandler}
-                value={form.npm_nidn}
+                value={form.nip}
                 required
               />
             </div>
@@ -306,7 +306,7 @@ export const Register = () => {
               </div>
             </div>
 
-            <div className="block relative mb-2">
+            <div className="block relative mb-4">
               <label className="block text-sm font-medium mb-1">
                 Konfirmasi Password
               </label>
@@ -358,27 +358,15 @@ export const Register = () => {
                   <li>
                     <span className="text-sm">
                       {switchIcon(passLength)}
-                      &nbsp; At least 8 Character
+                      &nbsp; At least 6 Character
                     </span>
                   </li>
                 </ul>
               </p>
             </div>
-
             <Button variant="primary" className="w-full h-12">
               Buat Akun
             </Button>
-            <div className="flex flex-row mt-4 items-center justify-center">
-              <Button as="a" href="/register-pmm" className="mr-2">
-                Mahasiswa PMM
-              </Button>
-              <Button as="a" href="/register-dosen-ext" className="mr-2">
-                Dosen External
-              </Button>
-              <Button as="a" href="/register-pegawai">
-                Pegawai
-              </Button>
-            </div>
             <div className={`block ${stylesForm.footer}`}>
               <p className="block text-sm text-center font-medium text-gray-400">
                 Sudah punya akun?{" "}
@@ -394,4 +382,4 @@ export const Register = () => {
   );
 };
 
-export default Register;
+export default RegisterPegawai;
