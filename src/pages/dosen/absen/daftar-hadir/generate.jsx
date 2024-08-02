@@ -14,6 +14,7 @@ import useDosen from "../../../../repo/dosen";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 import { Loading } from "../../../../components/Loading";
 import useMahasiswa from "../../../../repo/mahasiswa";
+import useDosenExt from "../../../../repo/dosen-ext";
 
 export default function GenerateQrCode() {
   const router = useRouter();
@@ -27,6 +28,9 @@ export default function GenerateQrCode() {
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
     user,
   ]);
+  const { data: listDosenExt, isLoading: isDosenExtLoading } = useDosenExt([
+    user,
+  ]);
 
   const [courseOptions, setCourseOptions] = useState([]);
   const [selectedCourse, setSelectedCourse] = useState("");
@@ -37,8 +41,6 @@ export default function GenerateQrCode() {
     rps_dasar: null,
     rps_pelaksanaan: null,
   });
-
-  const [idLecture, setIdLecture] = useState();
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -142,9 +144,14 @@ export default function GenerateQrCode() {
   }, [selectedCourse, courseOptions, data.nip]);
 
   const [selectedDosen, setSelectedDosen] = useState("");
+  const [selectedDosenExt, setSelectedDosenExt] = useState("");
 
   const handleDosenChange = (selected) => {
     setSelectedDosen(selected?.value);
+  };
+
+  const handleDosenExtChange = (selected) => {
+    setSelectedDosenExt(selected?.value);
   };
 
   const handleChange = (e) => {
@@ -198,6 +205,7 @@ export default function GenerateQrCode() {
         id_lecture: selectedOption.dataId,
         nidn_dosen_pengganti: selectedDosen,
         npm_komti: selectedMhs,
+        dosen_tamu: selectedDosenExt,
       };
 
       const request = await axios({
@@ -225,9 +233,14 @@ export default function GenerateQrCode() {
   }
 
   if (
-    [user, menu, loading, isDosenLoading, isMahasiswaLoading].some(
-      (item) => item == null
-    )
+    [
+      user,
+      menu,
+      loading,
+      isDosenLoading,
+      isMahasiswaLoading,
+      isDosenExtLoading,
+    ].some((item) => item == null)
   )
     return <Loading />;
   return (
@@ -352,13 +365,24 @@ export default function GenerateQrCode() {
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">Dosen Tamu</Form.Label>
               <span>:</span>
-              <Form.Input
+              <Form.Combobox
+                name="dosen_tamu"
+                className="flex-1"
+                onChange={handleDosenExtChange}
+                value={selectedDosenExt}
+                options={listDosenExt?.map((dosen) => ({
+                  label: dosen.nama_lengkap,
+                  value: `${dosen.nama_lengkap} - ${dosen.nip}`,
+                }))}
+                menuTarget={document.body}
+              />
+              {/* <Form.Input
                 type="text"
                 className="flex-1"
                 name="dosen_tamu"
                 onChange={inputHandler}
                 value={data.dosen_tamu}
-              />
+              /> */}
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
