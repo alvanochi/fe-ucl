@@ -127,9 +127,9 @@ export default function PelaksanaanSidang() {
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[20rem]">
               {form.statusDosen === "penguji_1"
-                ? "Evaluator 1"
+                ? "Penguji 1"
                 : form.statusDosen === "penguji_2"
-                ? "Evaluator 2"
+                ? "Penguji 2"
                 : form.statusDosen === "pembimbing_1"
                 ? "Pembimbing 1"
                 : form.statusDosen === "pembimbing_2"

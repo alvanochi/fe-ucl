@@ -39,8 +39,10 @@ export const useMenu = () => {
         break;
       case "Demo":
         menuPrefix = "/demo";
+        break;
       case "Dosen_Ext":
         menuPrefix = "/dosen_ext";
+        break;
       case "Pegawai":
         menuPrefix = "/pegawai";
     }

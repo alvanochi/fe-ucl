@@ -20,7 +20,7 @@ export default function PengajuanSidang() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const [defaultData, setDefaultData] = useState({});
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-pengajuan-sidang`;
