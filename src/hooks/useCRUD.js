@@ -75,7 +75,11 @@ export const useCRUD = (API_URL, INITIAL_FORM, options = INITIAL_OPTIONS) => {
         const response = await request.data;
 
         MySwal.close();
-        return toastAlert("success", response.message, 2000);
+        return toastAlert(
+          "success",
+          response.message || "success delete data!",
+          2000
+        );
       } catch (error) {
         if (error.name == "AxiosError" && error?.response)
           toastAlert("error", error.response.data.message);
@@ -124,7 +128,7 @@ export const useCRUD = (API_URL, INITIAL_FORM, options = INITIAL_OPTIONS) => {
       options.success(response);
       setIsSubmit(false);
 
-      return toastAlert("success", response.message, 2000);
+      return toastAlert("success", response.message || "Successfully", 2000);
     } catch (error) {
       if (error.name == "AxiosError" && error?.response)
         toastAlert("error", error.response.data.message);

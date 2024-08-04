@@ -150,16 +150,6 @@ export const APP_MENU = [
         allowedRoles: [ROLE_ID_MAHASISWA],
       },
       {
-        label: "Bimbingan",
-        url: "#bimbingan",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN],
-      },
-      {
-        label: "B-Akademik",
-        url: "#akademik",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
-      },
-      {
         label: "Tugas Akhir",
         url: "#tugas-akhir",
         allowedRoles: [
@@ -168,6 +158,16 @@ export const APP_MENU = [
           ROLE_ID_DOSEN,
           ROLE_ID_DOSEN_EXT,
         ],
+      },
+      {
+        label: "B-Akademik",
+        url: "#akademik",
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
+      },
+      {
+        label: "Bimbingan",
+        url: "#bimbingan",
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
       },
     ],
   },
@@ -316,6 +316,19 @@ export const APP_MENU = [
     ],
   },
   {
+    label: "Laporan",
+    url: "/laporan",
+    icon: "ic:outline-report",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Laporan",
+        url: "#laporan",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
     label: "Gamify",
     url: "/gamify-tias",
     icon: "iconoir:gamepad",
@@ -429,12 +442,25 @@ export const APP_MENU = [
   {
     label: "Struktural Prodi",
     url: "/struktural-prodi",
-    icon: "solar:floor-lamp-bold",
+    icon: "ph:tree-structure",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
       {
         label: "Struktural Prodi",
         url: "#struktural-prodi",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
+    label: "kategori",
+    url: "/kategori",
+    icon: "mdi:category-outline",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Kategori Laporan",
+        url: "#kategori-laporan",
         allowedRoles: [ROLE_ID_ADMIN],
       },
     ],
