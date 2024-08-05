@@ -28,7 +28,10 @@ export default function LaporanEdit() {
     long: "",
     deskripsi: "",
     foto: "",
-    kategori: "",
+    kategori_laporan: {
+      id: "",
+      nama_kategori: "",
+    },
   };
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
@@ -99,6 +102,20 @@ export default function LaporanEdit() {
                 name="nama"
                 onChange={inputHandler}
                 value={form.nama}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Kategori <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="kategori_id"
+                onChange={inputHandler}
+                value={form.kategori_laporan?.nama_kategori}
+                disable="true"
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
