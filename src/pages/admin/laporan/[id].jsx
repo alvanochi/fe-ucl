@@ -9,6 +9,7 @@ import useUser from "../../../hooks/useUser";
 import useCRUD from "../../../hooks/useCRUD";
 import { useEffect, useState } from "react";
 import { Loading } from "../../../components/Loading";
+import { Icon } from "@iconify-icon/react/dist/iconify.js";
 
 export default function LaporanEdit() {
   const router = useRouter();
@@ -125,6 +126,25 @@ export default function LaporanEdit() {
                 onChange={inputHandler}
                 value={form.long}
               />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Link Maps<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Button
+                onClick={() =>
+                  window.open(
+                    `https://www.google.com/maps/search/?api=1&query=${form.lat},${form.long}`,
+                    "_blank"
+                  )
+                }
+                variant="primary"
+                icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
+                pill
+              >
+                Link Maps
+              </Button>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">

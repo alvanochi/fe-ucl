@@ -144,8 +144,14 @@ export default function LaporanModule({ baseURL }) {
                     <Button.Icon
                       as="a"
                       href={`${baseURL}/${row.id}`}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
+                      variant="info"
+                      icon={
+                        <Icon
+                          icon="icon-park-outline:view-grid-detail"
+                          width={20}
+                          height={20}
+                        />
+                      }
                     />
 
                     <Button.Icon
