@@ -441,9 +441,9 @@ export default function PelaksanaanSidang() {
                 <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
                   <EditNilai
                     title="Penyajian Makalah dan Tampilan Slide"
-                    data={form.penilaian_kolo?.penilaian_3}
+                    data={form.penilaian_sidang?.penilaian_3}
                     name="penilaian_4"
-                    id={form.penilaian_kolo?.id}
+                    id={form.penilaian_sidang?.id}
                     onSuccess={() => show(router.query.id)}
                     db="ta_penilaian_sidang"
                   />
@@ -463,9 +463,9 @@ export default function PelaksanaanSidang() {
                 <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
                   <EditNilai
                     title="Argumentasi"
-                    data={form.penilaian_kolo?.penilaian_5}
+                    data={form.penilaian_sidang?.penilaian_5}
                     name="penilaian_5"
-                    id={form.penilaian_kolo?.id}
+                    id={form.penilaian_sidang?.id}
                     onSuccess={() => show(router.query.id)}
                     db="ta_penilaian_sidang"
                   />
