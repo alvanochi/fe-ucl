@@ -357,9 +357,15 @@ export default function RekapKehadiran() {
                 <td className="text-sm border-2 border-white bg-gray-400 max-w-[8rem] truncate mx-auto">
                   {row.uas}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-200 max-w-[8rem] truncate mx-auto">
-                  <div className="flex items-stretch gap-1">
-                    {row.persentase}
+                <td
+                  className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
+                    parseInt(row.persentase) > 70
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                  }`}
+                >
+                  <div className="flex items-stretch gap-1 text-white">
+                    {parseInt(row.persentase) > 100 ? "100%" : row.persentase}
                   </div>
                 </td>
               </tr>
@@ -517,9 +523,15 @@ export default function RekapKehadiran() {
                 <td className="text-sm border-2 border-white bg-gray-400 max-w-[8rem] truncate mx-auto">
                   {row.uas}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-200 max-w-[8rem] truncate mx-auto">
-                  <div className="flex items-stretch gap-1">
-                    {row.persentase}
+                <td
+                  className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
+                    parseInt(row.persentase) > 70
+                      ? "bg-green-500"
+                      : "bg-red-500"
+                  }`}
+                >
+                  <div className="flex items-stretch gap-1 text-white">
+                    {parseInt(row.persentase) > 100 ? "100%" : row.persentase}
                   </div>
                 </td>
               </tr>
