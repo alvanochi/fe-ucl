@@ -441,7 +441,7 @@ export default function PelaksanaanSidang() {
                 <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
                   <EditNilai
                     title="Penyajian Makalah dan Tampilan Slide"
-                    data={form.penilaian_sidang?.penilaian_3}
+                    data={form.penilaian_sidang?.penilaian_4}
                     name="penilaian_4"
                     id={form.penilaian_sidang?.id}
                     onSuccess={() => show(router.query.id)}
