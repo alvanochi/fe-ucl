@@ -141,11 +141,31 @@ export default function RekapAbsensi({ baseURL }) {
                     {row.name}
                   </Link>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.persentase_gasal}
+                <td
+                  className={`text-sm border-2 border-white max-w-[8rem] truncate text-center mx-auto ${
+                    parseInt(row.persentase_gasal) > 70
+                      ? "bg-green-700"
+                      : "bg-red-500"
+                  }`}
+                >
+                  <div className="flex items-stretch gap-1 text-white text-center">
+                    {parseInt(row.persentase_gasal) > 100
+                      ? "100%"
+                      : row.persentase_gasal}
+                  </div>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.persentase_genap}
+                <td
+                  className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
+                    parseInt(row.persentase_genap) > 70
+                      ? "bg-green-700"
+                      : "bg-red-500"
+                  }`}
+                >
+                  <div className="flex items-stretch gap-1 text-white">
+                    {parseInt(row.persentase_genap) > 100
+                      ? "100%"
+                      : row.persentase_genap}
+                  </div>
                 </td>
               </tr>
             ))}
