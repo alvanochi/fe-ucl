@@ -367,17 +367,30 @@ export const Register = () => {
             <Button variant="primary" className="w-full h-12">
               Buat Akun
             </Button>
-            <div className="flex flex-row mt-4 items-center justify-center">
-              <Button as="a" href="/register-pmm" className="mr-2">
+            <div className="flex flex-col sm:flex-row mt-4 items-center justify-center space-y-2 sm:space-y-0 sm:space-x-2">
+              <Button
+                as="a"
+                href="/register-pmm"
+                className="text-xs sm:text-sm md:text-base lg:text-lg px-3 py-1 sm:px-4 sm:py-2"
+              >
                 Mahasiswa PMM
               </Button>
-              <Button as="a" href="/register-dosen-ext" className="mr-2">
+              <Button
+                as="a"
+                href="/register-dosen-ext"
+                className="text-xs sm:text-sm md:text-base lg:text-lg px-3 py-1 sm:px-4 sm:py-2"
+              >
                 Dosen External
               </Button>
-              <Button as="a" href="/register-pegawai">
+              <Button
+                as="a"
+                href="/register-pegawai"
+                className="text-xs sm:text-sm md:text-base lg:text-lg px-3 py-1 sm:px-4 sm:py-2"
+              >
                 Pegawai
               </Button>
             </div>
+
             <div className={`block ${stylesForm.footer}`}>
               <p className="block text-sm text-center font-medium text-gray-400">
                 Sudah punya akun?{" "}
