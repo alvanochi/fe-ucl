@@ -36,10 +36,10 @@ export const Register = () => {
       const handleResize = () => {
         const screenWidth = window.innerWidth;
         setStylesForm({
-          container: screenWidth <= 880 ? "w-4/5" : "w-3/5",
-          head: screenWidth <= 880 ? "text-base" : "text-xl",
+          container: screenWidth <= 880 ? "w-4/5 h-full" : "w-3/5",
+          head: screenWidth <= 880 ? "text-base pt-10" : "text-xl pt-10",
           subHead: screenWidth <= 880 ? "none" : "block",
-          footer: screenWidth <= 880 ? "mt-5" : "mt-6",
+          footer: screenWidth <= 880 ? "mt-5" : "mt-6 mb-32",
           formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
         });
 
@@ -241,7 +241,7 @@ export const Register = () => {
         </div>
         <form
           onSubmit={submitHandler}
-          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${stylesForm.formWidth}`}
+          className={`flex items-center justify-center  shrink-0 h-full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${stylesForm.formWidth}`}
         >
           <div className={`block ${stylesForm.container}`}>
             <div className="block mb-6">

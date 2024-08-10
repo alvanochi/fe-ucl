@@ -37,9 +37,9 @@ export const Register = () => {
         const screenWidth = window.innerWidth;
         setStylesForm({
           container: screenWidth <= 880 ? "w-4/5" : "w-3/5",
-          head: screenWidth <= 880 ? "text-base" : "text-2xl",
+          head: screenWidth <= 880 ? "text-base" : "text-2xl pt-10",
           subHead: screenWidth <= 880 ? "none" : "block",
-          footer: screenWidth <= 880 ? "mt-5" : "mt-6",
+          footer: screenWidth <= 880 ? "mt-5" : "mt-6 mb-40",
           formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
         });
 
@@ -195,7 +195,6 @@ export const Register = () => {
             <img src="/img/app_logo.png" alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">
-            {/* SLIDER HERE */}
             <Slider {...settings} arrows={false} className={styles["slider"]}>
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
@@ -240,7 +239,7 @@ export const Register = () => {
         </div>
         <form
           onSubmit={submitHandler}
-          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${stylesForm.formWidth}`}
+          className={`flex items-center justify-center shrink-0 h-full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${stylesForm.formWidth}`}
         >
           <div className={`block ${stylesForm.container}`}>
             <div className="block mb-6">

@@ -7,7 +7,7 @@
 .slick-dots li {
   width: 100%;
 }
-@media (max-width: 954px) {
+@media (max-width: 800px) {
   .slider {
     display: none;
   }
