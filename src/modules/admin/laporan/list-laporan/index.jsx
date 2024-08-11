@@ -1,10 +1,11 @@
 import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Form from "../../../components/Form";
-import useCRUD from "../../../hooks/useCRUD";
-import useNewDataTableNew from "../../../hooks/useNewDataTableNew";
+import Button from "../../../../components/Button";
+import Form from "../../../../components/Form";
+import useCRUD from "../../../../hooks/useCRUD";
+import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
 import { useState } from "react";
-import SortIcon from "../../../components/SortIcon";
+import SortIcon from "../../../../components/SortIcon";
+import date from "../../../../utils/date";
 
 export default function LaporanModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/laporan`;
@@ -68,12 +69,17 @@ export default function LaporanModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">
+                Kontak
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("nama")}
+                onClick={() => sortByNew("created_at")}
               >
-                Nama
-                <SortIcon sort={getSortByNew("nama")} />
+                Tanggal
+                <SortIcon sort={getSortByNew("created_at")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -122,10 +128,17 @@ export default function LaporanModule({ baseURL }) {
                   {index + 1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.code}
+                  {row.nama}
+                  <span className="block font-bold">{row.code}</span>
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama}
+                  {row.user?.email}
+                  <span className="block font-bold">
+                    {row.user?.personal_data?.no_hp}
+                  </span>
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">
+                  {date.formatIdWithTime(new Date(row.created_at))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.deskripsi}

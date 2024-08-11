@@ -3,7 +3,9 @@ import Layout from "../../../components/Layout";
 import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
 import { Loading } from "../../../components/Loading";
-import LaporanModule from "../../../modules/admin/laporan";
+import LaporanModule from "../../../modules/admin/laporan/list-laporan";
+import StatistikLaporanModule from "../../../modules/admin/laporan/statistik";
+import SebaranLaporanModule from "../../../modules/admin/laporan/sebaran";
 
 export default function Laporan() {
   /* eslint-disable */
@@ -24,6 +26,12 @@ export default function Laporan() {
       <div className="my-8">
         {active.url === "#laporan" && (
           <LaporanModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#laporan-statistik" && (
+          <StatistikLaporanModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#laporan-sebaran" && (
+          <SebaranLaporanModule baseURL={prefix + menu.url} />
         )}
       </div>
     </Layout>

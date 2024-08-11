@@ -326,6 +326,16 @@ export const APP_MENU = [
         url: "#laporan",
         allowedRoles: [ROLE_ID_ADMIN],
       },
+      {
+        label: "Statistik",
+        url: "#laporan-statistik",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Sebaran",
+        url: "#laporan-sebaran",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
     ],
   },
   {

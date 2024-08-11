@@ -1,12 +1,17 @@
 export default {
-	formatToID: (date, option = { dateStyle: "long" }) => Intl.DateTimeFormat("id", option).format(date),
-	formatToInput: (date) => date.split("T")[0],
-	different: (a, b) => {
-		const NUM_OF_DAYS = 1000 * 3600 * 24;
+  formatToID: (date, option = { dateStyle: "long" }) =>
+    Intl.DateTimeFormat("id", option).format(date),
+  formatToInput: (date) => date.split("T")[0],
+  different: (a, b) => {
+    const NUM_OF_DAYS = 1000 * 3600 * 24;
 
-		const differentInTime = b.getTime() - a.getTime();
-		const differentInDays = Math.ceil(differentInTime / NUM_OF_DAYS);
+    const differentInTime = b.getTime() - a.getTime();
+    const differentInDays = Math.ceil(differentInTime / NUM_OF_DAYS);
 
-		return differentInDays;
-	},
+    return differentInDays;
+  },
+  formatIdWithTime: (
+    date,
+    options = { dateStyle: "long", timeStyle: "short" }
+  ) => Intl.DateTimeFormat("id", options).format(date),
 };
