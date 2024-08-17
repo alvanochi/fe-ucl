@@ -24,7 +24,7 @@ export default function MahasiswaModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
+    totalData,
   } = useDatatable(DATA_URL);
 
   return (
@@ -33,7 +33,9 @@ export default function MahasiswaModule({ baseURL }) {
         <Filter filter={filter} handler={setFilter} />
       </div>
       <div className="flex items-start">
-        <span>Total Data: <b>{totalData}</b></span>
+        <span>
+          Total Data: <b>{totalData}</b>
+        </span>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -42,22 +44,18 @@ export default function MahasiswaModule({ baseURL }) {
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                No
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">No</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                NPM
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">NPM</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">Email</div>
+              <div className="flex items-center gap-2 cursor-pointer">
+                Email
+              </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
@@ -65,8 +63,11 @@ export default function MahasiswaModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">FRS</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">
-                FRS
+                Departement
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
@@ -100,55 +101,85 @@ export default function MahasiswaModule({ baseURL }) {
 
               // Tampilkan nomor urut sesuai dengan halaman aktif
               const rowNumber = startNumber + index;
-              return(
-              <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {rowNumber}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.npm}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.email}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.kode_mhs}
-                </td>
-                <td className={`text-sm border-2 border-white bg-gray-50 ${row.status_frs === 1 ? 'text-green-500' : row.status_frs === 0 ? 'text-red-500' : 'text-gray-500'}`}>
-                  {row.status_frs === 1 ? "Already" : row.status_frs === 0 ? "Not yet" : "-"}
-                </td>
+              return (
+                <tr key={`row-${index}`}>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    {rowNumber}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.npm}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.nama_lengkap}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.email}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.kode_mhs}
+                  </td>
+                  <td
+                    className={`text-sm border-2 border-white bg-gray-50 ${
+                      row.status_frs === 1
+                        ? "text-green-500"
+                        : row.status_frs === 0
+                        ? "text-red-500"
+                        : "text-gray-500"
+                    }`}
+                  >
+                    {row.status_frs === 1
+                      ? "Already"
+                      : row.status_frs === 0
+                      ? "Not yet"
+                      : "-"}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.department_code}
+                  </td>
 
-                
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                      onClick={() => window.open(`${baseURL}/detail-mhs/${row.user_id}`,'_blank')}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                    <Button.Icon
-                      onClick={() => window.open(`${baseURL}/change-password/${row.user_id}`,'_blank')}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/achievements-mhs/${row.user_id}`}
-                      variant="primary"
-                      icon={<Icon icon="bx:bar-chart-alt-2" width={20} height={20} />}
-                    />
-                  </div>
-                </td>
-              </tr>
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    <div className="flex items-stretch gap-1">
+                      <Button.Icon
+                        onClick={() =>
+                          window.open(
+                            `${baseURL}/detail-mhs/${row.user_id}`,
+                            "_blank"
+                          )
+                        }
+                        variant="info"
+                        icon={
+                          <Icon
+                            icon="fluent:info-24-filled"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                      <Button.Icon
+                        onClick={() =>
+                          window.open(
+                            `${baseURL}/change-password/${row.user_id}`,
+                            "_blank"
+                          )
+                        }
+                        variant="secondary"
+                        icon={<Icon icon="bx:edit" width={20} height={20} />}
+                      />
+                      <Button.Icon
+                        as="a"
+                        href={`${baseURL}/achievements-mhs/${row.user_id}`}
+                        variant="primary"
+                        icon={
+                          <Icon
+                            icon="bx:bar-chart-alt-2"
+                            width={20}
+                            height={20}
+                          />
+                        }
+                      />
+                    </div>
+                  </td>
+                </tr>
               );
             })}
         </tbody>
@@ -203,7 +234,6 @@ export default function MahasiswaModule({ baseURL }) {
           of {pageCount || 1}
         </div>
       </div>
-
     </>
   );
 }
