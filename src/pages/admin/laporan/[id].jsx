@@ -28,6 +28,7 @@ export default function LaporanEdit() {
     long: "",
     deskripsi: "",
     foto: "",
+    status: "",
     kategori_laporan: {
       id: "",
       nama_kategori: "",
@@ -41,6 +42,7 @@ export default function LaporanEdit() {
       { field: "lat", label: "lat" },
       { field: "long", label: "long" },
       { field: "deskripsi", label: "deskripsi" },
+      { field: "status", label: "status" },
     ],
     success: () => router.push(prefix + menu.url),
   });
@@ -178,6 +180,32 @@ export default function LaporanEdit() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
+                Status <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <div className="flex gap-4">
+                <Form.Label>
+                  <Form.Radio
+                    name="status"
+                    value={0}
+                    onChange={inputHandler}
+                    checked={form.status == 0}
+                  />
+                  MULAI
+                </Form.Label>
+                <Form.Label>
+                  <Form.Radio
+                    name="status"
+                    value={1}
+                    onChange={inputHandler}
+                    checked={form.status == 1}
+                  />
+                  SELESAI
+                </Form.Label>
+              </div>
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
                 Foto <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
@@ -189,10 +217,18 @@ export default function LaporanEdit() {
                   onChange={handleImageChange}
                 />
                 {previewImage ? (
-                  <img src={previewImage} alt="foto" width={80} height={80} />
+                  <img
+                    src={previewImage}
+                    alt="foto"
+                    className="w-full h-auto object-cover"
+                  />
                 ) : (
                   form.foto && (
-                    <img src={form.foto} alt="foto" width={80} height={80} />
+                    <img
+                      src={form.foto}
+                      alt="foto"
+                      className="w-full h-auto object-cover"
+                    />
                   )
                 )}
               </div>

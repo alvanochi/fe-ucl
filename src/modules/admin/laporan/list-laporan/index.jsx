@@ -92,6 +92,15 @@ export default function LaporanModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("status")}
+              >
+                Status
+                <SortIcon sort={getSortByNew("status")} />
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Foto</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -141,7 +150,12 @@ export default function LaporanModule({ baseURL }) {
                   {date.formatIdWithTime(new Date(row.created_at))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.deskripsi}
+                  {`${row.deskripsi.split(" ").slice(0, 6).join(" ")}${
+                    row.deskripsi.split(" ").length > 6 ? "..." : ""
+                  }`}
+                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">
+                  {row.status == 0 ? "MULAI" : "SELESAI"}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   <img
