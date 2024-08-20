@@ -476,6 +476,19 @@ export const APP_MENU = [
     ],
   },
   {
+    label: "Ruang",
+    url: "/ruang",
+    icon: "fluent:conference-room-24-regular",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Ruang",
+        url: "#ruang",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
     label: "Setting",
     url: "/setting",
     icon: "ant-design:setting-filled",
