@@ -122,9 +122,8 @@ export default function RuanganModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
-                      onClick={() =>
-                        window.open(`${baseURL}/${row.id}`, "_blank")
-                      }
+                      as="a"
+                      href={`${baseURL}/${row.id}`}
                       variant="secondary"
                       icon={<Icon icon="bx:edit" width={20} height={20} />}
                     />
