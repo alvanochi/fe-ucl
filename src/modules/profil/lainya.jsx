@@ -48,14 +48,34 @@ export default function LainyaModule({ baseURL }) {
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[18rem]">TTD</Form.Label>
             <span>:</span>
-            {!loading && data.ttd ? (
+            {!loading && data.status_ttd ? (
               <img
                 src={data.ttd}
                 alt="TTD"
-                className="w-100 h-100 object-cover border-2 border-primary-600"
+                className="w-40 h-auto object-cover border-2 border-primary-600"
               />
             ) : (
               <span>Belum ada tanda tangan</span>
+            )}
+          </Form.Group>
+
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[18rem]">Foto Sebagai Narasumber</Form.Label>
+            <span>:</span>
+            {!loading && data.status_foto_narsum ? (
+             <a
+             href={data.foto_narsum}
+             target="_blank"
+             rel="noopener noreferrer"
+           >
+             <img
+               src={data.foto_narsum}
+               alt="narasumber"
+               className="w-40 h-auto object-cover border-2 border-primary-600 cursor-pointer"
+             />
+           </a>
+            ) : (
+              <span>Belum ada foto</span>
             )}
           </Form.Group>
         </Card.Body>
