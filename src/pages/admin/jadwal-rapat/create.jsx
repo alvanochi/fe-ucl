@@ -20,6 +20,9 @@ import { Icon } from "@iconify-icon/react";
 import _ from "underscore";
 import { Loading } from "../../../components/Loading";
 import useGroup from "../../../repo/group";
+import useKategoriKegiatan from "../../../repo/kategori-kegiatan";
+import useRuangan from "../../../repo/ruangan";
+import useUsers from "../../../repo/users";
 
 export default function CreateJadwal() {
   const router = useRouter();
@@ -46,6 +49,11 @@ export default function CreateJadwal() {
     status_ruangan: "",
     tanggal: "",
     waktu: "",
+    waktu_end: "",
+    narsum: "",
+    ket_narsum: "",
+    link_online: "",
+    tipe_kegiatan: "",
     peserta_dosen: [],
     peserta_mahasiswa: [],
     groups: [],
@@ -81,12 +89,15 @@ export default function CreateJadwal() {
   });
 
   const { form, inputHandler, setForm } = formdata;
-
+  const { data: listKegiatan, isLoading: isKegiatanLoading } =
+    useKategoriKegiatan([user]);
   const { data: listGroup, isLoading: isGroupLoading } = useGroup([user]);
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
     user,
   ]);
+  const { data: listRuangan, isLoading: isRuanganLoading } = useRuangan([user]);
+  const { data: listUsers, isLoading: isUsersLoading } = useUsers([user]);
 
   const removeFromUser = (key, index, role) =>
     setForm((state) => ({
@@ -97,9 +108,16 @@ export default function CreateJadwal() {
     }));
 
   if (
-    [user, menu, isDosenLoading, isMahasiswaLoading, isGroupLoading].some(
-      (item) => item == null
-    )
+    [
+      user,
+      menu,
+      isDosenLoading,
+      isMahasiswaLoading,
+      isGroupLoading,
+      isKegiatanLoading,
+      isRuanganLoading,
+      isUsersLoading,
+    ].some((item) => item == null)
   )
     return <Loading />;
   return (
@@ -125,7 +143,40 @@ export default function CreateJadwal() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
-                Nama Kegiatan <span className="text-danger-600">*</span>
+                Tipe Kegiatan <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Combobox
+                className="border-blue-900"
+                name="tipe_kegiatan"
+                onChange={(selected) =>
+                  inputHandler({
+                    target: {
+                      attributes: {
+                        index: {
+                          value: selected?.value,
+                        },
+                      },
+                      name: "tipe_kegiatan",
+                      value: selected?.value,
+                    },
+                  })
+                }
+                value={form.tipe_kegiatan}
+                options={
+                  listKegiatan &&
+                  Array.isArray(listKegiatan) &&
+                  listKegiatan.map((keg) => ({
+                    label: keg.nama_kegiatan,
+                    value: keg.id,
+                  }))
+                }
+                menuTarget={document.body}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">
+                Judul Kegiatan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -138,8 +189,19 @@ export default function CreateJadwal() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">Sub Judul</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="sub_tema"
+                onChange={inputHandler}
+                value={form.sub_tema}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
-                Pertemuan <span className="text-danger-600">*</span>
+                Pertemuan Ke - <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -153,16 +215,95 @@ export default function CreateJadwal() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
-                Ruangan <span className="text-danger-600">*</span>
+                Narasumber <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Combobox
+                className="border-blue-900"
+                name="narsum"
+                onChange={(selected) =>
+                  inputHandler({
+                    target: {
+                      attributes: {
+                        index: {
+                          value: selected?.value,
+                        },
+                      },
+                      name: "narsum",
+                      value: selected?.value,
+                    },
+                  })
+                }
+                value={form.narsum}
+                options={
+                  listUsers &&
+                  Array.isArray(listUsers) &&
+                  listUsers.map((user) => ({
+                    label: `${user.personal_data?.nama_lengkap} - ${
+                      user.npm ? user.npm : user.personal_data?.nip
+                    }`,
+                    value: user.user_id,
+                  }))
+                }
+                menuTarget={document.body}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">
+                Keterangan Narasumber <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
                 className="flex-1"
-                name="ruangan"
+                name="ket_narsum"
                 onChange={inputHandler}
-                value={form.ruangan}
+                value={form.ket_narsum}
                 required
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">
+                Ruangan <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Combobox
+                className="border-blue-900"
+                name="ruangan"
+                onChange={(selected) =>
+                  inputHandler({
+                    target: {
+                      attributes: {
+                        index: {
+                          value: selected?.value,
+                        },
+                      },
+                      name: "ruangan",
+                      value: selected?.value,
+                    },
+                  })
+                }
+                value={form.ruangan}
+                options={
+                  listRuangan &&
+                  Array.isArray(listRuangan) &&
+                  listRuangan.map((ruang) => ({
+                    label: ruang.nama_ruangan,
+                    value: ruang.id,
+                  }))
+                }
+                menuTarget={document.body}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">Link Online</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="url"
+                className="flex-1"
+                name="link_online"
+                onChange={inputHandler}
+                value={form.link_online}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -181,7 +322,7 @@ export default function CreateJadwal() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
-                Waktu <span className="text-danger-600">*</span>
+                Waktu Mulai <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -190,6 +331,34 @@ export default function CreateJadwal() {
                 name="waktu"
                 onChange={inputHandler}
                 value={form.waktu}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">
+                Waktu Selesai <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="time"
+                className="flex-1"
+                name="waktu_end"
+                onChange={inputHandler}
+                value={form.waktu_end}
+                required
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">
+                Contact <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="contact"
+                onChange={inputHandler}
+                value={form.contact}
                 required
               />
             </Form.Group>

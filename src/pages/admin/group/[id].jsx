@@ -208,8 +208,8 @@ export default function GroupDetail() {
                       listUsers &&
                       Array.isArray(listUsers) &&
                       listUsers.map((user) => ({
-                        label: `${user.nama_lengkap} - ${
-                          user.npm ? user.npm : user.nip
+                        label: `${user.personal_data?.nama_lengkap} - ${
+                          user.npm ? user.npm : user.personal_data?.nip
                         }`,
                         value: user.user_id,
                       }))

@@ -1,15 +1,15 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
-import date from "../../../../utils/date";
 import Form from "../../../../components/Form";
 import useCRUD from "../../../../hooks/useCRUD";
-import useNewDataTable from "../../../../hooks/useNewDataTable";
+import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
 import { useState } from "react";
 import SortIcon from "../../../../components/SortIcon";
+import CreateKategoriKegiatan from "./create";
+import EditKategoriKegiatan from "./edit";
 
-export default function VotingModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/voting/question-all`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/voting/question`;
+export default function KategoriKegiatanModule({ baseURL }) {
+  const DATA_URL = `${process.env.API_ENDPOINT}/kategori/kegiatan`;
   const [searchValue, setSearchValue] = useState("");
 
   const {
@@ -18,25 +18,22 @@ export default function VotingModule({ baseURL }) {
     pageNew,
     pageCountNew,
     setPageNew,
+    refreshNew,
     sortByNew,
     getSortByNew,
-    refreshNew,
-  } = useNewDataTable(DATA_URL, {}, searchValue);
+  } = useNewDataTableNew(DATA_URL, {}, searchValue);
 
-  const { destroy } = useCRUD(DELETE_URL);
+  const { destroy } = useCRUD(DATA_URL);
+
+  const handleAction = () => {
+    refreshNew();
+  };
 
   return (
     <>
       <div className="flex mb-8 justify-end items-center">
         <div className="mr-4">
-          <Button
-            onClick={() => window.open(`${`${baseURL}/create`}`, "_blank")}
-            variant="primary"
-            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
-            pill
-          >
-            Create Vote
-          </Button>
+          <CreateKategoriKegiatan onAction={handleAction} />
         </div>
         <div className="flex-shrink">
           <Form.Input
@@ -66,31 +63,15 @@ export default function VotingModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("deskripsi")}
+                onClick={() => sortByNew("nama_kegiatan")}
               >
-                deskripsi
-                <SortIcon sort={getSortByNew("deskripsi")} />
+                Nama kegiatan
+                <SortIcon sort={getSortByNew("nama_kegiatan")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("status_pertanyaan")}
-              >
-                status
-                <SortIcon sort={getSortByNew("status_pertanyaan")} />
-              </div>
+              Action
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("created_at")}
-              >
-                Tanggal Dibuat
-                <SortIcon sort={getSortByNew("created_at")} />
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
         </thead>
         <tbody>
@@ -122,41 +103,13 @@ export default function VotingModule({ baseURL }) {
                   {index + 1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {`${row.deskripsi.split(" ").slice(0, 5).join(" ")}${
-                    row.deskripsi.split(" ").length > 5 ? "..." : ""
-                  }`}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.status_pertanyaan === 1 ? (
-                    <h5 className="text-green-500 font-bold">ACTIVE</h5>
-                  ) : (
-                    <h5 className="text-red-500 font-bold">NON ACTIVE</h5>
-                  )}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {date.formatToID(new Date(row.created_at))}
+                  {row.nama_kegiatan}
                 </td>
 
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/detail-question/${row.id}`}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                    />
-                    <Button.Icon
-                      as="a"
-                      href={`${baseURL}/edit-question/${row.id}`}
-                      variant="secondary"
-                      icon={<Icon icon="bx:edit" width={20} height={20} />}
-                    />
+                    <EditKategoriKegiatan id={row.id} onAction={handleAction} />
+
                     <Button.Icon
                       variant="danger"
                       icon={

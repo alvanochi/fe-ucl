@@ -17,10 +17,26 @@ import Card from "../../../../components/Card";
 import { data } from "autoprefixer";
 import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
 import { Loading } from "../../../../components/Loading";
+import useKategoriKegiatan from "../../../../repo/kategori-kegiatan";
+import useGroup from "../../../../repo/group";
+import useDosen from "../../../../repo/dosen";
+import useMahasiswa from "../../../../repo/mahasiswa";
+import useRuangan from "../../../../repo/ruangan";
+import useUsers from "../../../../repo/users";
 
 export default function DetailList() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
+
+  const { data: listKegiatan, isLoading: isKegiatanLoading } =
+    useKategoriKegiatan([user]);
+  const { data: listGroup, isLoading: isGroupLoading } = useGroup([user]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
+    user,
+  ]);
+  const { data: listRuangan, isLoading: isRuanganLoading } = useRuangan([user]);
+  const { data: listUsers, isLoading: isUsersLoading } = useUsers([user]);
 
   const router = useRouter();
 
@@ -39,6 +55,12 @@ export default function DetailList() {
     notulen: "",
     bukti_foto: "",
     status_ruangan: "",
+    waktu: "",
+    waktu_end: "",
+    narsum: "",
+    ket_narsum: "",
+    link_online: "",
+    tipe_kegiatan: "",
   });
 
   useEffect(() => {
@@ -101,7 +123,13 @@ export default function DetailList() {
       formData.append("waktu", dataMeet.waktu);
       formData.append("status_ruangan", dataMeet.status_ruangan);
       formData.append("notulen", dataMeet.notulen);
-
+      formData.append("waktu_end", dataMeet.waktu_end);
+      formData.append("tipe_kegiatan", dataMeet.tipe_kegiatan);
+      formData.append("sub_tema", dataMeet.sub_tema);
+      formData.append("narsum", dataMeet.narsum);
+      formData.append("ket_narsum", dataMeet.ket_narsum);
+      formData.append("contact", dataMeet.contact);
+      formData.append("link_online", dataMeet.link_online);
       formData.append("bukti_foto", dataMeet.bukti_foto);
 
       const response = await axios.post(
@@ -154,7 +182,19 @@ export default function DetailList() {
 
   const FILE_URL = `https://absen.ft.uika-bogor.ac.id/storage/meeting/photo/${dataMeet.bukti_foto}`;
 
-  if ([user, menu, loadingAbsensi].some((item) => item == null))
+  if (
+    [
+      user,
+      menu,
+      loadingAbsensi,
+      isDosenLoading,
+      isMahasiswaLoading,
+      isGroupLoading,
+      isKegiatanLoading,
+      isRuanganLoading,
+      isUsersLoading,
+    ].some((item) => item == null)
+  )
     return <Loading />;
   return (
     <Layout>
@@ -170,7 +210,7 @@ export default function DetailList() {
             <Card.Header className="text-center">Detail Pertemuan</Card.Header>
             <Card.Body className="space-y-4">
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
+                <Form.Label className="min-w-[16rem]">
                   Nama Pengundang <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
@@ -184,8 +224,8 @@ export default function DetailList() {
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
-                  Nama Kegiatan <span className="text-danger-600">*</span>
+                <Form.Label className="min-w-[16rem]">
+                  Judul Kegiatan <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
                 <Form.Input
@@ -198,7 +238,83 @@ export default function DetailList() {
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
+                <Form.Label className="min-w-[16rem]">Sub Judul</Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1"
+                  name="sub_tema"
+                  onChange={inputHandler}
+                  value={dataMeet.sub_tema}
+                />
+              </Form.Group>
+
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[16rem]">
+                  Pertemuan Ke - <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1"
+                  name="pertemuan"
+                  value={dataMeet.pertemuan}
+                  onChange={inputHandler}
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[16rem]">
+                  Narasumber <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Combobox
+                  className="border-blue-900"
+                  name="narsum"
+                  onChange={(selected) =>
+                    inputHandler({
+                      target: {
+                        attributes: {
+                          index: {
+                            value: selected?.value,
+                          },
+                        },
+                        name: "narsum",
+                        value: selected?.value,
+                      },
+                    })
+                  }
+                  value={dataMeet.narsum}
+                  options={
+                    listUsers &&
+                    Array.isArray(listUsers) &&
+                    listUsers.map((user) => ({
+                      label: `${user.personal_data?.nama_lengkap} - ${
+                        user.npm ? user.npm : user.personal_data?.nip
+                      }`,
+                      value: user.user_id,
+                    }))
+                  }
+                  menuTarget={document.body}
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[16rem]">
+                  Keterangan Narasumber{" "}
+                  <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1"
+                  name="ket_narsum"
+                  onChange={inputHandler}
+                  value={dataMeet.ket_narsum}
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[16rem]">
                   Ruangan <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
@@ -212,21 +328,18 @@ export default function DetailList() {
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
-                  Pertemuan <span className="text-danger-600">*</span>
-                </Form.Label>
+                <Form.Label className="min-w-[16rem]">Link Online</Form.Label>
                 <span>:</span>
                 <Form.Input
-                  type="text"
+                  type="url"
                   className="flex-1"
-                  name="pertemuan"
-                  value={dataMeet.pertemuan}
+                  name="link_online"
                   onChange={inputHandler}
-                  required
+                  value={dataMeet.link_online}
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
+                <Form.Label className="min-w-[16rem]">
                   Tanggal <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
@@ -240,21 +353,49 @@ export default function DetailList() {
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
-                  Waktu <span className="text-danger-600">*</span>
+                <Form.Label className="min-w-[16rem]">
+                  Waktu Mulai <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
                 <Form.Input
                   type="time"
                   className="flex-1"
                   name="waktu"
-                  value={dataMeet.waktu}
                   onChange={inputHandler}
+                  value={dataMeet.waktu}
                   required
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
+                <Form.Label className="min-w-[16rem]">
+                  Waktu Selesai <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="time"
+                  className="flex-1"
+                  name="waktu_end"
+                  onChange={inputHandler}
+                  value={dataMeet.waktu_end}
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[16rem]">
+                  Contact <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Input
+                  type="text"
+                  className="flex-1"
+                  name="contact"
+                  onChange={inputHandler}
+                  value={dataMeet.contact}
+                  required
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[16rem]">
                   Status Ruangan <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
@@ -289,18 +430,18 @@ export default function DetailList() {
                 </div>
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">Notulen</Form.Label>
+                <Form.Label className="min-w-[16rem]">Notulen</Form.Label>
                 <span>:</span>
                 <Form.Textarea
                   className="flex-1"
                   rows="5"
                   name="notulen"
-                  value={dataMeet.notulen}
+                  value={dataMeet?.notulen}
                   onChange={inputHandler}
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">Dokumentasi</Form.Label>
+                <Form.Label className="min-w-[16rem]">Dokumentasi</Form.Label>
                 <span>:</span>
                 <div className="block flex-1 space-y-2">
                   <Form.Input

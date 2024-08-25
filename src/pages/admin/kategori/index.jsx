@@ -4,6 +4,7 @@ import PageHeader from "../../../components/PageHeader";
 import useUser from "../../../hooks/useUser";
 import { Loading } from "../../../components/Loading";
 import KategoriLaporanModule from "../../../modules/admin/kategori/kategori-laporan";
+import KategoriKegiatanModule from "../../../modules/admin/kategori/kategori-kegiatan";
 
 export default function Kategori() {
   /* eslint-disable */
@@ -24,6 +25,9 @@ export default function Kategori() {
       <div className="my-8">
         {active.url === "#kategori-laporan" && (
           <KategoriLaporanModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#kategori-kegiatan" && (
+          <KategoriKegiatanModule baseURL={prefix + menu.url} />
         )}
       </div>
     </Layout>

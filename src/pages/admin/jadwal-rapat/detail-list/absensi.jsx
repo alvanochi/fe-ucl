@@ -108,8 +108,8 @@ const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
                 onChange={handlePesertaChange}
                 value={code}
                 options={listUser?.map((user) => ({
-                  label: `${user.nama_lengkap} - ${
-                    user.npm ? user.npm : user.nip
+                  label: `${user.personal_data?.nama_lengkap} - ${
+                    user.npm ? user.npm : user.personal_data?.nip
                   }`,
                   value: user.npm ? user.npm : user.nip,
                   name: user.nama_lengkap,

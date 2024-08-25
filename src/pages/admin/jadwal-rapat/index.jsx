@@ -9,6 +9,7 @@ import useCRUD from "../../../hooks/useCRUD";
 import Form from "../../../components/Form";
 import ShowQr from "./showQr";
 import { Loading } from "../../../components/Loading";
+import Filter from "./filter";
 
 export default function JadwalRapat() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -21,15 +22,15 @@ export default function JadwalRapat() {
     loadingAbsensi,
     pageAbsensi,
     pageCountAbsensi,
-    filter,
     setPageAbsensi,
-    setFilter,
     canPrevAbsensi,
     canNextAbsensi,
     refreshAbsensi,
     sortBy,
     getSortBy,
     recordsTotal,
+    filter,
+    setFilter,
   } = useDatatableAbsensi(DATA_URL);
 
   const { destroy } = useCRUD(DELETE_URL);
@@ -46,13 +47,27 @@ export default function JadwalRapat() {
       />
       <div className="my-8">
         <div className="flex items-center justify-center gap-2 mb-8 mt-8">
+          <Filter filter={filter} handler={setFilter} />
+
           <Button
-            onClick={() => window.open(`${`${prefix + menu.url}/create`}`,'_blank')}
+            onClick={() =>
+              window.open(`${`${prefix + menu.url}/create`}`, "_blank")
+            }
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
           >
             Tambah Jadwal
+          </Button>
+          <Button
+            onClick={() =>
+              window.open(`${`${prefix + menu.url}/sebaran`}`, "_blank")
+            }
+            variant="success"
+            icon={<Icon icon="logos:google-maps" width={20} height={20} />}
+            pill
+          >
+            Sebaran
           </Button>
         </div>
         <table
@@ -148,7 +163,12 @@ export default function JadwalRapat() {
                     <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                       <div className="flex items-stretch gap-1">
                         <Button.Icon
-                          onClick={() => window.open(`${`${prefix + menu.url}/invite/${row.id}`}`,'_blank')}
+                          onClick={() =>
+                            window.open(
+                              `${`${prefix + menu.url}/invite/${row.id}`}`,
+                              "_blank"
+                            )
+                          }
                           variant="primary"
                           icon={
                             <Icon
@@ -162,7 +182,12 @@ export default function JadwalRapat() {
                           data={{ token: row.token, kegiatan: row.nm_kegiatan }}
                         />
                         <Button.Icon
-                          onClick={() => window.open(`${`${prefix + menu.url}/detail-list/${row.id}`}`,'_blank')}
+                          onClick={() =>
+                            window.open(
+                              `${`${prefix + menu.url}/detail-list/${row.id}`}`,
+                              "_blank"
+                            )
+                          }
                           variant="primary"
                           icon={
                             <Icon

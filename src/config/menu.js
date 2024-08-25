@@ -473,6 +473,11 @@ export const APP_MENU = [
         url: "#kategori-laporan",
         allowedRoles: [ROLE_ID_ADMIN],
       },
+      {
+        label: "Kategori Kegiatan",
+        url: "#kategori-kegiatan",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
     ],
   },
   {
