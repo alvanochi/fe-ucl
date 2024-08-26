@@ -54,8 +54,8 @@ export default function LainyaModule({ baseURL }) {
 
   return (
     <>
-      {!loading && data.role == "Mahasiswa" && (
-        <div className="flex items-center justify-center gap-2 mb-8">
+      <div className="flex items-center justify-center gap-2 mb-8">
+        {!loading && data.role == "Mahasiswa" && (
           <Button
             as="a"
             href={`${baseURL}/lainya/edit`}
@@ -65,6 +65,9 @@ export default function LainyaModule({ baseURL }) {
           >
             Edit
           </Button>
+        )}
+
+        {!loading && data.role == "Dosen" && (
           <Button
             variant="primary"
             icon={<Icon icon="bx:edit" width={20} height={20} />}
@@ -73,8 +76,8 @@ export default function LainyaModule({ baseURL }) {
           >
             Upload Foto Narsum
           </Button>
-        </div>
-      )}
+        )}
+      </div>
 
       <Card className="mt-4">
         <Card.Header className="text-center">Lainya</Card.Header>
