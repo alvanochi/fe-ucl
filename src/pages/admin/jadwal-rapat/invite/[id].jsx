@@ -13,7 +13,7 @@ import axios from "axios";
 import InvitePesertaDosen from "./invite";
 import InvitePesertaMhs from "./inviteMhs";
 import { Loading } from "../../../../components/Loading";
-import useNewDataTable from "../../../../hooks/useNewDataTable";
+import useNewDataTableForUserMeet from "../../../../hooks/useNewDataTableForUserMeet";
 
 export default function Invite() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -28,15 +28,16 @@ export default function Invite() {
   const [searchValue, setSearchValue] = useState("");
 
   const {
-    dataNew,
-    loadingNew,
-    pageNew,
-    pageCountNew,
-    setPageNew,
-    sortByNew,
-    getSortByNew,
-    refreshNew,
-  } = useNewDataTable(
+    data,
+    loading,
+    page,
+    pageCount,
+    setPage,
+    sortBy,
+    getSortBy,
+    refresh,
+    itemsPerPage,
+  } = useNewDataTableForUserMeet(
     DATA_URL,
     {
       filter: ["id_meeting"],
@@ -51,7 +52,7 @@ export default function Invite() {
     refreshAbsensi();
   };
 
-  if ([user, menu, loadingNew].some((item) => item == null)) return <Loading />;
+  if ([user, menu, loading].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader
@@ -102,7 +103,7 @@ export default function Invite() {
             </tr>
           </thead>
           <tbody>
-            {loadingNew && (
+            {loading && (
               <tr>
                 <td
                   colSpan="6"
@@ -112,7 +113,7 @@ export default function Invite() {
                 </td>
               </tr>
             )}
-            {!loadingNew && dataNew && dataNew.length < 1 && (
+            {!loading && data && data.length < 1 && (
               <tr>
                 <td
                   colSpan="6"
@@ -122,38 +123,44 @@ export default function Invite() {
                 </td>
               </tr>
             )}
-            {!loadingNew &&
-              dataNew &&
-              dataNew.map((row, index) => (
-                <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.code}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.nama}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <div className="flex items-stretch gap-1">
-                      <Button.Icon
-                        variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.id).then(() => refreshAbsensi())
-                        }
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
+            {!loading &&
+              data &&
+              data.map((row, index) => {
+                const startNumber = (page - 1) * 10 + 1;
+
+                // Tampilkan nomor urut sesuai dengan halaman aktif
+                const rowNumber = startNumber + index;
+                return (
+                  <tr key={`row-${index}`}>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {rowNumber}
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {row.code}
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {row.nama}
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                      <div className="flex items-stretch gap-1">
+                        <Button.Icon
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() =>
+                            destroy(row.id).then(() => refreshAbsensi())
+                          }
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
           </tbody>
         </table>
 
@@ -185,8 +192,8 @@ export default function Invite() {
                   height={20}
                 />
               }
-              onClick={() => setPageNew(pageNew - 1)}
-              disabled={pageNew <= 1}
+              onClick={() => setPage(page - 1)}
+              disabled={page <= 1}
               pill
             />
             <Button
@@ -200,8 +207,8 @@ export default function Invite() {
                 />
               }
               iconPosition="right"
-              onClick={() => setPageNew(pageNew + 1)}
-              disabled={pageNew >= pageCountNew}
+              onClick={() => setPage(page + 1)}
+              disabled={page >= pageCount}
               pill
             >
               Next Page
@@ -212,19 +219,19 @@ export default function Invite() {
             <Form.Input
               type="number"
               min="1"
-              max={pageCountNew || 1}
+              max={pageCount || 1}
               className="w-20"
-              value={pageNew}
+              value={page}
               onChange={(event) =>
-                setPageNew(
+                setPage(
                   Math.max(
                     1,
-                    Math.min(event.target.valueAsNumber, pageCountNew || 1)
+                    Math.min(event.target.valueAsNumber, pageCount || 1)
                   )
                 )
               }
             />
-            of {pageCountNew || 1}
+            of {pageCount || 1}
           </div>
         </div>
       </div>

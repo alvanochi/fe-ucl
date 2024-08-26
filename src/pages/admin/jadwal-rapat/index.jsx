@@ -163,12 +163,8 @@ export default function JadwalRapat() {
                     <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                       <div className="flex items-stretch gap-1">
                         <Button.Icon
-                          onClick={() =>
-                            window.open(
-                              `${`${prefix + menu.url}/invite/${row.id}`}`,
-                              "_blank"
-                            )
-                          }
+                          as="a"
+                          href={`${prefix + menu.url}/invite/${row.id}`}
                           variant="primary"
                           icon={
                             <Icon
@@ -182,12 +178,8 @@ export default function JadwalRapat() {
                           data={{ token: row.token, kegiatan: row.nm_kegiatan }}
                         />
                         <Button.Icon
-                          onClick={() =>
-                            window.open(
-                              `${`${prefix + menu.url}/detail-list/${row.id}`}`,
-                              "_blank"
-                            )
-                          }
+                          as="a"
+                          href={`${prefix + menu.url}/detail-list/${row.id}`}
                           variant="primary"
                           icon={
                             <Icon
