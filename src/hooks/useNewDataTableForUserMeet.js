@@ -47,13 +47,14 @@ export const useNewDataTableForUserMeet = (url, options = {}, searchValue) => {
       valueObjSort = value;
     });
 
-    // Create the query with pagination parameters
+    // Create the query with pagination and search parameters
     const query = {
       dataTable: true,
       orderField: keySort || "id",
       orderValue: valueObjSort || "desc",
       filter: options.filter || [],
       filterValue: options.filterValue || [],
+      search: searchValue || "", // Add the searchValue here
       page: page, // Send the current page number
       perPage: pageSize, // Send the current page size
     };

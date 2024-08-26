@@ -49,7 +49,7 @@ export default function Invite() {
   const { destroy } = useCRUD(DELETE_URL);
 
   const handleInvite = () => {
-    refreshAbsensi();
+    refresh();
   };
 
   if ([user, menu, loading].some((item) => item == null)) return <Loading />;
@@ -95,11 +95,11 @@ export default function Invite() {
                   NPM/NIK
                 </div>
               </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
+              {/* <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2 cursor-pointer">
                   Action
                 </div>
-              </th>
+              </th> */}
             </tr>
           </thead>
           <tbody>
@@ -141,7 +141,7 @@ export default function Invite() {
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {row.nama}
                     </td>
-                    <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
+                    {/* <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                       <div className="flex items-stretch gap-1">
                         <Button.Icon
                           variant="danger"
@@ -152,12 +152,10 @@ export default function Invite() {
                               height={20}
                             />
                           }
-                          onClick={() =>
-                            destroy(row.id).then(() => refreshAbsensi())
-                          }
+                          onClick={() => destroy(row.id).then(() => refresh())}
                         />
                       </div>
-                    </td>
+                    </td> */}
                   </tr>
                 );
               })}
