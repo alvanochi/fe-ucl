@@ -67,7 +67,7 @@ export default function LainyaModule({ baseURL }) {
           </Button>
         )}
 
-        {!loading && data.role == "Dosen" && (
+        {!loading && (data.role == "Dosen" || data.role == "Dosen_Ext") && (
           <Button
             variant="primary"
             icon={<Icon icon="bx:edit" width={20} height={20} />}

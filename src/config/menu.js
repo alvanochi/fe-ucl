@@ -79,7 +79,7 @@ export const APP_MENU = [
       {
         label: "Lainya",
         url: "#lainya",
-        allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN_EXT],
       },
       {
         label: "Kepangkatan",
