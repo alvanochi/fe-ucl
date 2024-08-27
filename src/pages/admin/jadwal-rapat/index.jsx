@@ -81,19 +81,14 @@ export default function JadwalRapat() {
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2 cursor-pointer">No</div>
               </th>
-              {/* <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Nama Pengundang
-                </div>
-              </th> */}
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2 cursor-pointer">
-                  Nama Kegiatan
+                  Tipe Kegiatan
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2 cursor-pointer">
-                  Tipe Kegiatan
+                  Nama Kegiatan
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
@@ -148,9 +143,6 @@ export default function JadwalRapat() {
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {rowNumber}
                     </td>
-                    {/* <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.nm_pengundang}
-                    </td> */}
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {row.tipe_kegiatan}
                     </td>
