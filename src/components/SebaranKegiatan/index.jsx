@@ -100,7 +100,8 @@ export default function Map() {
               {data?.map((location, index) => (
                 <Marker key={index} position={[location.lat, location.long]}>
                   <Popup>
-                    <strong>Nama Ruangan: {location.nama_ruangan}</strong>
+                    <strong>Ruangan: {location.nama_ruangan}</strong>
+                    <br />
                     <br />
                     <strong>Alamat: {location.alamat}</strong>
                     <br />
