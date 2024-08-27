@@ -83,6 +83,11 @@ export default function JadwalRapat() {
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2 cursor-pointer">
+                  Pamflet
+                </div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                <div className="flex items-center gap-2 cursor-pointer">
                   Tipe Kegiatan
                 </div>
               </th>
@@ -144,6 +149,24 @@ export default function JadwalRapat() {
                       {rowNumber}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
+                      <Button.Icon
+                        onClick={() =>
+                          window.open(
+                            `${`https://absen.ft.uika-bogor.ac.id/storage/generatePamplet/${row.tipe_kegiatan}-${row.narsum}-(${row.tanggal}).png`}`,
+                            "_blank"
+                          )
+                        }
+                        variant="success"
+                        icon={
+                          <Icon
+                            icon="game-icons:target-poster"
+                            width={15}
+                            height={15}
+                          />
+                        }
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
                       {row.tipe_kegiatan}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
@@ -170,22 +193,6 @@ export default function JadwalRapat() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                       <div className="flex items-stretch gap-1">
-                        <Button.Icon
-                          onClick={() =>
-                            window.open(
-                              `${`https://absen.ft.uika-bogor.ac.id/storage/generatePamplet/${row.tipe_kegiatan}-${row.narsum}-(${row.tanggal}).png`}`,
-                              "_blank"
-                            )
-                          }
-                          variant="success"
-                          icon={
-                            <Icon
-                              icon="game-icons:target-poster"
-                              width={15}
-                              height={15}
-                            />
-                          }
-                        />
                         <Button.Icon
                           as="a"
                           href={`${prefix + menu.url}/invite/${row.id}`}
