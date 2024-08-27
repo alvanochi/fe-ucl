@@ -189,7 +189,9 @@ export default function CreateJadwal() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[14rem]">Sub Judul</Form.Label>
+              <Form.Label className="min-w-[14rem]">
+                Sub Judul <span className="text-danger-600">*</span>
+              </Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -197,6 +199,7 @@ export default function CreateJadwal() {
                 name="sub_tema"
                 onChange={inputHandler}
                 value={form.sub_tema}
+                required
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
