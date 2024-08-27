@@ -15,7 +15,7 @@ export default function JadwalRapat() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/meeting`;
+  const DATA_URL = `${process.env.API_ENDPOINT}/meet/meeting`;
   const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/meeting/delete`;
   const {
     dataAbsensi,
@@ -32,6 +32,8 @@ export default function JadwalRapat() {
     filter,
     setFilter,
   } = useDatatableAbsensi(DATA_URL);
+
+  console.log(dataAbsensi);
 
   const { destroy } = useCRUD(DELETE_URL);
 
@@ -79,24 +81,32 @@ export default function JadwalRapat() {
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2 cursor-pointer">No</div>
               </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
+              {/* <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2 cursor-pointer">
                   Nama Pengundang
                 </div>
-              </th>
+              </th> */}
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2 cursor-pointer">
                   Nama Kegiatan
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                Pertemuan
+                <div className="flex items-center gap-2 cursor-pointer">
+                  Tipe Kegiatan
+                </div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                Nararumber
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div className="flex items-center gap-2">Ruangan</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2">Tgl/Jam</div>
+                <div className="flex items-center gap-2">Tgl</div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                <div className="flex items-center gap-2">Waktu</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 Status
@@ -138,20 +148,26 @@ export default function JadwalRapat() {
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {rowNumber}
                     </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
+                    {/* <td className="text-sm border-2 border-white bg-gray-50">
                       {row.nm_pengundang}
+                    </td> */}
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {row.tipe_kegiatan}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {row.nm_kegiatan}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.pertemuan}
+                      {row.narsum}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {row.ruangan}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
-                      {`${row.tanggal}/${row.waktu}`}
+                      {row.tanggal}
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      {`${row.waktu} - ${row.waktu_end}`}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {row.status_ruangan === 1
@@ -162,6 +178,18 @@ export default function JadwalRapat() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                       <div className="flex items-stretch gap-1">
+                        <Button.Icon
+                          as="a"
+                          href={`https://absen.ft.uika-bogor.ac.id/storage/generatePamplet/${row.nm_kegiatan}-${row.narsum}-${row.tanggal}.png`}
+                          variant="success"
+                          icon={
+                            <Icon
+                              icon="game-icons:target-poster"
+                              width={15}
+                              height={15}
+                            />
+                          }
+                        />
                         <Button.Icon
                           as="a"
                           href={`${prefix + menu.url}/invite/${row.id}`}
