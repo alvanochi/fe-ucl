@@ -172,7 +172,7 @@ export default function JadwalRapat() {
                       <div className="flex items-stretch gap-1">
                         <Button.Icon
                           as="a"
-                          href={`https://absen.ft.uika-bogor.ac.id/storage/generatePamplet/${row.tipe_kegiatan} - ${row.narsum} (${row.tanggal}).png`}
+                          href={`https://absen.ft.uika-bogor.ac.id/storage/generatePamplet/${row.tipe_kegiatan}-${row.narsum}-(${row.tanggal}).png`}
                           variant="success"
                           icon={
                             <Icon
