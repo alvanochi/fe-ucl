@@ -106,18 +106,75 @@ export default function Map() {
                     <br />
                     <br />
                     <strong>Daftar Kegiatan:</strong>
-                    <ul>
-                      {location.meeting.map((meeting, meetingIndex) => (
-                        <li key={meetingIndex}>
-                          <strong>Nama Kegiatan:</strong> {meeting.nm_kegiatan}
-                          <br />
-                          <strong>Tanggal:</strong> {meeting.tanggal}
-                          <br />
-                          <strong>Waktu:</strong> {meeting.waktu}
-                          <br />
-                        </li>
-                      ))}
-                    </ul>
+                    <table
+                      style={{
+                        width: "100%",
+                        borderCollapse: "collapse",
+                        marginTop: "10px",
+                      }}
+                    >
+                      <thead>
+                        <tr>
+                          <th
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              textAlign: "left",
+                            }}
+                          >
+                            Nama Kegiatan
+                          </th>
+                          <th
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              textAlign: "left",
+                            }}
+                          >
+                            Tanggal
+                          </th>
+                          <th
+                            style={{
+                              border: "1px solid #ddd",
+                              padding: "8px",
+                              textAlign: "left",
+                            }}
+                          >
+                            Waktu
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {location.meeting.map((meeting, meetingIndex) => (
+                          <tr key={meetingIndex}>
+                            <td
+                              style={{
+                                border: "1px solid #ddd",
+                                padding: "8px",
+                              }}
+                            >
+                              {meeting.nm_kegiatan}
+                            </td>
+                            <td
+                              style={{
+                                border: "1px solid #ddd",
+                                padding: "8px",
+                              }}
+                            >
+                              {meeting.tanggal}
+                            </td>
+                            <td
+                              style={{
+                                border: "1px solid #ddd",
+                                padding: "8px",
+                              }}
+                            >
+                              {meeting.waktu}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </Popup>
                 </Marker>
               ))}
