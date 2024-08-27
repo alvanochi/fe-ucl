@@ -171,8 +171,12 @@ export default function JadwalRapat() {
                     <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                       <div className="flex items-stretch gap-1">
                         <Button.Icon
-                          as="a"
-                          href={`https://absen.ft.uika-bogor.ac.id/storage/generatePamplet/${row.tipe_kegiatan}-${row.narsum}-(${row.tanggal}).png`}
+                          onClick={() =>
+                            window.open(
+                              `${`https://absen.ft.uika-bogor.ac.id/storage/generatePamplet/${row.tipe_kegiatan}-${row.narsum}-(${row.tanggal}).png`}`,
+                              "_blank"
+                            )
+                          }
                           variant="success"
                           icon={
                             <Icon
