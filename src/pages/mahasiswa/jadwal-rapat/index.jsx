@@ -9,12 +9,13 @@ import useCRUD from "../../../hooks/useCRUD";
 import Form from "../../../components/Form";
 import ShowQr from "./showQr";
 import { Loading } from "../../../components/Loading";
+import Filter from "./filter";
 
 export default function JadwalRapat() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/meeting`;
+  const DATA_URL = `${process.env.API_ENDPOINT}/meet/user-meeting`;
   const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/meeting/delete`;
   const {
     dataAbsensi,
@@ -45,131 +46,134 @@ export default function JadwalRapat() {
         handler={setActive}
       />
       <div className="my-8">
-        <div className="flex items-center justify-center gap-2 mb-8 mt-8"></div>
-        <table
-          className="w-full border-collapse rounded-2xl overflow-hidden shadow"
-          cellPadding={10}
-        >
-          <thead>
-            <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">No</div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Nama Pengundang
-                </div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Nama Kegiatan
-                </div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Pertemuan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2">Ruangan</div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2">Tgl/Jam</div>
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {loadingAbsensi && (
+        <div className="flex items-center justify-center gap-2 mb-8 mt-8">
+          <Filter filter={filter} handler={setFilter} />
+        </div>
+        <div className="overflow-x-auto">
+          <table
+            className="w-full border-collapse rounded-2xl overflow-hidden shadow"
+            cellPadding={10}
+          >
+            <thead>
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
-                  Loading...
-                </td>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    No
+                  </div>
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    Pamflet
+                  </div>
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    Tipe Kegiatan
+                  </div>
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  <div className="flex items-center gap-2 cursor-pointer">
+                    Nama Kegiatan
+                  </div>
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  Nararumber
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  <div className="flex items-center gap-2">Ruangan</div>
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  <div className="flex items-center gap-2">Tgl</div>
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  <div className="flex items-center gap-2">Waktu</div>
+                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">
+                  Status
+                </th>
               </tr>
-            )}
-            {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
-              <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
-                  Tidak ada data
-                </td>
-              </tr>
-            )}
-            {!loadingAbsensi &&
-              dataAbsensi &&
-              dataAbsensi.map((row, index) => {
-                const startNumber = (pageAbsensi - 1) * 10 + 1;
+            </thead>
+            <tbody>
+              {loadingAbsensi && (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="text-sm border-2 border-white bg-gray-50 text-center"
+                  >
+                    Loading...
+                  </td>
+                </tr>
+              )}
+              {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
+                <tr>
+                  <td
+                    colSpan="6"
+                    className="text-sm border-2 border-white bg-gray-50 text-center"
+                  >
+                    Tidak ada data
+                  </td>
+                </tr>
+              )}
+              {!loadingAbsensi &&
+                dataAbsensi &&
+                dataAbsensi.map((row, index) => {
+                  const startNumber = (pageAbsensi - 1) * 10 + 1;
 
-                const rowNumber = startNumber + index;
-                return (
-                  <tr key={`row-${index}`}>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {rowNumber}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.nm_pengundang}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.nm_kegiatan}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.pertemuan}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.ruangan}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {`${row.tanggal}/${row.waktu}`}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.status_ruangan === 1
-                        ? "ONLINE"
-                        : row.status_ruangan === 0
-                        ? "OFFLINE"
-                        : "HYBRID"}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                      <div className="flex items-stretch gap-1">
+                  const rowNumber = startNumber + index;
+                  return (
+                    <tr key={`row-${index}`}>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        {rowNumber}
+                      </td>
+                      <td className="text-sm border-2 border-white bg-gray-50">
                         <Button.Icon
-                          onClick={() => window.open(`${`${prefix + menu.url}/invite/${row.id}`}`,'_blank')}
-                          variant="primary"
+                          onClick={() =>
+                            window.open(
+                              `${`https://absen.ft.uika-bogor.ac.id/storage/generatePamplet/${row.tipe_kegiatan}-${row.narsum}-(${row.tanggal}).png`}`,
+                              "_blank"
+                            )
+                          }
+                          variant="success"
                           icon={
                             <Icon
-                              icon="bi:person-fill-add"
+                              icon="game-icons:target-poster"
                               width={15}
                               height={15}
                             />
                           }
                         />
-                        <ShowQr
-                          data={{ token: row.token, kegiatan: row.nm_kegiatan }}
-                        />
-                        <Button.Icon
-                          onClick={() => window.open(`${`${prefix + menu.url}/detail-list/${row.id}`}`,'_blank')}
-                          variant="primary"
-                          icon={
-                            <Icon
-                              icon="bxs:message-square-edit"
-                              width={15}
-                              height={15}
-                            />
-                          }
-                        />
-                      </div>
-                    </td>
-                  </tr>
-                );
-              })}
-          </tbody>
-        </table>
+                      </td>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        {row.tipe_kegiatan}
+                      </td>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        {row.nm_kegiatan}
+                      </td>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        {row.narsum}
+                      </td>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        {row.ruangan}
+                      </td>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        {row.tanggal}
+                      </td>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        {`${row.waktu} - ${row.waktu_end}`}
+                      </td>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        {row.status_ruangan === 1
+                          ? "ONLINE"
+                          : row.status_ruangan === 0
+                          ? "OFFLINE"
+                          : "HYBRID"}
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+        </div>
 
         <div className="flex mt-8">
           <div className="flex gap-1 ml-auto">

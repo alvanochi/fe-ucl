@@ -45,14 +45,36 @@ export const useMenu = () => {
         break;
       case "Pegawai":
         menuPrefix = "/pegawai";
+        break;
     }
 
     const findMenu = utils.getAppMenuByUrl(fixedUrl, user.role);
     setMenu(() => findMenu);
-    setAllowed(() => utils.getAppMenuByRole(user.role, menuPrefix));
+    const menuByRole = utils.getAppMenuByRole(user.role, menuPrefix);
 
+    const groupedMenu = menuByRole.reduce((groups, item) => {
+      const group = item.group || "Other";
+      if (!groups[group]) {
+        groups[group] = [];
+      }
+      groups[group].push(item);
+      return groups;
+    }, {});
+
+    const sortedGroups = Object.keys(groupedMenu)
+      .sort((a, b) => {
+        if (a === "Other") return 1;
+        if (b === "Other") return -1;
+        return 0;
+      })
+      .reduce((acc, key) => {
+        acc[key] = groupedMenu[key];
+        return acc;
+      }, {});
+
+    setAllowed(() => sortedGroups);
     setPrefix(menuPrefix);
-    setActive(() => findMenu?.submenus.at(0));
+    setActive(() => findMenu?.submenus?.at(0));
   }, [user, Router]);
 
   return { menu, allowed, active, prefix, setActive };

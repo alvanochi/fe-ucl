@@ -218,7 +218,7 @@ export default function JadwalRapat() {
                             variant="primary"
                             icon={
                               <Icon
-                                icon="bxs:message-square-edit"
+                                icon="ic:round-info"
                                 width={15}
                                 height={15}
                               />

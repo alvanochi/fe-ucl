@@ -11,6 +11,7 @@ export const APP_MENU = [
   {
     label: "Dashboard",
     url: "/",
+    group: "Main",
     icon: "material-symbols:space-dashboard-rounded",
     allowedRoles: [
       ROLE_ID_ADMIN,
@@ -25,6 +26,7 @@ export const APP_MENU = [
   },
   {
     label: "Profil",
+    group: "Main",
     url: "/profil",
     icon: "mdi:user-circle",
     allowedRoles: [
@@ -97,6 +99,7 @@ export const APP_MENU = [
     label: "Presensi",
     url: "/absen",
     icon: "mdi:account-card-details",
+    group: "Tri Dharma Plus",
     allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_ADMIN],
     submenus: [
       {
@@ -120,6 +123,7 @@ export const APP_MENU = [
     label: "Jadwal Kegiatan",
     url: "/jadwal-rapat",
     icon: "mdi-clock-fast",
+    group: "Kegiatan",
     allowedRoles: [
       ROLE_ID_ADMIN,
       ROLE_ID_DOSEN,
@@ -131,6 +135,7 @@ export const APP_MENU = [
   {
     label: "Pelaksanaan Pendidikan",
     url: "/pelaksanaan-pendidikan",
+    group: "Tri Dharma Plus",
     icon: "mdi:bookshelf",
     allowedRoles: [
       ROLE_ID_ADMIN,
@@ -174,6 +179,7 @@ export const APP_MENU = [
   {
     label: "Pelaksanaan Penelitian",
     url: "/pelaksanaan-penelitian",
+    group: "Tri Dharma Plus",
     icon: "fa:flask",
     allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
     submenus: [
@@ -198,6 +204,7 @@ export const APP_MENU = [
     label: "Pelaksanaan Pengabdian",
     url: "/pelaksanaan-pengabdian",
     icon: "fa6-solid:hand-holding-hand",
+    group: "Tri Dharma Plus",
     allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA, ROLE_ID_DOSEN],
     submenus: [
       {
@@ -215,6 +222,7 @@ export const APP_MENU = [
   {
     label: "Penunjang",
     url: "/penunjang",
+    group: "Tri Dharma Plus",
     icon: "solar:users-group-two-rounded-bold-duotone",
     allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
     submenus: [
@@ -233,6 +241,7 @@ export const APP_MENU = [
   {
     label: "Kompetensi",
     url: "/kompetensi",
+    group: "Tri Dharma Plus",
     icon: "icon-park-outline:certificate",
     allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
     submenus: [
@@ -251,6 +260,7 @@ export const APP_MENU = [
   {
     label: "Kualifikasi",
     url: "/kualifikasi",
+    group: "Tri Dharma Plus",
     icon: "iconoir:graduation-cap",
     allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
     submenus: [
@@ -269,6 +279,7 @@ export const APP_MENU = [
   {
     label: "Jafung Dosen",
     url: "/dosenOnly",
+    group: "Tri Dharma Plus",
     icon: "iconoir:reports-solid",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
@@ -288,6 +299,7 @@ export const APP_MENU = [
     label: "Berita",
     url: "/berita",
     icon: "iconoir:rss-feed-tag",
+    group: "Kegiatan",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
       {
@@ -305,6 +317,7 @@ export const APP_MENU = [
   {
     label: "E-Voting",
     url: "/e-voting",
+    group: "Kegiatan",
     icon: "ic:twotone-how-to-vote",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
@@ -318,6 +331,7 @@ export const APP_MENU = [
   {
     label: "Laporan",
     url: "/laporan",
+    group: "Laporan Lapangan",
     icon: "ic:outline-report",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
@@ -343,11 +357,13 @@ export const APP_MENU = [
     url: "/gamify-tias",
     icon: "iconoir:gamepad",
     allowedRoles: [ROLE_ID_ADMIN],
+    group: "Gamifikasi",
     submenus: [],
   },
   {
     label: "Kategori Gamify",
     url: "/gamify",
+    group: "Gamifikasi",
     icon: "iconoir:gamepad",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
@@ -391,6 +407,7 @@ export const APP_MENU = [
   {
     label: "Users",
     url: "/users",
+    group: "Master",
     icon: "flowbite:users-solid",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
@@ -419,6 +436,7 @@ export const APP_MENU = [
   {
     label: "Rekomendasi Mahasiswa",
     url: "/rek-mhs",
+    group: "Gamifikasi",
     icon: "mdi-certificate",
     allowedRoles: [ROLE_ID_DOSEN],
     submenus: [],
@@ -427,6 +445,7 @@ export const APP_MENU = [
     label: "Group",
     url: "/group",
     icon: "fa6-solid:users",
+    group: "Kegiatan",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
       {
@@ -465,6 +484,7 @@ export const APP_MENU = [
   {
     label: "kategori",
     url: "/kategori",
+    group: "Master",
     icon: "mdi:category-outline",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [
@@ -483,6 +503,7 @@ export const APP_MENU = [
   {
     label: "Ruang",
     url: "/ruang",
+    group: "Kegiatan",
     icon: "fluent:conference-room-24-regular",
     allowedRoles: [ROLE_ID_ADMIN],
     submenus: [

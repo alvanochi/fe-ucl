@@ -220,7 +220,7 @@ export default function DetailList() {
                   name="nm_pengundang"
                   value={dataMeet.nm_pengundang}
                   onChange={inputHandler}
-                  required
+                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -234,7 +234,7 @@ export default function DetailList() {
                   name="nm_kegiatan"
                   value={dataMeet.nm_kegiatan}
                   onChange={inputHandler}
-                  required
+                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -246,6 +246,7 @@ export default function DetailList() {
                   name="sub_tema"
                   onChange={inputHandler}
                   value={dataMeet.sub_tema}
+                  disabled
                 />
               </Form.Group>
 
@@ -260,7 +261,7 @@ export default function DetailList() {
                   name="pertemuan"
                   value={dataMeet.pertemuan}
                   onChange={inputHandler}
-                  required
+                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -296,6 +297,7 @@ export default function DetailList() {
                     }))
                   }
                   menuTarget={document.body}
+                  readOnly
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -310,7 +312,7 @@ export default function DetailList() {
                   name="ket_narsum"
                   onChange={inputHandler}
                   value={dataMeet.ket_narsum}
-                  required
+                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -318,13 +320,32 @@ export default function DetailList() {
                   Ruangan <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
-                <Form.Input
-                  type="text"
-                  className="flex-1"
+                <Form.Combobox
+                  className="border-blue-900"
                   name="ruangan"
+                  onChange={(selected) =>
+                    inputHandler({
+                      target: {
+                        attributes: {
+                          index: {
+                            value: selected?.value,
+                          },
+                        },
+                        name: "ruangan",
+                        value: selected?.value,
+                      },
+                    })
+                  }
                   value={dataMeet.ruangan}
-                  onChange={inputHandler}
-                  required
+                  options={
+                    listRuangan &&
+                    Array.isArray(listRuangan) &&
+                    listRuangan.map((ruang) => ({
+                      label: ruang.nama_ruangan,
+                      value: ruang.id,
+                    }))
+                  }
+                  menuTarget={document.body}
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -335,7 +356,10 @@ export default function DetailList() {
                   className="flex-1"
                   name="link_online"
                   onChange={inputHandler}
-                  value={dataMeet.link_online}
+                  value={
+                    dataMeet.link_online == "null" ? "" : dataMeet.link_online
+                  }
+                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -349,7 +373,7 @@ export default function DetailList() {
                   name="tanggal"
                   value={dataMeet.tanggal}
                   onChange={inputHandler}
-                  required
+                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -363,7 +387,7 @@ export default function DetailList() {
                   name="waktu"
                   onChange={inputHandler}
                   value={dataMeet.waktu}
-                  required
+                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -377,7 +401,7 @@ export default function DetailList() {
                   name="waktu_end"
                   onChange={inputHandler}
                   value={dataMeet.waktu_end}
-                  required
+                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -391,7 +415,7 @@ export default function DetailList() {
                   name="contact"
                   onChange={inputHandler}
                   value={dataMeet.contact}
-                  required
+                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -406,6 +430,7 @@ export default function DetailList() {
                       onChange={inputHandler}
                       value={0}
                       checked={dataMeet.status_ruangan == 0}
+                      disabled
                     />
                     Offline
                   </Form.Label>
@@ -415,6 +440,7 @@ export default function DetailList() {
                       onChange={inputHandler}
                       value={1}
                       checked={dataMeet.status_ruangan == 1}
+                      disabled
                     />
                     Online
                   </Form.Label>
@@ -424,6 +450,7 @@ export default function DetailList() {
                       onChange={inputHandler}
                       value={2}
                       checked={dataMeet.status_ruangan == 2}
+                      disabled
                     />
                     Hybird
                   </Form.Label>
@@ -436,7 +463,7 @@ export default function DetailList() {
                   className="flex-1"
                   rows="5"
                   name="notulen"
-                  value={dataMeet?.notulen}
+                  value={dataMeet?.notulen == "null" ? "" : dataMeet.notulen}
                   onChange={inputHandler}
                 />
               </Form.Group>
@@ -450,11 +477,13 @@ export default function DetailList() {
                     name="bukti_foto"
                     onChange={fileInputHandler}
                   />
-                  <img
-                    src={FILE_URL}
-                    className="w-full h-full"
-                    alt="dokumentasi"
-                  />
+                  {dataMeet.bukti_foto && (
+                    <img
+                      src={FILE_URL}
+                      className="w-full h-full"
+                      alt="dokumentasi"
+                    />
+                  )}
                 </div>
               </Form.Group>
             </Card.Body>

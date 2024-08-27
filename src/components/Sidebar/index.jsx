@@ -70,14 +70,22 @@ export const Sidebar = ({ expanded, toggle }) => {
       >
         {expanded && (
           <>
-            {allowed?.map((menu, index) => (
-              <NavlinkExpand
-                key={`expand-menu-${index}`}
-                label={menu.label}
-                icon={menu.icon}
-                url={menu.url}
-                active={prefix + mn.url == menu.url}
-              />
+            {Object.keys(allowed)?.map((group, groupIndex) => (
+              <div key={`group-${groupIndex}`}>
+                <div className="text-gray-400 uppercase font-bold text-left w-full pl-4 pt-4 pb-4">
+                  {group}
+                </div>
+                {/* <hr /> */}
+                {allowed[group]?.map((menu, index) => (
+                  <NavlinkExpand
+                    key={`expand-menu-${index}`}
+                    label={menu.label}
+                    icon={menu.icon}
+                    url={menu.url}
+                    active={prefix + mn.url == menu.url}
+                  />
+                ))}
+              </div>
             ))}
             <NavlinkExpand
               label="Logout"
@@ -90,14 +98,18 @@ export const Sidebar = ({ expanded, toggle }) => {
         )}
         {!expanded && (
           <>
-            {allowed.map((menu, index) => (
-              <NavbarShrink
-                key={`shrink-menu-${index}`}
-                label={menu.label}
-                icon={menu.icon}
-                url={menu.url}
-                active={prefix + mn.url == menu.url}
-              />
+            {Object.keys(allowed)?.map((group, groupIndex) => (
+              <div key={`group-${groupIndex}`}>
+                {allowed[group]?.map((menu, index) => (
+                  <NavbarShrink
+                    key={`shrink-menu-${index}`}
+                    label={menu.label}
+                    icon={menu.icon}
+                    url={menu.url}
+                    active={prefix + mn.url == menu.url}
+                  />
+                ))}
+              </div>
             ))}
             <NavbarShrink
               icon="material-symbols:logout"
