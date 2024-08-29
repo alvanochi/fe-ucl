@@ -11,11 +11,11 @@ import useCRUD from "../../../hooks/useCRUD";
 import useUsers from "../../../repo/users";
 import { useEffect, useState } from "react";
 import _ from "underscore";
-import useNewDataTable from "../../../hooks/useNewDataTable";
 import axios from "axios";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 import { Loading } from "../../../components/Loading";
 import SortIcon from "../../../components/SortIcon";
+import useNewDataTableNew from "../../../hooks/useNewDataTableNew";
 
 export default function GroupDetail() {
   const router = useRouter();
@@ -26,12 +26,20 @@ export default function GroupDetail() {
 
   const [searchValue, setSearchValue] = useState("");
   const DATA_GROUP_USERS = `${process.env.API_ENDPOINT}/voting/group-users`;
-  const { dataNew, loadingNew, pageNew, pageCountNew, setPageNew, refreshNew } =
-    useNewDataTable(
-      DATA_GROUP_USERS,
-      { filter: ["id_group"], filterValue: [router.query.id] },
-      searchValue
-    );
+  const {
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    refreshNew,
+    sortByNew,
+    getSortByNew,
+  } = useNewDataTableNew(
+    DATA_GROUP_USERS,
+    { filter: ["id_group"], filterValue: [router.query.id] },
+    searchValue
+  );
 
   const INITIAL_USERS = {
     user_id: "",
@@ -179,7 +187,9 @@ export default function GroupDetail() {
                         (user) => user.user_id === selected.value
                       );
                       const codeValue =
-                        selectedUser?.npm || selectedUser?.nip || "";
+                        selectedUser?.npm ||
+                        selectedUser?.personal_data?.nip ||
+                        "";
                       inputHandler({
                         target: {
                           attributes: {
@@ -293,6 +303,7 @@ export default function GroupDetail() {
                     name="search"
                     placeholder="Search"
                     style={{ width: "400px" }}
+                    className="font-normal"
                     value={searchValue}
                     onChange={(e) => setSearchValue(e.target.value)}
                   />
@@ -332,16 +343,16 @@ export default function GroupDetail() {
           )}
           {!loadingNew &&
             dataNew &&
-            dataNew.map((user, index) => (
+            dataNew?.map((user, index) => (
               <tr key={`anggota-dosen-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {user.nama_lengkap}
+                  {user.personal_data.nama_lengkap}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {user.code}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {user.role}
+                  {user.user.role}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
