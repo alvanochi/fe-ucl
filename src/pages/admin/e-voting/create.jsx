@@ -11,6 +11,7 @@ import { Icon } from "@iconify-icon/react";
 import _ from "underscore";
 import { useState } from "react";
 import { Loading } from "../../../components/Loading";
+import useGroup from "../../../repo/group";
 
 export default function CreateQuestion() {
   const router = useRouter();
@@ -18,8 +19,18 @@ export default function CreateQuestion() {
   const { prefix, menu, setActive } = useMenu();
 
   const API_URL = `${process.env.API_ENDPOINT}/voting/question`;
+  const { data: listGroup, isLoading: isGroupLoading } = useGroup([user]);
 
   const [jawaban, setJawaban] = useState([{ jawaban: "" }]);
+  const [groups, setGroups] = useState([]);
+
+  const tambahGroup = () => {
+    setGroups([...groups, { group: null }]);
+  };
+
+  const hapusGroup = (index) => {
+    setGroups(groups.filter((_, idx) => idx !== index));
+  };
 
   const tambahJawaban = () => {
     setJawaban([...jawaban, { jawaban: "" }]);
@@ -39,6 +50,7 @@ export default function CreateQuestion() {
       const transformedData = {
         ...data,
         jawaban: jawaban.map((item) => item.jawaban),
+        groups: groups.map((item) => item.group),
       };
       return transformedData;
     },
@@ -144,12 +156,109 @@ export default function CreateQuestion() {
               <Button
                 type="button"
                 variant="primary"
-                className="mx-auto"
+                className="mx-auto mt-4"
                 onClick={tambahJawaban}
               >
                 Tambah Jawaban
               </Button>
             </div>
+          </div>
+        </div>
+
+        <div className="flex justify-between">
+          <div className="flex-grow">
+            <table
+              className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+              cellPadding={10}
+            >
+              <colgroup>
+                <col style={{ width: "80%" }} />
+                <col style={{ width: "20%" }} />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th
+                    colSpan={4}
+                    className="text-sm border-2 border-white bg-gray-50"
+                  >
+                    Group E-Voting
+                  </th>
+                </tr>
+                <tr>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    Nama Group
+                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {groups.map((item, index) => (
+                  <tr key={`group-${index}`}>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      <Form.Combobox
+                        index={index}
+                        name={`groups[${index}].id`}
+                        onChange={(e) => {
+                          const newValue = e.value;
+                          setGroups((prevGroups) =>
+                            prevGroups.map((groupItem, idx) =>
+                              idx === index
+                                ? { ...groupItem, group: newValue }
+                                : groupItem
+                            )
+                          );
+                        }}
+                        value={item.group}
+                        options={
+                          listGroup &&
+                          Array.isArray(listGroup) &&
+                          listGroup.map((group) => ({
+                            label: group.nama_group,
+                            value: group.id,
+                          }))
+                        }
+                        menuTarget={document.body}
+                      />
+                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">
+                      <div className="flex items-stretch gap-1">
+                        <Button.Icon
+                          type="button"
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() => hapusGroup(index)}
+                        />
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="text-sm border-2 border-white bg-gray-50"
+                  >
+                    <Button
+                      type="button"
+                      variant="primary"
+                      className="mx-auto"
+                      onClick={tambahGroup}
+                    >
+                      Tambah Group
+                    </Button>
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
         </div>
 

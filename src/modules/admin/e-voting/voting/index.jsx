@@ -3,9 +3,9 @@ import Button from "../../../../components/Button";
 import date from "../../../../utils/date";
 import Form from "../../../../components/Form";
 import useCRUD from "../../../../hooks/useCRUD";
-import useNewDataTable from "../../../../hooks/useNewDataTable";
 import { useState } from "react";
 import SortIcon from "../../../../components/SortIcon";
+import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
 
 export default function VotingModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/voting/question-all`;
@@ -18,10 +18,10 @@ export default function VotingModule({ baseURL }) {
     pageNew,
     pageCountNew,
     setPageNew,
+    refreshNew,
     sortByNew,
     getSortByNew,
-    refreshNew,
-  } = useNewDataTable(DATA_URL, {}, searchValue);
+  } = useNewDataTableNew(DATA_URL, {}, searchValue);
 
   const { destroy } = useCRUD(DELETE_URL);
 
