@@ -313,6 +313,18 @@ export const APP_MENU = [
           },
         ],
       },
+      {
+        label: "Group",
+        url: "/group",
+        allowedRoles: [ROLE_ID_ADMIN],
+        submenus: [
+          {
+            label: "Group",
+            url: "#group",
+            allowedRoles: [ROLE_ID_ADMIN],
+          },
+        ],
+      },
     ],
   },
   // Laporan Lapangan
@@ -511,6 +523,18 @@ export const APP_MENU = [
           {
             label: "Struktural Prodi",
             url: "#struktural-prodi",
+            allowedRoles: [ROLE_ID_ADMIN],
+          },
+        ],
+      },
+      {
+        label: "Group",
+        url: "/group",
+        allowedRoles: [ROLE_ID_ADMIN],
+        submenus: [
+          {
+            label: "Group",
+            url: "#group",
             allowedRoles: [ROLE_ID_ADMIN],
           },
         ],
