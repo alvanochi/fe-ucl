@@ -10,17 +10,14 @@ export const NavLinkDropdown = ({
   url,
   submenus,
   className,
+  isOpen,
+  onToggle,
   ...props
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const handleDropdownToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
     <div className="relative">
       <div
-        onClick={handleDropdownToggle}
+        onClick={onToggle}
         style={{ direction: "ltr" }}
         className={classNames(
           "flex items-center w-full hover:bg-white hover:bg-opacity-10 hover:shadow-md justify-start rounded-r-full px-4 py-4 font-medium text-white backdrop-blur-0 hover:backdrop-blur-sm hover:text-base",
@@ -67,8 +64,8 @@ export const NavLinkDropdown = ({
                     }
                   )}
                 >
-                  <span className="ml-2"> {submenu.label}</span>
-                  <Icon icon="codicon:circle-filled" />
+                  {submenu.label}
+                  <Icon icon="codicon:circle-filled" className="mr-2" />
                 </div>
               </Link>
             </li>

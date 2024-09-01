@@ -1,6 +1,6 @@
-import { useEffect } from "react";
-import classNames from "classnames";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import classNames from "classnames";
 import useMenu from "../../hooks/useMenu";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import NavlinkExpand from "../Navlink/NavlinkExpand";
@@ -14,6 +14,12 @@ export const Sidebar = ({ expanded, toggle }) => {
   const { logout } = useUser();
   const { prefix, menu: mn, allowed } = useMenu();
   const isMobile = useMediaQuery("(max-width: 768px)");
+
+  const [openDropdown, setOpenDropdown] = useState(null);
+
+  const handleDropdownToggle = (index) => {
+    setOpenDropdown(openDropdown === index ? null : index);
+  };
 
   useEffect(() => {
     isMobile === true && toggle(false);
@@ -79,8 +85,10 @@ export const Sidebar = ({ expanded, toggle }) => {
                     key={`expand-menu-${index}`}
                     label={menu.label}
                     icon={menu.icon}
-                    submenus={menu.children} // Pass the submenus
+                    submenus={menu.children}
                     active={prefix + mn.url == menu.url}
+                    isOpen={openDropdown === index}
+                    onToggle={() => handleDropdownToggle(index)}
                   />
                 );
               }
@@ -112,8 +120,10 @@ export const Sidebar = ({ expanded, toggle }) => {
                     key={`shrink-menu-${index}`}
                     label={menu.label}
                     icon={menu.icon}
-                    submenus={menu.children} // Pass the submenus
+                    submenus={menu.children}
                     active={prefix + mn.url == menu.url}
+                    isOpen={openDropdown === index}
+                    onToggle={() => handleDropdownToggle(index)}
                     toggle={toggle}
                   />
                 );
