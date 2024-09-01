@@ -12,8 +12,7 @@ export const NavLinkDropdown = ({
   className,
   ...props
 }) => {
-  const [isOpen, setIsOpen] = useState(false); // State to control dropdown visibility
-
+  const [isOpen, setIsOpen] = useState(false);
   const handleDropdownToggle = () => {
     setIsOpen(!isOpen);
   };
@@ -33,18 +32,26 @@ export const NavLinkDropdown = ({
         )}
         {...props}
       >
-        <div className="flex items-center text-left w-11/12">
+        <div className="flex items-center text-left w-11/12 cursor-pointer text-sm">
           <Icon icon={icon} width={24} height={24} className="shrink-0 mr-6" />
           {label}
+          <Icon
+            icon="mdi:chevron-down"
+            width={24}
+            height={24}
+            className={classNames("transition-transform right-0", {
+              "rotate-180": isOpen,
+            })}
+          />
         </div>
       </div>
       <ul
         className={classNames("block z-20 top-full left-0", {
-          hidden: !isOpen, // Hide submenu when isOpen is false
-          visible: isOpen, // Show submenu when isOpen is true
+          hidden: !isOpen,
+          visible: isOpen,
         })}
         style={{
-          transition: "height 0.3s", // Apply transition effect on height change
+          transition: "height 0.3s",
         }}
       >
         {submenus &&
@@ -53,17 +60,15 @@ export const NavLinkDropdown = ({
               <Link href={submenu.url} passHref>
                 <div
                   className={classNames(
-                    "text-sm hover:bg-white hover:bg-opacity-10 hover:shadow-md rounded-r-full px-4 py-4 font-medium text-white backdrop-blur-0 hover:backdrop-blur-sm hover:text-base",
+                    "text-sm hover:bg-white hover:bg-opacity-10 hover:shadow-md rounded-r-full px-4 py-4 font-medium text-white backdrop-blur-0 hover:backdrop-blur-sm hover:text-base text-left ml-10",
                     {
                       "bg-white bg-opacity-10 shadow-md backdrop-blur-sm text-base":
                         active,
                     }
                   )}
-                  style={{
-                    marginRight: "200px",
-                  }}
                 >
-                  {submenu.label}
+                  <span className="ml-2"> {submenu.label}</span>
+                  <Icon icon="codicon:circle-filled" />
                 </div>
               </Link>
             </li>

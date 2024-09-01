@@ -5,6 +5,8 @@ import useMenu from "../../hooks/useMenu";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import NavlinkExpand from "../Navlink/NavlinkExpand";
 import NavbarShrink from "../Navlink/NavlinkShrink";
+import NavLinkDropdown from "../Navlink/NavLinkDropdown";
+import NavLinkShrinkDropdown from "../Navlink/NavLinkShrinkDropdown";
 import useUser from "../../hooks/useUser";
 
 export const Sidebar = ({ expanded, toggle }) => {
@@ -37,7 +39,7 @@ export const Sidebar = ({ expanded, toggle }) => {
         )}
       >
         {expanded && (
-          <div className="flex items-center px-4 py-8 grow">
+          <div className="flex items-center px-4 grow">
             <img
               src="/img/app_logo.png"
               alt="app logo"
@@ -65,28 +67,33 @@ export const Sidebar = ({ expanded, toggle }) => {
         </div>
       </div>
       <div
-        className="relative z-10 flex flex-col grow overflow-x-hidden overflow-y-auto py-6 text-sm"
+        className="relative z-10 flex flex-col grow overflow-x-hidden overflow-y-auto py-6 text-base"
         style={{ direction: "rtl" }}
       >
         {expanded && (
           <>
-            {Object.keys(allowed)?.map((group, groupIndex) => (
-              <div key={`group-${groupIndex}`}>
-                <div className="text-gray-400 uppercase font-bold text-left w-full pl-4 pt-4 pb-4">
-                  {group}
-                </div>
-                {/* <hr /> */}
-                {allowed[group]?.map((menu, index) => (
-                  <NavlinkExpand
+            {allowed?.map((menu, index) => {
+              if (menu.type === "menu-group") {
+                return (
+                  <NavLinkDropdown
                     key={`expand-menu-${index}`}
                     label={menu.label}
                     icon={menu.icon}
-                    url={menu.url}
+                    submenus={menu.children} // Pass the submenus
                     active={prefix + mn.url == menu.url}
                   />
-                ))}
-              </div>
-            ))}
+                );
+              }
+              return (
+                <NavlinkExpand
+                  key={`expand-menu-${index}`}
+                  label={menu.label}
+                  icon={menu.icon}
+                  url={menu.url}
+                  active={prefix + mn.url == menu.url}
+                />
+              );
+            })}
             <NavlinkExpand
               label="Logout"
               icon="material-symbols:logout"
@@ -98,19 +105,29 @@ export const Sidebar = ({ expanded, toggle }) => {
         )}
         {!expanded && (
           <>
-            {Object.keys(allowed)?.map((group, groupIndex) => (
-              <div key={`group-${groupIndex}`}>
-                {allowed[group]?.map((menu, index) => (
-                  <NavbarShrink
+            {allowed.map((menu, index) => {
+              if (menu.type === "menu-group") {
+                return (
+                  <NavLinkShrinkDropdown
                     key={`shrink-menu-${index}`}
                     label={menu.label}
                     icon={menu.icon}
-                    url={menu.url}
+                    submenus={menu.children} // Pass the submenus
                     active={prefix + mn.url == menu.url}
+                    toggle={toggle}
                   />
-                ))}
-              </div>
-            ))}
+                );
+              }
+              return (
+                <NavbarShrink
+                  key={`shrink-menu-${index}`}
+                  label={menu.label}
+                  icon={menu.icon}
+                  url={menu.url}
+                  active={prefix + mn.url == menu.url}
+                />
+              );
+            })}
             <NavbarShrink
               icon="material-symbols:logout"
               className="mt-auto"

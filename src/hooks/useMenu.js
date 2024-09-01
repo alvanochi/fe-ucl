@@ -15,15 +15,8 @@ export const useMenu = () => {
     if (user == null) return;
 
     const fixedUrl =
-      [
-        "/admin",
-        "/dosen",
-        "/mahasiswa",
-        "/demo",
-        "/dosen_ext",
-        "/pegawai",
-      ].includes(Router.pathname) === false
-        ? `/${Router.pathname.split(`/`).at(2)}`
+      ["/admin", "/dosen", "/mahasiswa"].includes(Router.pathname) === false
+        ? `/${Router.pathname.split("/").at(2)}`
         : "/";
     let menuPrefix;
 
@@ -36,45 +29,23 @@ export const useMenu = () => {
         break;
       case "Admin":
         menuPrefix = "/admin";
-        break;
-      case "Demo":
-        menuPrefix = "/demo";
-        break;
-      case "Dosen_Ext":
-        menuPrefix = "/dosen_ext";
-        break;
-      case "Pegawai":
-        menuPrefix = "/pegawai";
-        break;
     }
 
     const findMenu = utils.getAppMenuByUrl(fixedUrl, user.role);
     setMenu(() => findMenu);
-    const menuByRole = utils.getAppMenuByRole(user.role, menuPrefix);
 
-    const groupedMenu = menuByRole.reduce((groups, item) => {
-      const group = item.group || "Other";
-      if (!groups[group]) {
-        groups[group] = [];
-      }
-      groups[group].push(item);
-      return groups;
-    }, {});
+    const allowedMenu = utils.getAppMenuByRole(user.role, menuPrefix);
+    setAllowed(() => allowedMenu);
 
-    const sortedGroups = Object.keys(groupedMenu)
-      .sort((a, b) => {
-        if (a === "Other") return 1;
-        if (b === "Other") return -1;
-        return 0;
-      })
-      .reduce((acc, key) => {
-        acc[key] = groupedMenu[key];
-        return acc;
-      }, {});
-
-    setAllowed(() => sortedGroups);
     setPrefix(menuPrefix);
-    setActive(() => findMenu?.submenus?.at(0));
+
+    if (findMenu?.type === "menu-group" && findMenu?.children?.length > 0) {
+      setActive(() => findMenu.children.at(0));
+    } else if (findMenu?.type === "menu" || findMenu?.submenus?.length > 0) {
+      setActive(() => findMenu.submenus?.at(0) || findMenu);
+    } else {
+      setActive(() => findMenu);
+    }
   }, [user, Router]);
 
   return { menu, allowed, active, prefix, setActive };
