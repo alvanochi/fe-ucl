@@ -98,7 +98,7 @@ export default function VoteDetail() {
             <Card.Header className="text-center">Detail Vote</Card.Header>
             <Card.Body className="space-y-4">
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
+                <Form.Label className="min-w-[8rem]">
                   Deskripsi <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
@@ -111,7 +111,7 @@ export default function VoteDetail() {
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
+                <Form.Label className="min-w-[8rem]">
                   Status <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
@@ -170,6 +170,7 @@ export default function VoteDetail() {
                       <td className="text-sm border-2 border-white bg-gray-50">
                         <Button.Icon
                           variant="danger"
+                          type="button"
                           icon={
                             <Icon
                               icon="solar:trash-bin-2-bold-duotone"
@@ -177,7 +178,9 @@ export default function VoteDetail() {
                               height={20}
                             />
                           }
-                          onClick={() => destroy(row.id).then(() => reload())}
+                          onClick={() =>
+                            destroy(row.id).then(() => router.reload())
+                          }
                         />
                       </td>
                     </tr>
