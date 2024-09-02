@@ -12,6 +12,7 @@ import useCRUD from "../../../../hooks/useCRUD";
 import resolveConfig from "tailwindcss/resolveConfig";
 import twConfig from "../../../../../tailwind.config";
 import { Loading } from "../../../../components/Loading";
+import { Icon } from "@iconify-icon/react/dist/iconify.js";
 
 const BarChart = dynamic(() => import("../../../../components/Chart/bar"), {
   ssr: false,
@@ -82,50 +83,109 @@ export default function VoteDetail() {
     }
   }, [form]);
 
+  const DELETE_URL = `${process.env.API_ENDPOINT}/voting/group-voting`;
+
+  const { destroy } = useCRUD(DELETE_URL);
+
   if ([user, menu, form].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <div className="flex justify-center mt-4"></div>
       <Form>
-        <Card className="mt-4">
-          <Card.Header className="text-center">Detail Vote</Card.Header>
-          <Card.Body className="space-y-4">
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Deskripsi <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Textarea
-                className="flex-1"
-                rows="5"
-                name="deskripsi"
-                value={form?.pertanyaan.deskripsi}
-                disabled
-              />
-            </Form.Group>
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Status <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
+        <div className="grid grid-cols-3 gap-4">
+          <Card className="mt-4 col-span-2">
+            <Card.Header className="text-center">Detail Vote</Card.Header>
+            <Card.Body className="space-y-4">
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[18rem]">
+                  Deskripsi <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
+                <Form.Textarea
+                  className="flex-1"
+                  rows="5"
+                  name="deskripsi"
+                  value={form?.pertanyaan.deskripsi}
+                  disabled
+                />
+              </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[18rem]">
+                  Status <span className="text-danger-600">*</span>
+                </Form.Label>
+                <span>:</span>
 
-              {form?.pertanyaan.status_pertanyaan === 0 ? (
-                <>
-                  <span className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
-                    NON ACTIVE
-                  </span>
-                </>
-              ) : (
-                <>
-                  <span className="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
-                    ACTIVE
-                  </span>
-                </>
-              )}
-            </Form.Group>
-          </Card.Body>
-        </Card>
+                {form?.pertanyaan.status_pertanyaan === 0 ? (
+                  <>
+                    <span className="bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300">
+                      NON ACTIVE
+                    </span>
+                  </>
+                ) : (
+                  <>
+                    <span className="bg-green-100 text-green-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300">
+                      ACTIVE
+                    </span>
+                  </>
+                )}
+              </Form.Group>
+            </Card.Body>
+          </Card>
+
+          <div className="overflow-auto max-h-72">
+            <table
+              className="w-full border-collapse rounded-2xl shadow table-auto"
+              cellPadding={10}
+            >
+              <thead>
+                <tr>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    <div className="flex items-center gap-2 cursor-pointer">
+                      Nama Group
+                    </div>
+                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {form && form?.group?.length < 1 && (
+                  <tr>
+                    <td
+                      colSpan="6"
+                      className="text-sm border-2 border-white bg-gray-50 text-center"
+                    >
+                      Tidak ada group
+                    </td>
+                  </tr>
+                )}
+                {form &&
+                  form?.group?.map((row, index) => (
+                    <tr key={`row-${index}`}>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        {row.group.nama_group}
+                      </td>
+                      <td className="text-sm border-2 border-white bg-gray-50">
+                        <Button.Icon
+                          variant="danger"
+                          icon={
+                            <Icon
+                              icon="solar:trash-bin-2-bold-duotone"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                          onClick={() => destroy(row.id).then(() => reload())}
+                        />
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div
           id="alert-border-1"
