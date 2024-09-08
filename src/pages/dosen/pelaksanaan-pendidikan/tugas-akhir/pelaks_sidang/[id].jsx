@@ -15,6 +15,7 @@ import date from "../../../../../utils/date";
 import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
 import EditKomentar from "../../../../../components/EditPenilaian/edit-komentar";
 import Link from "next/link";
+import EditNilaiSidang from "../../../../../components/EditPenilaian/edit-nilai-sidang";
 
 export default function PelaksanaanSidang() {
   const router = useRouter();
@@ -50,7 +51,6 @@ export default function PelaksanaanSidang() {
     penilaian_2: "",
     penilaian_3: "",
     penilaian_4: "",
-    penilaian_5: "",
     komentar_singkat: "",
     dosen_id: "",
     penilaian_sidang: null,
@@ -211,7 +211,7 @@ export default function PelaksanaanSidang() {
                 <Card.Body className="space-y-4">
                   <Form.Group className="flex items-baseline gap-3">
                     <Form.Label className="min-w-[20rem]">
-                      Substansi dan Orientasi Topik Penelitian{" "}
+                      Nilai Tugas Akhir (Skripsi)
                       <span className="text-danger-600">*</span>
                     </Form.Label>
                     <span>:</span>
@@ -227,11 +227,7 @@ export default function PelaksanaanSidang() {
                   </Form.Group>
                   <Form.Group className="flex items-baseline gap-3">
                     <Form.Label className="min-w-[20rem]">
-                      <p>Konsistensi Antara Masalah, Tujuan</p>
-                      <p>
-                        Penelitian dan Metodologi Penelitian{" "}
-                        <span className="text-danger-600">*</span>
-                      </p>
+                      Presentasi
                     </Form.Label>
                     <span>:</span>
                     <Form.Input
@@ -246,11 +242,7 @@ export default function PelaksanaanSidang() {
                   </Form.Group>
                   <Form.Group className="flex items-baseline gap-3">
                     <Form.Label className="min-w-[20rem]">
-                      <p>Organisasi, Kelengkapan dan Teknis </p>
-                      <p>
-                        Penulisan Makalah{" "}
-                        <span className="text-danger-600">*</span>
-                      </p>
+                      Penguasaan Materi
                     </Form.Label>
                     <span>:</span>
                     <Form.Input
@@ -265,8 +257,12 @@ export default function PelaksanaanSidang() {
                   </Form.Group>
                   <Form.Group className="flex items-baseline gap-3">
                     <Form.Label className="min-w-[20rem]">
-                      Penyajian Makalah dan Tampilan Slide{" "}
-                      <span className="text-danger-600">*</span>
+                      <p>Penampilan (Menanggapi Pertanyaan,</p>
+                      <p>Memberikan Jawaban, sistematika</p>
+                      <p>
+                        jawaban dan etika)
+                        <span className="text-danger-600">*</span>
+                      </p>
                     </Form.Label>
                     <span>:</span>
                     <Form.Input
@@ -274,21 +270,6 @@ export default function PelaksanaanSidang() {
                       className="flex-1"
                       name="penilaian_4"
                       value={form.penilaian_4}
-                      onChange={inputHandler}
-                      min={1}
-                      max={100}
-                    />
-                  </Form.Group>
-                  <Form.Group className="flex items-baseline gap-3">
-                    <Form.Label className="min-w-[20rem]">
-                      Argumentasi <span className="text-danger-600">*</span>
-                    </Form.Label>
-                    <span>:</span>
-                    <Form.Input
-                      type="number"
-                      className="flex-1"
-                      name="penilaian_5"
-                      value={form.penilaian_5}
                       onChange={inputHandler}
                       min={1}
                       max={100}
@@ -362,16 +343,16 @@ export default function PelaksanaanSidang() {
               <tr>
                 <td className="text-sm border-2 border-white bg-gray-50">1</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  Subtansi dan Orientasi Topik Penilitian
+                  Nilai Tugas Akhir (Skripsi)
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                  20%
+                  40%
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 text-center">
                   {form.penilaian_sidang?.penilaian_1}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                  <EditNilai
+                  <EditNilaiSidang
                     title="Subtansi dan Orientasi Topik Penilitian"
                     data={form.penilaian_sidang?.penilaian_1}
                     name="penilaian_1"
@@ -384,17 +365,16 @@ export default function PelaksanaanSidang() {
               <tr>
                 <td className="text-sm border-2 border-white bg-gray-50">2</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
-                  Penelitian
+                  Presentasi
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                  40%
+                  10%
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 text-center">
                   {form.penilaian_sidang?.penilaian_2}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                  <EditNilai
+                  <EditNilaiSidang
                     title="Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
                     Penelitian"
                     data={form.penilaian_sidang?.penilaian_2}
@@ -408,16 +388,16 @@ export default function PelaksanaanSidang() {
               <tr>
                 <td className="text-sm border-2 border-white bg-gray-50">3</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  Organisasi, kelengkapan dan Teknik Penulisan Makalah
+                  Penguasaan Materi
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                  10%
+                  40%
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 text-center">
                   {form.penilaian_sidang?.penilaian_3}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                  <EditNilai
+                  <EditNilaiSidang
                     title="Organisasi, kelengkapan dan Teknik Penulisan Makalah"
                     data={form.penilaian_sidang?.penilaian_3}
                     name="penilaian_3"
@@ -430,7 +410,8 @@ export default function PelaksanaanSidang() {
               <tr>
                 <td className="text-sm border-2 border-white bg-gray-50">4</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  Penyajian Makalah dan Tampilan Slide
+                  Penampilan (menanggapi pertanyaan, Memberikan Jawaban,
+                  sistematika jawaban dan etika)
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 text-center">
                   10%
@@ -439,32 +420,10 @@ export default function PelaksanaanSidang() {
                   {form.penilaian_sidang?.penilaian_4}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                  <EditNilai
+                  <EditNilaiSidang
                     title="Penyajian Makalah dan Tampilan Slide"
                     data={form.penilaian_sidang?.penilaian_4}
                     name="penilaian_4"
-                    id={form.penilaian_sidang?.id}
-                    onSuccess={() => show(router.query.id)}
-                    db="ta_penilaian_sidang"
-                  />
-                </td>
-              </tr>
-              <tr>
-                <td className="text-sm border-2 border-white bg-gray-50">5</td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  Argumentasi
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                  20%
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                  {form.penilaian_sidang?.penilaian_5}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                  <EditNilai
-                    title="Argumentasi"
-                    data={form.penilaian_sidang?.penilaian_5}
-                    name="penilaian_5"
                     id={form.penilaian_sidang?.id}
                     onSuccess={() => show(router.query.id)}
                     db="ta_penilaian_sidang"

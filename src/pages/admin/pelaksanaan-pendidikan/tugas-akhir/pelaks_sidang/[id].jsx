@@ -17,6 +17,7 @@ import Accordion from "../../../../../components/Accordion";
 import date from "../../../../../utils/date";
 import axios from "axios";
 import ReactDOMServer from "react-dom/server";
+import EditNilaiSidang from "../../../../../components/EditPenilaian/edit-nilai-sidang";
 
 export default function PelaksanaanSidang() {
   const router = useRouter();
@@ -54,7 +55,6 @@ export default function PelaksanaanSidang() {
     penilaian_2: "",
     penilaian_3: "",
     penilaian_4: "",
-    penilaian_5: "",
     komentar_singkat: "",
     dosen_id: "",
     penilaian_sidang: null,
@@ -987,10 +987,10 @@ export default function PelaksanaanSidang() {
           <tr>
             <td className="text-sm border-2 border-white bg-gray-50">1</td>
             <td className="text-sm border-2 border-white bg-gray-50">
-              Subtansi dan Orientasi Topik Penilitian
+              Nilai Tugas Akhir (Skripsi)
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              20%
+              40%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               {form?.nilai_akhir.penilaian_1}
@@ -999,11 +999,10 @@ export default function PelaksanaanSidang() {
           <tr>
             <td className="text-sm border-2 border-white bg-gray-50">2</td>
             <td className="text-sm border-2 border-white bg-gray-50">
-              Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
-              Penelitian
+              Presentasi
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              40%
+              10%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               {form?.nilai_akhir.penilaian_2}
@@ -1012,10 +1011,10 @@ export default function PelaksanaanSidang() {
           <tr>
             <td className="text-sm border-2 border-white bg-gray-50">3</td>
             <td className="text-sm border-2 border-white bg-gray-50">
-              Organisasi, kelengkapan dan Teknik Penulisan Makalah
+              Penguasaan Materi
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              10%
+              40%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               {form?.nilai_akhir.penilaian_3}
@@ -1024,25 +1023,14 @@ export default function PelaksanaanSidang() {
           <tr>
             <td className="text-sm border-2 border-white bg-gray-50">4</td>
             <td className="text-sm border-2 border-white bg-gray-50">
-              Penyajian Makalah dan Tampilan Slide
+              Penampilan (menanggapi pertanyaan, Memberikan Jawaban, sistematika
+              jawaban dan etika)
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               10%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               {form?.nilai_akhir.penilaian_4}
-            </td>
-          </tr>
-          <tr>
-            <td className="text-sm border-2 border-white bg-gray-50">5</td>
-            <td className="text-sm border-2 border-white bg-gray-50">
-              Argumentasi
-            </td>
-            <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              20%
-            </td>
-            <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_5}
             </td>
           </tr>
         </tbody>
@@ -1138,17 +1126,17 @@ export default function PelaksanaanSidang() {
                     1
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    Subtansi dan Orientasi Topik Penilitian
+                    Nilai Tugas Akhir (Skripsi)
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    20%
+                    40%
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_1}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                    <EditNilai
-                      title="Subtansi dan Orientasi Topik Penilitian"
+                    <EditNilaiSidang
+                      title="Nilai Tugas Akhir (Skripsi)"
                       data={item.penilaian_1}
                       name="penilaian_1"
                       id={item.id}
@@ -1162,18 +1150,17 @@ export default function PelaksanaanSidang() {
                     2
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
-                    Penelitian
+                    Presentasi
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    40%
+                    10%
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_2}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                    <EditNilai
-                      title="Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi Penelitian"
+                    <EditNilaiSidang
+                      title="Presentasi"
                       data={item.penilaian_2}
                       name="penilaian_2"
                       id={item.id}
@@ -1187,17 +1174,17 @@ export default function PelaksanaanSidang() {
                     3
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    Organisasi, kelengkapan dan Teknik Penulisan Makalah
+                    Penguasaan Materi
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    10%
+                    40%
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_3}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                    <EditNilai
-                      title="Organisasi, kelengkapan dan Teknik Penulisan Makalah"
+                    <EditNilaiSidang
+                      title="Penguasaan Materi"
                       data={item.penilaian_3}
                       name="penilaian_3"
                       id={item.id}
@@ -1211,7 +1198,8 @@ export default function PelaksanaanSidang() {
                     4
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    Penyajian Makalah dan Tampilan Slide
+                    Penampilan (menanggapi pertanyaan, Memberikan Jawaban,
+                    sistematika jawaban dan etika)
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     10%
@@ -1220,34 +1208,10 @@ export default function PelaksanaanSidang() {
                     {item.penilaian_4}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                    <EditNilai
-                      title="Penyajian Makalah dan Tampilan Slide"
+                    <EditNilaiSidang
+                      title="Penampilan (menanggapi pertanyaan, Memberikan Jawaban, sistematika jawaban dan etika)"
                       data={item.penilaian_4}
                       name="penilaian_4"
-                      id={item.id}
-                      onSuccess={() => show(router.query.id)}
-                      db="ta_penilaian_sidang"
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    5
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    Argumentasi
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    20%
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    {item.penilaian_5}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 flex justify-center items-center">
-                    <EditNilai
-                      title="Argumentasi"
-                      data={item.penilaian_5}
-                      name="penilaian_5"
                       id={item.id}
                       onSuccess={() => show(router.query.id)}
                       db="ta_penilaian_sidang"
