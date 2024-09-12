@@ -5,23 +5,25 @@ import useCRUD from "../../../../hooks/useCRUD";
 import Form from "../../../../components/Form";
 import { useState } from "react";
 import useDataTableBk from "../../../../hooks/useDataTableBk";
+import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
 
 export default function AkademikModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik/get`;
+  const DATA_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik/for-admin`;
   const DELETE_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik`;
 
   const [searchValue, setSearchValue] = useState("");
 
   const {
-    dataAbsensi,
-    loadingAbsensi,
-    pageAbsensi,
-    pageCountAbsensi,
-    setPageAbsensi,
-    refreshAbsensi,
-    canPrevAbsensi,
-    canNextAbsensi,
-  } = useDataTableBk(DATA_URL, {}, searchValue);
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    refreshNew,
+    sortByNew,
+    getSortByNew,
+  } = useNewDataTableNew(DATA_URL, {}, searchValue);
+
   const { destroy } = useCRUD(DELETE_URL);
 
   return (
@@ -29,7 +31,9 @@ export default function AkademikModule({ baseURL }) {
       <div className="flex mb-8 justify-end items-center">
         <div className="mr-4">
           <Button
-            onClick={() => window.open(`${`${baseURL}/akademik/create`}`,'_blank')}
+            onClick={() =>
+              window.open(`${`${baseURL}/akademik/create`}`, "_blank")
+            }
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -73,7 +77,7 @@ export default function AkademikModule({ baseURL }) {
           </tr>
         </thead>
         <tbody>
-          {loadingAbsensi && (
+          {loadingNew && (
             <tr>
               <td
                 colSpan="6"
@@ -83,7 +87,7 @@ export default function AkademikModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
+          {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
               <td
                 colSpan="6"
@@ -93,10 +97,10 @@ export default function AkademikModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loadingAbsensi &&
-            dataAbsensi &&
-            dataAbsensi.map((row, index) => {
-              const startNumber = (pageAbsensi - 1) * 10 + 1;
+          {!loadingNew &&
+            dataNew &&
+            dataNew.map((row, index) => {
+              const startNumber = (pageNew - 1) * 10 + 1;
 
               const rowNumber = startNumber + index;
               return (
@@ -108,12 +112,17 @@ export default function AkademikModule({ baseURL }) {
                     {row.tahun_angkatan}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.nama_lengkap}
+                    {row.personal_data?.nama_lengkap}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        onClick={() => window.open(`${baseURL}/akademik/detail/${row.id}`,'_blank')}
+                        onClick={() =>
+                          window.open(
+                            `${baseURL}/akademik/detail/${row.id}`,
+                            "_blank"
+                          )
+                        }
                         variant="info"
                         icon={
                           <Icon
@@ -124,7 +133,12 @@ export default function AkademikModule({ baseURL }) {
                         }
                       />
                       <Button.Icon
-                        onClick={() => window.open(`${baseURL}/akademik/edit/${row.id}`,'_blank')}
+                        onClick={() =>
+                          window.open(
+                            `${baseURL}/akademik/edit/${row.id}`,
+                            "_blank"
+                          )
+                        }
                         variant="secondary"
                         icon={<Icon icon="bx:edit" width={20} height={20} />}
                       />
@@ -160,8 +174,8 @@ export default function AkademikModule({ baseURL }) {
                 height={20}
               />
             }
-            onClick={() => setPageAbsensi(pageAbsensi - 1)}
-            disabled={!canPrevAbsensi || pageAbsensi === 1} // Tambahkan kondisi page === 1
+            onClick={() => setPageNew(pageNew - 1)}
+            disabled={pageNew <= 1}
             pill
           />
           <Button
@@ -175,8 +189,8 @@ export default function AkademikModule({ baseURL }) {
               />
             }
             iconPosition="right"
-            onClick={() => setPageAbsensi(pageAbsensi + 1)}
-            disabled={!canNextAbsensi || pageAbsensi === pageCountAbsensi} // Tambahkan kondisi page === pageCount
+            onClick={() => setPageNew(pageNew + 1)}
+            disabled={pageNew >= pageCountNew}
             pill
           >
             Next Page
@@ -187,15 +201,19 @@ export default function AkademikModule({ baseURL }) {
           <Form.Input
             type="number"
             min="1"
-            max={pageCountAbsensi}
+            max={pageCountNew || 1}
             className="w-20"
-            value={pageAbsensi}
+            value={pageNew}
             onChange={(event) =>
-              event.target.valueAsNumber <= pageCountAbsensi &&
-              setPageAbsensi(event.target.value)
+              setPageNew(
+                Math.max(
+                  1,
+                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
+                )
+              )
             }
           />
-          of {pageCountAbsensi || 1}
+          of {pageCountNew || 1}
         </div>
       </div>
     </>
