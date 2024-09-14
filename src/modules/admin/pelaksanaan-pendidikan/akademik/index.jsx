@@ -4,11 +4,16 @@ import useDatatable from "../../../../hooks/useDatatable";
 import useCRUD from "../../../../hooks/useCRUD";
 import Form from "../../../../components/Form";
 import { useState } from "react";
-import useDataTableBk from "../../../../hooks/useDataTableBk";
 import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
+import Modal from "../../../../components/Modal";
+import useModal from "../../../../hooks/useModal";
+import axios from "axios";
+import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import useForm from "../../../../hooks/useForm";
 
 export default function AkademikModule({ baseURL }) {
   const DATA_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik/for-admin`;
+  const IMPORT_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik/format-import`;
   const DELETE_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik`;
 
   const [searchValue, setSearchValue] = useState("");
@@ -26,21 +31,93 @@ export default function AkademikModule({ baseURL }) {
 
   const { destroy } = useCRUD(DELETE_URL);
 
+  const { form, inputHandler } = useForm({});
+  const { show, toggle, close } = useModal();
+
+  async function submitHandler(event) {
+    event.preventDefault();
+    try {
+      const formdata = new FormData();
+      formdata.append("file", form.file);
+
+      const request = await axios({
+        url: `${process.env.API_ENDPOINT}/bimbingan-akademik/import`,
+        method: "POST",
+        data: formdata,
+      });
+      const response = await request.data;
+
+      if (response) {
+        loadingAlert();
+        MySwal.close();
+
+        close();
+
+        return refreshNew();
+      }
+
+      throw new Error(response.message);
+    } catch (error) {
+      if (error.name === "AxiosError") {
+        const { status_code, message, data } = error.response.data;
+        toastAlert("error", message);
+
+        return;
+      }
+
+      toastAlert("error", error.message);
+    }
+  }
+
+  const formatImport = async () => {
+    try {
+      const response = await axios.get(IMPORT_URL, {
+        responseType: "blob",
+      });
+
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+
+      const filename = "format_import.xlsx";
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", filename);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading the file:", error);
+    }
+  };
+
   return (
     <>
       <div className="flex mb-8 justify-end items-center">
-        <div className="mr-4">
+        <div className="flex items-center mr-4">
           <Button
             onClick={() =>
               window.open(`${`${baseURL}/akademik/create`}`, "_blank")
             }
             variant="primary"
+            className="mr-4"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
           >
             Tambah Bimbingan
           </Button>
+
+          <Button
+            onClick={toggle}
+            variant="success"
+            className="mr-4"
+            icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+            pill
+          >
+            Import
+          </Button>
         </div>
+
         <div className="flex-shrink">
           <Form.Input
             type="text"
@@ -151,9 +228,7 @@ export default function AkademikModule({ baseURL }) {
                             height={20}
                           />
                         }
-                        onClick={() =>
-                          destroy(row.id).then(() => refreshAbsensi())
-                        }
+                        onClick={() => destroy(row.id).then(() => refreshNew())}
                       />
                     </div>
                   </td>
@@ -216,6 +291,32 @@ export default function AkademikModule({ baseURL }) {
           of {pageCountNew || 1}
         </div>
       </div>
+
+      <Modal title="Import" show={show} handler={toggle}>
+        <div className="flex items-center mb-4">
+          <h1 className="mr-4">
+            Silahkan download format import terlebih dahulu :
+          </h1>
+          <Button.Icon
+            variant="info"
+            icon={
+              <Icon icon="basil:file-download-solid" width={20} height={20} />
+            }
+            onClick={(e) => formatImport()}
+          />
+        </div>
+
+        <hr />
+        <Form onSubmit={submitHandler} className="space-y-2" type="formdata">
+          <Form.Group className="mb-4 mt-2">
+            <Form.Label className="pb-2 text-2xl">File</Form.Label>
+            <Form.Input type="file" name="file" onChange={inputHandler} />
+          </Form.Group>
+          <div className="flex justify-center">
+            <Button variant="primary">Import</Button>
+          </div>
+        </Form>
+      </Modal>
     </>
   );
 }
