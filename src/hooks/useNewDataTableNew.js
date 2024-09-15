@@ -4,7 +4,12 @@ import { toastAlert } from "../lib/sweetalert";
 import useUser from "./useUser";
 import useDebounce from "./useDebounce";
 
-export const useNewDataTableNew = (url, options = {}, searchValue) => {
+export const useNewDataTableNew = (
+  url,
+  options = {},
+  searchValue,
+  defaultSort = "id"
+) => {
   const { user } = useUser({ redirectTo: "/login" });
   const { debounce } = useDebounce();
 
@@ -14,7 +19,7 @@ export const useNewDataTableNew = (url, options = {}, searchValue) => {
   const [loading, setLoading] = useState(true);
   const [pageCount, setPageCount] = useState(1);
   const [recordsTotal, setRecordsTotal] = useState(0);
-  const [sort, setSort] = useState({});
+  const [sort, setSort] = useState({ [defaultSort]: "desc" }); // Set default sort column
 
   const refresh = () => {
     toastAlert("info", "Mengambil Data!", 1000);
@@ -27,28 +32,23 @@ export const useNewDataTableNew = (url, options = {}, searchValue) => {
   const sortBy = (key) => {
     setSort((state) => {
       const isSameAsBefore = state[key] ?? false;
-      return { [key]: isSameAsBefore && state[key] == "desc" ? "asc" : "desc" };
+      return {
+        [key]: isSameAsBefore && state[key] === "desc" ? "asc" : "desc",
+      };
     });
   };
 
   const fetchData = async () => {
     setLoading(true);
 
-    let keySort;
-    let valueObjSort;
-    const keys = Object.keys(sort);
-
-    keys.forEach((key) => {
-      const value = sort[key];
-      keySort = key;
-      valueObjSort = value;
-    });
+    const keySort = Object.keys(sort)[0] || defaultSort;
+    const valueObjSort = sort[keySort] || "desc";
 
     const query = {
       limit: pageSize,
       page: page,
-      order: keySort || "id",
-      orderBy: valueObjSort || "desc",
+      order: keySort, // Sorting by the selected column or default
+      orderBy: valueObjSort, // Sort direction
       filter: options.filter || [],
       filterValue: options.filterValue || [],
       search: searchValue,

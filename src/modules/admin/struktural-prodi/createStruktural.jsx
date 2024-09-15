@@ -106,7 +106,7 @@ const CreateStruktural = ({ onAction }) => {
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">
-              Program Studi <span className="text-danger-600">*</span>
+              Unit <span className="text-danger-600">*</span>
             </Form.Label>
             <span>:</span>
             <Form.Combobox

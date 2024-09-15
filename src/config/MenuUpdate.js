@@ -501,6 +501,11 @@ export const APP_MENU = [
             url: "#list-dosen-ext",
             allowedRoles: [ROLE_ID_ADMIN],
           },
+          {
+            label: "Pegawai",
+            url: "#list-pegawai",
+            allowedRoles: [ROLE_ID_ADMIN],
+          },
         ],
       },
       {
@@ -516,7 +521,7 @@ export const APP_MENU = [
         ],
       },
       {
-        label: "Struktural Prodi",
+        label: "Jabatan Struktural",
         url: "/struktural-prodi",
         allowedRoles: [ROLE_ID_ADMIN],
         submenus: [

@@ -469,7 +469,7 @@ export const APP_MENU = [
     ],
   },
   {
-    label: "Struktural Prodi",
+    label: "Jabatan Struktural",
     url: "/struktural-prodi",
     icon: "ph:tree-structure",
     allowedRoles: [ROLE_ID_ADMIN],
