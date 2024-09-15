@@ -10,6 +10,7 @@ import SortIcon from "../../../../../components/SortIcon";
 import Button from "../../../../../components/Button";
 import useNewDataTableForMainApi from "../../../../../hooks/useNewDataTableForMainApi";
 import { Icon } from "@iconify-icon/react";
+import axios from "axios";
 
 export default function RekapitulasiNilaiSidang() {
   const router = useRouter();
@@ -33,6 +34,34 @@ export default function RekapitulasiNilaiSidang() {
     setFilterNew,
   } = useNewDataTableForMainApi(DATA_URL, {}, searchValue);
 
+  const exportsRekap = async () => {
+    const EXPORT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/export-nilai-sidang`;
+    try {
+      if (user) {
+        const response = await axios.get(EXPORT_URL, {
+          headers: {
+            token: user?.token,
+          },
+          responseType: "blob",
+        });
+
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+
+        const filename = "rekapitulasi_penilaian_sidang.xlsx";
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", filename);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error("Error downloading the rekapitulasi kolokium:", error);
+    }
+  };
+
   useEffect(() => {
     if (router.isReady === false || !user) return;
   }, [router, user]);
@@ -42,7 +71,7 @@ export default function RekapitulasiNilaiSidang() {
       <div className="flex mb-8 justify-end items-center mt-8">
         <div className="flex items-center mr-4"></div>
 
-        <div className="flex-shrink">
+        <div className="flex-shrink mr-4">
           <Form.Input
             type="text"
             name="search"
@@ -50,6 +79,13 @@ export default function RekapitulasiNilaiSidang() {
             style={{ width: "400px" }}
             value={searchValue}
             onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
+        <div className="flex items-center ">
+          <Button.Icon
+            variant="success"
+            icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
+            onClick={() => exportsRekap()}
           />
         </div>
       </div>
