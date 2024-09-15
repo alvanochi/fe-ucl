@@ -32,8 +32,12 @@ export default function DetailBimbinganAkademik() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (router.query.id) {
-          const response = await axios.get(`${API_URL}/${router.query.id}`);
+        if (router.query.id && user) {
+          const response = await axios.get(`${API_URL}/${router.query.id}`, {
+            headers: {
+              token: user?.token,
+            },
+          });
 
           setDataBimbingan(response.data.data.dataBimbingan);
           setMhsBimbingan(response.data.data.mhsBimbingan);
@@ -49,7 +53,7 @@ export default function DetailBimbinganAkademik() {
     };
 
     fetchData();
-  }, [router.query]);
+  }, [router.query, user]);
 
   const handleChange = (mhsIndex, semesterIndex, fieldName, value) => {
     const updatedMhsBimbingan = [...mhsBimbingan];
