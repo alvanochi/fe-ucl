@@ -1,12 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
+import Button from "../../../components/Button";
+import Modal from "../../../components/Modal";
+import Form from "../../../components/Form";
+import useModal from "../../../hooks/useModal";
 import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import useForm from "../../../hooks/useForm";
+import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 
 const CreateJabatan = ({ onAction }) => {
   const { show, toggle, close } = useModal();
@@ -33,7 +33,7 @@ const CreateJabatan = ({ onAction }) => {
       }
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/jabatan`,
+        url: `${process.env.API_ENDPOINT}/kategori/jabatan`,
         method: "POST",
         data: requestData,
       });
@@ -65,9 +65,9 @@ const CreateJabatan = ({ onAction }) => {
         onClick={toggle}
         pill
       >
-        Tambah Jabatan
+        Tambah Unit
       </Button>
-      <Modal title="Tambah Jabatan" show={show} handler={toggle}>
+      <Modal title="Tambah Data Master Jabatan" show={show} handler={toggle}>
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">

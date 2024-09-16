@@ -7,23 +7,25 @@ import { Icon } from "@iconify-icon/react";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 import Form from "../../../components/Form";
 
-const EditKategoriKegiatan = ({ id, onAction }) => {
+const EditUnit = ({ id, onAction }) => {
   const { show, toggle, close } = useModal();
 
   const [formData, setFormData] = useState({
-    nama_kegiatan: "",
+    code: "",
+    nama_unit: "",
   });
 
   const getData = async (id) => {
     try {
       const response = await axios.get(
-        `${process.env.API_ENDPOINT}/kategori/kegiatan/${id}`
+        `${process.env.API_ENDPOINT}/kategori/unit/${id}`
       );
 
       const dataResponse = response.data.data;
 
       setFormData({
-        nama_kegiatan: dataResponse.nama_kegiatan,
+        code: dataResponse.code,
+        nama_unit: dataResponse.nama_unit,
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -49,7 +51,7 @@ const EditKategoriKegiatan = ({ id, onAction }) => {
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/kategori/kegiatan/${id || ""}`,
+        `${process.env.API_ENDPOINT}/kategori/unit/${id || ""}`,
         formData
       );
 
@@ -78,16 +80,28 @@ const EditKategoriKegiatan = ({ id, onAction }) => {
         onClick={toggle}
       />
 
-      <Modal title="Edit Kategori Kegiatan" show={show} handler={toggle}>
+      <Modal title="Edit Data Master Unit" show={show} handler={toggle}>
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group>
             <Form.Label>
-              Nama Kegiatan <span className="text-danger-600">*</span>
+              Kode <span className="text-danger-600">*</span>
             </Form.Label>
             <Form.Input
               type="text"
-              name="nama_kegiatan"
-              value={formData.nama_kegiatan}
+              name="code"
+              value={formData.code}
+              onChange={inputHandler}
+              required
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>
+              Nama Unit <span className="text-danger-600">*</span>
+            </Form.Label>
+            <Form.Input
+              type="text"
+              name="nama_unit"
+              value={formData.nama_unit}
               onChange={inputHandler}
               required
             />
@@ -107,4 +121,4 @@ const EditKategoriKegiatan = ({ id, onAction }) => {
   );
 };
 
-export default EditKategoriKegiatan;
+export default EditUnit;

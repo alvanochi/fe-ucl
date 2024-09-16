@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
+import Button from "../../../components/Button";
+import Modal from "../../../components/Modal";
+import useModal from "../../../hooks/useModal";
 import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
+import Form from "../../../components/Form";
 
 const EditJabatan = ({ id, onAction }) => {
   const { show, toggle, close } = useModal();
@@ -17,7 +17,7 @@ const EditJabatan = ({ id, onAction }) => {
   const getData = async (id) => {
     try {
       const response = await axios.get(
-        `${process.env.API_ENDPOINT}/jabatan/${id}`
+        `${process.env.API_ENDPOINT}/kategori/jabatan/${id}`
       );
 
       const dataResponse = response.data.data;
@@ -49,7 +49,7 @@ const EditJabatan = ({ id, onAction }) => {
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/jabatan/${id || ""}`,
+        `${process.env.API_ENDPOINT}/kategori/jabatan/${id || ""}`,
         formData
       );
 
@@ -78,7 +78,7 @@ const EditJabatan = ({ id, onAction }) => {
         onClick={toggle}
       />
 
-      <Modal title="Edit Jabatan" show={show} handler={toggle}>
+      <Modal title="Edit Data Master Jabatan" show={show} handler={toggle}>
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group>
             <Form.Label>

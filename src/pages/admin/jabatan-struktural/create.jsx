@@ -7,27 +7,24 @@ import useModal from "../../../hooks/useModal";
 import { Icon } from "@iconify-icon/react";
 import useForm from "../../../hooks/useForm";
 import useDosen from "../../../repo/dosen";
-import useDepartemen from "../../../repo/departemen";
 import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
 import useJabatan from "../../../repo/jabatan";
+import useUnit from "../../../repo/unit";
 
 const CreateStruktural = ({ onAction }) => {
   const { show, toggle, close } = useModal();
 
   const { data: listDosen, isLoading: isDosenLoading } = useDosen();
-  const { data: listDepartemen, isLoading: isDepartemenLoading } =
-    useDepartemen();
+  const { data: listDepartemen, isLoading: isDepartemenLoading } = useUnit();
   const { data: listJabatan, isLoading: isJabatanLoading } = useJabatan();
 
   const [selectedDosen, setSelectedDosen] = useState("");
   const [selectedDepartemen, setSelectedDepartemen] = useState("");
   const [selectedJabatan, setSelectedJabatan] = useState("");
-  const [selectedNip, setSelectedNip] = useState("");
   const [keterangan, setKeterangan] = useState(null);
 
   const handleDosenChange = (selected) => {
     setSelectedDosen(selected?.value);
-    setSelectedNip(selected?.nip);
   };
   const handleDepartemenChange = (selected) => {
     setSelectedDepartemen(selected?.value);
@@ -46,17 +43,15 @@ const CreateStruktural = ({ onAction }) => {
     try {
       const requestData = {
         user_id: selectedDosen,
-        nip: selectedNip,
-        kode_prodi: selectedDepartemen,
-        id_jabatan: selectedJabatan,
+        unit_id: selectedDepartemen,
+        jabatan_id: selectedJabatan,
         keterangan: keterangan,
       };
 
       if (
         !requestData.user_id ||
-        !requestData.nip ||
-        !requestData.kode_prodi ||
-        !requestData.id_jabatan
+        !requestData.unit_id ||
+        !requestData.jabatan_id
       ) {
         toastAlert("error", "Pleas fill in all the required fields.");
 
@@ -64,7 +59,7 @@ const CreateStruktural = ({ onAction }) => {
       }
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/struktural`,
+        url: `${process.env.API_ENDPOINT}/users/jabatan-struktural`,
         method: "POST",
         data: requestData,
       });
@@ -72,7 +67,6 @@ const CreateStruktural = ({ onAction }) => {
 
       setSelectedDepartemen("");
       setSelectedDosen("");
-      setSelectedNip("");
       setSelectedJabatan("");
       setKeterangan(null);
 
@@ -92,6 +86,13 @@ const CreateStruktural = ({ onAction }) => {
     }
   }
 
+  if (
+    [isDosenLoading, isDepartemenLoading, isJabatanLoading].some(
+      (item) => item == null
+    )
+  )
+    return <Loading />;
+
   return (
     <>
       <Button
@@ -100,9 +101,14 @@ const CreateStruktural = ({ onAction }) => {
         onClick={toggle}
         pill
       >
-        Tambah
+        Tambah Jabatan Struktural
       </Button>
-      <Modal title="Tambah Struktural" show={show} handler={toggle} size="lg">
+      <Modal
+        title="Tambah Jabatan Struktural"
+        show={show}
+        handler={toggle}
+        size="lg"
+      >
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">
@@ -110,12 +116,12 @@ const CreateStruktural = ({ onAction }) => {
             </Form.Label>
             <span>:</span>
             <Form.Combobox
-              name="kode_prodi"
+              name="unit_id"
               onChange={handleDepartemenChange}
               value={selectedDepartemen}
               options={listDepartemen?.map((item) => ({
-                label: `${item.code} - ${item.name}`,
-                value: item.code,
+                label: `${item.code} - ${item.nama_unit}`,
+                value: item.id,
               }))}
             />
           </Form.Group>
@@ -125,7 +131,7 @@ const CreateStruktural = ({ onAction }) => {
             </Form.Label>
             <span>:</span>
             <Form.Combobox
-              name="id_jabatan"
+              name="jabatan_id"
               onChange={handleJabatanChange}
               value={selectedJabatan}
               options={listJabatan?.map((item) => ({

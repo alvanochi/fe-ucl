@@ -10,16 +10,16 @@ import Form from "../../../components/Form";
 import SortIcon from "../../../components/SortIcon";
 import Button from "../../../components/Button";
 import { Icon } from "@iconify-icon/react/dist/iconify.js";
-import CreateJabatan from "./create";
-import EditJabatan from "./edit";
+import CreateUnit from "./create";
+import EditUnit from "./edit";
 
-export default function Jabatan() {
+export default function Unit() {
   /* eslint-disable */
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
   /* eslint-enable */
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/kategori/jabatan`;
+  const DATA_URL = `${process.env.API_ENDPOINT}/kategori/unit`;
   const [searchValue, setSearchValue] = useState("");
 
   const {
@@ -52,7 +52,7 @@ export default function Jabatan() {
       <div className="my-8">
         <div className="flex mb-8 justify-end items-center">
           <div className="mr-4">
-            <CreateJabatan onAction={handleAction} />
+            <CreateUnit onAction={handleAction} />
           </div>
           <div className="flex-shrink">
             <Form.Input
@@ -82,10 +82,19 @@ export default function Jabatan() {
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("nama_jabatan")}
+                  onClick={() => sortByNew("code")}
                 >
-                  Nama Jabatan
-                  <SortIcon sort={getSortByNew("nama_jabatan")} />
+                  Kode
+                  <SortIcon sort={getSortByNew("code")} />
+                </div>
+              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">
+                <div
+                  className="flex items-center gap-2 cursor-pointer"
+                  onClick={() => sortByNew("nama_unit")}
+                >
+                  Nama Unit
+                  <SortIcon sort={getSortByNew("nama_unit")} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
@@ -122,12 +131,15 @@ export default function Jabatan() {
                     {index + 1}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.nama_jabatan}
+                    {row.code}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.nama_unit}
                   </td>
 
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
-                      <EditJabatan id={row.id} onAction={handleAction} />
+                      <EditUnit id={row.id} onAction={handleAction} />
 
                       <Button.Icon
                         variant="danger"

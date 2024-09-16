@@ -509,6 +509,18 @@ export const APP_MENU = [
         ],
       },
       {
+        label: "Jabatan Struktural",
+        url: "/jabatan-struktural",
+        allowedRoles: [ROLE_ID_ADMIN],
+        submenus: [
+          {
+            label: "Jabatan Struktural",
+            url: "#jabatan-struktural",
+            allowedRoles: [ROLE_ID_ADMIN],
+          },
+        ],
+      },
+      {
         label: "Master Jabatan",
         url: "/jabatan",
         allowedRoles: [ROLE_ID_ADMIN],
@@ -521,13 +533,13 @@ export const APP_MENU = [
         ],
       },
       {
-        label: "Jabatan Struktural",
-        url: "/struktural-prodi",
+        label: "Master Unit",
+        url: "/unit",
         allowedRoles: [ROLE_ID_ADMIN],
         submenus: [
           {
-            label: "Struktural Prodi",
-            url: "#struktural-prodi",
+            label: "Unit",
+            url: "#unit",
             allowedRoles: [ROLE_ID_ADMIN],
           },
         ],
