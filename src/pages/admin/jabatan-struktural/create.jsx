@@ -86,13 +86,6 @@ const CreateStruktural = ({ onAction }) => {
     }
   }
 
-  if (
-    [isDosenLoading, isDepartemenLoading, isJabatanLoading].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
-
   return (
     <>
       <Button
