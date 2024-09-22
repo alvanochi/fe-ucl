@@ -417,8 +417,8 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="mt-8 mb-4 w-2/4">
-        <Form className="grid grid-cols-2 gap-4">
+      <div className="mt-8 mb-4 w-full sm:w-3/4 lg:w-2/4">
+        <Form className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Form.Group>
             <Form.Label className="pb-2">Tahun Akademik :</Form.Label>
             <Form.Select
@@ -436,7 +436,7 @@ export default function Home() {
           <Form.Group>
             <Form.Label className="pb-2">Semester :</Form.Label>
             <Form.Select
-              name="Tahu_akademik"
+              name="Semester"
               options={[
                 { value: "GASAL", label: "GASAL" },
                 { value: "GENAP", label: "GENAP" },

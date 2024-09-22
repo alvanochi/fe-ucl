@@ -65,7 +65,7 @@ const CreateJabatan = ({ onAction }) => {
         onClick={toggle}
         pill
       >
-        Tambah Unit
+        Tambah Jabatan
       </Button>
       <Modal title="Tambah Data Master Jabatan" show={show} handler={toggle}>
         <Form className="space-y-4" onSubmit={submitHandler}>

@@ -30,8 +30,8 @@ export const Sidebar = ({ expanded, toggle }) => {
       className={classNames(
         "flex flex-col shrink-0 transition-[width] h-screen max-h-full overflow-x-auto",
         {
-          "fixed z-50 md:relative w-96": expanded,
-          "relative w-24": !expanded,
+          "fixed z-50 md:relative w-96": expanded, // For larger screens, set width to 96
+          "relative w-16 md:w-24": !expanded, // Shrink width on mobile (16) and larger screens (24)
         }
       )}
     >
@@ -39,8 +39,8 @@ export const Sidebar = ({ expanded, toggle }) => {
         className={classNames(
           "relative z-10 flex justify-center h-14 shrink-0",
           {
-            "w-10/12": expanded,
-            "w-7/12": !expanded,
+            "w-10/12": expanded, // Expanded state width
+            "w-6/12 md:w-7/12": !expanded, // Adjust shrink width for mobile (6/12) and larger screens (7/12)
           }
         )}
       >
@@ -53,9 +53,9 @@ export const Sidebar = ({ expanded, toggle }) => {
             />
           </div>
         )}
-        <div className="flex shrink items-center justify-center">
+        <div className="flex shrink-0 items-center justify-center">
           <button
-            className="flex items-center justify-center px-4 py-4"
+            className="flex items-center justify-center px-4 py-4 sm:px-2 sm:py-2"
             onClick={toggle}
           >
             <img
@@ -152,7 +152,7 @@ export const Sidebar = ({ expanded, toggle }) => {
           "absolute inset-0 z-0 bg-motion bg-cover bg-center rounded-br-3xl",
           {
             "w-10/12": expanded,
-            "w-7/12": !expanded,
+            "w-6/12 md:w-7/12": !expanded, // Adjust background width for mobile (6/12) and larger screens (7/12)
           }
         )}
       ></div>

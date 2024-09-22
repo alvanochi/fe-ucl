@@ -75,14 +75,14 @@ const CreateStruktural = ({ onAction }) => {
       onAction();
     } catch (error) {
       if (error.name === "AxiosError") {
-        toastAlert("error", error.response.data.message);
+        toastAlert("error", error.response.data.responseMessage);
 
         return;
       }
       loadingAlert();
       MySwal.close();
 
-      toastAlert("error", error.message);
+      toastAlert("error", error.response.data.responseMessage);
     }
   }
 
