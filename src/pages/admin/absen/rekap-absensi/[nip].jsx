@@ -23,7 +23,7 @@ export default function RekapKehadiran() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const [academicYear, setAcademicYear] = useState("2023/2024");
+  const [academicYear, setAcademicYear] = useState("2024/2025");
 
   useEffect(() => {
     if (router.isReady === false || !user) return;
@@ -196,6 +196,7 @@ export default function RekapKehadiran() {
           value={academicYear}
           onChange={handleYearChange}
           options={[
+            { value: "2024/2025", label: "2024/2025" },
             { value: "2023/2024", label: "2023/2024" },
             { value: "2022/2023", label: "2022/2023" },
             { value: "2021/2022", label: "2021/2022" },
