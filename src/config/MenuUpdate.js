@@ -105,17 +105,17 @@ export const APP_MENU = [
       {
         label: "Presensi",
         url: "/absen",
-        allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_ADMIN],
+        allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_ADMIN, ROLE_ID_DOSEN_EXT],
         submenus: [
           {
             label: "Daftar Hadir",
             url: "#daftar-hadir",
-            allowedRoles: [ROLE_ID_DOSEN],
+            allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_DOSEN_EXT],
           },
           {
             label: "Rekap Kehadiran",
             url: "#rekap-kehadiran",
-            allowedRoles: [ROLE_ID_DOSEN],
+            allowedRoles: [ROLE_ID_DOSEN, ROLE_ID_DOSEN_EXT],
           },
           {
             label: "Rekap Presensi",
@@ -558,7 +558,25 @@ export const APP_MENU = [
       },
     ],
   },
-
+  {
+    type: "menu",
+    label: "Pembelajaran",
+    url: "/pembelajaran",
+    icon: "fluent-mdl2:learning-tools",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "Matakuliah",
+        url: "#matakuliah",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Kurikulum",
+        url: "#kurikulum",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
   {
     type: "menu",
     icon: "fluent:hand-point-28-filled",

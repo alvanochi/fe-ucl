@@ -1,21 +1,24 @@
 import { useState } from "react";
 import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
+import Button from "../../../../components/Button";
+import Modal from "../../../../components/Modal";
 import { Icon } from "@iconify-icon/react";
 
 export default function ShowQr({ data }) {
   const [qrCode, setQrCode] = useState(null);
   const [loading, setLoading] = useState(false);
-
   const handleShowQr = async () => {
     try {
       if (data && data.token) {
         setLoading(true);
 
+        console.log(data.token);
+
         const response = await axios.get(
-          `${process.env.API_ENDPOINT_ABSEN}/absensi/show-qr?token=${data.token}`
+          `${process.env.API_ENDPOINT}/absensi-external/pembelajaran/show-qr?token=${data.token}`
         );
+
+        console.log(response.data);
 
         const svgContent = response.data;
         setQrCode(svgContent);
@@ -46,24 +49,14 @@ export default function ShowQr({ data }) {
         ) : qrCode ? (
           <>
             <div
+              dangerouslySetInnerHTML={{ __html: qrCode }}
               style={{
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
                 height: "100%",
               }}
-            >
-              <div
-                dangerouslySetInnerHTML={{ __html: qrCode }}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: "80vh",
-                }}
-              />
-            </div>
-            <h1 className="text-center font-bold text-4xl pt-4">
-              {data.token}
-            </h1>
+            />
           </>
         ) : (
           <p>No QR code available.</p>

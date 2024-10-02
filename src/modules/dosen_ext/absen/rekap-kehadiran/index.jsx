@@ -1,10 +1,10 @@
 import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Form from "../../../components/Form";
+import Button from "../../../../components/Button";
+import Form from "../../../../components/Form";
 import Link from "next/link";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { toastAlert } from "../../../lib/sweetalert";
+import { toastAlert } from "../../../../lib/sweetalert";
 import UploadSk from "./upload-sk";
 
 export default function RekapKehadiran({ baseURL, user }) {

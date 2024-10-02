@@ -1,20 +1,17 @@
 import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import date from "../../../utils/date";
-import SortIcon from "../../../components/SortIcon";
-import Form from "../../../components/Form";
+import Button from "../../../../components/Button";
+import useCRUD from "../../../../hooks/useCRUD";
+import SortIcon from "../../../../components/SortIcon";
+import Form from "../../../../components/Form";
 import ShowQr from "./show-qr";
 import axios from "axios";
-import { toastAlert } from "../../../lib/sweetalert";
+import { toastAlert } from "../../../../lib/sweetalert";
 import { useState } from "react";
-import useNewDataTable from "../../../hooks/useNewDataTable";
+import useNewDataTable from "../../../../hooks/useNewDataTable";
+import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
 
 export default function DaftarHadirModule({ baseURL, user }) {
-  const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran`;
-  const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/delete`;
+  const DATA_URL = `${process.env.API_ENDPOINT}/absensi-external/pembelajaran`;
   const [searchValue, setSearchValue] = useState("");
 
   const {
@@ -26,29 +23,25 @@ export default function DaftarHadirModule({ baseURL, user }) {
     refreshNew,
     sortByNew,
     getSortByNew,
-  } = useNewDataTable(
+  } = useNewDataTableNew(
     DATA_URL,
     {
-      filter: ["nik_dosen"],
-      filterValue: [user && user.nip],
+      filter: "id_dosen",
+      filterValue: user?.user_id,
     },
     searchValue
   );
 
-  const { destroy } = useCRUD(DELETE_URL);
+  const { destroy } = useCRUD(DATA_URL);
+
+  const handleAction = () => {
+    refreshNew();
+  };
 
   const updateLearningDone = async (id) => {
     try {
-      const currentDate = new Date()
-        .toISOString()
-        .slice(0, 19)
-        .replace("T", " ");
-
       await axios.post(
-        `https://absen.ft.uika-bogor.ac.id/api/pembelajaran/update/${id}`,
-        {
-          learning_done: currentDate,
-        }
+        `${process.env.API_ENDPOINT}/absensi-external/pembelajaran/non-active/${id}`
       );
 
       refreshNew();
@@ -66,7 +59,9 @@ export default function DaftarHadirModule({ baseURL, user }) {
       <div className="flex mb-8 justify-end items-center">
         <div className="mr-4">
           <Button
-            onClick={() => window.open(`${baseURL}/daftar-hadir/generate`,'_blank')}
+            onClick={() =>
+              window.open(`${baseURL}/daftar-hadir/generate`, "_blank")
+            }
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -183,15 +178,15 @@ export default function DaftarHadirModule({ baseURL, user }) {
                       {rowNumber}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.matkul?.name &&
-                        row.matkul.name
+                      {row.matakuliah?.nama_matakuliah &&
+                        row.matakuliah?.nama_matakuliah
                           .split(" ")
                           .slice(0, 3)
                           .concat("...")
                           .join(" ")}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.id_matkul}
+                      {row.matakuliah?.kode_matakuliah}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {row.pertemuan}
@@ -212,13 +207,18 @@ export default function DaftarHadirModule({ baseURL, user }) {
                         <ShowQr
                           data={{
                             token: row.token,
-                            matkul: row.matkul?.name,
+                            matkul: row.matakuliah?.nama_matakuliah,
                             kelas: row.kelas,
                             pertemuan: row.pertemuan,
                           }}
                         />
                         <Button.Icon
-                          onClick={() => window.open(`${baseURL}/daftar-hadir/list-mhs/${row.id}`,'_blank')}
+                          onClick={() =>
+                            window.open(
+                              `${baseURL}/daftar-hadir/list-mhs/${row.id}`,
+                              "_blank"
+                            )
+                          }
                           variant="primary"
                           icon={<Icon icon="bx:group" width={18} height={18} />}
                         />
