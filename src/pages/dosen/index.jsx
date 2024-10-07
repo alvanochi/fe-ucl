@@ -338,23 +338,22 @@ export default function Home() {
     },
   ];
 
-  useEffect(() => {
-    async function fetchJabatanStruktural(user) {
-      try {
-        const DATA_URL = `${process.env.API_ENDPOINT}/users/user-jabatan`;
-        const response = await axios.get(DATA_URL);
+  // useEffect(() => {
+  //   async function fetchJabatanStruktural(user) {
+  //     try {
+  //       const DATA_URL = `${process.env.API_ENDPOINT}/users/user-jabatan`;
+  //       const response = await axios.get(DATA_URL);
 
-        setDataJabatan(response.data.data);
-      } catch (error) {
-        console.log(error);
-      }
-    }
+  //       setDataJabatan(response.data.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   }
 
-    fetchJabatanStruktural();
-  }, [user]);
+  //   fetchJabatanStruktural();
+  // }, [user]);
 
-  if ([menu, user, dataJabatan].some((item) => item == null))
-    return <Loading />;
+  if ([menu, user].some((item) => item == null)) return <Loading />;
   return (
     <Layout>
       <Head>
@@ -411,7 +410,7 @@ export default function Home() {
               </span>
             </div>
 
-            <div>
+            {/* <div>
               <div className="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-4 mb-4 mt-4">
                 {dataJabatan
                   ? dataJabatan.map((jabatan, index) => {
@@ -428,7 +427,7 @@ export default function Home() {
                     })
                   : ""}
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>
