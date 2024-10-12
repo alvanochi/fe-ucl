@@ -220,7 +220,6 @@ export default function DetailList() {
                   name="nm_pengundang"
                   value={dataMeet.nm_pengundang}
                   onChange={inputHandler}
-                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -234,7 +233,6 @@ export default function DetailList() {
                   name="nm_kegiatan"
                   value={dataMeet.nm_kegiatan}
                   onChange={inputHandler}
-                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -246,7 +244,6 @@ export default function DetailList() {
                   name="sub_tema"
                   onChange={inputHandler}
                   value={dataMeet.sub_tema}
-                  disabled
                 />
               </Form.Group>
 
@@ -261,7 +258,6 @@ export default function DetailList() {
                   name="pertemuan"
                   value={dataMeet.pertemuan}
                   onChange={inputHandler}
-                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -297,7 +293,6 @@ export default function DetailList() {
                     }))
                   }
                   menuTarget={document.body}
-                  readOnly
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -312,7 +307,6 @@ export default function DetailList() {
                   name="ket_narsum"
                   onChange={inputHandler}
                   value={dataMeet.ket_narsum}
-                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -359,7 +353,6 @@ export default function DetailList() {
                   value={
                     dataMeet.link_online == "null" ? "" : dataMeet.link_online
                   }
-                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -373,7 +366,6 @@ export default function DetailList() {
                   name="tanggal"
                   value={dataMeet.tanggal}
                   onChange={inputHandler}
-                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -387,7 +379,6 @@ export default function DetailList() {
                   name="waktu"
                   onChange={inputHandler}
                   value={dataMeet.waktu}
-                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -401,7 +392,6 @@ export default function DetailList() {
                   name="waktu_end"
                   onChange={inputHandler}
                   value={dataMeet.waktu_end}
-                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -415,7 +405,6 @@ export default function DetailList() {
                   name="contact"
                   onChange={inputHandler}
                   value={dataMeet.contact}
-                  disabled
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -430,7 +419,6 @@ export default function DetailList() {
                       onChange={inputHandler}
                       value={0}
                       checked={dataMeet.status_ruangan == 0}
-                      disabled
                     />
                     Offline
                   </Form.Label>
@@ -440,7 +428,6 @@ export default function DetailList() {
                       onChange={inputHandler}
                       value={1}
                       checked={dataMeet.status_ruangan == 1}
-                      disabled
                     />
                     Online
                   </Form.Label>
@@ -450,7 +437,6 @@ export default function DetailList() {
                       onChange={inputHandler}
                       value={2}
                       checked={dataMeet.status_ruangan == 2}
-                      disabled
                     />
                     Hybird
                   </Form.Label>
