@@ -456,9 +456,13 @@ export default function DetailList() {
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
                 <Form.Label className="min-w-[16rem]"></Form.Label>
-                <ShowNotulen
-                  notulen={dataMeet?.notulen == "null" ? "" : dataMeet.notulen}
-                />
+                <div className="ml-4">
+                  <ShowNotulen
+                    notulen={
+                      dataMeet?.notulen == "null" ? "" : dataMeet.notulen
+                    }
+                  />
+                </div>
               </Form.Group>
 
               <Form.Group className="flex items-baseline gap-3">
