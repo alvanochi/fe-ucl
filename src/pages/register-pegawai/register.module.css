@@ -10,6 +10,8 @@
 
 .logo {
   display: block;
+  width: 150px;
+  height: auto;
 }
 
 @media (max-width: 954px) {
