@@ -23,6 +23,7 @@ import useDosen from "../../../../repo/dosen";
 import useMahasiswa from "../../../../repo/mahasiswa";
 import useRuangan from "../../../../repo/ruangan";
 import useUsers from "../../../../repo/users";
+import ShowNotulen from "./showNotulen";
 
 export default function DetailList() {
   const { user } = useUser({ redirectTo: "/login" });
@@ -453,6 +454,13 @@ export default function DetailList() {
                   onChange={inputHandler}
                 />
               </Form.Group>
+              <Form.Group className="flex items-baseline gap-3">
+                <Form.Label className="min-w-[16rem]"></Form.Label>
+                <ShowNotulen
+                  notulen={dataMeet?.notulen == "null" ? "" : dataMeet.notulen}
+                />
+              </Form.Group>
+
               <Form.Group className="flex items-baseline gap-3">
                 <Form.Label className="min-w-[16rem]">Dokumentasi</Form.Label>
                 <span>:</span>
