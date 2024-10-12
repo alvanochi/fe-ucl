@@ -7,7 +7,7 @@ export const Gamification = () => {
       <div className="container py-20">
         <div data-aos="fade-up" className="text-center m-auto mb-20 md:w-1/2">
           <h4 className="font-bold text-color-secondary mb-4">Gamification</h4>
-          <h1 className="title">
+          <h1 className="title text-primary-700">
             Leveling Up Learning. Harnessing Gamification for Engagement and
             Innovation.
           </h1>
@@ -19,7 +19,7 @@ export const Gamification = () => {
         >
           <div
             data-aos="flip-down"
-            className="border-2 border-solid border-color-gray text-center py-20 px-5 rounded-2xl cursor-pointer hover:bg-color-primary-dark ease-in duration-200"
+            className="bg-color-primary-dark border-2 border-solid border-color-gray text-center py-20 px-5 rounded-2xl cursor-pointer"
           >
             <div className="bg-color-secondary inline-block rounded-2xl py-5 px-6">
               <Icon icon="ph:flask-fill" width={50} height={50} />
@@ -46,7 +46,7 @@ export const Gamification = () => {
 
           <div
             data-aos="flip-down"
-            className="border-2 border-solid border-color-gray text-center py-20 px-5 rounded-2xl cursor-pointer hover:bg-color-primary-dark ease-in duration-200"
+            className="bg-color-primary-dark border-2 border-solid border-color-gray text-center py-20 px-5 rounded-2xl cursor-pointer"
           >
             <div className="bg-color-secondary inline-block rounded-2xl py-5 px-6">
               <Icon icon="gg:community" width={50} height={50} />

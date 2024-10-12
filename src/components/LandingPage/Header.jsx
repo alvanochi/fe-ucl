@@ -23,11 +23,9 @@ export const Header = () => {
 
   return (
     <header
-      className={`sticky top-0 z-50 ${
-        isSticky ? "bg-color-primary-dark border-b border-color-gray" : ""
-      }`}
+      className={`sticky top-0 z-50 bg-color-primary-dark border-b border-color-gray`}
     >
-      <nav className="container flex justify-between items-center">
+      <nav className="container flex justify-between items-center bg-color-primary-dark">
         <div className="py-5 text-color-secondary font-bold text-3xl">
           <a href="#home">
             <img src="/img/landing-page/logo-tias.png" alt="" width="170" />

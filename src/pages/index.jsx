@@ -64,7 +64,7 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>Tias</title>
+        <title>UCL</title>
       </Head>
       <div className="bg-color-primary text-color-white tracking-wider">
         <Header />

@@ -9,7 +9,7 @@ export const Footer = () => {
             <div className="space-y-6">
               <h4 className="font-bold text-lg">About App</h4>
               <p className="leading-relaxed">
-                The TIAS application with the implementation of gamification
+                The UCL application with the implementation of gamification
                 based on the Tridharma of higher education is developed on two
                 platforms: web and mobile.
               </p>
@@ -98,7 +98,8 @@ export const Footer = () => {
           </div>
 
           <div className="flex justify-center pt-10 border-t border-color-gray">
-            <p>2024 &copy; TIAS. All Rights Reserved.</p>
+            <p>2024 &copy; UCL. All Rights Reserved.</p>
+            <span className="ml-40"> Powered By TIAS</span>
           </div>
         </div>
       </div>

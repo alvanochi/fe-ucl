@@ -206,7 +206,7 @@ export const RegisterPegawai = () => {
                   </h3>
                   <p className="block text-white text-sm font-semibold">
                     Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga TIAS
+                    keluarga UCL
                   </p>
                 </div>
               </div>
@@ -219,7 +219,7 @@ export const RegisterPegawai = () => {
                   />
                   <p className="block text-white text-sm font-semibold">
                     Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga TIAS
+                    keluarga UCL
                   </p>
                 </div>
               </div>
@@ -232,7 +232,7 @@ export const RegisterPegawai = () => {
                   />
                   <p className="block text-white text-sm font-semibold">
                     Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga TIAS
+                    keluarga UCL
                   </p>
                 </div>
               </div>

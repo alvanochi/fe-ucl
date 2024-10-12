@@ -2,15 +2,13 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
-
-
 export const Support = () => {
   return (
     <section id="support" className="bg-color-primary-light">
       <div className="container py-20">
-        <div className="text-center m-auto mb-20 md:w-1/2">
-          <h4 className="font-bold text-color-secondary mb-4">Support</h4>
-          <h1 className="title">
+        <div className="text-center text-primary-700 m-auto mb-20 md:w-1/2">
+          <h4 className="font-bold text-color-secondary mb-4 ">Support</h4>
+          <h1 className="text-primary-700">
             need help? Or do you have suggestions for improving the app? Please
             share your feedback!
           </h1>
@@ -41,21 +39,15 @@ export const Support = () => {
                   <img src="/img/wahyu.jpeg" alt="" className="rounded-2xl" />
                 </div>
 
-                <div className="py-10 text-center">
-                  <h3 className="text-xl font-bold pb-3">Mobile Developer</h3>
-                  <span className="text-md pb-3">Wahyu Ramadhan</span> <br />
-                  <span className="text-md pb-3">+62 812-9894-8302</span>
+                <div className="py-10 text-center text-primary-700">
+                  <h3 className="text-xl font-bold pb-3 text-primary-700">
+                    Mobile Developer
+                  </h3>
+                  <span className="text-md pb-3 text-primary-700">
+                    Wahyu Ramadhan
+                  </span>{" "}
+                  <br />
                 </div>
-
-                <button
-                  className="card_btn"
-                  onClick={() => {
-                    window.location.href =
-                      "https://api.whatsapp.com/send?phone=6281298948302";
-                  }}
-                >
-                  Contact Here
-                </button>
               </div>
             </div>
           </SwiperSlide>
@@ -70,24 +62,15 @@ export const Support = () => {
                   <img src="/img/azis.jpg" alt="" className="rounded-2xl" />
                 </div>
 
-                <div className="py-10 text-center">
-                  <h3 className="text-xl font-bold pb-3">Back-End Engineer</h3>
-                  <span className="text-md pb-3">
+                <div className="py-10 text-center text-primary-700">
+                  <h3 className="text-xl font-bold pb-3 text-primary-700">
+                    Back-End Engineer
+                  </h3>
+                  <span className="text-md pb-3 text-primary-700">
                     Muhammad Azis Pratama
                   </span>{" "}
                   <br />
-                  <span className="text-md pb-3">+62 895-3491-39240</span>
                 </div>
-
-                <button
-                  className="card_btn"
-                  onClick={() => {
-                    window.location.href =
-                      "https://api.whatsapp.com/send?phone=62895349139240";
-                  }}
-                >
-                  Contact Here
-                </button>
               </div>
             </div>
           </SwiperSlide>
@@ -102,23 +85,15 @@ export const Support = () => {
                   <img src="/img/tamam.jpeg" alt="" className="rounded-2xl" />
                 </div>
 
-                <div className="py-10 text-center">
-                  <h3 className="text-xl font-bold pb-3">Web Developer</h3>
-                  <span className="text-md pb-3">
+                <div className="py-10 text-center text-primary-700">
+                  <h3 className="text-xl font-bold pb-3 text-primary-700">
+                    Web Developer
+                  </h3>
+                  <span className="text-md pb-3 text-primary-700">
                     Mochammad Tamam Mulya
                   </span>{" "}
                   <br />
-                  <span className="text-md pb-3">+62 896-3818-7480</span>
                 </div>
-                <button
-                  className="card_btn"
-                  onClick={() => {
-                    window.location.href =
-                      "https://api.whatsapp.com/send?phone=6289638187480";
-                  }}
-                >
-                  Contact Here
-                </button>
               </div>
             </div>
           </SwiperSlide>
@@ -132,23 +107,15 @@ export const Support = () => {
                   <img src="/img/tamam.jpeg" alt="" className="rounded-2xl" />
                 </div>
 
-                <div className="py-10 text-center">
-                  <h3 className="text-xl font-bold pb-3">Web Developer</h3>
-                  <span className="text-md pb-3">
+                <div className="py-10 text-center text-primary-700">
+                  <h3 className="text-xl font-bold pb-3 text-primary-700">
+                    Web Developer
+                  </h3>
+                  <span className="text-md pb-3 text-primary-700">
                     Mochammad Tamam Mulya
                   </span>{" "}
                   <br />
-                  <span className="text-md pb-3">+62 896-3818-7480</span>
                 </div>
-                <button
-                  className="card_btn"
-                  onClick={() => {
-                    window.location.href =
-                      "https://api.whatsapp.com/send?phone=6289638187480";
-                  }}
-                >
-                  Contact Here
-                </button>
               </div>
             </div>
           </SwiperSlide>
@@ -162,23 +129,15 @@ export const Support = () => {
                   <img src="/img/tamam.jpeg" alt="" className="rounded-2xl" />
                 </div>
 
-                <div className="py-10 text-center">
-                  <h3 className="text-xl font-bold pb-3">Web Developer</h3>
-                  <span className="text-md pb-3">
+                <div className="py-10 text-center text-primary-700">
+                  <h3 className="text-xl font-bold pb-3 text-primary-700">
+                    Web Developer
+                  </h3>
+                  <span className="text-md pb-3 text-primary-700">
                     Mochammad Tamam Mulya
                   </span>{" "}
                   <br />
-                  <span className="text-md pb-3">+62 896-3818-7480</span>
                 </div>
-                <button
-                  className="card_btn"
-                  onClick={() => {
-                    window.location.href =
-                      "https://api.whatsapp.com/send?phone=6289638187480";
-                  }}
-                >
-                  Contact Here
-                </button>
               </div>
             </div>
           </SwiperSlide>
@@ -192,23 +151,15 @@ export const Support = () => {
                   <img src="/img/tamam.jpeg" alt="" className="rounded-2xl" />
                 </div>
 
-                <div className="py-10 text-center">
-                  <h3 className="text-xl font-bold pb-3">Web Developer</h3>
-                  <span className="text-md pb-3">
+                <div className="py-10 text-center text-primary-700">
+                  <h3 className="text-xl font-bold pb-3 text-primary-700">
+                    Web Developer
+                  </h3>
+                  <span className="text-md pb-3 text-primary-700">
                     Mochammad Tamam Mulya
                   </span>{" "}
                   <br />
-                  <span className="text-md pb-3">+62 896-3818-7480</span>
                 </div>
-                <button
-                  className="card_btn"
-                  onClick={() => {
-                    window.location.href =
-                      "https://api.whatsapp.com/send?phone=6289638187480";
-                  }}
-                >
-                  Contact Here
-                </button>
               </div>
             </div>
           </SwiperSlide>

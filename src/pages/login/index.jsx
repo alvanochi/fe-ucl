@@ -179,7 +179,7 @@ export const Login = () => {
                   </h3>
                   <p className="block text-white text-sm font-semibold">
                     Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga TIAS
+                    keluarga UCL
                   </p>
                 </div>
               </div>
@@ -192,7 +192,7 @@ export const Login = () => {
                   />
                   <p className="block text-white text-sm font-semibold">
                     Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga TIAS
+                    keluarga UCL
                   </p>
                 </div>
               </div>
@@ -205,7 +205,7 @@ export const Login = () => {
                   />
                   <p className="block text-white text-sm font-semibold">
                     Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga TIAS
+                    keluarga UCL
                   </p>
                 </div>
               </div>
@@ -222,7 +222,7 @@ export const Login = () => {
                 Login
               </h1>
               <p className="block text-gray-600 text-sm">
-                Selamat datang di TIAS. Kami merekomendasikan untuk login
+                Selamat datang di UCL. Kami merekomendasikan untuk login
                 menggunakan perangkat dengan layar berukuran desktop.
               </p>
             </div>

@@ -38,7 +38,7 @@ export default function ChangeStatus({ id, status, onStatusChange }) {
       const EDIT_URL = `${process.env.API_ENDPOINT}/berita/change-status/${form.id}`;
       const response = await axios.patch(EDIT_URL, { status: form.status });
 
-      toastAlert('success', response.data.message);
+      toastAlert("success", response.data.message);
 
       close();
       reset();
@@ -47,7 +47,7 @@ export default function ChangeStatus({ id, status, onStatusChange }) {
         onStatusChange();
       }
     } catch (error) {
-      toastAlert('error', error);
+      toastAlert("error", error);
     } finally {
       setIsSubmit(false);
     }
@@ -62,7 +62,10 @@ export default function ChangeStatus({ id, status, onStatusChange }) {
       />
       <Modal title="Change Status" show={show} handler={toggle}>
         <p className="text-center text-sm mb-8">
-          Jika status suatu (Event / Tantangan) adalah Active maka informasi tersebut akan ditampilkan dalam daftar berita pada aplikasi mobile TIAS. Sebaliknya, jika statusnya Non Active berarti informasi tersebut tidak akan ditampilkan.
+          Jika status suatu (Event / Tantangan) adalah Active maka informasi
+          tersebut akan ditampilkan dalam daftar berita pada aplikasi mobile
+          UCL. Sebaliknya, jika statusnya Non Active berarti informasi tersebut
+          tidak akan ditampilkan.
         </p>
         <Form onSubmit={submitHandler} className="space-y-4" type="formdata">
           <Form.Group className="flex items-baseline gap-3">

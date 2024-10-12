@@ -5,10 +5,10 @@ export const DownloadApp = () => {
     <section id="download-app" className="bg-color-primary-light">
       <div className="container h-[80vh] grid place-items-center">
         <div className="text-center md:w-2/3 m-auto">
-          <h1 className="title">
+          <h1 className="title text-primary-700">
             Download The Application Now and Check Your Rank.
           </h1>
-          <p className="leading-relaxed pt-5">
+          <p className="leading-relaxed pt-5 text-primary-700">
             Explore the app, climb the ranks, and track your progress!
           </p>
 

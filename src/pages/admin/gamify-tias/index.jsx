@@ -45,7 +45,7 @@ export default function GamifyTias() {
   return (
     <Layout>
       <PageHeader
-        title="Tias Gamify"
+        title="UCL Gamify"
         icon={menu.icon}
         items={menu.submenus}
         handler={setActive}

@@ -6,7 +6,7 @@ export const HowItWorks = () => {
       <div className="container py-20">
         <div data-aos="fade-up" className="text-center m-auto mb-20 md:w-1/2">
           <h4 className="font-bold text-color-secondary mb-4">How It Works</h4>
-          <h1 className="title">
+          <h1 className="title text-primary-700">
             Unlocking the Mechanism, Understanding How It Works.
           </h1>
         </div>
@@ -18,8 +18,10 @@ export const HowItWorks = () => {
                 1
               </p>
             </div>
-            <h3 className="text-xl font-bold py-4">Create an Account</h3>
-            <p className="leading-relaxed">
+            <h3 className="text-xl font-bold py-4 text-primary-700">
+              Create an Account
+            </h3>
+            <p className="leading-relaxed text-primary-700">
               Start Your Journey. Create an Account Now!
             </p>
           </div>
@@ -30,8 +32,10 @@ export const HowItWorks = () => {
                 2
               </p>
             </div>
-            <h3 className="text-xl font-bold py-4">Setup Your Profile</h3>
-            <p className="leading-relaxed">
+            <h3 className="text-xl font-bold py-4 text-primary-700">
+              Setup Your Profile
+            </h3>
+            <p className="leading-relaxed text-primary-700">
               Optimize Your Presence. Complete Profile Setup!
             </p>
           </div>
@@ -39,8 +43,10 @@ export const HowItWorks = () => {
             <div className="relative bg-color-primary-dark inline-block px-6 py-3 rounded-lg cursor-pointer hover:bg-color-secondary ease-in duration-200">
               <p className="text-6xl">3</p>
             </div>
-            <h3 className="text-xl font-bold py-4">Enjoy The Game!</h3>
-            <p className="leading-relaxed">
+            <h3 className="text-xl font-bold py-4 text-primary-700">
+              Enjoy The Game!
+            </h3>
+            <p className="leading-relaxed text-primary-700">
               Level Up Your Enjoyment. Let the Games Begin!
             </p>
           </div>

@@ -49,7 +49,7 @@ export const Sidebar = ({ expanded, toggle }) => {
             <img
               src="/img/app_logo.png"
               alt="app logo"
-              className={classNames({ hidden: !expanded })}
+              className={classNames("w-50 h-16", { hidden: !expanded })}
             />
           </div>
         )}
@@ -149,7 +149,7 @@ export const Sidebar = ({ expanded, toggle }) => {
       </div>
       <div
         className={classNames(
-          "absolute inset-0 z-0 bg-motion bg-cover bg-center rounded-br-3xl",
+          "absolute inset-0 z-0 bg-liquid bg-cover bg-center rounded-br-3xl",
           {
             "w-10/12": expanded,
             "w-6/12 md:w-7/12": !expanded, // Adjust background width for mobile (6/12) and larger screens (7/12)
