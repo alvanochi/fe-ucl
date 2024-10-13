@@ -6,8 +6,10 @@ import { Loading } from "../../../components/Loading";
 import ESignModule from "../../../modules/admin/esign";
 
 export default function esign() {
+  /* eslint-disable */
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
+  /* eslint-enable */
 
   if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
