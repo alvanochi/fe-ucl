@@ -3,8 +3,6 @@ import Link from "next/link";
 import React, { useState } from "react";
 
 export const Header = () => {
-  const [isSticky, setSticky] = useState(false);
-
   const handleHamburgerClick = () => {
     const menu = document.querySelector("#menu");
 
@@ -23,7 +21,7 @@ export const Header = () => {
 
   return (
     <header
-      className={`sticky top-0 z-50 bg-color-primary-dark border-b border-color-gray`}
+      className={`sticky top-0 z-50 bg-color-primary-dark border-b border-color-gray w-full`}
     >
       <nav className="container flex justify-between items-center bg-color-primary-dark">
         <div className="py-5 text-color-secondary font-bold text-3xl">

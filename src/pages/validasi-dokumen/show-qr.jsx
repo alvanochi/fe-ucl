@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import Button from "../../components/Button";
 import Modal from "../../components/Modal";
+import { Icon } from "@iconify-icon/react";
 
 export default function ShowQr({ data }) {
   const [qrCode, setQrCode] = useState(null);
@@ -28,9 +29,12 @@ export default function ShowQr({ data }) {
 
   return (
     <>
-      <Button variant="secondary" onClick={handleShowQr}>
-        Show QR Code
-      </Button>
+      <Button.Icon
+        variant="info"
+        icon={<Icon icon="ic:baseline-qrcode" width={20} height={20} />}
+        onClick={handleShowQr}
+      />
+
       <Modal
         title={`Link Validasi`}
         show={qrCode !== null}

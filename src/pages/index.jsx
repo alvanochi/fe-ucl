@@ -22,19 +22,19 @@ const Home = () => {
       const sectionn = document.querySelectorAll("section");
       const navlinkss = document.querySelectorAll("nav ul li a");
 
-      if (window.scrollY > 100) {
-        navbar.classList.add(
-          "bg-color-primary-dark",
-          "border-b",
-          "border-color-gray"
-        );
-      } else {
-        navbar.classList.remove(
-          "bg-color-primary-dark",
-          "border-b",
-          "border-color-gray"
-        );
-      }
+      // if (window.scrollY > 100) {
+      //   navbar.classList.add(
+      //     "bg-color-primary-dark",
+      //     "border-b",
+      //     "border-color-gray"
+      //   );
+      // } else {
+      //   navbar.classList.remove(
+      //     "bg-color-primary-dark",
+      //     "border-b",
+      //     "border-color-gray"
+      //   );
+      // }
 
       // active link
       let current = "home";

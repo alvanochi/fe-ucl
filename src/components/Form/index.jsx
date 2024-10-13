@@ -28,7 +28,7 @@ Form.Label = ({ children, className, ...props }) => (
 
 Form.LabelFront = ({ children, className, ...props }) => (
   <label
-    className={classnames("block text-sm text-white", className)}
+    className={classnames("block text-sm text-primary-700", className)}
     {...props}
   >
     {children}

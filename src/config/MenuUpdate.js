@@ -587,6 +587,20 @@ export const APP_MENU = [
   },
   {
     type: "menu",
+    icon: "mdi:sign",
+    label: "E-Sign",
+    url: "/esign",
+    allowedRoles: [ROLE_ID_ADMIN],
+    submenus: [
+      {
+        label: "E-Sign",
+        url: "#esign",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
+  {
+    type: "menu",
     label: "Setting",
     url: "/setting",
     icon: "ant-design:setting-filled",

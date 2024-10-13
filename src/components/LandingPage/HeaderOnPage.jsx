@@ -9,19 +9,11 @@ const HeaderOnPage = () => {
       const sectionn = document.querySelectorAll("section");
       const navlinkss = document.querySelectorAll("nav ul li a");
 
-      if (window.scrollY > 100) {
-        navbar.classList.add(
-          "bg-color-primary-dark",
-          "border-b",
-          "border-color-gray"
-        );
-      } else {
-        navbar.classList.remove(
-          "bg-color-primary-dark",
-          "border-b",
-          "border-color-gray"
-        );
-      }
+      // if (window.scrollY > 100) {
+      //   navbar.classList.add("bg-color-primary-dark", "border-b");
+      // } else {
+      //   navbar.classList.remove("bg-color-primary-dark", "border-b");
+      // }
 
       // active link
       let current = "validasi-dokumen";
@@ -47,7 +39,6 @@ const HeaderOnPage = () => {
       window.onscroll = null;
     };
   }, []);
-  const [isSticky, setSticky] = useState(false);
 
   const handleHamburgerClick = () => {
     const menu = document.querySelector("#menu");
@@ -66,9 +57,7 @@ const HeaderOnPage = () => {
   };
   return (
     <header
-      className={`sticky top-0 z-50 ${
-        isSticky ? "bg-color-primary-dark border-b border-color-gray" : ""
-      }`}
+      className={`sticky top-0 z-50 bg-color-primary-dark border-b border-color-gray`}
     >
       <nav className="container flex justify-between items-center">
         <div className="py-5 text-color-secondary font-bold text-3xl">

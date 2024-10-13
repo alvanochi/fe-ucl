@@ -87,33 +87,37 @@ const DetailValidasi = () => {
                       <>
                         <div>
                           <Form.Group className="flex items-baseline gap-3">
-                            <Form.LabelFront className="min-w-[8rem] ">
-                              Dosen
-                            </Form.LabelFront>
-                            <span>:</span>
-                            <p className="text-sm">{data[0]?.nama_dosen}</p>
+                            <label className="min-w-[8rem] text-primary-700 ">
+                              Pelaksana
+                            </label>
+                            <span className="text-primary-700">:</span>
+                            <p className="text-sm text-primary-700">
+                              {data[0]?.nama_dosen}
+                            </p>
                           </Form.Group>
-                          <Form.Group className="flex items-baseline gap-3">
-                            <Form.LabelFront className="min-w-[8rem] ">
-                              Mahasiswa
-                            </Form.LabelFront>
-                            <span>:</span>
-                            <p className="text-sm">{data[0]?.nama_mhs}</p>
+                          <Form.Group className="flex items-baseline gap-3 mt-4">
+                            <label className="min-w-[8rem]  text-primary-700">
+                              Tertuju
+                            </label>
+                            <span className="text-primary-700">:</span>
+                            <p className="text-sm text-primary-700">
+                              {data[0]?.nama_mhs}
+                            </p>
                           </Form.Group>
-                          <Form.Group className="flex items-baseline gap-3">
-                            <Form.LabelFront className="min-w-[8rem] ">
+                          <Form.Group className="flex items-baseline gap-3 mt-4">
+                            <label className="min-w-[8rem] text-primary-700">
                               Kegiatan
-                            </Form.LabelFront>
-                            <span>:</span>
-                            <p className="text-sm">
+                            </label>
+                            <span className="text-primary-700">:</span>
+                            <p className="text-sm text-primary-700">
                               Memberikan rekomendasi mahasiswa
                             </p>
                           </Form.Group>
-                          <Form.Group className="flex items-baseline gap-3 mt-2">
-                            <Form.LabelFront className="min-w-[8rem] ">
+                          <Form.Group className="flex items-baseline gap-3 mt-4">
+                            <label className="min-w-[8rem] text-primary-700">
                               Link
-                            </Form.LabelFront>
-                            <span>:</span>
+                            </label>
+                            <span className="text-primary-700">:</span>
                             <Button
                               as="a"
                               href={`${data[0]?.link_kegiatan}`}

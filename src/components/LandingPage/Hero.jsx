@@ -14,7 +14,7 @@ export const Hero = () => {
             <p className="leading-relaxed mb-10 text-primary-700">
               Enhancing Productivity and Quality of the Three Pillars of Higher
               Education through Gamification Approach in the Academic System of
-              Informatics Engineering.
+              UIKA CAMPUS LIFE.
             </p>
             <Link href="/login" className="btn bg-primary-500">
               Dashboard

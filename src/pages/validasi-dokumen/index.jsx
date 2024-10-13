@@ -5,7 +5,7 @@ import Button from "../../components/Button";
 import Form from "../../components/Form";
 import { Icon } from "@iconify-icon/react";
 import Link from "next/link";
-import useNewDataTable from "../../hooks/useNewDataTable";
+import useNewDataTableNew from "../../hooks/useNewDataTableNew";
 import date from "../../utils/date";
 import HeaderOnPage from "../../components/LandingPage/HeaderOnPage";
 import { Breadcrumb } from "../../components/LandingPage/Breadcrumb";
@@ -29,7 +29,7 @@ const ValidasiDokumen = () => {
     refreshNew,
     sortByNew,
     getSortByNew,
-  } = useNewDataTable(DATA_URL, {}, searchValue);
+  } = useNewDataTableNew(DATA_URL, {}, searchValue);
 
   return (
     <>
@@ -51,7 +51,7 @@ const ValidasiDokumen = () => {
                       type="text"
                       id="base-input"
                       style={{ width: "300px" }}
-                      className="bg-gray-500 border text-sm rounded-lg  block  p-2.5 border-gray-600 placeholder-gray-400 text-white-700 focus:ring-blue-500 focus:border-blue-500"
+                      className="bg-white border text-sm rounded-lg text-black  block  p-2.5 border-gray-600 placeholder-gray-400 text-white-700  focus:border-primary-700"
                       placeholder="Search"
                       name="search"
                       value={searchValue}
@@ -66,13 +66,13 @@ const ValidasiDokumen = () => {
                         No
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        Dosen
+                        Pelaksana
                       </th>
                       <th scope="col" className="px-6 py-3">
                         Nama Kegiatan
                       </th>
                       <th scope="col" className="px-6 py-3">
-                        Mahasiswa
+                        Tertuju
                       </th>
                       <th scope="col" className="px-6 py-3">
                         <div className="flex items-center ">Tanggal</div>
@@ -109,11 +109,13 @@ const ValidasiDokumen = () => {
                         const rowNumber = startNumber + index;
                         return (
                           <tr
-                            className={`bg-gray-800 border-gray-700`}
+                            className={`bg-white border-gray-700`}
                             key={`row-${index}`}
                           >
                             <td className="px-6 py-4">{rowNumber}</td>
-                            <td className="px-6 py-4">{row.nama_dosen}</td>
+                            <td className="px-6 py-4">
+                              {row?.dosen.nama_lengkap}
+                            </td>
                             <th
                               scope="row"
                               className="px-6 py-4 font-medium  whitespace-nowrap"
@@ -132,7 +134,9 @@ const ValidasiDokumen = () => {
                                 }`}
                               </Link>
                             </th>
-                            <td className="px-6 py-4">{row.nama_mhs}</td>
+                            <td className="px-6 py-4">
+                              {row?.mahasiswa?.nama_lengkap}
+                            </td>
                             <td className="px-6 py-4">
                               {date.formatToID(new Date(row.created_at))}
                             </td>
@@ -178,18 +182,19 @@ const ValidasiDokumen = () => {
                       iconPosition="right"
                       onClick={() => setPageNew(pageNew + 1)}
                       disabled={pageNew >= pageCountNew}
+                      className="text-primary-700"
                       pill
                     >
                       Next Page
                     </Button>
                   </div>
                   <div className="ml-auto whitespace-nowrap flex items-center gap-2">
-                    <p className="">Page</p>
+                    <p className="text-primary-700">Page</p>
                     <Form.Input
                       type="number"
                       min="1"
                       max={pageCountNew || 1}
-                      className="w-20 text-color-white"
+                      className="w-20 text-primary-700"
                       value={pageNew}
                       onChange={(event) =>
                         setPageNew(
