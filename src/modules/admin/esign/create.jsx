@@ -27,11 +27,11 @@ const CreateValidasi = ({ onAction }) => {
   const [selectedDosen, setSelectedDosen] = useState("");
 
   const handleMhsChange = (selected) => {
-    selectedMhs(selected?.value);
+    setSelectedMhs(selected?.value);
   };
 
   const handleDosenChange = (selected) => {
-    selectedDosen(selected?.value);
+    setSelectedDosen(selected?.value);
   };
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
@@ -73,8 +73,8 @@ const CreateValidasi = ({ onAction }) => {
       form.nama_kegiatan = "";
       form.link_validasi = "";
 
-      selectedMhs("");
-      selectedDosen("");
+      setSelectedMhs("");
+      setSelectedDosen("");
 
       toastAlert("success", "Successfully");
       close();

@@ -26,11 +26,11 @@ const EditESign = ({ id, onAction }) => {
   const [selectedDosen, setSelectedDosen] = useState("");
 
   const handleMhsChange = (selected) => {
-    selectedMhs(selected?.value);
+    setSelectedMhs(selected?.value);
   };
 
   const handleDosenChange = (selected) => {
-    selectedDosen(selected?.value);
+    setSelectedDosen(selected?.value);
   };
 
   const getData = async (id) => {
