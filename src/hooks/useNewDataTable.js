@@ -4,7 +4,12 @@ import { toastAlert } from "../lib/sweetalert";
 import useUser from "./useUser";
 import useDebounce from "./useDebounce";
 
-export const useNewDataTable = (url, options = {}, searchValue) => {
+export const useNewDataTable = (
+  url,
+  options = {},
+  searchValue,
+  sortOptions = {}
+) => {
   const { user } = useUser({ redirectTo: "/login" });
 
   const { debounce } = useDebounce();
@@ -49,8 +54,8 @@ export const useNewDataTable = (url, options = {}, searchValue) => {
 
     const query = {
       dataTable: true,
-      orderField: keySort || "id",
-      orderValue: valueObjSort || "desc",
+      orderField: sortOptions.orderField || keySort || "id",
+      orderValue: sortOptions.orderValue || valueObjSort || "desc",
       filter: options.filter || [],
       filterValue: options.filterValue || [],
       length: -1,
