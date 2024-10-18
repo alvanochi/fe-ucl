@@ -7,8 +7,17 @@ import Link from "next/link";
 import { toastAlert } from "../../../../lib/sweetalert";
 import Form from "../../../../components/Form";
 import useNewDataTable from "../../../../hooks/useNewDataTable";
+import useDepartemen from "../../../../repo/departemen";
+import useUnit from "../../../../repo/unit";
 
-export default function RekapAbsensi({ baseURL }) {
+export default function RekapAbsensi({ baseURL, user }) {
+  const { data: listDepartemen, isLoading: isDepartemenLoading } = useUnit();
+
+  const options = listDepartemen?.map((departemen) => ({
+    value: departemen.code, // Ganti 'code' dengan properti yang sesuai dari listDepartemen
+    label: departemen.code, // Ganti 'name' dengan properti yang sesuai dari listDepartemen
+  }));
+
   const [academicYear, setAcademicYear] = useState("");
   const [departementCode, setDepartementCode] = useState("");
 
@@ -117,11 +126,7 @@ export default function RekapAbsensi({ baseURL }) {
           <Form.Select
             value={departementCode}
             onChange={handleDepartementChange}
-            options={[
-              { value: "FT_TI", label: "FT_TI" },
-              { value: "FT_TS", label: "FT_TS" },
-              { value: "FT_TM", label: "FT_TM" },
-            ]}
+            options={options}
           />
         </div>
 
