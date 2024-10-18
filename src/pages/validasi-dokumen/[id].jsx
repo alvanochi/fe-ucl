@@ -92,7 +92,7 @@ const DetailValidasi = () => {
                             </label>
                             <span className="text-primary-700">:</span>
                             <p className="text-sm text-primary-700">
-                              {data[0]?.nama_dosen}
+                              {data.rows[0]?.pelaksana}
                             </p>
                           </Form.Group>
                           <Form.Group className="flex items-baseline gap-3 mt-4">
@@ -101,7 +101,7 @@ const DetailValidasi = () => {
                             </label>
                             <span className="text-primary-700">:</span>
                             <p className="text-sm text-primary-700">
-                              {data[0]?.nama_mhs}
+                              {data.rows[0]?.tertuju}
                             </p>
                           </Form.Group>
                           <Form.Group className="flex items-baseline gap-3 mt-4">
@@ -120,7 +120,7 @@ const DetailValidasi = () => {
                             <span className="text-primary-700">:</span>
                             <Button
                               as="a"
-                              href={`${data[0]?.link_kegiatan}`}
+                              href={`${data.rows[0]?.link_kegiatan}`}
                               variant="primary"
                               icon={
                                 <Icon

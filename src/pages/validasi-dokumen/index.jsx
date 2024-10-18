@@ -113,9 +113,7 @@ const ValidasiDokumen = () => {
                             key={`row-${index}`}
                           >
                             <td className="px-6 py-4">{rowNumber}</td>
-                            <td className="px-6 py-4">
-                              {row?.dosen.nama_lengkap}
-                            </td>
+                            <td className="px-6 py-4">{row?.pelaksana}</td>
                             <th
                               scope="row"
                               className="px-6 py-4 font-medium  whitespace-nowrap"
@@ -134,9 +132,7 @@ const ValidasiDokumen = () => {
                                 }`}
                               </Link>
                             </th>
-                            <td className="px-6 py-4">
-                              {row?.mahasiswa?.nama_lengkap}
-                            </td>
+                            <td className="px-6 py-4">{row?.tertuju}</td>
                             <td className="px-6 py-4">
                               {date.formatToID(new Date(row.created_at))}
                             </td>

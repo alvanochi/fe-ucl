@@ -122,10 +122,10 @@ export default function ESignModule({ baseURL }) {
                     {index + 1}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row?.dosen?.nama_lengkap}
+                    {row?.pelaksana}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row?.mahasiswa?.nama_lengkap}
+                    {row?.tertuju}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row?.nama_kegiatan}
