@@ -113,27 +113,6 @@ const DetailValidasi = () => {
                               Memberikan rekomendasi mahasiswa
                             </p>
                           </Form.Group>
-                          <Form.Group className="flex items-baseline gap-3 mt-4">
-                            <label className="min-w-[8rem] text-primary-700">
-                              Link
-                            </label>
-                            <span className="text-primary-700">:</span>
-                            <Button
-                              as="a"
-                              href={`${data.rows[0]?.link_kegiatan}`}
-                              variant="primary"
-                              icon={
-                                <Icon
-                                  icon="material-symbols:link"
-                                  width={10}
-                                  height={10}
-                                />
-                              }
-                              pill
-                            >
-                              Link
-                            </Button>
-                          </Form.Group>
                         </div>
                       </>
                     )}
