@@ -110,7 +110,7 @@ const DetailValidasi = () => {
                             </label>
                             <span className="text-primary-700">:</span>
                             <p className="text-sm text-primary-700">
-                              Memberikan rekomendasi mahasiswa
+                              {data.rows[0]?.nama_kegiatan}
                             </p>
                           </Form.Group>
                         </div>
