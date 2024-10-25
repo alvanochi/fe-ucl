@@ -59,33 +59,23 @@ export default function ListMhs() {
     }
   }, [id]);
 
-  let dataNew,
+  const {
+    dataNew,
     loadingNew,
     pageNew,
     pageCountNew,
     setPageNew,
     refreshNew,
     sortByNew,
-    getSortByNew;
-  if (id) {
-    ({
-      dataNew,
-      loadingNew,
-      pageNew,
-      pageCountNew,
-      setPageNew,
-      refreshNew,
-      sortByNew,
-      getSortByNew,
-    } = useNewDataTable(
-      DATA_URL,
-      {
-        filter: ["id_pembelajaran"],
-        filterValue: [id],
-      },
-      searchValue
-    ));
-  }
+    getSortByNew,
+  } = useNewDataTable(
+    DATA_URL,
+    {
+      filter: ["id_pembelajaran"],
+      filterValue: [id],
+    },
+    searchValue
+  );
 
   const { destroy } = useCRUD(DELETE_URL);
 

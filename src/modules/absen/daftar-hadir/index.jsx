@@ -66,7 +66,9 @@ export default function DaftarHadirModule({ baseURL, user }) {
       <div className="flex mb-8 justify-end items-center">
         <div className="mr-4">
           <Button
-            onClick={() => window.open(`${baseURL}/daftar-hadir/generate`,'_blank')}
+            onClick={() =>
+              window.open(`${baseURL}/daftar-hadir/generate`, "_blank")
+            }
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -218,7 +220,8 @@ export default function DaftarHadirModule({ baseURL, user }) {
                           }}
                         />
                         <Button.Icon
-                          onClick={() => window.open(`${baseURL}/daftar-hadir/list-mhs/${row.id}`,'_blank')}
+                          as="a"
+                          href={`${baseURL}/daftar-hadir/list-mhs/${row.id}`}
                           variant="primary"
                           icon={<Icon icon="bx:group" width={18} height={18} />}
                         />
