@@ -104,6 +104,15 @@ export default function MahasiswaExtModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("departement_code")}
+              >
+                Departement
+                <SortIcon sort={getSortByNew("departement_code")} />
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
                 onClick={() => sortByNew("class")}
               >
                 Kelas
@@ -158,6 +167,9 @@ export default function MahasiswaExtModule({ baseURL }) {
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row.phone}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.department_code}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row.class}

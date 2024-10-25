@@ -8,26 +8,32 @@ import Form from "../../../../components/Form";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { MySwal, toastAlert, warningAlert } from "../../../../lib/sweetalert";
+import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
 
 export default function DosenExtModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/users/get-dosen-ext`;
+  const DATA_URL = `${process.env.API_ENDPOINT}/users/list-users`;
   const verifyUrl = `${process.env.API_ENDPOINT}/auth/verify-dosen-ext`;
+  const [searchValue, setSearchValue] = useState("");
 
   const {
-    data,
-    loading,
-    page,
-    pageCount,
-    filter,
-    setPage,
-    setFilter,
-    canPrev,
-    canNext,
-    refresh,
-    sortBy,
-    getSortBy,
-    totalData,
-  } = useDatatable(DATA_URL);
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    recordsTotalNew,
+    refreshNew,
+    sortByNew,
+    getSortByNew,
+  } = useNewDataTableNew(
+    DATA_URL,
+    {
+      filter: ["role"],
+      filterValue: ["Dosen_Ext"],
+    },
+    searchValue,
+    "user_id"
+  );
 
   const verify = async (userId, isverified) => {
     let text = isverified
@@ -55,13 +61,22 @@ export default function DosenExtModule({ baseURL }) {
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 my-8">
-        <Filter filter={filter} handler={setFilter} />
-      </div>
-      <div className="flex items-start">
-        <span>
-          Total Data: <b>{totalData}</b>
-        </span>
+      <div className="flex items-center justify-between my-4">
+        <div>
+          <span>
+            Total Data: <b>{recordsTotalNew}</b>
+          </span>
+        </div>
+        <div>
+          <Form.Input
+            type="text"
+            name="search"
+            placeholder="Search"
+            style={{ width: "400px" }}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -72,10 +87,10 @@ export default function DosenExtModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pangkat_id")}
+                onClick={() => sortByNew("created_at")}
               >
                 No
-                <SortIcon sort={getSortBy("pangkat_id")} />
+                <SortIcon sort={getSortByNew("created_at")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -100,7 +115,7 @@ export default function DosenExtModule({ baseURL }) {
           </tr>
         </thead>
         <tbody>
-          {loading && (
+          {loadingNew && (
             <tr>
               <td
                 colSpan="6"
@@ -110,7 +125,7 @@ export default function DosenExtModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading && data && data.length < 1 && (
+          {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
               <td
                 colSpan="6"
@@ -120,25 +135,22 @@ export default function DosenExtModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading &&
-            data &&
-            data.map((row, index) => {
-              const startNumber = (page - 1) * 10 + 1;
-
-              const rowNumber = startNumber + index;
+          {!loadingNew &&
+            dataNew &&
+            dataNew.map((row, index) => {
               return (
                 <tr key={`row-${index}`}>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {rowNumber}
+                    {index + 1}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.nip}
+                    {row.personal_data?.nip}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.nama_lengkap}
+                    {row.personal_data?.nama_lengkap}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.instansi_ext}
+                    {row.personal_data?.instansi_ext}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {!row.isverified ? (
@@ -231,8 +243,8 @@ export default function DosenExtModule({ baseURL }) {
                 height={20}
               />
             }
-            onClick={() => setPage(page - 1)}
-            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
+            onClick={() => setPageNew(pageNew - 1)}
+            disabled={pageNew <= 1}
             pill
           />
           <Button
@@ -246,8 +258,8 @@ export default function DosenExtModule({ baseURL }) {
               />
             }
             iconPosition="right"
-            onClick={() => setPage(page + 1)}
-            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
+            onClick={() => setPageNew(pageNew + 1)}
+            disabled={pageNew >= pageCountNew}
             pill
           >
             Next Page
@@ -258,15 +270,19 @@ export default function DosenExtModule({ baseURL }) {
           <Form.Input
             type="number"
             min="1"
-            max={pageCount}
+            max={pageCountNew || 1}
             className="w-20"
-            value={page}
+            value={pageNew}
             onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
+              setPageNew(
+                Math.max(
+                  1,
+                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
+                )
+              )
             }
           />
-          of {pageCount || 1}
+          of {pageCountNew || 1}
         </div>
       </div>
     </>

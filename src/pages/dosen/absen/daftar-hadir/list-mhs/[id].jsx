@@ -24,10 +24,10 @@ export default function ListMhs() {
   const [searchValue, setSearchValue] = useState("");
 
   const router = useRouter();
+  const id = router.query.id;
 
   const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi`;
   const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi/delete`;
-  const id = router.query.id;
 
   const [matkulData, setMatkulData] = useState({});
 
@@ -54,31 +54,45 @@ export default function ListMhs() {
       }
     };
 
-    fetchDataMatkul();
+    if (id) {
+      fetchDataMatkul();
+    }
   }, [id]);
 
-  const {
-    dataNew,
+  let dataNew,
     loadingNew,
     pageNew,
     pageCountNew,
     setPageNew,
     refreshNew,
     sortByNew,
-    getSortByNew,
-  } = useNewDataTable(
-    DATA_URL,
-    {
-      filter: ["id_pembelajaran"],
-      filterValue: [id],
-    },
-    searchValue
-  );
+    getSortByNew;
+  if (id) {
+    ({
+      dataNew,
+      loadingNew,
+      pageNew,
+      pageCountNew,
+      setPageNew,
+      refreshNew,
+      sortByNew,
+      getSortByNew,
+    } = useNewDataTable(
+      DATA_URL,
+      {
+        filter: ["id_pembelajaran"],
+        filterValue: [id],
+      },
+      searchValue
+    ));
+  }
 
   const { destroy } = useCRUD(DELETE_URL);
 
   const handleTambahMhs = () => {
-    refreshNew();
+    if (refreshNew) {
+      refreshNew();
+    }
   };
 
   if ([user, menu, loadingNew].some((item) => item == null)) return <Loading />;

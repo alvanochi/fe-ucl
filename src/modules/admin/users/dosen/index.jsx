@@ -7,35 +7,50 @@ import SortIcon from "../../../../components/SortIcon";
 import Form from "../../../../components/Form";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
 
 export default function DosenModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/users/getDosen`;
+  const DATA_URL = `${process.env.API_ENDPOINT}/users/list-users`;
+  const [searchValue, setSearchValue] = useState("");
 
   const {
-    data,
-    loading,
-    page,
-    pageCount,
-    filter,
-    setPage,
-    setFilter,
-    canPrev,
-    canNext,
-    refresh,
-    sortBy,
-    getSortBy,
-    totalData,
-  } = useDatatable(DATA_URL);
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    recordsTotalNew,
+    refreshNew,
+    sortByNew,
+    getSortByNew,
+  } = useNewDataTableNew(
+    DATA_URL,
+    {
+      filter: ["role"],
+      filterValue: ["Dosen"],
+    },
+    searchValue,
+    "user_id"
+  );
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 my-8">
-        <Filter filter={filter} handler={setFilter} />
-      </div>
-      <div className="flex items-start">
-        <span>
-          Total Data: <b>{totalData}</b>
-        </span>
+      <div className="flex items-center justify-between my-4">
+        <div>
+          <span>
+            Total Data: <b>{recordsTotalNew}</b>
+          </span>
+        </div>
+        <div>
+          <Form.Input
+            type="text"
+            name="search"
+            placeholder="Search"
+            style={{ width: "400px" }}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
       </div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -46,15 +61,19 @@ export default function DosenModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pangkat_id")}
+                onClick={() => sortByNew("created_at")}
               >
                 No
-                <SortIcon sort={getSortBy("pangkat_id")} />
+                <SortIcon sort={getSortByNew("created_at")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("created_at")}
+              >
                 NIDN | NIP
+                <SortIcon sort={getSortByNew("nidn")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -66,15 +85,19 @@ export default function DosenModule({ baseURL }) {
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("department_code")}
+              >
                 Departemen
+                <SortIcon sort={getSortByNew("department_code")} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
         </thead>
         <tbody>
-          {loading && (
+          {loadingNew && (
             <tr>
               <td
                 colSpan="6"
@@ -84,7 +107,7 @@ export default function DosenModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading && data && data.length < 1 && (
+          {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
               <td
                 colSpan="6"
@@ -94,23 +117,20 @@ export default function DosenModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading &&
-            data &&
-            data.map((row, index) => {
-              const startNumber = (page - 1) * 10 + 1;
-
-              const rowNumber = startNumber + index;
+          {!loadingNew &&
+            dataNew &&
+            dataNew.map((row, index) => {
               return (
                 <tr key={`row-${index}`}>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {rowNumber}
+                    {index + 1}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     <p>NIDN: {row.nidn}</p>
-                    <p className="pt-2">NIP: {row.nip}</p>
+                    <p className="pt-2">NIP: {row.personal_data?.nip}</p>
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.nama_lengkap}
+                    {row.personal_data?.nama_lengkap}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row.email}
@@ -166,8 +186,8 @@ export default function DosenModule({ baseURL }) {
                 height={20}
               />
             }
-            onClick={() => setPage(page - 1)}
-            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
+            onClick={() => setPageNew(pageNew - 1)}
+            disabled={pageNew <= 1}
             pill
           />
           <Button
@@ -181,8 +201,8 @@ export default function DosenModule({ baseURL }) {
               />
             }
             iconPosition="right"
-            onClick={() => setPage(page + 1)}
-            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
+            onClick={() => setPageNew(pageNew + 1)}
+            disabled={pageNew >= pageCountNew}
             pill
           >
             Next Page
@@ -193,15 +213,19 @@ export default function DosenModule({ baseURL }) {
           <Form.Input
             type="number"
             min="1"
-            max={pageCount}
+            max={pageCountNew || 1}
             className="w-20"
-            value={page}
+            value={pageNew}
             onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
+              setPageNew(
+                Math.max(
+                  1,
+                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
+                )
+              )
             }
           />
-          of {pageCount || 1}
+          of {pageCountNew || 1}
         </div>
       </div>
     </>

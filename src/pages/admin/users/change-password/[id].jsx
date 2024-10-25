@@ -11,7 +11,7 @@ import { toastAlert } from "../../../../lib/sweetalert";
 import _ from "underscore";
 import axios from "axios";
 import { Loading } from "../../../../components/Loading";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ChangePassword() {
   const router = useRouter();
@@ -98,7 +98,56 @@ export default function ChangePassword() {
     }
   }
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  const [isVerified, setIsVerified] = useState(false);
+
+  const handleSwitchChange = async (e) => {
+    const newValue = e.target.checked;
+    setIsVerified(newValue);
+    try {
+      const request = await axios({
+        url: `${process.env.API_ENDPOINT}/auth/verify-by-admin/${router.query.id}`,
+        method: "PUT",
+        data: { verified: newValue },
+      });
+      const response = await request;
+
+      if (response.status === 200 && newValue == true) {
+        toastAlert("success", "Sukses verification");
+        router.push(prefix + menu.url);
+      } else if (response.status === 200 && newValue == false) {
+        toastAlert("success", "Account not verification");
+        router.push(prefix + menu.url);
+      }
+    } catch (error) {
+      console.error("Error updating verification status:", error);
+    }
+  };
+
+  const fecthUser = async function () {
+    try {
+      if (user) {
+        const response = await axios.get(
+          `${process.env.API_ENDPOINT}/users/detail-user/${router.query.id}`
+        );
+        setIsVerified(response.data.data.isverified);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (router.query.id) {
+      fecthUser();
+    }
+  }, []);
+
+  if (
+    [user, menu, router.query.id].some(
+      (item) => item == null || item == undefined
+    )
+  )
+    return <Loading />;
   return (
     <Layout>
       <PageHeader
@@ -171,6 +220,27 @@ export default function ChangePassword() {
             Konfirmasi
           </Button>
         </div>
+      </Form>
+
+      <Form>
+        <Card className="mt-8">
+          <Card.Header className="text-center">Verification</Card.Header>
+          <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[2rem]">Is Verified ?</Form.Label>
+              <span>:</span>
+              <label className="inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={isVerified}
+                  onChange={handleSwitchChange}
+                  className="sr-only peer"
+                />
+                <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all peer-checked:bg-blue-600"></div>
+              </label>
+            </Form.Group>
+          </Card.Body>
+        </Card>
       </Form>
       <div className="flex gap-4 mt-4">
         <Button

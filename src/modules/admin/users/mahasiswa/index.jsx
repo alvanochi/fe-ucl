@@ -1,42 +1,54 @@
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../../hooks/useDatatable";
-import SortIcon from "../../../../components/SortIcon";
 import Form from "../../../../components/Form";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useState } from "react";
+import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
+import SortIcon from "../../../../components/SortIcon";
 
 export default function MahasiswaModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/users/getMhs`;
+  const DATA_URL = `${process.env.API_ENDPOINT}/users/list-users`;
+  const [searchValue, setSearchValue] = useState("");
 
   const {
-    data,
-    loading,
-    page,
-    pageCount,
-    filter,
-    setPage,
-    setFilter,
-    canPrev,
-    canNext,
-    refresh,
-    sortBy,
-    getSortBy,
-    totalData,
-  } = useDatatable(DATA_URL);
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    recordsTotalNew,
+    refreshNew,
+    sortByNew,
+    getSortByNew,
+  } = useNewDataTableNew(
+    DATA_URL,
+    {
+      filter: ["role"],
+      filterValue: ["Mahasiswa"],
+    },
+    searchValue,
+    "user_id"
+  );
 
   return (
     <>
-      <div className="flex items-center justify-center gap-2 my-8">
-        <Filter filter={filter} handler={setFilter} />
+      <div className="flex items-center justify-between my-4">
+        <div>
+          <span>
+            Total Data: <b>{recordsTotalNew}</b>
+          </span>
+        </div>
+        <div>
+          <Form.Input
+            type="text"
+            name="search"
+            placeholder="Search"
+            style={{ width: "400px" }}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+        </div>
       </div>
-      <div className="flex items-start">
-        <span>
-          Total Data: <b>{totalData}</b>
-        </span>
-      </div>
+
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
@@ -44,10 +56,20 @@ export default function MahasiswaModule({ baseURL }) {
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">No</div>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("created_at")}
+              >
+                No <SortIcon sort={getSortByNew("created_at")} />
+              </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">NPM</div>
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("npm")}
+              >
+                NPM <SortIcon sort={getSortByNew("npm")} />
+              </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
@@ -62,19 +84,34 @@ export default function MahasiswaModule({ baseURL }) {
                 Status MHS
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
+            {/* <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">FRS</div>
-            </th>
+            </th> */}
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("department_code")}
+              >
                 Departement
+                <SortIcon sort={getSortByNew("department_code")} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200"></th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew("isverified")}
+              >
+                Status Akun
+                <SortIcon sort={getSortByNew("isverified")} />
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              Action
+            </th>
           </tr>
         </thead>
         <tbody>
-          {loading && (
+          {loadingNew && (
             <tr>
               <td
                 colSpan="6"
@@ -84,7 +121,7 @@ export default function MahasiswaModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading && data && data.length < 1 && (
+          {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
               <td
                 colSpan="6"
@@ -94,31 +131,27 @@ export default function MahasiswaModule({ baseURL }) {
               </td>
             </tr>
           )}
-          {!loading &&
-            data &&
-            data.map((row, index) => {
-              const startNumber = (page - 1) * 10 + 1;
-
-              // Tampilkan nomor urut sesuai dengan halaman aktif
-              const rowNumber = startNumber + index;
+          {!loadingNew &&
+            dataNew &&
+            dataNew.map((row, index) => {
               return (
                 <tr key={`row-${index}`}>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {rowNumber}
+                    {index + 1}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row.npm}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.nama_lengkap}
+                    {row.personal_data?.nama_lengkap}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row.email}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.kode_mhs}
+                    {row.personal_data?.kode_mhs}
                   </td>
-                  <td
+                  {/* <td
                     className={`text-sm border-2 border-white bg-gray-50 ${
                       row.status_frs === 1
                         ? "text-green-500"
@@ -132,9 +165,12 @@ export default function MahasiswaModule({ baseURL }) {
                       : row.status_frs === 0
                       ? "Not yet"
                       : "-"}
-                  </td>
+                  </td> */}
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row.department_code}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.isverified ? "Verified" : "Belum Verifikasi"}
                   </td>
 
                   <td className="text-sm border-2 border-white bg-gray-50">
@@ -156,12 +192,8 @@ export default function MahasiswaModule({ baseURL }) {
                         }
                       />
                       <Button.Icon
-                        onClick={() =>
-                          window.open(
-                            `${baseURL}/change-password/${row.user_id}`,
-                            "_blank"
-                          )
-                        }
+                        as="a"
+                        href={`${baseURL}/change-password/${row.user_id}`}
                         variant="secondary"
                         icon={<Icon icon="bx:edit" width={20} height={20} />}
                       />
@@ -196,8 +228,8 @@ export default function MahasiswaModule({ baseURL }) {
                 height={20}
               />
             }
-            onClick={() => setPage(page - 1)}
-            disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
+            onClick={() => setPageNew(pageNew - 1)}
+            disabled={pageNew <= 1}
             pill
           />
           <Button
@@ -211,8 +243,8 @@ export default function MahasiswaModule({ baseURL }) {
               />
             }
             iconPosition="right"
-            onClick={() => setPage(page + 1)}
-            disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
+            onClick={() => setPageNew(pageNew + 1)}
+            disabled={pageNew >= pageCountNew}
             pill
           >
             Next Page
@@ -223,15 +255,19 @@ export default function MahasiswaModule({ baseURL }) {
           <Form.Input
             type="number"
             min="1"
-            max={pageCount}
+            max={pageCountNew || 1}
             className="w-20"
-            value={page}
+            value={pageNew}
             onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
+              setPageNew(
+                Math.max(
+                  1,
+                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
+                )
+              )
             }
           />
-          of {pageCount || 1}
+          of {pageCountNew || 1}
         </div>
       </div>
     </>
