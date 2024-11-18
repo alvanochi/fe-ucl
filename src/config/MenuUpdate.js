@@ -278,6 +278,20 @@ export const APP_MENU = [
       },
     ],
   },
+  // UJIAN
+  {
+    label: "Ujian",
+    url: "/ujian",
+    icon: "fluent:position-to-back-24-regular",
+    allowedRoles: [ROLE_ID_MAHASISWA, ROLE_ID_ADMIN, ROLE_ID_DOSEN],
+    submenus: [
+      {
+        label: "Ujian",
+        url: "#ujian",
+        allowedRoles: [ROLE_ID_MAHASISWA, ROLE_ID_ADMIN, ROLE_ID_DOSEN],
+      },
+    ],
+  },
   // Kegiatan
   {
     type: "menu-group",
