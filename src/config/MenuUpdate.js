@@ -144,16 +144,7 @@ export const APP_MENU = [
             url: "#perkuliahan",
             allowedRoles: [ROLE_ID_MAHASISWA],
           },
-          {
-            label: "Tugas Akhir",
-            url: "#tugas-akhir",
-            allowedRoles: [
-              ROLE_ID_ADMIN,
-              ROLE_ID_MAHASISWA,
-              ROLE_ID_DOSEN,
-              ROLE_ID_DOSEN_EXT,
-            ],
-          },
+
           {
             label: "B-Akademik",
             url: "#akademik",
@@ -163,6 +154,38 @@ export const APP_MENU = [
             label: "Bimbingan",
             url: "#bimbingan",
             allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA],
+          },
+        ],
+      },
+      {
+        label: "Pelaksanaan TA",
+        url: "/pelaksanaan-ta",
+        allowedRoles: [
+          ROLE_ID_ADMIN,
+          ROLE_ID_DOSEN,
+          ROLE_ID_MAHASISWA,
+          ROLE_ID_DOSEN_EXT,
+        ],
+        submenus: [
+          {
+            label: "Bimbingan TA",
+            url: "#bimbingan-ta",
+            allowedRoles: [
+              ROLE_ID_ADMIN,
+              ROLE_ID_MAHASISWA,
+              ROLE_ID_DOSEN,
+              ROLE_ID_DOSEN_EXT,
+            ],
+          },
+          {
+            label: "Pelaksanaan TA",
+            url: "#tugas-akhir",
+            allowedRoles: [
+              ROLE_ID_ADMIN,
+              ROLE_ID_MAHASISWA,
+              ROLE_ID_DOSEN,
+              ROLE_ID_DOSEN_EXT,
+            ],
           },
         ],
       },

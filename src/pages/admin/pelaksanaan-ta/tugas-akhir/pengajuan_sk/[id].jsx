@@ -1,0 +1,454 @@
+import { Icon } from "@iconify-icon/react";
+import Button from "../../../../../components/Button";
+import Card from "../../../../../components/Card";
+import Form from "../../../../../components/Form";
+import Layout from "../../../../../components/Layout";
+import PageHeader from "../../../../../components/PageHeader";
+import useMenu from "../../../../../hooks/useMenu";
+import useUser from "../../../../../hooks/useUser";
+import { useRouter } from "next/router";
+import useCRUD from "../../../../../hooks/useCRUD";
+import useDosen from "../../../../../repo/dosen";
+import { useEffect, useState } from "react";
+import { Loading } from "../../../../../components/Loading";
+import date from "../../../../../utils/date";
+import {
+  MySwal,
+  loadingAlert,
+  toastAlert,
+} from "../../../../../lib/sweetalert";
+import axios from "axios";
+
+export default function PengajuanSkAction() {
+  const router = useRouter();
+  const { user } = useUser({ redirectTo: "/login" });
+  const { prefix, menu, setActive } = useMenu();
+
+  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail`;
+  const FILE_URL = `${process.env.API_ENDPOINT}/foto-profile`;
+
+  const INITIAL_FORM = {
+    id: "",
+    mhs_id: "",
+    judul_skripsi: "",
+    lokasi_kegiatan: "",
+    semester: "",
+    nomor_sk: "",
+    tgl_sk: "",
+    link_dokumen_sk: "",
+    sk_pembimbing_1: "",
+    sk_pembimbing_2: "",
+    sk_pembimbing_3: "",
+    kepala_lab: "",
+    sk_status_pem_1: "",
+    sk_status_pem_2: "",
+    sk_status_pem_3: "",
+    status_kepala_lab: "",
+    nama_lengkap: "",
+    npm: "",
+    nomor_nota_dinas: "",
+    status: "",
+  };
+
+  const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
+    rules: [
+      { field: "nomor_sk", label: "Nomor SK" },
+      { field: "tgl_sk", label: "Tanggal SK" },
+      { field: "link_dokumen_sk", label: "Link Dokumen Sk" },
+    ],
+    success: () => router.push(prefix + menu.url),
+  });
+  const { form, inputHandler } = formdata;
+
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+
+  const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/update-sk`;
+  const EDIT_OPTION = {
+    url: `${EDIT_URL}/${form.id}`,
+    method: "PATCH",
+  };
+
+  const pembimbing1Data = listDosen?.find(
+    (dosen) => dosen.user_id === form?.sk_pembimbing_1
+  );
+  const pembimbing2Data = listDosen?.find(
+    (dosen) => dosen.user_id === form?.sk_pembimbing_2
+  );
+  const pembimbing3Data = listDosen?.find(
+    (dosen) => dosen.user_id === form?.sk_pembimbing_3
+  );
+  const kepalaLabData = listDosen?.find(
+    (dosen) => dosen.user_id === form?.kepala_lab
+  );
+
+  useEffect(() => {
+    if (router.isReady === false || !user) return;
+    show(router.query.id, {
+      transformData: (data) => ({
+        ...data,
+        tgl_sk: data.tgl_sk ? date.formatToInput(data.tgl_sk) : "",
+      }),
+    });
+  }, [router, user]);
+
+  const [isChecked1, setIsChecked1] = useState(false);
+  const [isChecked2, setIsChecked2] = useState(false);
+  const [isChecked3, setIsChecked3] = useState(false);
+  const [isCheckedLab, setIsCheckedLab] = useState(false);
+
+  const handleCheckboxChange = async (event, id) => {
+    const { name, checked } = event.target;
+    if (name === "sk_status_pem_1") {
+      setIsChecked1(checked);
+    } else if (name === "sk_status_pem_2") {
+      setIsChecked2(checked);
+    } else if (name === "sk_status_pem_3") {
+      setIsChecked3(checked);
+    } else if (name === "status_kepala_lab") {
+      setIsCheckedLab(checked);
+    }
+
+    try {
+      const response = await axios.put(
+        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        {
+          [name]: true,
+          db: "ta_pengajuan_sk",
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      toastAlert("success", "Successfully approved");
+    } catch (error) {
+      console.error("There was a problem with the fetch operation:", error);
+      if (error.name === "AxiosError") {
+        toastAlert("error", error.message);
+        return;
+      }
+      loadingAlert();
+      MySwal.close();
+      toastAlert("error", error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (form) {
+      if (form?.sk_status_pem_1 == true) {
+        setIsChecked1(true);
+      }
+      if (form?.sk_status_pem_2 == true) {
+        setIsChecked2(true);
+      }
+      if (form?.sk_status_pem_3 == true) {
+        setIsChecked3(true);
+      }
+      if (form?.status_kepala_lab == true) {
+        setIsCheckedLab(true);
+      }
+    }
+  }, [form]);
+
+  if ([user, menu, form, isDosenLoading].some((item) => item == null))
+    return <Loading />;
+  return (
+    <Layout>
+      <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+      <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+        <Card className="mt-4">
+          <Card.Header className="text-center">Pengajuan SK</Card.Header>
+          <div
+            className="flex items-center p-4 mb-4  mt-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-300"
+            role="alert"
+          >
+            <svg
+              className="flex-shrink-0 inline w-4 h-4 me-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span className="sr-only">Info</span>
+            <div>
+              <span className="font-medium">Catatan!</span> Silahkan isi form
+              yang dibintangi saja (<span className="text-danger-600">*</span>)
+            </div>
+          </div>
+          <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">Nama</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nama_lengkap"
+                value={form.nama_lengkap}
+                disable
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">NPM</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="npm"
+                value={form.npm}
+                disable
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">Judul Skripsi</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="judul_skripsi"
+                value={form.judul_skripsi}
+                onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">Semester</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="semester"
+                value={form.semester}
+                onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">Lokasi Kegiatan</Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="lokasi_kegiatan"
+                value={form.lokasi_kegiatan}
+                onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nomor Nota Dinas
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="link"
+                className="flex-1"
+                name="nomor_nota_dinas"
+                value={form.nomor_nota_dinas || "-"}
+                onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nomor SK Penugasan <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nomor_sk"
+                value={form.nomor_sk}
+                onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Tanggal SK Penugasan <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="date"
+                className="flex-1"
+                name="tgl_sk"
+                value={form.tgl_sk}
+                onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Link Dokumen SK <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="url"
+                className="flex-1"
+                name="link_dokumen_sk"
+                value={form.link_dokumen_sk}
+                onChange={inputHandler}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Status <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Select
+                name="status"
+                onChange={inputHandler}
+                value={form.status}
+                options={[
+                  { label: "pengajuan-sk", value: "pengajuan-sk" },
+                  { label: "menuju-kolokium", value: "menuju-kolokium" },
+                  { label: "menuju-sidang", value: "menuju-sidang" },
+                  {
+                    label: "menyelesaikan-revisi",
+                    value: "menyelesaikan-revisi",
+                  },
+                  { label: "selesai", value: "selesai" },
+                ]}
+              />
+            </Form.Group>
+          </Card.Body>
+        </Card>
+
+        <div className="w-full max-w-md p-4 mt-4 mb-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 mx-auto">
+          <div className="flex items-center justify-between mb-4">
+            <h5 className="text-xl font-bold leading-none text-gray-900">
+              Mengetahui
+            </h5>
+          </div>
+          <div className="flow-root">
+            <ul role="list" className="divide-y divide-gray-200">
+              <li className="py-3 sm:py-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <img
+                      className="w-8 h-8 rounded-full"
+                      src={`${FILE_URL}/${pembimbing1Data?.image || "-"}`}
+                      alt="Neil image"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0 ms-4">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      Pembimbing 1
+                    </p>
+                    <p className="text-md text-gray-500 truncate">
+                      {pembimbing1Data?.nama_lengkap || "-"}
+                    </p>
+                  </div>
+                  <div className="inline-flex items-center text-base font-semibold text-gray-900">
+                    <input
+                      type="checkbox"
+                      checked={isChecked1}
+                      onChange={(event) => handleCheckboxChange(event, form.id)}
+                      name="sk_status_pem_1"
+                    />
+                  </div>
+                </div>
+              </li>
+              <li className="py-3 sm:py-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <img
+                      className="w-8 h-8 rounded-full"
+                      src={`${FILE_URL}/${pembimbing2Data?.image || "-"}`}
+                      alt="Neil image"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0 ms-4">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      Pembimbing 2
+                    </p>
+                    <p className="text-md text-gray-500 truncate">
+                      {pembimbing2Data?.nama_lengkap || "-"}
+                    </p>
+                  </div>
+                  <div className="inline-flex items-center text-base font-semibold text-gray-900">
+                    <input
+                      type="checkbox"
+                      checked={isChecked2}
+                      onChange={(event) => handleCheckboxChange(event, form.id)}
+                      name="sk_status_pem_2"
+                    />
+                  </div>
+                </div>
+              </li>
+              {pembimbing3Data && (
+                <li className="py-3 sm:py-4">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <img
+                        className="w-8 h-8 rounded-full"
+                        src={`${FILE_URL}/${pembimbing3Data?.image}`}
+                        alt="Neil image"
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0 ms-4">
+                      <p className="text-sm font-medium text-gray-900 truncate">
+                        Pembimbing 3
+                      </p>
+                      <p className="text-md text-gray-500 truncate">
+                        {pembimbing3Data?.nama_lengkap}
+                      </p>
+                    </div>
+                    <div className="inline-flex items-center text-base font-semibold text-gray-900">
+                      <input
+                        type="checkbox"
+                        checked={isChecked3}
+                        onChange={(event) =>
+                          handleCheckboxChange(event, form.id)
+                        }
+                        name="sk_status_pem_1"
+                      />
+                    </div>
+                  </div>
+                </li>
+              )}
+
+              <li className="py-3 sm:py-4">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <img
+                      className="w-8 h-8 rounded-full"
+                      src={`${FILE_URL}/${kepalaLabData?.image || "-"}`}
+                      alt="Neil image"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0 ms-4">
+                    <p className="text-sm font-medium text-gray-900 truncate">
+                      Kepala Lab
+                    </p>
+                    <p className="text-md text-gray-500 truncate">
+                      {kepalaLabData?.nama_lengkap || "-"}
+                    </p>
+                  </div>
+                  <div className="inline-flex items-center text-base font-semibold text-gray-900">
+                    <input
+                      type="checkbox"
+                      checked={isCheckedLab}
+                      onChange={(event) => handleCheckboxChange(event, form.id)}
+                      name="status_kepala_lab"
+                    />
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="flex gap-4 mt-4">
+          <Button
+            as="a"
+            href={prefix + menu.url}
+            variant="secondary"
+            className="w-full h-12"
+          >
+            Batal
+          </Button>
+          <Button type="submit" variant="primary" className="w-full h-12">
+            Konfirmasi
+          </Button>
+        </div>
+      </Form>
+    </Layout>
+  );
+}
