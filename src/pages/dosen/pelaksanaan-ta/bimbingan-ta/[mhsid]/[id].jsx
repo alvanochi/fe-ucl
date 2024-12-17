@@ -56,6 +56,7 @@ export default function PelaksanaanKolo() {
   const INITIAL_FORM = {
     id: "",
     status_kelulusan: "",
+    peran: "",
   };
   const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail`;
 
@@ -128,11 +129,15 @@ export default function PelaksanaanKolo() {
         <Card.Body className="space-y-4">
           <div className="flex mb-8 justify-end items-center">
             <div className="mr-4">
-              <CreateProgresBimbingan
-                onAction={handleAction}
-                id={router.query.id}
-                mhsid={router.query.mhsid}
-              />
+              {!/(Evaluator|Penguji)/i.test(form.peran) &&
+                (!/Kepala Lab/i.test(form.peran) ||
+                  /Pembimbing/i.test(form.peran)) && (
+                  <CreateProgresBimbingan
+                    onAction={handleAction}
+                    id={router.query.id}
+                    mhsid={router.query.mhsid}
+                  />
+                )}
             </div>
             <div className="flex-shrink">
               <Form.Input
