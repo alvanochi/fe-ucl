@@ -57,7 +57,7 @@ export default function PelaksanaanKolo() {
     id: "",
     status_kelulusan: "",
   };
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail`;
+  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-for-bimbingan`;
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [{ field: "status_kelulusan", label: "Status Kelulusan" }],
