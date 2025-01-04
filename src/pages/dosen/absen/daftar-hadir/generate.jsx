@@ -164,6 +164,11 @@ export default function GenerateQrCode() {
     }));
   };
 
+  const handleChangePertemuan = (e) => {
+    const { name, value } = e.target;
+    setPertemuanData(value);
+  };
+
   const handleMhsChange = (selected) => {
     setSelectedMhs(selected?.value);
   };
@@ -209,6 +214,8 @@ export default function GenerateQrCode() {
         npm_komti: selectedMhs,
         dosen_tamu: selectedDosenExt,
       };
+
+      console.log(requestData);
 
       const request = await axios({
         url: `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/store`,
@@ -292,6 +299,7 @@ export default function GenerateQrCode() {
                 className="flex-1"
                 name="pertemuan"
                 value={pertemuanData}
+                onChange={handleChangePertemuan}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
