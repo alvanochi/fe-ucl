@@ -292,7 +292,6 @@ export default function GenerateQrCode() {
                 className="flex-1"
                 name="pertemuan"
                 value={pertemuanData}
-                readOnly
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
