@@ -117,13 +117,14 @@ export default function RekapKehadiran() {
       toastAlert("error", error);
     }
   }
-  async function generateRekap(id_matkul, kelas) {
+  async function generateRekap(id_matkul, kelas, kurikulum) {
     try {
       if (id_matkul && kelas) {
         const response = await axios.get(GENERATE_URL_REKAP, {
           params: {
             id_matkul: id_matkul,
             kelas: kelas,
+            curiculum: kurikulum,
           },
           responseType: "blob",
         });
@@ -298,7 +299,9 @@ export default function RekapKehadiran() {
                       icon="ri:file-excel-2-line"
                       width={20}
                       height={20}
-                      onClick={() => generateRekap(row.course_code, row.class)}
+                      onClick={() =>
+                        generateRekap(row.course_code, row.class.row.curr_code)
+                      }
                     />
                   </i>
                 </td>
@@ -309,7 +312,7 @@ export default function RekapKehadiran() {
                   <Link
                     href={`${prefix + menu.url}/rekap-kehadiran/${
                       row.course_code
-                    }-${row.class}`}
+                    }-${row.class}-${row.curr_code}`}
                     className="text-blue-500"
                   >
                     {row.name_matkul}

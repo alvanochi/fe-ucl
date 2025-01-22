@@ -25,7 +25,7 @@ export default function RekapKehadiran() {
     const fetchData = async () => {
       try {
         if (router.query.id) {
-          const [idmatkul, kelas] = router.query.id.split("-");
+          const [idmatkul, kelas, kurikulum] = router.query.id.split("-");
 
           const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/list-absen`;
           const response = await axios.get(DATA_URL, {
@@ -33,6 +33,7 @@ export default function RekapKehadiran() {
               dataTable: true,
               id_matkul: idmatkul,
               kelas: kelas,
+              curiculum: kurikulum,
             },
           });
           setData(response.data.data);
