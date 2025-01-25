@@ -299,9 +299,7 @@ export default function RekapKehadiran() {
                       icon="ri:file-excel-2-line"
                       width={20}
                       height={20}
-                      onClick={() =>
-                        generateRekap(row.course_code, row.class.row.curr_code)
-                      }
+                      onClick={() => generateRekap(row.course_code, row.class)}
                     />
                   </i>
                 </td>
