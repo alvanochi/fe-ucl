@@ -208,7 +208,7 @@ export default function RekapAbsensi({ baseURL, user }) {
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     <Link
-                      href={`${baseURL}/rekap-absensi/${row.code_lecturer}`}
+                      href={`${baseURL}/rekap-absensi/${row.nik}`}
                       className="text-blue-500"
                     >
                       {row.name}
