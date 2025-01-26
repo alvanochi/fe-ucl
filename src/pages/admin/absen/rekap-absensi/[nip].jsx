@@ -476,7 +476,7 @@ export default function RekapKehadiran() {
                   <Link
                     href={`${prefix + menu.url}/rekap-kehadiran/${
                       row.course_code
-                    }-${row.class}`}
+                    }-${row.class}-${row.curr_code}`}
                     className="text-blue-500"
                   >
                     {row.name_matkul}

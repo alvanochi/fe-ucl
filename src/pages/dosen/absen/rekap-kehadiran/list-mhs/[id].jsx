@@ -25,7 +25,7 @@ export default function ListMhs() {
     const fetchData = async () => {
       try {
         if (router.query.id) {
-          const [idmatkul, kelas] = router.query.id.split("-");
+          const [idmatkul, kelas, curiculum] = router.query.id.split("-");
 
           const DATA_URL = `https://absen.ft.uika-bogor.ac.id/api/pembelajaran/list-absen`;
           const response = await axios.get(DATA_URL, {
@@ -33,6 +33,7 @@ export default function ListMhs() {
               dataTable: true,
               id_matkul: idmatkul,
               kelas: kelas,
+              curiculum: curiculum,
             },
           });
           setData(response.data.data);

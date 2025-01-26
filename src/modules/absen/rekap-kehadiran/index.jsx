@@ -290,7 +290,7 @@ export default function RekapKehadiran({ baseURL, user }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Link
-                    href={`${baseURL}/rekap-kehadiran/list-mhs/${row.course_code}-${row.class}`}
+                    href={`${baseURL}/rekap-kehadiran/list-mhs/${row.course_code}-${row.class}-${row.curr_code}`}
                     className="text-blue-500"
                   >
                     {row.name_matkul}
@@ -446,7 +446,7 @@ export default function RekapKehadiran({ baseURL, user }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Link
-                    href={`${baseURL}/rekap-kehadiran/list-mhs/${row.course_code}-${row.class}`}
+                    href={`${baseURL}/rekap-kehadiran/list-mhs/${row.course_code}-${row.class}-${row.curr_code}`}
                     className="text-blue-500"
                   >
                     {row.name_matkul}
