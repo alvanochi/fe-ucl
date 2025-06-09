@@ -52,7 +52,7 @@ export default function GenerateQrCode() {
               params: {
                 code: data.nip,
                 academic_year: "2024/2025",
-                semester: "gasal",
+                semester: "genap",
               },
             },
             {
