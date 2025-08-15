@@ -74,7 +74,7 @@ export default function TugasAkhirModule({ baseURL }) {
                 className="flex items-center gap-2 cursor-pointer"
                 onClick={() => sortByNew("last_tgl")}
               >
-                Terkahir Bimbingan
+                Terakhir Bimbingan
                 <SortIcon sort={getSortByNew("last_tgl")} />
               </div>
             </th>
