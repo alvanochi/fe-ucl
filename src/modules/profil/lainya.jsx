@@ -1,61 +1,61 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../components/Button";
-import Card from "../../components/Card";
-import Form from "../../components/Form";
-import useDatatable from "../../hooks/useDatatable";
-import { ROLE_ID_MAHASISWA } from "../../config/role";
-import useModal from "../../hooks/useModal";
-import Modal from "../../components/Modal";
-import axios from "axios";
-import useForm from "../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../components/Button'
+import Card from '../../components/Card'
+import Form from '../../components/Form'
+import useDatatable from '../../hooks/useDatatable'
+import { ROLE_ID_MAHASISWA } from '../../config/role'
+import useModal from '../../hooks/useModal'
+import Modal from '../../components/Modal'
+import axios from 'axios'
+import useForm from '../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../lib/sweetalert'
 
 export default function LainyaModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
-  const { data, loading, refresh } = useDatatable(DATA_URL);
-  const { show, toggle, close } = useModal();
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataPribadi`
+  const { data, loading, refresh } = useDatatable(DATA_URL)
+  const { show, toggle, close } = useModal()
 
-  const { form, inputHandler } = useForm({});
+  const { form, inputHandler } = useForm({})
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
-      const formdata = new FormData();
-      formdata.append("file", form.file);
+      const formdata = new FormData()
+      formdata.append('file', form.file)
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/profile/update-foto-narsum`,
-        method: "PATCH",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/profile/update-foto-narsum`,
+        method: 'PATCH',
         data: formdata,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
       if (response) {
-        loadingAlert();
-        MySwal.close();
+        loadingAlert()
+        MySwal.close()
 
-        close();
+        close()
 
-        return refresh();
+        return refresh()
       }
 
-      throw new Error(response.message);
+      throw new Error(response.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
   return (
     <>
       <div className="flex items-center justify-center gap-2 mb-8">
-        {!loading && data.role == "Mahasiswa" && (
+        {!loading && data.role == 'Mahasiswa' && (
           <Button
             as="a"
             href={`${baseURL}/lainya/edit`}
@@ -67,7 +67,7 @@ export default function LainyaModule({ baseURL }) {
           </Button>
         )}
 
-        {!loading && (data.role == "Dosen" || data.role == "Dosen_Ext") && (
+        {!loading && (data.role == 'Dosen' || data.role == 'Dosen_Ext') && (
           <Button
             variant="primary"
             icon={<Icon icon="bx:edit" width={20} height={20} />}
@@ -82,7 +82,7 @@ export default function LainyaModule({ baseURL }) {
       <Card className="mt-4">
         <Card.Header className="text-center">Lainya</Card.Header>
         <Card.Body className="space-y-4">
-          {!loading && data.role == "Mahasiswa" && (
+          {!loading && data.role == 'Mahasiswa' && (
             <>
               <Form.Group className="flex items-baseline gap-3">
                 <Form.Label className="min-w-[18rem]">Pekerjaan</Form.Label>
@@ -90,9 +90,7 @@ export default function LainyaModule({ baseURL }) {
                 <p>{!loading && data.pekerjaan}</p>
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[18rem]">
-                  Alamat Pekerjaan
-                </Form.Label>
+                <Form.Label className="min-w-[18rem]">Alamat Pekerjaan</Form.Label>
                 <span>:</span>
                 <p>{!loading && data.alamat_pekerjaan}</p>
               </Form.Group>
@@ -114,16 +112,10 @@ export default function LainyaModule({ baseURL }) {
           </Form.Group>
 
           <Form.Group className="flex items-baseline gap-3">
-            <Form.Label className="min-w-[18rem]">
-              Foto Sebagai Narasumber
-            </Form.Label>
+            <Form.Label className="min-w-[18rem]">Foto Sebagai Narasumber</Form.Label>
             <span>:</span>
             {!loading && data.status_foto_narsum ? (
-              <a
-                href={data.foto_narsum}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={data.foto_narsum} target="_blank" rel="noopener noreferrer">
                 <img
                   src={data.foto_narsum}
                   alt="narasumber"
@@ -136,11 +128,7 @@ export default function LainyaModule({ baseURL }) {
           </Form.Group>
         </Card.Body>
       </Card>
-      <Modal
-        title="Update Foto Sebagai Narasumber"
-        show={show}
-        handler={toggle}
-      >
+      <Modal title="Update Foto Sebagai Narasumber" show={show} handler={toggle}>
         <Form onSubmit={submitHandler} className="space-y-2" type="formdata">
           <Form.Group>
             <Form.Label>File</Form.Label>
@@ -152,5 +140,5 @@ export default function LainyaModule({ baseURL }) {
         </Form>
       </Modal>
     </>
-  );
+  )
 }

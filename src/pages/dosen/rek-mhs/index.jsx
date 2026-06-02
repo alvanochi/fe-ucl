@@ -1,22 +1,22 @@
-import useMenu from "../../../hooks/useMenu";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
-import useUser from "../../../hooks/useUser";
-import Button from "../../../components/Button";
-import { Icon } from "@iconify-icon/react";
-import { DevelopmentPage } from "../../../components/DevelopmentPage";
-import styles from "./rek-mhs.module.css";
-import Form from "../../../components/Form";
-import useDatatable from "../../../hooks/useDatatable";
-import Link from "next/link";
-import Filter from "./filter";
-import { Loading } from "../../../components/Loading";
+import useMenu from '../../../hooks/useMenu'
+import Layout from '../../../components/Layout'
+import PageHeader from '../../../components/PageHeader'
+import useUser from '../../../hooks/useUser'
+import Button from '../../../components/Button'
+import { Icon } from '@iconify-icon/react'
+import { DevelopmentPage } from '../../../components/DevelopmentPage'
+import styles from './rek-mhs.module.css'
+import Form from '../../../components/Form'
+import useDatatable from '../../../hooks/useDatatable'
+import Link from 'next/link'
+import Filter from './filter'
+import { Loading } from '../../../components/Loading'
 
 export default function Absen() {
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/users/papan-peringkat`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/users/papan-peringkat`
 
   const {
     data,
@@ -31,9 +31,9 @@ export default function Absen() {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(DATA_URL);
+  } = useDatatable(DATA_URL)
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader
@@ -49,20 +49,14 @@ export default function Absen() {
         <div>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 <b>Loading...</b>
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 <b>Tidak ada data</b>
               </td>
             </tr>
@@ -79,11 +73,7 @@ export default function Absen() {
                       <div className="md:flex-shrink-0">
                         <img
                           className="h-20 w-full object-cover md:w-20"
-                          src={
-                            process.env.API_ENDPOINT +
-                            "/foto-profile/" +
-                            row.image
-                          }
+                          src={process.env.NEXT_PUBLIC_API_URL + '/foto-profile/' + row.image}
                           alt="Event image"
                         />
                       </div>
@@ -110,13 +100,7 @@ export default function Absen() {
             <Button.Icon
               type="button"
               variant="outline-primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-left"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
               onClick={() => setPage(page - 1)}
               disabled={!canPrev}
               pill
@@ -124,13 +108,7 @@ export default function Absen() {
             <Button
               type="button"
               variant="primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-right"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
               iconPosition="right"
               onClick={() => setPage(page + 1)}
               disabled={!canNext}
@@ -147,9 +125,8 @@ export default function Absen() {
               max={pageCount}
               className="w-20"
               value={page}
-              onChange={(event) =>
-                event.target.valueAsNumber <= pageCount &&
-                setPage(event.target.value)
+              onChange={event =>
+                event.target.valueAsNumber <= pageCount && setPage(event.target.value)
               }
             />
             of {pageCount || 1}
@@ -157,5 +134,5 @@ export default function Absen() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }

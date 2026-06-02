@@ -1,16 +1,16 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import useCRUD from "../../../../hooks/useCRUD";
-import Form from "../../../../components/Form";
-import CreateGroup from "./createGroup";
-import EditGroup from "./editGroup";
-import { useState } from "react";
-import useNewDataTableForMainApi from "../../../../hooks/useNewDataTableForMainApi";
-import SortIcon from "../../../../components/SortIcon";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import useCRUD from '../../../../hooks/useCRUD'
+import Form from '../../../../components/Form'
+import CreateGroup from './createGroup'
+import EditGroup from './editGroup'
+import { useState } from 'react'
+import useNewDataTableForMainApi from '../../../../hooks/useNewDataTableForMainApi'
+import SortIcon from '../../../../components/SortIcon'
 
 export default function Group({ baseURL }) {
-  const API_URL = `${process.env.API_ENDPOINT}/voting/group-voting`;
-  const [searchValue, setSearchValue] = useState("");
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/group-voting`
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -23,13 +23,13 @@ export default function Group({ baseURL }) {
     refreshNew,
     filterNew,
     setFilterNew,
-  } = useNewDataTableForMainApi(API_URL, {}, searchValue);
+  } = useNewDataTableForMainApi(API_URL, {}, searchValue)
 
-  const { destroy } = useCRUD(API_URL);
+  const { destroy } = useCRUD(API_URL)
 
   const handleAction = () => {
-    refreshAbsensi();
-  };
+    refreshAbsensi()
+  }
 
   return (
     <>
@@ -41,9 +41,9 @@ export default function Group({ baseURL }) {
           type="text"
           name="search"
           placeholder="Search"
-          style={{ width: "400px" }}
+          style={{ width: '400px' }}
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+          onChange={e => setSearchValue(e.target.value)}
         />
       </div>
 
@@ -56,42 +56,34 @@ export default function Group({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("nama_group")}
+                onClick={() => sortByNew('nama_group')}
               >
-                No <SortIcon sort={getSortByNew("id")} />
+                No <SortIcon sort={getSortByNew('id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("nama_group")}
+                onClick={() => sortByNew('nama_group')}
               >
                 Nama Group
-                <SortIcon sort={getSortByNew("nama_group")} />
+                <SortIcon sort={getSortByNew('nama_group')} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loadingNew && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -99,49 +91,31 @@ export default function Group({ baseURL }) {
           {!loadingNew &&
             dataNew &&
             dataNew.map((row, index) => {
-              const startNumber = (pageNew - 1) * 10 + 1;
+              const startNumber = (pageNew - 1) * 10 + 1
 
-              const rowNumber = startNumber + index;
+              const rowNumber = startNumber + index
               return (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {rowNumber}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.nama_group}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{rowNumber}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">{row.nama_group}</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/${row.id}`}
                         variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                       />
                       <EditGroup id={row.id} onAction={handleAction} />
                       <Button.Icon
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.id).then(() => refreshAbsensi())
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => destroy(row.id).then(() => refreshAbsensi())}
                       />
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </table>
@@ -151,13 +125,7 @@ export default function Group({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPageNew(pageNew - 1)}
             disabled={pageNew <= 1}
             pill
@@ -165,13 +133,7 @@ export default function Group({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPageNew(pageNew + 1)}
             disabled={pageNew >= pageCountNew}
@@ -188,18 +150,13 @@ export default function Group({ baseURL }) {
             max={pageCountNew || 1}
             className="w-20"
             value={pageNew}
-            onChange={(event) =>
-              setPageNew(
-                Math.max(
-                  1,
-                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                )
-              )
+            onChange={event =>
+              setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
             }
           />
           of {pageCountNew || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

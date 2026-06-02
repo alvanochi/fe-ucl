@@ -1,49 +1,49 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useCRUD from "../../../../hooks/useCRUD";
-import useKategoriPrestasi from "../../../../repo/kategori-prestasi";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import useKategoriPrestasi from '../../../../repo/kategori-prestasi'
+import { Loading } from '../../../../components/Loading'
 
 export default function SertifikasiCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penunjang/addPenghargaan`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penunjang/addPenghargaan`
   const INITIAL_FORM = {
-    kategori_id: "",
-    tingkat_peng: "",
-    jenis_peng: "",
-    nama_peng: "",
-    tahun_peng: "",
-    instansi_pemberi: "",
-  };
+    kategori_id: '',
+    tingkat_peng: '',
+    jenis_peng: '',
+    nama_peng: '',
+    tahun_peng: '',
+    instansi_pemberi: '',
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "kategori_id", label: "Kategori Penghargaan" },
-      { field: "tingkat_peng", label: "tingkat Penghargaan" },
-      { field: "jenis_peng", label: "Jenis Penghargaan" },
-      { field: "nama_peng", label: "Nama Penghargaan" },
-      { field: "tahun_peng", label: "Tahun Penghargaan" },
-      { field: "instansi_peberi", label: "Instansi Pemberi" },
+      { field: 'kategori_id', label: 'Kategori Penghargaan' },
+      { field: 'tingkat_peng', label: 'tingkat Penghargaan' },
+      { field: 'jenis_peng', label: 'Jenis Penghargaan' },
+      { field: 'nama_peng', label: 'Nama Penghargaan' },
+      { field: 'tahun_peng', label: 'Tahun Penghargaan' },
+      { field: 'instansi_peberi', label: 'Instansi Pemberi' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const { data: kategoriPrestasi, isLoading: isLoadingKategoriPrestasi } =
-    useKategoriPrestasi([user]);
+  const { data: kategoriPrestasi, isLoading: isLoadingKategoriPrestasi } = useKategoriPrestasi([
+    user,
+  ])
 
-  if ([user, menu, isLoadingKategoriPrestasi].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isLoadingKategoriPrestasi].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -63,7 +63,7 @@ export default function SertifikasiCreate() {
                 onChange={inputHandler}
                 options={
                   kategoriPrestasi &&
-                  kategoriPrestasi.map((item) => ({
+                  kategoriPrestasi.map(item => ({
                     label: `${item.nama_kategori} - Juara ${item.juara}`,
                     value: item.id,
                   }))
@@ -82,11 +82,11 @@ export default function SertifikasiCreate() {
                 value={form.tingkat_peng}
                 onChange={inputHandler}
                 options={[
-                  { label: "Lokal", value: "Lokal" },
-                  { label: "Daerah", value: "Daerah" },
-                  { label: "Nasional", value: "Nasional" },
-                  { label: "Internasional", value: "Internasional" },
-                  { label: "Lainnya", value: "Lainnya" },
+                  { label: 'Lokal', value: 'Lokal' },
+                  { label: 'Daerah', value: 'Daerah' },
+                  { label: 'Nasional', value: 'Nasional' },
+                  { label: 'Internasional', value: 'Internasional' },
+                  { label: 'Lainnya', value: 'Lainnya' },
                 ]}
               />
             </Form.Group>
@@ -129,8 +129,8 @@ export default function SertifikasiCreate() {
                 onChange={inputHandler}
                 options={Array.from(
                   { length: new Date().getFullYear() - 1970 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
+                  (_, i) => new Date().getFullYear() - i,
+                ).map(item => ({
                   label: item,
                   value: item,
                 }))}
@@ -163,12 +163,7 @@ export default function SertifikasiCreate() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -177,5 +172,5 @@ export default function SertifikasiCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

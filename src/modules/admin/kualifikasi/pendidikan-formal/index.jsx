@@ -1,84 +1,86 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../../hooks/useDatatable";
-import date from "../../../../utils/date";
-import SortIcon from "../../../../components/SortIcon";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Pagination from '../../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../../hooks/useDatatable'
+import date from '../../../../utils/date'
+import SortIcon from '../../../../components/SortIcon'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export default function PendidikanFormalModule({ baseURL }) {
-  const approveData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/kualifikasi/approveStatusPend/${id}`;
+  const approveData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/kualifikasi/approveStatusPend/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const rejectData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/kualifikasi/rejectStatusPend/${id}`;
+  const rejectData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/kualifikasi/rejectStatusPend/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
+        method: 'PATCH',
+      })
 
-      MySwal.close();
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/pendFormalPending`);
+  const [dataUrl, setDataUrl] = useState(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/pendFormalPending`,
+  )
 
   const handleApproveClick = async () => {
-    await approveData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/pendFormalAprove`);
-  };
+    await approveData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/pendFormalAprove`)
+  }
 
   const handleRejectClick = async () => {
-    await rejectData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/pendFormalReject`);
-  };
+    await rejectData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/pendFormalReject`)
+  }
 
   const handlePendingClick = () => {
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/pendFormalPending`);
-  };
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/pendFormalPending`)
+  }
 
   const {
     data,
@@ -93,11 +95,11 @@ export default function PendidikanFormalModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(dataUrl);
+  } = useDatatable(dataUrl)
 
   useEffect(() => {
-    refresh();
-  }, [dataUrl]);
+    refresh()
+  }, [dataUrl])
 
   return (
     <>
@@ -108,7 +110,7 @@ export default function PendidikanFormalModule({ baseURL }) {
           icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
           onClick={handlePendingClick}
           pill
-          >
+        >
           Pending
         </Button>
         <Button
@@ -116,7 +118,7 @@ export default function PendidikanFormalModule({ baseURL }) {
           icon={<Icon icon="oi:check" width={20} height={20} />}
           onClick={handleApproveClick}
           pill
-          >
+        >
           Aprove
         </Button>
         <Button
@@ -124,73 +126,66 @@ export default function PendidikanFormalModule({ baseURL }) {
           icon={<Icon icon="oi:x" width={20} height={20} />}
           onClick={handleRejectClick}
           pill
-          >
+        >
           Reject
         </Button>
       </div>
-      <table
-        className="w-full border-collapse rounded-2xl overflow-hidden shadow"
-        cellPadding={10}
-      >
+      <table className="w-full border-collapse rounded-2xl overflow-hidden shadow" cellPadding={10}>
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pend_id")}
+                onClick={() => sortBy('pend_id')}
               >
                 No
-                <SortIcon sort={getSortBy("pend_id")} />
+                <SortIcon sort={getSortBy('pend_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                NPM/NIDN
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">NPM/NIDN</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jenjang_studi")}
+                onClick={() => sortBy('jenjang_studi')}
               >
                 Jenjang
-                <SortIcon sort={getSortBy("jenjang_studi")} />
+                <SortIcon sort={getSortBy('jenjang_studi')} />
               </div>
             </th>
 
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("asal")}
+                onClick={() => sortBy('asal')}
               >
                 Asal
-                <SortIcon sort={getSortBy("asal")} />
+                <SortIcon sort={getSortBy('asal')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("thn_lulus")}
+                onClick={() => sortBy('thn_lulus')}
               >
                 Tahun Lulus
-                <SortIcon sort={getSortBy("thn_lulus")} />
+                <SortIcon sort={getSortBy('thn_lulus')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("gelar_akademik")}
+                onClick={() => sortBy('gelar_akademik')}
               >
                 Gelar
-                <SortIcon sort={getSortBy("gelar_akademik")} />
+                <SortIcon sort={getSortBy('gelar_akademik')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
@@ -199,20 +194,14 @@ export default function PendidikanFormalModule({ baseURL }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="7"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="7" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="7"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="7" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -221,82 +210,52 @@ export default function PendidikanFormalModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.nama_lengkap}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.npm ? row.npm : row.nidn}
                   <span className="block font-bold">{row.role}</span>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.jenjang_studi}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.jenjang_studi}</td>
 
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.asal}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.tahun_lulus}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.gelar_akademik}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.asal}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.tahun_lulus}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.gelar_akademik}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
                       as="a"
                       href={`${baseURL}/detail-pendidikan-formal/${row.pend_id}`}
                       variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
+                      icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                     />
-                    {
-                      row.status === 0 && (
-                        <>
-                          <Button.Icon
-                            variant="success"
-                            type="button"
-                            icon={<Icon icon="oi:check" width={20} height={20} />}
-                            onClick={() =>
-                              approveData(row.pend_id).then(() => refresh())
-                            }
-                          />
-                          <Button.Icon
-                            variant="danger"
-                            type="button"
-                            icon={<Icon icon="oi:x" width={20} height={20} />}
-                            onClick={() =>
-                              rejectData(row.pend_id).then(() => refresh())
-                            }
-                          />
-                        </>
-                      )
-                    }
+                    {row.status === 0 && (
+                      <>
+                        <Button.Icon
+                          variant="success"
+                          type="button"
+                          icon={<Icon icon="oi:check" width={20} height={20} />}
+                          onClick={() => approveData(row.pend_id).then(() => refresh())}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          type="button"
+                          icon={<Icon icon="oi:x" width={20} height={20} />}
+                          onClick={() => rejectData(row.pend_id).then(() => refresh())}
+                        />
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -312,5 +271,5 @@ export default function PendidikanFormalModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

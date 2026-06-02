@@ -1,72 +1,69 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useCRUD from "../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import { Loading } from '../../../../components/Loading'
 
 export default function GamifyEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/achievments/detail`;
-  const IMG_URL = `${process.env.API_ENDPOINT}/gamify`;
-  const IMG_URL_LENCANA = `${process.env.API_ENDPOINT}/gamify/lencana`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/achievments/detail`
+  const IMG_URL = `${process.env.NEXT_PUBLIC_API_URL}/gamify`
+  const IMG_URL_LENCANA = `${process.env.NEXT_PUBLIC_API_URL}/gamify/lencana`
 
   const INITIAL_FORM = {
-    id: "",
-    kode: "",
-    name: "",
-    sub_judul: "",
-    gamify: "",
-    start_point: "",
-    points: "",
-    deskripsi: "",
-    image: "",
-    lencana: "",
-  };
+    id: '',
+    kode: '',
+    name: '',
+    sub_judul: '',
+    gamify: '',
+    start_point: '',
+    points: '',
+    deskripsi: '',
+    image: '',
+    lencana: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "name", label: "Name" },
-      { field: "kode", label: "Kode" },
-      { field: "gamify", label: "Gamify" },
-      { field: "start_point", label: "Start Point" },
-      { field: "points", label: "Point" },
-      { field: "deskripsi", label: "Deskripsi" },
-      { field: "sub_judul", label: "Sub Judul" },
+      { field: 'name', label: 'Name' },
+      { field: 'kode', label: 'Kode' },
+      { field: 'gamify', label: 'Gamify' },
+      { field: 'start_point', label: 'Start Point' },
+      { field: 'points', label: 'Point' },
+      { field: 'deskripsi', label: 'Deskripsi' },
+      { field: 'sub_judul', label: 'Sub Judul' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/achievments`;
-  const EDIT_OPTION = { url: `${EDIT_URL}/${form.id}`, method: "PATCH" };
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/achievments`
+  const EDIT_OPTION = { url: `${EDIT_URL}/${form.id}`, method: 'PATCH' }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Edit Gamify</Card.Header>
           <Card.Body className="space-y-4">
@@ -168,12 +165,7 @@ export default function GamifyEdit() {
               </Form.Label>
               <span>:</span>
               <div className="block flex-1 space-y-2">
-                <Form.Input
-                  type="file"
-                  className="flex-1"
-                  name="lencana"
-                  onChange={inputHandler}
-                />
+                <Form.Input type="file" className="flex-1" name="lencana" onChange={inputHandler} />
                 <img
                   src={`${IMG_URL_LENCANA}/${form.lencana}`}
                   alt="img-edit"
@@ -188,28 +180,14 @@ export default function GamifyEdit() {
               </Form.Label>
               <span>:</span>
               <div className="block flex-1 space-y-2">
-                <Form.Input
-                  type="file"
-                  className="flex-1"
-                  name="image"
-                  onChange={inputHandler}
-                />
-                <img
-                  src={`${IMG_URL}/${form.image}`}
-                  alt="img-edit"
-                  className="w-2/4 h-[256px]"
-                />
+                <Form.Input type="file" className="flex-1" name="image" onChange={inputHandler} />
+                <img src={`${IMG_URL}/${form.image}`} alt="img-edit" className="w-2/4 h-[256px]" />
               </div>
             </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -218,5 +196,5 @@ export default function GamifyEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

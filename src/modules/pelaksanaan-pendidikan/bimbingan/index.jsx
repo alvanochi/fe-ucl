@@ -1,14 +1,14 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import SortIcon from "../../../components/SortIcon";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Pagination from '../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../hooks/useDatatable'
+import useCRUD from '../../../hooks/useCRUD'
+import SortIcon from '../../../components/SortIcon'
 
 export default function BimbinganModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/pendidikan/bimbingan/get`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/pendidikan/bimbingan/delete`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/pendidikan/bimbingan/get`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/pendidikan/bimbingan/delete`
 
   const {
     data,
@@ -23,14 +23,14 @@ export default function BimbinganModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(DATA_URL);
-  const { destroy } = useCRUD(DELETE_URL);
+  } = useDatatable(DATA_URL)
+  const { destroy } = useCRUD(DELETE_URL)
 
   return (
     <>
       <div className="flex items-center justify-center gap-2 mb-8">
         <Button
-          onClick={() => window.open(`${`${baseURL}/bimbingan/create`}`,'_blank')}
+          onClick={() => window.open(`${`${baseURL}/bimbingan/create`}`, '_blank')}
           variant="primary"
           icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
           pill
@@ -48,75 +48,65 @@ export default function BimbinganModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("bimbingan_id")}
+                onClick={() => sortBy('bimbingan_id')}
               >
                 No
-                <SortIcon sort={getSortBy("bimbingan_id")} />
+                <SortIcon sort={getSortBy('bimbingan_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("semester")}
+                onClick={() => sortBy('semester')}
               >
                 Semester
-                <SortIcon sort={getSortBy("semester")} />
+                <SortIcon sort={getSortBy('semester')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("judul_bimbingan")}
+                onClick={() => sortBy('judul_bimbingan')}
               >
                 Judul Kegiatan
-                <SortIcon sort={getSortBy("judul_bimbingan")} />
+                <SortIcon sort={getSortBy('judul_bimbingan')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jenis_bimbingan")}
+                onClick={() => sortBy('jenis_bimbingan')}
               >
                 Jenis Bimbingan
-                <SortIcon sort={getSortBy("jenis_bimbingan")} />
+                <SortIcon sort={getSortBy('jenis_bimbingan')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("program_studi")}
+                onClick={() => sortBy('program_studi')}
               >
                 Program Studi
-                <SortIcon sort={getSortBy("program_studi")} />
+                <SortIcon sort={getSortBy('program_studi')} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -125,24 +115,16 @@ export default function BimbinganModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
@@ -159,37 +141,27 @@ export default function BimbinganModule({ baseURL }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.status == 1 ? (
-                    ""
+                    ''
                   ) : (
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        onClick={() => window.open(`${baseURL}/bimbingan/detail/${row.bimbingan_id}`,'_blank')}
-                        variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
+                        onClick={() =>
+                          window.open(`${baseURL}/bimbingan/detail/${row.bimbingan_id}`, '_blank')
                         }
+                        variant="info"
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                       />
                       <Button.Icon
-                        onClick={() => window.open(`${baseURL}/bimbingan/edit/${row.bimbingan_id}`,'_blank')}
+                        onClick={() =>
+                          window.open(`${baseURL}/bimbingan/edit/${row.bimbingan_id}`, '_blank')
+                        }
                         variant="secondary"
                         icon={<Icon icon="bx:edit" width={20} height={20} />}
                       />
                       <Button.Icon
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.bimbingan_id).then(() => refresh())
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => destroy(row.bimbingan_id).then(() => refresh())}
                       />
                     </div>
                   )}
@@ -207,5 +179,5 @@ export default function BimbinganModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

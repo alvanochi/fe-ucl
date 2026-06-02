@@ -1,15 +1,15 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Form from "../../../components/Form";
-import { useEffect, useRef, useState } from "react";
-import SortIcon from "../../../components/SortIcon";
-import Link from "next/link";
-import useNewDataTableForMainApi from "../../../hooks/useNewDataTableForMainApi";
-import Filter from "./filter";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Form from '../../../components/Form'
+import { useEffect, useRef, useState } from 'react'
+import SortIcon from '../../../components/SortIcon'
+import Link from 'next/link'
+import useNewDataTableForMainApi from '../../../hooks/useNewDataTableForMainApi'
+import Filter from './filter'
 
 export default function TugasAkhirModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/tugas-akhir/get-for-dosen`;
-  const [searchValue, setSearchValue] = useState("");
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/get-for-dosen`
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -21,36 +21,36 @@ export default function TugasAkhirModule({ baseURL }) {
     getSortByNew,
     filterNew,
     setFilterNew,
-  } = useNewDataTableForMainApi(DATA_URL, {}, searchValue);
+  } = useNewDataTableForMainApi(DATA_URL, {}, searchValue)
 
-  const [openedDropdownId, setOpenedDropdownId] = useState(null);
-  const dropdownRef = useRef(null);
+  const [openedDropdownId, setOpenedDropdownId] = useState(null)
+  const dropdownRef = useRef(null)
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        closeDropdown();
+        closeDropdown()
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const toggleDropdown = (rowId) => {
-    if (openedDropdownId === rowId) {
-      setOpenedDropdownId(null);
-    } else {
-      setOpenedDropdownId(rowId);
+      document.removeEventListener('mousedown', handleClickOutside)
     }
-  };
+  }, [])
+
+  const toggleDropdown = rowId => {
+    if (openedDropdownId === rowId) {
+      setOpenedDropdownId(null)
+    } else {
+      setOpenedDropdownId(rowId)
+    }
+  }
 
   const closeDropdown = () => {
-    setOpenedDropdownId(null);
-  };
+    setOpenedDropdownId(null)
+  }
 
   return (
     <>
@@ -63,93 +63,82 @@ export default function TugasAkhirModule({ baseURL }) {
             type="text"
             name="search"
             placeholder="Search"
-            style={{ width: "400px" }}
+            style={{ width: '400px' }}
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={e => setSearchValue(e.target.value)}
           />
         </div>
       </div>
-      <table
-        className="w-full border-collapse rounded-2xl  shadow table-auto"
-        cellPadding={10}
-      >
+      <table className="w-full border-collapse rounded-2xl  shadow table-auto" cellPadding={10}>
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("id")}
+                onClick={() => sortByNew('id')}
               >
-                No <SortIcon sort={getSortByNew("id")} />
+                No <SortIcon sort={getSortByNew('id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("npm")}
+                onClick={() => sortByNew('npm')}
               >
                 Nama
-                <SortIcon sort={getSortByNew("npm")} />
+                <SortIcon sort={getSortByNew('npm')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("status")}
+                onClick={() => sortByNew('status')}
               >
                 status
-                <SortIcon sort={getSortByNew("status")} />
+                <SortIcon sort={getSortByNew('status')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("semester")}
+                onClick={() => sortByNew('semester')}
               >
                 Semester
-                <SortIcon sort={getSortByNew("semester")} />
+                <SortIcon sort={getSortByNew('semester')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("judul_skripsi")}
+                onClick={() => sortByNew('judul_skripsi')}
               >
                 Judul Skripsi
-                <SortIcon sort={getSortByNew("judul_skripsi")} />
+                <SortIcon sort={getSortByNew('judul_skripsi')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("peran")}
+                onClick={() => sortByNew('peran')}
               >
                 Peran
-                <SortIcon sort={getSortByNew("peran")} />
+                <SortIcon sort={getSortByNew('peran')} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loadingNew && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -158,27 +147,19 @@ export default function TugasAkhirModule({ baseURL }) {
             dataNew &&
             dataNew.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.nama_lengkap}
                   <span className="block font-bold">{row.npm}</span>
                 </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.status}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.semester}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.status}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.semester}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {`${row.judul_skripsi.split(" ").slice(0, 6).join(" ")}${
-                    row.judul_skripsi.split(" ").length > 6 ? "..." : ""
+                  {`${row.judul_skripsi.split(' ').slice(0, 6).join(' ')}${
+                    row.judul_skripsi.split(' ').length > 6 ? '...' : ''
                   }`}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.peran}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.peran}</td>
 
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="relative flex items-stretch gap-1">
@@ -186,11 +167,7 @@ export default function TugasAkhirModule({ baseURL }) {
                       onClick={() => toggleDropdown(row.id)}
                       className="flex items-center gap-2 bg-blue-500 text-white px-3 py-2 rounded-md focus:outline-none z-10"
                     >
-                      <Icon
-                        icon="fluent:settings-24-filled"
-                        width={20}
-                        height={20}
-                      />
+                      <Icon icon="fluent:settings-24-filled" width={20} height={20} />
                     </button>
                     {openedDropdownId === row.id && (
                       <div
@@ -201,16 +178,15 @@ export default function TugasAkhirModule({ baseURL }) {
                           <button
                             onClick={closeDropdown}
                             className={`w-full px-4 py-2 text-sm ${
-                              row.status === "pengajuan-sk" &&
-                              row.status_approved === false
-                                ? "text-blue-500 underline font-bold"
-                                : (row.status === "menuju-kolokium" ||
-                                    row.status === "menuju-sidang" ||
-                                    row.status === "menyelesaikan-revisi" ||
-                                    row.status === "selesai") &&
-                                  row.status_approved === true
-                                ? "text-black font-semibold"
-                                : "text-gray-500"
+                              row.status === 'pengajuan-sk' && row.status_approved === false
+                                ? 'text-blue-500 underline font-bold'
+                                : (row.status === 'menuju-kolokium' ||
+                                      row.status === 'menuju-sidang' ||
+                                      row.status === 'menyelesaikan-revisi' ||
+                                      row.status === 'selesai') &&
+                                    row.status_approved === true
+                                  ? 'text-black font-semibold'
+                                  : 'text-gray-500'
                             } hover:bg-gray-200`}
                           >
                             <Link
@@ -228,30 +204,29 @@ export default function TugasAkhirModule({ baseURL }) {
                                 className="text-green-400 "
                               />
                             ) : (
-                              ""
+                              ''
                             )}
                           </button>
 
                           <button
                             onClick={closeDropdown}
                             className={`w-full px-4 py-2 text-sm ${
-                              row.status === "menuju-kolokium" &&
-                              row.status_approved_kolo === false
-                                ? "text-blue-500 underline font-bold"
-                                : (row.status === "menuju-kolokium" ||
-                                    row.status === "menuju-sidang" ||
-                                    row.status === "menyelesaikan-revisi" ||
-                                    row.status === "selesai") &&
-                                  row.status_approved_kolo === true
-                                ? "text-black font-semibold"
-                                : "text-gray-500"
+                              row.status === 'menuju-kolokium' && row.status_approved_kolo === false
+                                ? 'text-blue-500 underline font-bold'
+                                : (row.status === 'menuju-kolokium' ||
+                                      row.status === 'menuju-sidang' ||
+                                      row.status === 'menyelesaikan-revisi' ||
+                                      row.status === 'selesai') &&
+                                    row.status_approved_kolo === true
+                                  ? 'text-black font-semibold'
+                                  : 'text-gray-500'
                             } hover:bg-gray-200`}
                           >
                             <span>
-                              {row.status === "menuju-kolokium" ||
-                              row.status === "menuju-sidang" ||
-                              row.status === "menyelesaikan-revisi" ||
-                              row.status === "selesai" ? (
+                              {row.status === 'menuju-kolokium' ||
+                              row.status === 'menuju-sidang' ||
+                              row.status === 'menyelesaikan-revisi' ||
+                              row.status === 'selesai' ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pengajuan_kolo/${row.id}`}
                                   target="_blank"
@@ -271,32 +246,32 @@ export default function TugasAkhirModule({ baseURL }) {
                                 className="text-green-400 "
                               />
                             ) : (
-                              ""
+                              ''
                             )}
                           </button>
 
                           <button
                             onClick={closeDropdown}
                             className={`w-full px-4 py-2 text-sm ${
-                              (row.status === "menuju-kolokium" ||
-                                row.status === "menuju-sidang") &&
+                              (row.status === 'menuju-kolokium' ||
+                                row.status === 'menuju-sidang') &&
                               row.status_penilaian === false &&
                               row.status_approved_kolo === true
-                                ? "text-blue-500 underline font-bold"
-                                : (row.status === "menuju-kolokium" ||
-                                    row.status === "menuju-sidang" ||
-                                    row.status === "menyelesaikan-revisi" ||
-                                    row.status === "selesai") &&
-                                  row.status_penilaian === true
-                                ? "text-black font-semibold"
-                                : "text-gray-500"
+                                ? 'text-blue-500 underline font-bold'
+                                : (row.status === 'menuju-kolokium' ||
+                                      row.status === 'menuju-sidang' ||
+                                      row.status === 'menyelesaikan-revisi' ||
+                                      row.status === 'selesai') &&
+                                    row.status_penilaian === true
+                                  ? 'text-black font-semibold'
+                                  : 'text-gray-500'
                             } hover:bg-gray-200`}
                           >
                             <span>
-                              {(row.status === "menuju-kolokium" ||
-                                row.status === "menuju-sidang" ||
-                                row.status === "menyelesaikan-revisi" ||
-                                row.status === "selesai") &&
+                              {(row.status === 'menuju-kolokium' ||
+                                row.status === 'menuju-sidang' ||
+                                row.status === 'menyelesaikan-revisi' ||
+                                row.status === 'selesai') &&
                               row.status_approved_kolo === true ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pelaks_kolo/${row.id}`}
@@ -317,29 +292,28 @@ export default function TugasAkhirModule({ baseURL }) {
                                 className="text-green-400 "
                               />
                             ) : (
-                              ""
+                              ''
                             )}
                           </button>
 
                           <button
                             onClick={closeDropdown}
                             className={`w-full px-4 py-2 text-sm ${
-                              row.status === "menuju-sidang" &&
-                              row.status_approved_sidang === false
-                                ? "text-blue-500 underline font-bold"
-                                : (row.status === "menuju-kolokium" ||
-                                    row.status === "menuju-sidang" ||
-                                    row.status === "menyelesaikan-revisi" ||
-                                    row.status === "selesai") &&
-                                  row.status_approved_sidang === true
-                                ? "text-black font-semibold"
-                                : "text-gray-500"
+                              row.status === 'menuju-sidang' && row.status_approved_sidang === false
+                                ? 'text-blue-500 underline font-bold'
+                                : (row.status === 'menuju-kolokium' ||
+                                      row.status === 'menuju-sidang' ||
+                                      row.status === 'menyelesaikan-revisi' ||
+                                      row.status === 'selesai') &&
+                                    row.status_approved_sidang === true
+                                  ? 'text-black font-semibold'
+                                  : 'text-gray-500'
                             } hover:bg-gray-200`}
                           >
                             <span>
-                              {row.status === "selesai" ||
-                              row.status === "menuju-sidang" ||
-                              row.status === "menyelesaikan-revisi" ? (
+                              {row.status === 'selesai' ||
+                              row.status === 'menuju-sidang' ||
+                              row.status === 'menyelesaikan-revisi' ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pengajuan_sidang/${row.id}`}
                                   target="_blank"
@@ -359,31 +333,31 @@ export default function TugasAkhirModule({ baseURL }) {
                                 className="text-green-400 "
                               />
                             ) : (
-                              ""
+                              ''
                             )}
                           </button>
 
                           <button
                             onClick={closeDropdown}
                             className={`w-full px-4 py-2 text-sm ${
-                              (row.status === "menuju-sidang" ||
-                                row.status === "menyelesaikan-revisi") &&
+                              (row.status === 'menuju-sidang' ||
+                                row.status === 'menyelesaikan-revisi') &&
                               row.status_penilaian_sidang === false &&
                               row.status_approved_sidang === true
-                                ? "text-blue-500 underline font-bold"
-                                : (row.status === "menuju-kolokium" ||
-                                    row.status === "menuju-sidang" ||
-                                    row.status === "menyelesaikan-revisi" ||
-                                    row.status === "selesai") &&
-                                  row.status_penilaian_sidang === true
-                                ? "text-black font-semibold"
-                                : "text-gray-500"
+                                ? 'text-blue-500 underline font-bold'
+                                : (row.status === 'menuju-kolokium' ||
+                                      row.status === 'menuju-sidang' ||
+                                      row.status === 'menyelesaikan-revisi' ||
+                                      row.status === 'selesai') &&
+                                    row.status_penilaian_sidang === true
+                                  ? 'text-black font-semibold'
+                                  : 'text-gray-500'
                             } hover:bg-gray-200`}
                           >
                             <span>
-                              {(row.status === "selesai" ||
-                                row.status === "menuju-sidang" ||
-                                row.status === "menyelesaikan-revisi") &&
+                              {(row.status === 'selesai' ||
+                                row.status === 'menuju-sidang' ||
+                                row.status === 'menyelesaikan-revisi') &&
                               row.status_approved_sidang === true ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pelaks_sidang/${row.id}`}
@@ -404,23 +378,22 @@ export default function TugasAkhirModule({ baseURL }) {
                                 className="text-green-400 "
                               />
                             ) : (
-                              ""
+                              ''
                             )}
                           </button>
 
                           <button
                             onClick={closeDropdown}
                             className={`w-full px-4 py-2 text-sm ${
-                              row.status === "menyelesaikan-revisi"
-                                ? "text-blue-500 underline font-bold"
-                                : row.status === "selesai"
-                                ? "text-black font-semibold"
-                                : "text-gray-500"
+                              row.status === 'menyelesaikan-revisi'
+                                ? 'text-blue-500 underline font-bold'
+                                : row.status === 'selesai'
+                                  ? 'text-black font-semibold'
+                                  : 'text-gray-500'
                             } hover:bg-gray-200`}
                           >
                             <span>
-                              {row.status === "menyelesaikan-revisi" ||
-                              row.status === "selesai" ? (
+                              {row.status === 'menyelesaikan-revisi' || row.status === 'selesai' ? (
                                 <Link
                                   href={`${baseURL}/tugas-akhir/pengumpulan_revisi/${row.id}`}
                                   target="_blank"
@@ -432,7 +405,7 @@ export default function TugasAkhirModule({ baseURL }) {
                                 <span>Pengumpulan Revisi</span>
                               )}
                             </span>
-                            {row.status === "selesai" ? (
+                            {row.status === 'selesai' ? (
                               <Icon
                                 icon="ph:check-fat-fill"
                                 width={20}
@@ -440,7 +413,7 @@ export default function TugasAkhirModule({ baseURL }) {
                                 className="text-green-400 "
                               />
                             ) : (
-                              ""
+                              ''
                             )}
                           </button>
                         </div>
@@ -457,13 +430,7 @@ export default function TugasAkhirModule({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPageNew(pageNew - 1)}
             disabled={pageNew <= 1}
             pill
@@ -471,13 +438,7 @@ export default function TugasAkhirModule({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPageNew(pageNew + 1)}
             disabled={pageNew >= pageCountNew}
@@ -494,18 +455,13 @@ export default function TugasAkhirModule({ baseURL }) {
             max={pageCountNew || 1}
             className="w-20"
             value={pageNew}
-            onChange={(event) =>
-              setPageNew(
-                Math.max(
-                  1,
-                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                )
-              )
+            onChange={event =>
+              setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
             }
           />
           of {pageCountNew || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

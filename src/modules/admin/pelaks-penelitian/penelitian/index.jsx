@@ -1,84 +1,85 @@
-import { Icon } from "@iconify-icon/react";
-import useDatatable from "../../../../hooks/useDatatable";
-import SortIcon from "../../../../components/SortIcon";
-import Filter from "./filter";
-import Pagination from "../../../../components/Pagination";
-import Button from "../../../../components/Button";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Icon } from '@iconify-icon/react'
+import useDatatable from '../../../../hooks/useDatatable'
+import SortIcon from '../../../../components/SortIcon'
+import Filter from './filter'
+import Pagination from '../../../../components/Pagination'
+import Button from '../../../../components/Button'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export default function PenelitianModule({ baseURL }) {
-  const approveData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/penelitian/approveStatus/${id}`;
+  const approveData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/approveStatus/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const rejectData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/penelitian/rejectStatus/${id}`;
+  const rejectData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/rejectStatus/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
-
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/penelitianPending`)
+  const [dataUrl, setDataUrl] = useState(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/penelitianPending`,
+  )
 
   const handleApproveClick = async () => {
-    await approveData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/penelitianAprove`);
-  };
+    await approveData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/penelitianAprove`)
+  }
 
   const handleRejectClick = async () => {
-    await rejectData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/penelitianReject`);
-  };
+    await rejectData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/penelitianReject`)
+  }
 
   const handlePendingClick = () => {
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/penelitianPending`);
-  };
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/penelitianPending`)
+  }
 
   const {
     data,
@@ -93,11 +94,11 @@ export default function PenelitianModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(dataUrl);
+  } = useDatatable(dataUrl)
 
   useEffect(() => {
-    refresh();
-  }, [dataUrl]);
+    refresh()
+  }, [dataUrl])
 
   return (
     <>
@@ -108,7 +109,7 @@ export default function PenelitianModule({ baseURL }) {
           icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
           onClick={handlePendingClick}
           pill
-          >
+        >
           Pending
         </Button>
         <Button
@@ -116,7 +117,7 @@ export default function PenelitianModule({ baseURL }) {
           icon={<Icon icon="oi:check" width={20} height={20} />}
           onClick={handleApproveClick}
           pill
-          >
+        >
           Aprove
         </Button>
         <Button
@@ -124,7 +125,7 @@ export default function PenelitianModule({ baseURL }) {
           icon={<Icon icon="oi:x" width={20} height={20} />}
           onClick={handleRejectClick}
           pill
-          >
+        >
           Reject
         </Button>
       </div>
@@ -137,51 +138,47 @@ export default function PenelitianModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("penelitian_id")}
+                onClick={() => sortBy('penelitian_id')}
               >
                 No
-                <SortIcon sort={getSortBy("penelitian_id")} />
+                <SortIcon sort={getSortBy('penelitian_id')} />
               </div>
             </th>
 
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                NPM/NIDN
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">NPM/NIDN</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("judul_kegiatan")}
+                onClick={() => sortBy('judul_kegiatan')}
               >
                 Judul
-                <SortIcon sort={getSortBy("judul_kegiatan")} />
+                <SortIcon sort={getSortBy('judul_kegiatan')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tahun_kegiatan")}
+                onClick={() => sortBy('tahun_kegiatan')}
               >
                 Tahun Pelaksanaan
-                <SortIcon sort={getSortBy("tahun_kegiatan")} />
+                <SortIcon sort={getSortBy('tahun_kegiatan')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("lama_kegiatan")}
+                onClick={() => sortBy('lama_kegiatan')}
               >
                 Lama Kegiatan
-                <SortIcon sort={getSortBy("lama_kegiatan")} />
+                <SortIcon sort={getSortBy('lama_kegiatan')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">Aksi</th>
@@ -190,20 +187,14 @@ export default function PenelitianModule({ baseURL }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -212,43 +203,29 @@ export default function PenelitianModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
 
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.nama_lengkap}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.npm ? row.npm : row.nidn}
                   <span className="block font-bold">{row.role}</span>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.judul_kegiatan}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.judul_kegiatan}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.tahun_kegiatan}/{row.tahun_pelaksanaan}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.lama_kegiatan}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.lama_kegiatan}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
@@ -288,5 +265,5 @@ export default function PenelitianModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

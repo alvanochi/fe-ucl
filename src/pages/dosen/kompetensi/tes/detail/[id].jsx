@@ -1,60 +1,60 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import BackButton from "../../../../../components/BackButton";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import date from "../../../../../utils/date";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import BackButton from '../../../../../components/BackButton'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import date from '../../../../../utils/date'
+import { Loading } from '../../../../../components/Loading'
 
 export default function TesDetail() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/kompetensi/detailTes`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/file-tes`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/detailTes`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/file-tes`
 
   const INITIAL_FORM = {
-    tes_id: "",
-    nama_tes: "",
-    jenis_tes: "",
-    penyelenggara: "",
-    tgl_tes: "",
-    skor_tes: "",
-    file: "",
-  };
+    tes_id: '',
+    nama_tes: '',
+    jenis_tes: '',
+    penyelenggara: '',
+    tgl_tes: '',
+    skor_tes: '',
+    file: '',
+  }
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nama_tes", label: "Nama Tes" },
-      { field: "jenis_tes", label: "Jenis Tes" },
-      { field: "penyelenggara", label: "Penyelenggara" },
-      { field: "tgl_tes", label: "Tanggal Tes" },
-      { field: "skor_tes", label: "Skor Tes" },
+      { field: 'nama_tes', label: 'Nama Tes' },
+      { field: 'jenis_tes', label: 'Jenis Tes' },
+      { field: 'penyelenggara', label: 'Penyelenggara' },
+      { field: 'tgl_tes', label: 'Tanggal Tes' },
+      { field: 'skor_tes', label: 'Skor Tes' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form } = formdata;
+  const { form } = formdata
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
         tgl_tes: date.formatToInput(data.tgl_tes),
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if ([user, menu, form].some((item) => item == null)) return <Loading />;
+  if ([user, menu, form].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader
@@ -149,25 +149,17 @@ export default function TesDetail() {
               </Form.Label>
               <span>:</span>
               <div className="block flex-1 space-y-2">
-                <embed
-                  src={`${FILE_URL}/${form.file}`}
-                  className="w-full h-[256px]"
-                />
+                <embed src={`${FILE_URL}/${form.file}`} className="w-full h-[256px]" />
               </div>
             </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

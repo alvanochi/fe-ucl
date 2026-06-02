@@ -1,129 +1,113 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import UploadDokumen from "../../../../../modules/pelaksanaan-pendidikan/bahan-ajar/upload-dokumen";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import useDosen from "../../../../../repo/dosen";
-import useMahasiswa from "../../../../../repo/mahasiswa";
-import date from "../../../../../utils/date";
-import { useEffect } from "react";
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
-import _ from "underscore";
-import Accordion from "../../../../../components/Accordion";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import UploadDokumen from '../../../../../modules/pelaksanaan-pendidikan/bahan-ajar/upload-dokumen'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import useDosen from '../../../../../repo/dosen'
+import useMahasiswa from '../../../../../repo/mahasiswa'
+import date from '../../../../../utils/date'
+import { useEffect } from 'react'
+import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../../config/role'
+import _ from 'underscore'
+import Accordion from '../../../../../components/Accordion'
+import { Loading } from '../../../../../components/Loading'
 
 export default function BahanAjarEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/pendidikan/bahan-ajar/detail`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-bahanAjar`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/pendidikan/bahan-ajar/detail`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-bahanAjar`
 
   const INITIAL_ANGGOTA = {
-    user_id: "",
-    urutan: "",
-    afiliasi: "",
-    peran: "",
-    role: "",
-  };
+    user_id: '',
+    urutan: '',
+    afiliasi: '',
+    peran: '',
+    role: '',
+  }
 
   const INITIAL_FORM = {
-    bahan_ajar_id: "",
-    jenis_bahan_ajar: "",
-    judul_bahan_ajar: "",
-    tgl_terbit: "",
-    penerbit: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    nama_dok: "",
-    keterangan: "",
-    tautan_dok: "",
+    bahan_ajar_id: '',
+    jenis_bahan_ajar: '',
+    judul_bahan_ajar: '',
+    tgl_terbit: '',
+    penerbit: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    nama_dok: '',
+    keterangan: '',
+    tautan_dok: '',
     penulis_dosen: [],
     penulis_mahasiswa: [],
     docs: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
-    transformData: (data) =>
+    transformData: data =>
       _.omit(
         {
           ...data,
           penulis: JSON.stringify([
-            ...data.penulis_dosen.map((item) => _.omit(item, ["role"])),
-            ...data.penulis_mahasiswa.map((item) => _.omit(item, ["role"])),
+            ...data.penulis_dosen.map(item => _.omit(item, ['role'])),
+            ...data.penulis_mahasiswa.map(item => _.omit(item, ['role'])),
           ]),
         },
-        ["penulis_dosen", "penulis_mahasiswa"]
+        ['penulis_dosen', 'penulis_mahasiswa'],
       ),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/pendidikan/bahan-ajar/edit`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/pendidikan/bahan-ajar/edit`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.bahan_ajar_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
   const removeFromUser = (key, index, role) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-      [key]: state[key].filter(
-        (item, idx) => item.role == role && idx != index
-      ),
-    }));
+      [key]: state[key].filter((item, idx) => item.role == role && idx != index),
+    }))
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...INITIAL_FORM,
         ...data.data[0],
         tgl_terbit: date.formatToInput(data.data[0].tgl_terbit),
         tgl_sk_penugasan: date.formatToInput(data.data[0].tgl_sk_penugasan),
-        penulis_dosen: data.penulis.filter(
-          (item) => item.role == ROLE_ID_DOSEN
-        ),
-        penulis_mahasiswa: data.penulis.filter(
-          (item) => item.role == ROLE_ID_MAHASISWA
-        ),
+        penulis_dosen: data.penulis.filter(item => item.role == ROLE_ID_DOSEN),
+        penulis_mahasiswa: data.penulis.filter(item => item.role == ROLE_ID_MAHASISWA),
         docs: data.dataDokumen,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const DELETE_FILE_URL = `${process.env.API_ENDPOINT}/pendidikan/bahan-ajar/deleteDokumen`;
+  const DELETE_FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/pendidikan/bahan-ajar/deleteDokumen`
 
-  const { destroy } = useCRUD(DELETE_FILE_URL);
+  const { destroy } = useCRUD(DELETE_FILE_URL)
 
-  if (
-    [user, menu, isDosenLoading, isMahasiswaLoading].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, isDosenLoading, isMahasiswaLoading].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Bahan Ajar</Card.Header>
           <Card.Body className="space-y-4">
@@ -138,14 +122,14 @@ export default function BahanAjarEdit() {
                 value={form.jenis_bahan_ajar}
                 onChange={inputHandler}
                 options={[
-                  { label: "Alat Bantu", value: "Alat Bantu" },
-                  { label: "Audio Visual", value: "Audio Visual" },
-                  { label: "Buku Ajar", value: "Buku Ajar" },
-                  { label: "Diktat", value: "Diktat" },
-                  { label: "Model", value: "Model" },
-                  { label: "Modul", value: "Modul" },
-                  { label: "Naskah Tutorial", value: "Naskah Tutorial" },
-                  { label: "Petunjuk Praktikum", value: "Petunjuk Praktikum" },
+                  { label: 'Alat Bantu', value: 'Alat Bantu' },
+                  { label: 'Audio Visual', value: 'Audio Visual' },
+                  { label: 'Buku Ajar', value: 'Buku Ajar' },
+                  { label: 'Diktat', value: 'Diktat' },
+                  { label: 'Model', value: 'Model' },
+                  { label: 'Modul', value: 'Modul' },
+                  { label: 'Naskah Tutorial', value: 'Naskah Tutorial' },
+                  { label: 'Petunjuk Praktikum', value: 'Petunjuk Praktikum' },
                 ]}
               />
             </Form.Group>
@@ -253,48 +237,29 @@ export default function BahanAjarEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Dokumen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Dokumen
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Keteranagan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Tautan Dokumen
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Dokumen</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Keteranagan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Tautan Dokumen</th>
 
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Action
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Action</th>
             </tr>
           </thead>
           <tbody>
             {form.docs.map((doc, index) => (
               <tr key={`anggota-dosen-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.nama_dok}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.keterangan}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.tautan_dok}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.nama_dok}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.keterangan}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.tautan_dok}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
                       as="a"
-                      href={`${prefix + menu.url}/bahan-ajar/dokumenEdit/${
-                        doc.dokumen_id
-                      }`}
+                      href={`${prefix + menu.url}/bahan-ajar/dokumenEdit/${doc.dokumen_id}`}
                       variant="secondary"
                       icon={<Icon icon="bx:edit" width={20} height={20} />}
                     />
@@ -309,10 +274,8 @@ export default function BahanAjarEdit() {
                           onClick={() =>
                             destroy(doc.dokumen_id).then(() =>
                               router.push(
-                                `${prefix + menu.url}/bahan-ajar/edit/${
-                                  form.bahan_ajar_id
-                                }`
-                              )
+                                `${prefix + menu.url}/bahan-ajar/edit/${form.bahan_ajar_id}`,
+                              ),
                             )
                           }
                         />
@@ -331,26 +294,15 @@ export default function BahanAjarEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={5}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={5} className="text-sm border-2 border-white bg-gray-50">
                 Penulis Dosen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Urutan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Affiliasi
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Urutan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Affiliasi</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -365,7 +317,7 @@ export default function BahanAjarEdit() {
                     value={form.penulis_dosen[index].user_id}
                     options={
                       listDosen &&
-                      listDosen.map((dosen) => ({
+                      listDosen.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -398,10 +350,10 @@ export default function BahanAjarEdit() {
                     onChange={inputHandler}
                     value={form.penulis_dosen[index].peran}
                     options={[
-                      { label: "Penulis", value: "Penulis" },
-                      { label: "Editor", value: "Editor" },
-                      { label: "Penerjemah", value: "Penerjemah" },
-                      { label: "Penemu/Inventor", value: "Penemu/Inventor" },
+                      { label: 'Penulis', value: 'Penulis' },
+                      { label: 'Editor', value: 'Editor' },
+                      { label: 'Penerjemah', value: 'Penerjemah' },
+                      { label: 'Penemu/Inventor', value: 'Penemu/Inventor' },
                     ]}
                   />
                 </td>
@@ -411,16 +363,8 @@ export default function BahanAjarEdit() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          removeFromUser("penulis_dosen", index, "Dosen")
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => removeFromUser('penulis_dosen', index, 'Dosen')}
                       />
                     )}
                   </div>
@@ -430,20 +374,17 @@ export default function BahanAjarEdit() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={5}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={5} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       penulis_dosen: [
                         ...state.penulis_dosen,
-                        { ...INITIAL_ANGGOTA, role: "Dosen" },
+                        { ...INITIAL_ANGGOTA, role: 'Dosen' },
                       ],
                     }))
                   }
@@ -460,26 +401,15 @@ export default function BahanAjarEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={5}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={5} className="text-sm border-2 border-white bg-gray-50">
                 Penulis Mahasiswa
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Urutan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Affiliasi
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Urutan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Affiliasi</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -494,7 +424,7 @@ export default function BahanAjarEdit() {
                     value={form.penulis_mahasiswa[index].user_id}
                     options={
                       listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
+                      listMahasiswa.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -527,10 +457,10 @@ export default function BahanAjarEdit() {
                     onChange={inputHandler}
                     value={form.penulis_mahasiswa[index].peran}
                     options={[
-                      { label: "Penulis", value: "Penulis" },
-                      { label: "Editor", value: "Editor" },
-                      { label: "Penerjemah", value: "Penerjemah" },
-                      { label: "Penemu/Inventor", value: "Penemu/Inventor" },
+                      { label: 'Penulis', value: 'Penulis' },
+                      { label: 'Editor', value: 'Editor' },
+                      { label: 'Penerjemah', value: 'Penerjemah' },
+                      { label: 'Penemu/Inventor', value: 'Penemu/Inventor' },
                     ]}
                   />
                 </td>
@@ -540,20 +470,8 @@ export default function BahanAjarEdit() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          removeFromUser(
-                            "penulis_mahasiswa",
-                            index,
-                            "Mahasiswa"
-                          )
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => removeFromUser('penulis_mahasiswa', index, 'Mahasiswa')}
                       />
                     )}
                   </div>
@@ -563,20 +481,17 @@ export default function BahanAjarEdit() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={6}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={6} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       penulis_mahasiswa: [
                         ...state.penulis_mahasiswa,
-                        { ...INITIAL_ANGGOTA, role: "Mahasiswa" },
+                        { ...INITIAL_ANGGOTA, role: 'Mahasiswa' },
                       ],
                     }))
                   }
@@ -588,12 +503,7 @@ export default function BahanAjarEdit() {
           </tfoot>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -602,5 +512,5 @@ export default function BahanAjarEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

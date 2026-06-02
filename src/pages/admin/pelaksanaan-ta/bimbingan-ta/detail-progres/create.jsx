@@ -1,44 +1,40 @@
-import { useState } from "react";
-import axios from "axios";
-import Modal from "../../../../../components/Modal";
-import Form from "../../../../../components/Form";
-import useModal from "../../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../../hooks/useForm";
-import {
-  MySwal,
-  loadingAlert,
-  toastAlert,
-} from "../../../../../lib/sweetalert";
-import Button from "../../../../../components/Button";
+import { useState } from 'react'
+import axios from 'axios'
+import Modal from '../../../../../components/Modal'
+import Form from '../../../../../components/Form'
+import useModal from '../../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../../../lib/sweetalert'
+import Button from '../../../../../components/Button'
 
 const CreateProgresBimbingan = ({ onAction, id, mhsid }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const INITIAL_FORM = {
-    pengajuan_sk_id: "",
-    mhs_id: "",
-    last_tgl: "",
-    pembahasan: "",
-    deskripsi: "",
-    bab: "",
-  };
+    pengajuan_sk_id: '',
+    mhs_id: '',
+    last_tgl: '',
+    pembahasan: '',
+    deskripsi: '',
+    bab: '',
+  }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
-    rules: [{ field: "last_tgl", label: "last_tgl" }],
-    rules: [{ field: "pembahasan", label: "pembahasan" }],
-    rules: [{ field: "deskripsi", label: "deskripsi" }],
-    rules: [{ field: "bab", label: "bab" }],
-  });
+    rules: [{ field: 'last_tgl', label: 'last_tgl' }],
+    rules: [{ field: 'pembahasan', label: 'pembahasan' }],
+    rules: [{ field: 'deskripsi', label: 'deskripsi' }],
+    rules: [{ field: 'bab', label: 'bab' }],
+  })
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
         pengajuan_sk_id: id,
         mhs_id: mhsid,
-      };
+      }
 
       if (
         !requestData.last_tgl ||
@@ -48,36 +44,36 @@ const CreateProgresBimbingan = ({ onAction, id, mhsid }) => {
         !requestData.pengajuan_sk_id ||
         !requestData.mhs_id
       ) {
-        toastAlert("error", "Pleas fill in all the required fields.");
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/progres-tugas-akhir/create-progres`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/create-progres`,
+        method: 'POST',
         data: requestData,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      form.last_tgl = "";
-      form.pembahasan = "";
-      form.deskripsi = "";
-      form.bab = "";
+      form.last_tgl = ''
+      form.pembahasan = ''
+      form.deskripsi = ''
+      form.bab = ''
 
-      toastAlert("success", "Successfully");
-      close();
-      onAction();
+      toastAlert('success', 'Successfully')
+      close()
+      onAction()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.response.data.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.response.data.message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -91,12 +87,7 @@ const CreateProgresBimbingan = ({ onAction, id, mhsid }) => {
       >
         Tambah Progres
       </Button>
-      <Modal
-        title="Tambah Progres Bimbigan"
-        show={show}
-        handler={toggle}
-        size="lg"
-      >
+      <Modal title="Tambah Progres Bimbigan" show={show} handler={toggle} size="lg">
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">
@@ -164,7 +155,7 @@ const CreateProgresBimbingan = ({ onAction, id, mhsid }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default CreateProgresBimbingan;
+export default CreateProgresBimbingan

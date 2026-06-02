@@ -1,85 +1,85 @@
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import { use, useState } from "react";
-import useUsers from "../../../../repo/users";
-import useUser from "../../../../hooks/useUser";
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import { use, useState } from 'react'
+import useUsers from '../../../../repo/users'
+import useUser from '../../../../hooks/useUser'
 
 const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
-  const { show, toggle, close } = useModal();
-  const [code, setCode] = useState("");
-  const [name, setName] = useState("");
-  const { user } = useUser({ redirectTo: "/login" });
+  const { show, toggle, close } = useModal()
+  const [code, setCode] = useState('')
+  const [name, setName] = useState('')
+  const { user } = useUser({ redirectTo: '/login' })
 
-  const { data: listUser, isLoading: isUsersLoading } = useUsers([user]);
+  const { data: listUser, isLoading: isUsersLoading } = useUsers([user])
 
   const INITIAL_FORM = {
-    id_meeting: data && data.id ? data.id : "",
-    status_absen: "1",
-  };
+    id_meeting: data && data.id ? data.id : '',
+    status_absen: '1',
+  }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
-      { field: "id_meeting", label: "ID Meeting" },
-      { field: "code", label: "code" },
-      { field: "name_absen", label: "Nama" },
-      { field: "status_absen", label: "status_absen" },
+      { field: 'id_meeting', label: 'ID Meeting' },
+      { field: 'code', label: 'code' },
+      { field: 'name_absen', label: 'Nama' },
+      { field: 'status_absen', label: 'status_absen' },
     ],
-  });
+  })
 
-  const handlePesertaChange = (selected) => {
-    setCode(selected?.value);
-    setName(selected?.name);
-  };
+  const handlePesertaChange = selected => {
+    setCode(selected?.value)
+    setName(selected?.name)
+  }
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
         name_absen: name,
         code,
-      };
+      }
 
       if (!requestData.status_absen || !requestData.code) {
-        toastAlert("error", "Pleas fill in all the required fields.");
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
       const request = await axios({
-        url: `${process.env.API_ENDPOINT_ABSEN}/absensi-meeting/store`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi-meeting/store`,
+        method: 'POST',
         data: requestData,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      form.id_meeting = data && data.id ? data.id : "";
-      form.code = "";
-      form.name_absen = "";
-      form.status_absen = "1";
+      form.id_meeting = data && data.id ? data.id : ''
+      form.code = ''
+      form.name_absen = ''
+      form.status_absen = '1'
 
-      toastAlert("success", "Successfully");
-      close();
-      onAddAbsensi();
+      toastAlert('success', 'Successfully')
+      close()
+      onAddAbsensi()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
-  if ([user, isUsersLoading].some((item) => item == null))
+  if ([user, isUsersLoading].some(item => item == null))
     return (
       <>
         <Button
@@ -107,7 +107,7 @@ const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
                 name="code"
                 onChange={handlePesertaChange}
                 value={code}
-                options={listUser?.map((user) => ({
+                options={listUser?.map(user => ({
                   label: `${user.personal_data?.nama_lengkap} - ${
                     user.npm ? user.npm : user.personal_data?.nip
                   }`,
@@ -162,7 +162,7 @@ const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
           </Form>
         </Modal>
       </>
-    );
-};
+    )
+}
 
-export default AddAbsensiRapat;
+export default AddAbsensiRapat

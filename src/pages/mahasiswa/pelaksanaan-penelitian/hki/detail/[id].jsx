@@ -1,120 +1,107 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import dummyFile from "../../../../../config/file";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import _ from "underscore";
-import useKategoriHki from "../../../../../repo/kategori-hki";
-import useDosen from "../../../../../repo/dosen";
-import useMahasiswa from "../../../../../repo/mahasiswa";
-import { useEffect } from "react";
-import date from "../../../../../utils/date";
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
-import Accordion from "../../../../../components/Accordion";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import dummyFile from '../../../../../config/file'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import _ from 'underscore'
+import useKategoriHki from '../../../../../repo/kategori-hki'
+import useDosen from '../../../../../repo/dosen'
+import useMahasiswa from '../../../../../repo/mahasiswa'
+import { useEffect } from 'react'
+import date from '../../../../../utils/date'
+import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../../config/role'
+import Accordion from '../../../../../components/Accordion'
+import { Loading } from '../../../../../components/Loading'
 
 export default function AnggotaProfesiEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penelitian/hki/detailHki`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-hki`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/hki/detailHki`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-hki`
 
   const INITIAL_ANGGOTA = {
-    user_id: "",
-    peran: "",
-    correspond: "",
-    role: "",
-  };
+    user_id: '',
+    peran: '',
+    correspond: '',
+    role: '',
+  }
 
   const INITIAL_FORM = {
-    hki_id: "",
-    kategori_id: "",
-    jenis_hki: "",
-    judul_hki: "",
-    tgl_terbit_hki: "",
-    keterangan_hki: "",
-    keterangan: "",
-    nama_dok: "",
-    keterangan_dok: "",
-    tautan_dok: "",
-    point: "",
+    hki_id: '',
+    kategori_id: '',
+    jenis_hki: '',
+    judul_hki: '',
+    tgl_terbit_hki: '',
+    keterangan_hki: '',
+    keterangan: '',
+    nama_dok: '',
+    keterangan_dok: '',
+    tautan_dok: '',
+    point: '',
     penulis_dosen: [],
     penulis_mahasiswa: [],
     docs: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
-    transformData: (data) =>
+    transformData: data =>
       _.omit(
         {
           ...data,
           penulis: JSON.stringify([
-            ...data.penulis_dosen.map((item) => _.omit(item, ["role"])),
-            ...data.penulis_mahasiswa.map((item) => _.omit(item, ["role"])),
+            ...data.penulis_dosen.map(item => _.omit(item, ['role'])),
+            ...data.penulis_mahasiswa.map(item => _.omit(item, ['role'])),
           ]),
         },
-        ["penulis_dosen", "penulis_mahasiswa"]
+        ['penulis_dosen', 'penulis_mahasiswa'],
       ),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: kategoriHki, isLoading: isLoadingHki } = useKategoriHki([user]);
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: kategoriHki, isLoading: isLoadingHki } = useKategoriHki([user])
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
   const removeFromUser = (key, index, role) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-      [key]: state[key].filter(
-        (item, idx) => item.role == role && idx != index
-      ),
-    }));
+      [key]: state[key].filter((item, idx) => item.role == role && idx != index),
+    }))
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...INITIAL_FORM,
         ...data.dataHki[0],
         keterangan_hki: data.dataHki[0].keterangan,
         tgl_terbit_hki: date.formatToInput(data.dataHki[0].tgl_terbit_hki),
-        penulis_dosen: data.dataPenulis.filter(
-          (item) => item.role == ROLE_ID_DOSEN
-        ),
-        penulis_mahasiswa: data.dataPenulis.filter(
-          (item) => item.role == ROLE_ID_MAHASISWA
-        ),
+        penulis_dosen: data.dataPenulis.filter(item => item.role == ROLE_ID_DOSEN),
+        penulis_mahasiswa: data.dataPenulis.filter(item => item.role == ROLE_ID_MAHASISWA),
         docs: data.dataDokumen,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if (
-    [user, menu, isDosenLoading, isMahasiswaLoading, isLoadingHki].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, isDosenLoading, isMahasiswaLoading, isLoadingHki].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <div className="flex justify-center mt-4">
         <Button
-          onClick={() => window.open(`${`${prefix + menu.url}/hki/edit/${form.hki_id}`}`,'_blank')}
+          onClick={() => window.open(`${`${prefix + menu.url}/hki/edit/${form.hki_id}`}`, '_blank')}
           variant="secondary"
           icon={<Icon icon="bx:edit" width={20} height={20} />}
           pill
@@ -138,7 +125,7 @@ export default function AnggotaProfesiEdit() {
                 onChange={inputHandler}
                 options={
                   kategoriHki &&
-                  kategoriHki.map((item) => ({
+                  kategoriHki.map(item => ({
                     label: item.nama_kategori,
                     value: item.id,
                   }))
@@ -151,13 +138,7 @@ export default function AnggotaProfesiEdit() {
                 Point <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="point"
-                value={form.point}
-                disabled
-              />
+              <Form.Input type="text" className="flex-1" name="point" value={form.point} disabled />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -170,43 +151,41 @@ export default function AnggotaProfesiEdit() {
                 value={form.jenis_hki}
                 onChange={inputHandler}
                 options={[
-                  { value: "Paten nasional", label: "Paten nasional" },
+                  { value: 'Paten nasional', label: 'Paten nasional' },
                   {
-                    value: "Paten internasional",
-                    label: "Paten internasional",
+                    value: 'Paten internasional',
+                    label: 'Paten internasional',
                   },
-                  { value: "Hak cipta nasional", label: "Hak cipta nasional" },
+                  { value: 'Hak cipta nasional', label: 'Hak cipta nasional' },
                   {
-                    value: "Hak cipta internasional",
-                    label: "Hak cipta internasional",
-                  },
-                  {
-                    value: "Rancangan dan karya seni monumental",
-                    label: "Rancangan dan karya seni monumental",
+                    value: 'Hak cipta internasional',
+                    label: 'Hak cipta internasional',
                   },
                   {
-                    value: "Rancangan dan karya seni rupa",
-                    label: "Rancangan dan karya seni rupa",
+                    value: 'Rancangan dan karya seni monumental',
+                    label: 'Rancangan dan karya seni monumental',
                   },
                   {
-                    value: "Rancangan dan karya seni kriya",
-                    label: "Rancangan dan karya seni kriya",
+                    value: 'Rancangan dan karya seni rupa',
+                    label: 'Rancangan dan karya seni rupa',
                   },
                   {
-                    value: "Rancangan dan karya seni pertunjukan",
-                    label: "Rancangan dan karya seni pertunjukan",
-                  },
-                  { value: "Karya desain", label: "Karya desain" },
-                  { value: "Karya sastra", label: "Karya sastra" },
-                  {
-                    value:
-                      "Hasil penelitian/pemikiran yang tidak dipublikasikan",
-                    label:
-                      "Hasil penelitian/pemikiran yang tidak dipublikasikan",
+                    value: 'Rancangan dan karya seni kriya',
+                    label: 'Rancangan dan karya seni kriya',
                   },
                   {
-                    value: "Hasil kerjasama industri yang tidak dipublikasikan",
-                    label: "Hasil kerjasama industri yang tidak dipublikasikan",
+                    value: 'Rancangan dan karya seni pertunjukan',
+                    label: 'Rancangan dan karya seni pertunjukan',
+                  },
+                  { value: 'Karya desain', label: 'Karya desain' },
+                  { value: 'Karya sastra', label: 'Karya sastra' },
+                  {
+                    value: 'Hasil penelitian/pemikiran yang tidak dipublikasikan',
+                    label: 'Hasil penelitian/pemikiran yang tidak dipublikasikan',
+                  },
+                  {
+                    value: 'Hasil kerjasama industri yang tidak dipublikasikan',
+                    label: 'Hasil kerjasama industri yang tidak dipublikasikan',
                   },
                 ]}
                 disabled
@@ -262,10 +241,7 @@ export default function AnggotaProfesiEdit() {
               <div className="flex-1 block">
                 <div className="space-y-2 mt-2">
                   {form.docs.map((doc, index) => (
-                    <Accordion
-                      key={`doc-${index}`}
-                      title={`Dokumen ${index + 1}`}
-                    >
+                    <Accordion key={`doc-${index}`} title={`Dokumen ${index + 1}`}>
                       <Form.Group className="mb-4">
                         <Form.Label>Nama Dokumen</Form.Label>
                         <Form.Input
@@ -294,10 +270,7 @@ export default function AnggotaProfesiEdit() {
                         />
                       </Form.Group>
                       <Form.Group className="mb-4">
-                        <embed
-                          src={`${FILE_URL}/${doc.file}`}
-                          className="w-full h-[256px]"
-                        />
+                        <embed src={`${FILE_URL}/${doc.file}`} className="w-full h-[256px]" />
                       </Form.Group>
                     </Accordion>
                   ))}
@@ -312,29 +285,16 @@ export default function AnggotaProfesiEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={6}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={6} className="text-sm border-2 border-white bg-gray-50">
                 Penulis Dosen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Urutan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Affiliasi
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Corresponding Author
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Urutan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Affiliasi</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Corresponding Author</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -349,7 +309,7 @@ export default function AnggotaProfesiEdit() {
                     value={form.penulis_dosen[index].user_id}
                     options={
                       listDosen &&
-                      listDosen.map((dosen) => ({
+                      listDosen.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -385,10 +345,10 @@ export default function AnggotaProfesiEdit() {
                     onChange={inputHandler}
                     value={form.penulis_dosen[index].peran}
                     options={[
-                      { label: "Penulis", value: "Penulis" },
-                      { label: "Editor", value: "Editor" },
-                      { label: "Penerjemah", value: "Penerjemah" },
-                      { label: "Penemu/Inventor", value: "Penemu/Inventor" },
+                      { label: 'Penulis', value: 'Penulis' },
+                      { label: 'Editor', value: 'Editor' },
+                      { label: 'Penerjemah', value: 'Penerjemah' },
+                      { label: 'Penemu/Inventor', value: 'Penemu/Inventor' },
                     ]}
                     disabled
                   />
@@ -401,7 +361,7 @@ export default function AnggotaProfesiEdit() {
                       onChange={inputHandler}
                       checked={form.penulis_dosen[index].correspond}
                       disabled
-                    />{" "}
+                    />{' '}
                     Ya
                   </Form.Label>
                 </td>
@@ -418,29 +378,16 @@ export default function AnggotaProfesiEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={6}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={6} className="text-sm border-2 border-white bg-gray-50">
                 Penulis Mahasiswa
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Urutan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Affiliasi
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Corresponding Author
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Urutan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Affiliasi</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Corresponding Author</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -455,7 +402,7 @@ export default function AnggotaProfesiEdit() {
                     value={form.penulis_mahasiswa[index].user_id}
                     options={
                       listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
+                      listMahasiswa.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -491,10 +438,10 @@ export default function AnggotaProfesiEdit() {
                     onChange={inputHandler}
                     value={form.penulis_mahasiswa[index].peran}
                     options={[
-                      { label: "Penulis", value: "Penulis" },
-                      { label: "Editor", value: "Editor" },
-                      { label: "Penerjemah", value: "Penerjemah" },
-                      { label: "Penemu/Inventor", value: "Penemu/Inventor" },
+                      { label: 'Penulis', value: 'Penulis' },
+                      { label: 'Editor', value: 'Editor' },
+                      { label: 'Penerjemah', value: 'Penerjemah' },
+                      { label: 'Penemu/Inventor', value: 'Penemu/Inventor' },
                     ]}
                     disabled
                   />
@@ -507,7 +454,7 @@ export default function AnggotaProfesiEdit() {
                       onChange={inputHandler}
                       checked={form.penulis_mahasiswa[index].correspond}
                       disabled
-                    />{" "}
+                    />{' '}
                     Ya
                   </Form.Label>
                 </td>
@@ -519,16 +466,11 @@ export default function AnggotaProfesiEdit() {
           </tbody>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

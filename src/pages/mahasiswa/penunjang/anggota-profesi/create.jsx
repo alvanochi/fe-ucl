@@ -1,56 +1,54 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useCRUD from "../../../../hooks/useCRUD";
-import useKategoriProfesi from "../../../../repo/kategori-profesi";
-import { getMonthOptions, getYearOptions } from "../../../../repo/bulan-tahun";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import useKategoriProfesi from '../../../../repo/kategori-profesi'
+import { getMonthOptions, getYearOptions } from '../../../../repo/bulan-tahun'
+import { Loading } from '../../../../components/Loading'
 
 export default function AnggotaProfesiCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penunjang/addProfesi`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penunjang/addProfesi`
   const INITIAL_FORM = {
-    kategori_id: "",
-    nama_organisasi: "",
-    peran: "",
-    mulai_tahun: "",
-    mulai_bulan: "",
-    selesai_tahun: "",
-    selesai_bulan: "",
-    instansi_prof: "",
-  };
+    kategori_id: '',
+    nama_organisasi: '',
+    peran: '',
+    mulai_tahun: '',
+    mulai_bulan: '',
+    selesai_tahun: '',
+    selesai_bulan: '',
+    instansi_prof: '',
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nama_organisasi", label: "Nama Organisasi" },
-      { field: "peran", label: "Peran" },
-      { field: "mulai_tahun", label: "Mulai Keanggotaan" },
-      { field: "mulai_bulan", label: "Mulai Keanggotaan" },
-      { field: "selesai_tahun", label: "Selesai Keanggotaan" },
-      { field: "selesai_bulan", label: "Selesai Keanggotaan" },
-      { field: "instansi_prof", label: "Instansi Profesi" },
+      { field: 'nama_organisasi', label: 'Nama Organisasi' },
+      { field: 'peran', label: 'Peran' },
+      { field: 'mulai_tahun', label: 'Mulai Keanggotaan' },
+      { field: 'mulai_bulan', label: 'Mulai Keanggotaan' },
+      { field: 'selesai_tahun', label: 'Selesai Keanggotaan' },
+      { field: 'selesai_bulan', label: 'Selesai Keanggotaan' },
+      { field: 'instansi_prof', label: 'Instansi Profesi' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const { data: kategoriProfesi, isLoading: isLoadingKategoriProfesi } =
-    useKategoriProfesi([user]);
+  const { data: kategoriProfesi, isLoading: isLoadingKategoriProfesi } = useKategoriProfesi([user])
 
-  const bulanOptions = getMonthOptions();
-  const tahunOptions = getYearOptions();
+  const bulanOptions = getMonthOptions()
+  const tahunOptions = getYearOptions()
 
-  if ([user, menu, isLoadingKategoriProfesi].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isLoadingKategoriProfesi].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -70,7 +68,7 @@ export default function AnggotaProfesiCreate() {
                 onChange={inputHandler}
                 options={
                   kategoriProfesi &&
-                  kategoriProfesi.map((item) => ({
+                  kategoriProfesi.map(item => ({
                     label: `${item.nama_kategori}`,
                     value: item.id,
                   }))
@@ -151,9 +149,7 @@ export default function AnggotaProfesiCreate() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Instansi Profesi
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Instansi Profesi</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -179,12 +175,7 @@ export default function AnggotaProfesiCreate() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -193,5 +184,5 @@ export default function AnggotaProfesiCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

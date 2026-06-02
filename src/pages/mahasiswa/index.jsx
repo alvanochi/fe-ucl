@@ -1,29 +1,29 @@
-import Head from "next/head";
-import dynamic from "next/dynamic";
-import { Icon } from "@iconify-icon/react";
-import useMenu from "../../hooks/useMenu";
-import Layout from "../../components/Layout";
-import Button from "../../components/Button";
-import Card from "../../components/Card";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import useUser from "../../hooks/useUser";
-import useDatatable from "../../hooks/useDatatable";
-import Link from "next/link";
-import resolveConfig from "tailwindcss/resolveConfig";
-import twConfig from "../../../tailwind.config.js";
-import { Loading } from "../../components/Loading";
+import Head from 'next/head'
+import dynamic from 'next/dynamic'
+import { Icon } from '@iconify-icon/react'
+import useMenu from '../../hooks/useMenu'
+import Layout from '../../components/Layout'
+import Button from '../../components/Button'
+import Card from '../../components/Card'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import useUser from '../../hooks/useUser'
+import useDatatable from '../../hooks/useDatatable'
+import Link from 'next/link'
+import resolveConfig from 'tailwindcss/resolveConfig'
+import twConfig from '../../../tailwind.config.js'
+import { Loading } from '../../components/Loading'
 
-const AreaChart = dynamic(() => import("../../components/Chart/area"), {
+const AreaChart = dynamic(() => import('../../components/Chart/area'), {
   ssr: false,
-});
+})
 
 export default function Home() {
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu } = useMenu();
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/dashboard`;
-  const { data } = useDatatable(DATA_URL);
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/dashboard`
+  const { data } = useDatatable(DATA_URL)
 
   function isUserDataComplete(userData) {
     return (
@@ -42,69 +42,67 @@ export default function Home() {
       userData?.provinsi !== null &&
       userData?.kode_pos !== null &&
       userData?.no_hp !== null
-    );
+    )
   }
 
-  const [valueChart, setValueChart] = useState([]);
-  const [labelsChart, setLabelsChart] = useState([]);
+  const [valueChart, setValueChart] = useState([])
+  const [labelsChart, setLabelsChart] = useState([])
 
-  const config = resolveConfig(twConfig);
+  const config = resolveConfig(twConfig)
 
   const {
     theme: { colors },
-  } = config;
+  } = config
 
   const dataUse = {
     labels: labelsChart,
     datasets: [
       {
         fill: true,
-        label: "IPS",
+        label: 'IPS',
         data: valueChart,
         borderColor: colors.primary[600],
-        backgroundColor: (context) => {
-          const bgColor = [colors.primary[400], "rgba(255, 255, 255, 0.1)"];
+        backgroundColor: context => {
+          const bgColor = [colors.primary[400], 'rgba(255, 255, 255, 0.1)']
 
-          if (!context.chart.chartArea) return;
+          if (!context.chart.chartArea) return
 
           const {
             ctx,
             chartArea: { top, bottom },
-          } = context.chart;
-          const gradientBg = ctx.createLinearGradient(0, top, 0, bottom);
-          gradientBg.addColorStop(0, bgColor[0]);
-          gradientBg.addColorStop(1, bgColor[1]);
+          } = context.chart
+          const gradientBg = ctx.createLinearGradient(0, top, 0, bottom)
+          gradientBg.addColorStop(0, bgColor[0])
+          gradientBg.addColorStop(1, bgColor[1])
 
-          return gradientBg;
+          return gradientBg
         },
       },
     ],
-  };
+  }
 
   useEffect(() => {
     if (data && data.dataChart) {
-      const datas = data.dataChart.data;
-      const labels = data.dataChart.label;
+      const datas = data.dataChart.data
+      const labels = data.dataChart.label
 
-      setValueChart(datas);
-      setLabelsChart(labels);
+      setValueChart(datas)
+      setLabelsChart(labels)
     }
-  }, [data]);
+  }, [data])
 
-  if ([menu, user].some((item) => item == null)) return <Loading />;
+  if ([menu, user].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <Head>
         <title>
-          {menu.label ?? ""} - {process.env.APP_NAME ?? ""}
+          {menu.label ?? ''} - {process.env.APP_NAME ?? ''}
         </title>
       </Head>
       <div className="flex flex-col sm:flex-row gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
         <div className="w-full sm:w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
           <img
-            src={
-              process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image
-            }
+            src={process.env.NEXT_PUBLIC_API_URL + '/foto-profile/' + data.userData?.image}
             alt="Profile"
             className="object-cover object-top w-full h-auto"
           />
@@ -113,7 +111,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex flex-col items-start">
               <h1 className="text-xl sm:text-2xl font-semibold text-primary-600 uppercase mb-2 sm:mb-4">
-                {data.userData?.nama_lengkap || ""}
+                {data.userData?.nama_lengkap || ''}
                 <Icon
                   icon="material-symbols:verified"
                   width={36}
@@ -126,12 +124,7 @@ export default function Home() {
                 NPM : {data.userData?.npm}
               </span>
               <span className="block text-sm sm:text-base text-gray-500 font-normal">
-                <Icon
-                  icon="ri:briefcase-fill"
-                  width={16}
-                  height={16}
-                  className="mr-1"
-                />
+                <Icon icon="ri:briefcase-fill" width={16} height={16} className="mr-1" />
                 STATUS : {data.userData?.kode_mhs}
               </span>
               <span className="block text-sm sm:text-base text-gray-500 font-normal">
@@ -192,9 +185,7 @@ export default function Home() {
       </div>
 
       <Card className="mb-4">
-        <Card.Header className="bg-primary-600 text-white text-center text-sm">
-          Summary
-        </Card.Header>
+        <Card.Header className="bg-primary-600 text-white text-center text-sm">Summary</Card.Header>
         <Card.Body className="mx-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
             <Card>
@@ -208,9 +199,7 @@ export default function Home() {
                       className="text-white"
                     />
                   </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.tes}
-                  </p>
+                  <p className="block text-2xl font-bold leading-relaxed">{data.tes}</p>
                   <p className="block text-sm">Total Pengajuan Tes</p>
                 </Link>
               </Card.Body>
@@ -226,9 +215,7 @@ export default function Home() {
                       className="text-white"
                     />
                   </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.sertifikasi}
-                  </p>
+                  <p className="block text-2xl font-bold leading-relaxed">{data.sertifikasi}</p>
                   <p className="block text-sm">Total Pengajuan Sertifikasi</p>
                 </Link>
               </Card.Body>
@@ -244,9 +231,7 @@ export default function Home() {
                       className="text-white"
                     />
                   </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.pembicara}
-                  </p>
+                  <p className="block text-2xl font-bold leading-relaxed">{data.pembicara}</p>
                   <p className="block text-sm">Total Pengajuan Pembicara</p>
                 </Link>
               </Card.Body>
@@ -262,9 +247,7 @@ export default function Home() {
                       className="text-white"
                     />
                   </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.pengabdian}
-                  </p>
+                  <p className="block text-2xl font-bold leading-relaxed">{data.pengabdian}</p>
                   <p className="block text-sm">Total Pengajuan Pengabdian</p>
                 </Link>
               </Card.Body>
@@ -280,9 +263,7 @@ export default function Home() {
                       className="text-white"
                     />
                   </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.penghargaan}
-                  </p>
+                  <p className="block text-2xl font-bold leading-relaxed">{data.penghargaan}</p>
                   <p className="block text-sm">Total Pengajuan Penghargaan</p>
                 </Link>
               </Card.Body>
@@ -291,16 +272,9 @@ export default function Home() {
               <Card.Body>
                 <Link href={`${prefix}/pelaksanaan-penelitian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="fa:flask"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
+                    <Icon icon="fa:flask" width={24} height={24} className="text-white" />
                   </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.penelitian}
-                  </p>
+                  <p className="block text-2xl font-bold leading-relaxed">{data.penelitian}</p>
                   <p className="block text-sm">Total Pengajuan Penelitian</p>
                 </Link>
               </Card.Body>
@@ -309,19 +283,10 @@ export default function Home() {
               <Card.Body>
                 <Link href={`${prefix}/pelaksanaan-penelitian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="fa:flask"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
+                    <Icon icon="fa:flask" width={24} height={24} className="text-white" />
                   </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.publikasi}
-                  </p>
-                  <p className="block text-sm">
-                    Total Pengajuan Publikasi Karya
-                  </p>
+                  <p className="block text-2xl font-bold leading-relaxed">{data.publikasi}</p>
+                  <p className="block text-sm">Total Pengajuan Publikasi Karya</p>
                 </Link>
               </Card.Body>
             </Card>
@@ -329,16 +294,9 @@ export default function Home() {
               <Card.Body>
                 <Link href={`${prefix}/pelaksanaan-penelitian`}>
                   <div className="inline-flex p-2 rounded-full bg-primary-600 mb-2">
-                    <Icon
-                      icon="fa:flask"
-                      width={24}
-                      height={24}
-                      className="text-white"
-                    />
+                    <Icon icon="fa:flask" width={24} height={24} className="text-white" />
                   </div>
-                  <p className="block text-2xl font-bold leading-relaxed">
-                    {data.hki}
-                  </p>
+                  <p className="block text-2xl font-bold leading-relaxed">{data.hki}</p>
                   <p className="block text-sm">Total Pengajuan HKI</p>
                 </Link>
               </Card.Body>
@@ -398,5 +356,5 @@ export default function Home() {
         </Card>
       </div> */}
     </Layout>
-  );
+  )
 }

@@ -1,13 +1,13 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Form from "../../../../components/Form";
-import { useState } from "react";
-import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
-import SortIcon from "../../../../components/SortIcon";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Form from '../../../../components/Form'
+import { useState } from 'react'
+import useNewDataTableNew from '../../../../hooks/useNewDataTableNew'
+import SortIcon from '../../../../components/SortIcon'
 
 export default function MahasiswaModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/users/list-users`;
-  const [searchValue, setSearchValue] = useState("");
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/users/list-users`
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -22,12 +22,12 @@ export default function MahasiswaModule({ baseURL }) {
   } = useNewDataTableNew(
     DATA_URL,
     {
-      filter: ["role"],
-      filterValue: ["Mahasiswa"],
+      filter: ['role'],
+      filterValue: ['Mahasiswa'],
     },
     searchValue,
-    "user_id"
-  );
+    'user_id',
+  )
 
   return (
     <>
@@ -42,9 +42,9 @@ export default function MahasiswaModule({ baseURL }) {
             type="text"
             name="search"
             placeholder="Search"
-            style={{ width: "400px" }}
+            style={{ width: '400px' }}
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={e => setSearchValue(e.target.value)}
           />
         </div>
       </div>
@@ -58,31 +58,27 @@ export default function MahasiswaModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("created_at")}
+                onClick={() => sortByNew('created_at')}
               >
-                No <SortIcon sort={getSortByNew("created_at")} />
+                No <SortIcon sort={getSortByNew('created_at')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("npm")}
+                onClick={() => sortByNew('npm')}
               >
-                NPM <SortIcon sort={getSortByNew("npm")} />
+                NPM <SortIcon sort={getSortByNew('npm')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Email
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Email</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status MHS
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status MHS</div>
             </th>
             {/* <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">FRS</div>
@@ -90,43 +86,35 @@ export default function MahasiswaModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("department_code")}
+                onClick={() => sortByNew('department_code')}
               >
                 Departement
-                <SortIcon sort={getSortByNew("department_code")} />
+                <SortIcon sort={getSortByNew('department_code')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("isverified")}
+                onClick={() => sortByNew('isverified')}
               >
                 Status Akun
-                <SortIcon sort={getSortByNew("isverified")} />
+                <SortIcon sort={getSortByNew('isverified')} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loadingNew && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -136,18 +124,12 @@ export default function MahasiswaModule({ baseURL }) {
             dataNew.map((row, index) => {
               return (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.npm}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">{row.npm}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row.personal_data?.nama_lengkap}
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.email}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">{row.email}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row.personal_data?.kode_mhs}
                   </td>
@@ -170,26 +152,17 @@ export default function MahasiswaModule({ baseURL }) {
                     {row.department_code}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.isverified ? "Verified" : "Belum Verifikasi"}
+                    {row.isverified ? 'Verified' : 'Belum Verifikasi'}
                   </td>
 
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
                         onClick={() =>
-                          window.open(
-                            `${baseURL}/detail-mhs/${row.user_id}`,
-                            "_blank"
-                          )
+                          window.open(`${baseURL}/detail-mhs/${row.user_id}`, '_blank')
                         }
                         variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                       />
                       <Button.Icon
                         as="a"
@@ -201,18 +174,12 @@ export default function MahasiswaModule({ baseURL }) {
                         as="a"
                         href={`${baseURL}/achievements-mhs/${row.user_id}`}
                         variant="primary"
-                        icon={
-                          <Icon
-                            icon="bx:bar-chart-alt-2"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="bx:bar-chart-alt-2" width={20} height={20} />}
                       />
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </table>
@@ -221,13 +188,7 @@ export default function MahasiswaModule({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPageNew(pageNew - 1)}
             disabled={pageNew <= 1}
             pill
@@ -235,13 +196,7 @@ export default function MahasiswaModule({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPageNew(pageNew + 1)}
             disabled={pageNew >= pageCountNew}
@@ -258,18 +213,13 @@ export default function MahasiswaModule({ baseURL }) {
             max={pageCountNew || 1}
             className="w-20"
             value={pageNew}
-            onChange={(event) =>
-              setPageNew(
-                Math.max(
-                  1,
-                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                )
-              )
+            onChange={event =>
+              setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
             }
           />
           of {pageCountNew || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

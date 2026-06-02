@@ -1,59 +1,59 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
 
 const CreateGroup = ({ onAction }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const INITIAL_FORM = {
-    nama_group: "",
-  };
+    nama_group: '',
+  }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
-    rules: [{ field: "nama_group", label: "nama_group" }],
-  });
+    rules: [{ field: 'nama_group', label: 'nama_group' }],
+  })
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
-      };
+      }
 
       if (!requestData.nama_group) {
-        toastAlert("error", "Pleas fill in all the required fields.");
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/voting/group-voting`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/voting/group-voting`,
+        method: 'POST',
         data: requestData,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      form.nama_group = "";
+      form.nama_group = ''
 
-      toastAlert("success", "Successfully");
-      close();
-      onAction();
+      toastAlert('success', 'Successfully')
+      close()
+      onAction()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.response.data.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.response.data.message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -94,7 +94,7 @@ const CreateGroup = ({ onAction }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default CreateGroup;
+export default CreateGroup

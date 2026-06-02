@@ -1,89 +1,82 @@
-import { useRouter } from "next/router";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import useKategoriSertifikasi from "../../../../../repo/kategori-sertifikasi";
-import date from "../../../../../utils/date";
-import _ from "underscore";
-import { Loading } from "../../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import useKategoriSertifikasi from '../../../../../repo/kategori-sertifikasi'
+import date from '../../../../../utils/date'
+import _ from 'underscore'
+import { Loading } from '../../../../../components/Loading'
 
 export default function SertifikasiEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/kompetensi/detailCertif`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/file-sertifikasi`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/detailCertif`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/file-sertifikasi`
 
   const INITIAL_FORM = {
-    sertifikat_id: "",
-    jenis_serti: "",
-    nama_serti: "",
-    bidang_studi: "",
-    nomor_sk: "",
-    tgl_serti: "",
-    kategori_id: "",
-    nomor_peserta: "",
-    nomor_regist: "",
-    penyelenggara: "",
-    file: "",
-  };
+    sertifikat_id: '',
+    jenis_serti: '',
+    nama_serti: '',
+    bidang_studi: '',
+    nomor_sk: '',
+    tgl_serti: '',
+    kategori_id: '',
+    nomor_peserta: '',
+    nomor_regist: '',
+    penyelenggara: '',
+    file: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "kategori_id", label: "Kategori Sertifikasi" },
-      { field: "jenis_serti", label: "Jenis Sertifikasi" },
-      { field: "nama_serti", label: "Nama Sertifikasi" },
-      { field: "bidang_studi", label: "Bidang Studi" },
-      { field: "nomor_sk", label: "Nomor SK" },
-      { field: "tgl_serti", label: "Tanggal Sertifikasi" },
-      { field: "nomor_peserta", label: "Nomor Peserta" },
-      { field: "nomor_regist", label: "Nomor Registrasi" },
-      { field: "penyelenggara", label: "penyelenggara" },
+      { field: 'kategori_id', label: 'Kategori Sertifikasi' },
+      { field: 'jenis_serti', label: 'Jenis Sertifikasi' },
+      { field: 'nama_serti', label: 'Nama Sertifikasi' },
+      { field: 'bidang_studi', label: 'Bidang Studi' },
+      { field: 'nomor_sk', label: 'Nomor SK' },
+      { field: 'tgl_serti', label: 'Tanggal Sertifikasi' },
+      { field: 'nomor_peserta', label: 'Nomor Peserta' },
+      { field: 'nomor_regist', label: 'Nomor Registrasi' },
+      { field: 'penyelenggara', label: 'penyelenggara' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
   const { data: kategoriSertifikasi, isLoading: isLoadingKategoriSertifikasi } =
-    useKategoriSertifikasi([user]);
+    useKategoriSertifikasi([user])
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/kompetensi/editCertif`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/editCertif`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.sertifikat_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
         tgl_serti: date.formatToInput(data.tgl_serti),
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if (
-    [user, menu, form, isLoadingKategoriSertifikasi].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, form, isLoadingKategoriSertifikasi].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Sertifikasi</Card.Header>
           <Card.Body className="space-y-4">
@@ -99,7 +92,7 @@ export default function SertifikasiEdit() {
                 onChange={inputHandler}
                 options={
                   kategoriSertifikasi &&
-                  kategoriSertifikasi.map((item) => ({
+                  kategoriSertifikasi.map(item => ({
                     label: item.nama_kategori,
                     value: item.id,
                   }))
@@ -117,14 +110,14 @@ export default function SertifikasiEdit() {
                 value={form.jenis_serti}
                 onChange={inputHandler}
                 options={[
-                  { label: "Sertifikasi Dosen", value: "Sertifikasi Dosen" },
+                  { label: 'Sertifikasi Dosen', value: 'Sertifikasi Dosen' },
                   {
-                    label: "Sertifikai Keahlian",
-                    value: "Sertifikai Keahlian",
+                    label: 'Sertifikai Keahlian',
+                    value: 'Sertifikai Keahlian',
                   },
                   {
-                    label: "Sertifikasi Kegiatan",
-                    value: "Sertifikasi Kegiatan",
+                    label: 'Sertifikasi Kegiatan',
+                    value: 'Sertifikasi Kegiatan',
                   },
                 ]}
                 required
@@ -142,24 +135,22 @@ export default function SertifikasiEdit() {
                 onChange={inputHandler}
                 options={[
                   {
-                    label: "Software Engineering",
-                    value: "Software Engineering",
+                    label: 'Software Engineering',
+                    value: 'Software Engineering',
                   },
                   {
-                    label: "Computer System and Network",
-                    value: "Computer System and Network",
+                    label: 'Computer System and Network',
+                    value: 'Computer System and Network',
                   },
                   {
-                    label: "Geospatial Information Technology",
-                    value: "Geospatial Information Technology",
+                    label: 'Geospatial Information Technology',
+                    value: 'Geospatial Information Technology',
                   },
                   {
-                    label:
-                      "Knowledge Engineering and Reliable Intelligent System",
-                    value:
-                      "Knowledge Engineering and Reliable Intelligent System",
+                    label: 'Knowledge Engineering and Reliable Intelligent System',
+                    value: 'Knowledge Engineering and Reliable Intelligent System',
                   },
-                  { label: "Lainya...", value: "Lainya..." },
+                  { label: 'Lainya...', value: 'Lainya...' },
                 ]}
                 required
               />
@@ -207,9 +198,7 @@ export default function SertifikasiEdit() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                No. SK Sertifikasi
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">No. SK Sertifikasi</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -231,9 +220,7 @@ export default function SertifikasiEdit() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Nomor Registrasi
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Nomor Registrasi</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -256,11 +243,7 @@ export default function SertifikasiEdit() {
                   onChange={inputHandler}
                 />
                 <embed
-                  src={
-                    form.file.startsWith("https")
-                      ? `${form.file}`
-                      : `${FILE_URL}/${form.file}`
-                  }
+                  src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
                   className="w-full h-[256px]"
                 />
               </div>
@@ -268,12 +251,7 @@ export default function SertifikasiEdit() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -282,5 +260,5 @@ export default function SertifikasiEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

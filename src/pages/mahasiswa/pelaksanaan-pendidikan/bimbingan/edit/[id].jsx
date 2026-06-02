@@ -1,115 +1,103 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import useDosen from "../../../../../repo/dosen";
-import useMahasiswa from "../../../../../repo/mahasiswa";
-import { useEffect } from "react";
-import date from "../../../../../utils/date";
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import useDosen from '../../../../../repo/dosen'
+import useMahasiswa from '../../../../../repo/mahasiswa'
+import { useEffect } from 'react'
+import date from '../../../../../utils/date'
+import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../../config/role'
+import { Loading } from '../../../../../components/Loading'
 
 export default function BimbinganMahasiswaEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/pendidikan/bimbingan/detail`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/pendidikan/bimbingan/detail`
 
   const INITIAL_ANGGOTA_DOSEN = {
-    user_id: "",
-    kategori_kegiatan: "",
-    urutan_promotor: "",
-  };
+    user_id: '',
+    kategori_kegiatan: '',
+    urutan_promotor: '',
+  }
 
   const INITIAL_ANGGOTA_MAHSISWA = {
-    user_id: "",
-    peran: "",
-  };
+    user_id: '',
+    peran: '',
+  }
 
   const INITIAL_FORM = {
-    bimbingan_id: "",
-    judul_bimbingan: "",
-    jenis_bimbingan: "",
-    program_studi: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    lokasi_kegiatan: "",
-    semester: "",
+    bimbingan_id: '',
+    judul_bimbingan: '',
+    jenis_bimbingan: '',
+    program_studi: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    lokasi_kegiatan: '',
+    semester: '',
     dosen_pembimbing: [],
     mhs_bimbingan: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
-    transformData: (data) => ({
+    transformData: data => ({
       ...data,
       dosen_pembimbing: JSON.stringify(data.dosen_pembimbing),
       mhs_bimbingan: JSON.stringify(data.mhs_bimbingan),
     }),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/pendidikan/bimbingan/edit`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/pendidikan/bimbingan/edit`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.bimbingan_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
   const removeFromUser = (key, index, role) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-      [key]: state[key].filter(
-        (item, idx) => item.role == role && idx != index
-      ),
-    }));
+      [key]: state[key].filter((item, idx) => item.role == role && idx != index),
+    }))
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...INITIAL_FORM,
         ...data.dataBimbingan[0],
-        tgl_sk_penugasan: date.formatToInput(
-          data.dataBimbingan[0].tgl_sk_penugasan
-        ),
+        tgl_sk_penugasan: date.formatToInput(data.dataBimbingan[0].tgl_sk_penugasan),
         dosen_pembimbing: data.dosenPembimbing,
         mhs_bimbingan: data.mhsBimbingan,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if (
-    [user, menu, isDosenLoading, isMahasiswaLoading].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, isDosenLoading, isMahasiswaLoading].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)}>
         <Card className="mt-4">
           <Card.Header className="text-center">Bimbingan Mahasiswa</Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Judul Aktivitas Pembimbingan{" "}
-                <span className="text-danger-600">*</span>
+                Judul Aktivitas Pembimbingan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -170,16 +158,15 @@ export default function BimbinganMahasiswaEdit() {
                 value={form.jenis_bimbingan}
                 onChange={inputHandler}
                 options={[
-                  { label: "KP/PKL", value: "KP/PKL" },
-                  { label: "KKN", value: "KKN" },
-                  { label: "Skripsi", value: "Skripsi" },
+                  { label: 'KP/PKL', value: 'KP/PKL' },
+                  { label: 'KKN', value: 'KKN' },
+                  { label: 'Skripsi', value: 'Skripsi' },
                 ]}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Program Studi Mahasiswa{" "}
-                <span className="text-danger-600">*</span>
+                Program Studi Mahasiswa <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Select
@@ -188,10 +175,10 @@ export default function BimbinganMahasiswaEdit() {
                 value={form.program_studi}
                 onChange={inputHandler}
                 options={[
-                  { label: "Teknik Informatika", value: "Teknik Informatika" },
-                  { label: "Teknik Mesin", value: "Teknik Mesin" },
-                  { label: "Teknik Elektro", value: "Teknik Elektro" },
-                  { label: "Teknik Sipil", value: "Teknik Sipil" },
+                  { label: 'Teknik Informatika', value: 'Teknik Informatika' },
+                  { label: 'Teknik Mesin', value: 'Teknik Mesin' },
+                  { label: 'Teknik Elektro', value: 'Teknik Elektro' },
+                  { label: 'Teknik Sipil', value: 'Teknik Sipil' },
                 ]}
               />
             </Form.Group>
@@ -216,23 +203,14 @@ export default function BimbinganMahasiswaEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Dosen Pembimbing
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Dosen
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Kategori Kegiatan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Urutan
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Dosen</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Kategori Kegiatan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Urutan</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -247,7 +225,7 @@ export default function BimbinganMahasiswaEdit() {
                     value={form.dosen_pembimbing[index].user_id}
                     options={
                       listDosen &&
-                      listDosen.map((dosen) => ({
+                      listDosen.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -263,16 +241,16 @@ export default function BimbinganMahasiswaEdit() {
                     value={form.dosen_pembimbing[index].kategori_kegiatan}
                     options={[
                       {
-                        label: "Skripsi (pembimbing utama)",
-                        value: "Skripsi (pembimbing utama)",
+                        label: 'Skripsi (pembimbing utama)',
+                        value: 'Skripsi (pembimbing utama)',
                       },
                       {
-                        label: "Skripsi (pembimbing pendamping)",
-                        value: "Skripsi (pembimbing pendamping)",
+                        label: 'Skripsi (pembimbing pendamping)',
+                        value: 'Skripsi (pembimbing pendamping)',
                       },
                       {
-                        label: "Anggota penguji",
-                        value: "Anggota penguji",
+                        label: 'Anggota penguji',
+                        value: 'Anggota penguji',
                       },
                     ]}
                   />
@@ -294,16 +272,8 @@ export default function BimbinganMahasiswaEdit() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          removeFromUser("dosen_pembimbing", index)
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => removeFromUser('dosen_pembimbing', index)}
                       />
                     )}
                   </div>
@@ -313,21 +283,15 @@ export default function BimbinganMahasiswaEdit() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
-                      dosen_pembimbing: [
-                        ...state.dosen_pembimbing,
-                        { ...INITIAL_ANGGOTA_DOSEN },
-                      ],
+                      dosen_pembimbing: [...state.dosen_pembimbing, { ...INITIAL_ANGGOTA_DOSEN }],
                     }))
                   }
                 >
@@ -343,20 +307,13 @@ export default function BimbinganMahasiswaEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 Mahasiswa Yang Dibimbing
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -371,7 +328,7 @@ export default function BimbinganMahasiswaEdit() {
                     value={form.mhs_bimbingan[index].user_id}
                     options={
                       listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
+                      listMahasiswa.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -385,8 +342,8 @@ export default function BimbinganMahasiswaEdit() {
                     onChange={inputHandler}
                     value={form.mhs_bimbingan[index].peran}
                     options={[
-                      { label: "Individu/Mandiri", value: "Individu/Mandiri" },
-                      { label: "Kelompok", value: "Kelompok" },
+                      { label: 'Individu/Mandiri', value: 'Individu/Mandiri' },
+                      { label: 'Kelompok', value: 'Kelompok' },
                     ]}
                   />
                 </td>
@@ -396,14 +353,8 @@ export default function BimbinganMahasiswaEdit() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() => removeFromUser("mhs_bimbingan", index)}
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => removeFromUser('mhs_bimbingan', index)}
                       />
                     )}
                   </div>
@@ -413,21 +364,15 @@ export default function BimbinganMahasiswaEdit() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
-                      mhs_bimbingan: [
-                        ...state.mhs_bimbingan,
-                        { ...INITIAL_ANGGOTA_MAHSISWA },
-                      ],
+                      mhs_bimbingan: [...state.mhs_bimbingan, { ...INITIAL_ANGGOTA_MAHSISWA }],
                     }))
                   }
                 >
@@ -438,12 +383,7 @@ export default function BimbinganMahasiswaEdit() {
           </tfoot>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -452,5 +392,5 @@ export default function BimbinganMahasiswaEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

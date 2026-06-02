@@ -1,43 +1,43 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useCRUD from "../../../../hooks/useCRUD";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import { Loading } from '../../../../components/Loading'
 
 export default function AnggotaProfesiCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penunjang/addProfesi`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penunjang/addProfesi`
   const INITIAL_FORM = {
-    kategori_id: "2f09f09d-4bae-4582-8fd2-1f96e9b2fc1a",
-    nama_organisasi: "",
-    peran: "",
-    mulai_keanggotaan: "",
-    selesai_keanggotaan: "",
-    instansi_prof: "",
-  };
+    kategori_id: '2f09f09d-4bae-4582-8fd2-1f96e9b2fc1a',
+    nama_organisasi: '',
+    peran: '',
+    mulai_keanggotaan: '',
+    selesai_keanggotaan: '',
+    instansi_prof: '',
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nama_organisasi", label: "Nama Organisasi" },
-      { field: "peran", label: "Peran" },
-      { field: "mulai_keanggotaan", label: "Mulai Keanggotaan" },
-      { field: "selesai_keanggotaan", label: "Selesai Keanggotaan" },
-      { field: "instansi_prof", label: "Instansi Profesi" },
+      { field: 'nama_organisasi', label: 'Nama Organisasi' },
+      { field: 'peran', label: 'Peran' },
+      { field: 'mulai_keanggotaan', label: 'Mulai Keanggotaan' },
+      { field: 'selesai_keanggotaan', label: 'Selesai Keanggotaan' },
+      { field: 'instansi_prof', label: 'Instansi Profesi' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -133,12 +133,7 @@ export default function AnggotaProfesiCreate() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -147,5 +142,5 @@ export default function AnggotaProfesiCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

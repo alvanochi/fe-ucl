@@ -1,31 +1,31 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Card from "../../../components/Card";
-import Form from "../../../components/Form";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
-import useMenu from "../../../hooks/useMenu";
-import useUser from "../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useCRUD from "../../../hooks/useCRUD";
-import useUsers from "../../../repo/users";
-import { useEffect, useState } from "react";
-import _ from "underscore";
-import axios from "axios";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
-import { Loading } from "../../../components/Loading";
-import SortIcon from "../../../components/SortIcon";
-import useNewDataTableNew from "../../../hooks/useNewDataTableNew";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Card from '../../../components/Card'
+import Form from '../../../components/Form'
+import Layout from '../../../components/Layout'
+import PageHeader from '../../../components/PageHeader'
+import useMenu from '../../../hooks/useMenu'
+import useUser from '../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../hooks/useCRUD'
+import useUsers from '../../../repo/users'
+import { useEffect, useState } from 'react'
+import _ from 'underscore'
+import axios from 'axios'
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
+import { Loading } from '../../../components/Loading'
+import SortIcon from '../../../components/SortIcon'
+import useNewDataTableNew from '../../../hooks/useNewDataTableNew'
 
 export default function GroupDetail() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/voting/group-users`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/group-users`
 
-  const [searchValue, setSearchValue] = useState("");
-  const DATA_GROUP_USERS = `${process.env.API_ENDPOINT}/voting/group-users`;
+  const [searchValue, setSearchValue] = useState('')
+  const DATA_GROUP_USERS = `${process.env.NEXT_PUBLIC_API_URL}/voting/group-users`
   const {
     dataNew,
     loadingNew,
@@ -37,104 +37,99 @@ export default function GroupDetail() {
     getSortByNew,
   } = useNewDataTableNew(
     DATA_GROUP_USERS,
-    { filter: ["id_group"], filterValue: [router.query.id] },
-    searchValue
-  );
+    { filter: ['id_group'], filterValue: [router.query.id] },
+    searchValue,
+  )
 
   const INITIAL_USERS = {
-    user_id: "",
-    code: "",
-  };
+    user_id: '',
+    code: '',
+  }
 
   const INITIAL_FORM = {
-    id: "",
-    nama_group: "",
+    id: '',
+    nama_group: '',
     users: [],
-  };
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     success: () => {
-      setForm((state) => ({
+      setForm(state => ({
         ...state,
         users: [],
-      }));
-      refreshNew();
+      }))
+      refreshNew()
     },
-    transformData: (data) => ({
+    transformData: data => ({
       ...data,
       users: JSON.stringify(data.users),
     }),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: listUsers, isLoading: isUsersLoading } = useUsers([user]);
+  const { data: listUsers, isLoading: isUsersLoading } = useUsers([user])
 
   const removeFromUser = (key, index) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
       [key]: state[key].filter((_, idx) => idx != index),
-    }));
+    }))
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
 
     const fetchData = async () => {
       if (router.query.id) {
-        const DATA_URL = `${process.env.API_ENDPOINT}/voting/group-voting/${router.query.id}`;
-        const response = await axios.get(DATA_URL);
-        const data = response.data.data;
+        const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/group-voting/${router.query.id}`
+        const response = await axios.get(DATA_URL)
+        const data = response.data.data
 
-        setForm((state) => ({
+        setForm(state => ({
           ...state,
           id: data.id,
           nama_group: data.nama_group,
-        }));
+        }))
       }
-    };
+    }
 
-    fetchData();
+    fetchData()
 
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-    }));
-  }, [router, user]);
+    }))
+  }, [router, user])
 
   const deleteHandler = async (user_id, id) => {
-    const DELETE_USER = `${process.env.API_ENDPOINT}/voting/group-users/${user_id}`;
+    const DELETE_USER = `${process.env.NEXT_PUBLIC_API_URL}/voting/group-users/${user_id}`
 
     try {
       const request = await axios.put(DELETE_USER, {
         id: id,
-      });
+      })
 
-      const response = await request.data;
+      const response = await request.data
 
-      toastAlert("success", "Successfully removed from group.");
-      refreshNew();
+      toastAlert('success', 'Successfully removed from group.')
+      refreshNew()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  if ([user, menu, isUsersLoading, loadingNew].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isUsersLoading, loadingNew].some(item => item == null)) return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title={`Edit ${menu.label}`}
-        icon={menu.icon}
-        handler={setActive}
-      />
+      <PageHeader title={`Edit ${menu.label}`} icon={menu.icon} handler={setActive} />
       <Form onSubmit={submitHandler}>
         <Card className="mt-4">
           <Card.Header className="text-center">Group Users</Card.Header>
@@ -161,17 +156,12 @@ export default function GroupDetail() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 Add Users
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -182,14 +172,9 @@ export default function GroupDetail() {
                   <Form.Combobox
                     index={index}
                     name="users.user_id"
-                    onChange={(selected) => {
-                      const selectedUser = listUsers.find(
-                        (user) => user.user_id === selected.value
-                      );
-                      const codeValue =
-                        selectedUser?.npm ||
-                        selectedUser?.personal_data?.nip ||
-                        "";
+                    onChange={selected => {
+                      const selectedUser = listUsers.find(user => user.user_id === selected.value)
+                      const codeValue = selectedUser?.npm || selectedUser?.personal_data?.nip || ''
                       inputHandler({
                         target: {
                           attributes: {
@@ -197,10 +182,10 @@ export default function GroupDetail() {
                               value: index,
                             },
                           },
-                          name: "users.user_id",
+                          name: 'users.user_id',
                           value: selected?.value,
                         },
-                      });
+                      })
                       inputHandler({
                         target: {
                           attributes: {
@@ -208,16 +193,16 @@ export default function GroupDetail() {
                               value: index,
                             },
                           },
-                          name: "users.code",
+                          name: 'users.code',
                           value: codeValue,
                         },
-                      });
+                      })
                     }}
-                    value={form.users[index].user_id || ""}
+                    value={form.users[index].user_id || ''}
                     options={
                       listUsers &&
                       Array.isArray(listUsers) &&
-                      listUsers.map((user) => ({
+                      listUsers.map(user => ({
                         label: `${user.personal_data?.nama_lengkap} - ${
                           user.npm ? user.npm : user.personal_data?.nip
                         }`,
@@ -232,14 +217,8 @@ export default function GroupDetail() {
                     <Button.Icon
                       type="button"
                       variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() => removeFromUser("users", index)}
+                      icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                      onClick={() => removeFromUser('users', index)}
                     />
                   </div>
                 </td>
@@ -248,16 +227,13 @@ export default function GroupDetail() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       users: [...state.users, { ...INITIAL_USERS }],
                     }))
@@ -271,12 +247,7 @@ export default function GroupDetail() {
         </table>
 
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -291,10 +262,7 @@ export default function GroupDetail() {
       >
         <thead>
           <tr>
-            <th
-              colSpan={4}
-              className="text-sm border-2 border-white bg-gray-50"
-            >
+            <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
               <span>Users</span>
               <div className="flex mb-8 justify-end items-center">
                 <div className="flex-shrink">
@@ -302,10 +270,10 @@ export default function GroupDetail() {
                     type="text"
                     name="search"
                     placeholder="Search"
-                    style={{ width: "400px" }}
+                    style={{ width: '400px' }}
                     className="font-normal"
                     value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={e => setSearchValue(e.target.value)}
                   />
                 </div>
               </div>
@@ -315,28 +283,20 @@ export default function GroupDetail() {
             <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
             <th className="text-sm border-2 border-white bg-gray-200">Code</th>
             <th className="text-sm border-2 border-white bg-gray-200">Role</th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loadingNew && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -348,12 +308,8 @@ export default function GroupDetail() {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {user.personal_data.nama_lengkap}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {user.code}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {user.user.role}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{user.code}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{user.user.role}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
@@ -364,9 +320,7 @@ export default function GroupDetail() {
                           icon="solar:trash-bin-2-bold-duotone"
                           width={20}
                           height={20}
-                          onClick={() =>
-                            deleteHandler(user.user_id, router.query.id)
-                          }
+                          onClick={() => deleteHandler(user.user_id, router.query.id)}
                         />
                       }
                     />
@@ -381,13 +335,7 @@ export default function GroupDetail() {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPageNew(pageNew - 1)}
             disabled={pageNew <= 1}
             pill
@@ -395,13 +343,7 @@ export default function GroupDetail() {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPageNew(pageNew + 1)}
             disabled={pageNew >= pageCountNew}
@@ -418,18 +360,13 @@ export default function GroupDetail() {
             max={pageCountNew || 1}
             className="w-20"
             value={pageNew}
-            onChange={(event) =>
-              setPageNew(
-                Math.max(
-                  1,
-                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                )
-              )
+            onChange={event =>
+              setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
             }
           />
           of {pageCountNew || 1}
         </div>
       </div>
     </Layout>
-  );
+  )
 }

@@ -1,14 +1,14 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Form from "../../../../components/Form";
-import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
-import { useState } from "react";
-import SortIcon from "../../../../components/SortIcon";
-import Link from "next/link";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Form from '../../../../components/Form'
+import useNewDataTableNew from '../../../../hooks/useNewDataTableNew'
+import { useState } from 'react'
+import SortIcon from '../../../../components/SortIcon'
+import Link from 'next/link'
 
 export default function ProgresTaAdmin({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/progres-tugas-akhir/get-for-admin`;
-  const [searchValue, setSearchValue] = useState("");
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/get-for-admin`
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -19,9 +19,9 @@ export default function ProgresTaAdmin({ baseURL }) {
     refreshNew,
     sortByNew,
     getSortByNew,
-  } = useNewDataTableNew(DATA_URL, {}, searchValue, "user_id");
+  } = useNewDataTableNew(DATA_URL, {}, searchValue, 'user_id')
 
-  getSortByNew("user_id");
+  getSortByNew('user_id')
 
   return (
     <>
@@ -32,9 +32,9 @@ export default function ProgresTaAdmin({ baseURL }) {
             type="text"
             name="search"
             placeholder="Search"
-            style={{ width: "400px" }}
+            style={{ width: '400px' }}
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={e => setSearchValue(e.target.value)}
           />
         </div>
       </div>
@@ -47,18 +47,18 @@ export default function ProgresTaAdmin({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("code")}
+                onClick={() => sortByNew('code')}
               >
-                No <SortIcon sort={getSortByNew("code")} />
+                No <SortIcon sort={getSortByNew('code')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("name")}
+                onClick={() => sortByNew('name')}
               >
                 name
-                <SortIcon sort={getSortByNew("name")} />
+                <SortIcon sort={getSortByNew('name')} />
               </div>
             </th>
 
@@ -71,20 +71,14 @@ export default function ProgresTaAdmin({ baseURL }) {
         <tbody>
           {loadingNew && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -93,9 +87,7 @@ export default function ProgresTaAdmin({ baseURL }) {
             dataNew &&
             dataNew.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   <Link
                     href={`${baseURL}/bimbingan-ta/${row.user_id}`}
@@ -126,13 +118,7 @@ export default function ProgresTaAdmin({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPageNew(pageNew - 1)}
             disabled={pageNew <= 1}
             pill
@@ -140,13 +126,7 @@ export default function ProgresTaAdmin({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPageNew(pageNew + 1)}
             disabled={pageNew >= pageCountNew}
@@ -163,18 +143,13 @@ export default function ProgresTaAdmin({ baseURL }) {
             max={pageCountNew || 1}
             className="w-20"
             value={pageNew}
-            onChange={(event) =>
-              setPageNew(
-                Math.max(
-                  1,
-                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                )
-              )
+            onChange={event =>
+              setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
             }
           />
           of {pageCountNew || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

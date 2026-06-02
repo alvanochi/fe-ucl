@@ -1,70 +1,69 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
 
 const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const INITIAL_FORM = {
-    id_meeting: data && data.id ? data.id : "",
-    code: "",
-    name_absen: "",
-    status_absen: "1",
+    id_meeting: data && data.id ? data.id : '',
+    code: '',
+    name_absen: '',
+    status_absen: '1',
   }
 
-  const {form, inputHandler} = useForm(INITIAL_FORM, {
+  const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
-      { field: "id_meeting", label: "ID Meeting" },
-      { field: "code", label: "code" },
-      { field: "name_absen", label: "Nama" },
-      { field: "status_absen", label: "status_absen" },
+      { field: 'id_meeting', label: 'ID Meeting' },
+      { field: 'code', label: 'code' },
+      { field: 'name_absen', label: 'Nama' },
+      { field: 'status_absen', label: 'status_absen' },
     ],
-  });
-  
+  })
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
       }
 
-      if(!requestData.status_absen || !requestData.code){
-        toastAlert("error", "Pleas fill in all the required fields.");
+      if (!requestData.status_absen || !requestData.code) {
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
       const request = await axios({
-        url: `${process.env.API_ENDPOINT_ABSEN}/absensi-meeting/store`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi-meeting/store`,
+        method: 'POST',
         data: requestData,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      form.id_meeting = data && data.id ? data.id : "";
-      form.code = "";
-      form.name_absen = "";
-      form.status_absen = "1";
+      form.id_meeting = data && data.id ? data.id : ''
+      form.code = ''
+      form.name_absen = ''
+      form.status_absen = '1'
 
-      toastAlert("success", "Successfully");
-      close();
-      onAddAbsensi();
+      toastAlert('success', 'Successfully')
+      close()
+      onAddAbsensi()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -116,33 +115,33 @@ const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
             </Form.Label>
             <span>:</span>
             <div className="flex gap-6">
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
-                value={1}
-                onChange={inputHandler}
-                checked={form.status_absen == 1}
-              />
-              Masuk
-            </Form.Label>
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
-                value={2}
-                onChange={inputHandler}
-                checked={form.status_absen == 2}
-              />
-              Sakit / Izin
-            </Form.Label>
-            <Form.Label>
-              <Form.Radio
-                name="status_absen"
-                value={0}
-                onChange={inputHandler}
-                checked={form.status_absen == 0}
-              />
-              Alfa
-            </Form.Label>
+              <Form.Label>
+                <Form.Radio
+                  name="status_absen"
+                  value={1}
+                  onChange={inputHandler}
+                  checked={form.status_absen == 1}
+                />
+                Masuk
+              </Form.Label>
+              <Form.Label>
+                <Form.Radio
+                  name="status_absen"
+                  value={2}
+                  onChange={inputHandler}
+                  checked={form.status_absen == 2}
+                />
+                Sakit / Izin
+              </Form.Label>
+              <Form.Label>
+                <Form.Radio
+                  name="status_absen"
+                  value={0}
+                  onChange={inputHandler}
+                  checked={form.status_absen == 0}
+                />
+                Alfa
+              </Form.Label>
             </div>
           </Form.Group>
           <div className="flex gap-4 mt-12">
@@ -156,7 +155,7 @@ const AddAbsensiRapat = ({ data, onAddAbsensi }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default AddAbsensiRapat;
+export default AddAbsensiRapat

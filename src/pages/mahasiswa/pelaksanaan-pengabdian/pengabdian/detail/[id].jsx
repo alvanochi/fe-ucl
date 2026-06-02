@@ -1,130 +1,117 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import KolabolatorEksternal from "../../../../../modules/pelaksanaan-pengabdian/pengabdian/kolaborator-eksternal";
-import UploadDokumen from "../../../../../modules/pelaksanaan-pengabdian/pengabdian/upload-dokumen";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import _ from "underscore";
-import useDosen from "../../../../../repo/dosen";
-import useMahasiswa from "../../../../../repo/mahasiswa";
-import { useEffect } from "react";
-import date from "../../../../../utils/date";
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
-import Accordion from "../../../../../components/Accordion";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import KolabolatorEksternal from '../../../../../modules/pelaksanaan-pengabdian/pengabdian/kolaborator-eksternal'
+import UploadDokumen from '../../../../../modules/pelaksanaan-pengabdian/pengabdian/upload-dokumen'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import _ from 'underscore'
+import useDosen from '../../../../../repo/dosen'
+import useMahasiswa from '../../../../../repo/mahasiswa'
+import { useEffect } from 'react'
+import date from '../../../../../utils/date'
+import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../../config/role'
+import Accordion from '../../../../../components/Accordion'
+import { Loading } from '../../../../../components/Loading'
 
 export default function PengabdianDetail() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/pengabdian/detailPengabdian`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-pengabdian`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/detailPengabdian`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-pengabdian`
 
   const INITIAL_ANGGOTA = {
-    user_id: "",
-    peran: "",
-    status: "",
-    role: "",
-  };
+    user_id: '',
+    peran: '',
+    status: '',
+    role: '',
+  }
 
   const INITIAL_FORM = {
-    pengabdian_id: "",
-    judul_kegiatan: "",
-    kelompok_bidang: "",
-    lokasi_kegiatan: "",
-    lama_kegiatan: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    nama_dok: "",
-    keterangan: "",
-    tautan_dok: "",
-    nama_kategori: "",
-    tingkatan: "",
-    point: "",
+    pengabdian_id: '',
+    judul_kegiatan: '',
+    kelompok_bidang: '',
+    lokasi_kegiatan: '',
+    lama_kegiatan: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    nama_dok: '',
+    keterangan: '',
+    tautan_dok: '',
+    nama_kategori: '',
+    tingkatan: '',
+    point: '',
     anggota_pengabdian_dosen: [],
     anggota_pengabdian_mahasiswa: [],
     docs: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "judul_kegiatan", label: "Judul Kegiatan" },
-      { field: "kelompok_bidang", label: "Kelompok Bidang" },
-      { field: "lokasi_kegiatan", label: "Lokasi Kegiatan" },
-      { field: "lama_kegiatan", label: "Lama Kegiatan" },
-      { field: "no_sk_penugasan", label: "No. SK Penugasan" },
-      { field: "tgl_sk_penugasan", label: "Tanggal SK Penugasan" },
-      { field: "nama_dok", label: "Nama Dokumen" },
-      { field: "keterangan", label: "Keterangan Dokumen" },
-      { field: "tautan_dok", label: "Tautan Dokumen" },
+      { field: 'judul_kegiatan', label: 'Judul Kegiatan' },
+      { field: 'kelompok_bidang', label: 'Kelompok Bidang' },
+      { field: 'lokasi_kegiatan', label: 'Lokasi Kegiatan' },
+      { field: 'lama_kegiatan', label: 'Lama Kegiatan' },
+      { field: 'no_sk_penugasan', label: 'No. SK Penugasan' },
+      { field: 'tgl_sk_penugasan', label: 'Tanggal SK Penugasan' },
+      { field: 'nama_dok', label: 'Nama Dokumen' },
+      { field: 'keterangan', label: 'Keterangan Dokumen' },
+      { field: 'tautan_dok', label: 'Tautan Dokumen' },
     ],
-    transformData: (data) =>
+    transformData: data =>
       _.omit(
         {
           ...data,
           anggota_pengabdian: JSON.stringify([
-            ...data.anggota_pengabdian_dosen.map((item) =>
-              _.omit(item, ["role"])
-            ),
-            ...data.anggota_pengabdian_mahasiswa.map((item) =>
-              _.omit(item, ["role"])
-            ),
+            ...data.anggota_pengabdian_dosen.map(item => _.omit(item, ['role'])),
+            ...data.anggota_pengabdian_mahasiswa.map(item => _.omit(item, ['role'])),
           ]),
         },
-        ["anggota_pengabdian_dosen", "anggota_pengabdian_mahasiswa"]
+        ['anggota_pengabdian_dosen', 'anggota_pengabdian_mahasiswa'],
       ),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...INITIAL_FORM,
         ...data.dataPengabdian[0],
-        tgl_sk_penugasan: date.formatToInput(
-          data.dataPengabdian[0].tgl_sk_penugasan
-        ),
-        anggota_pengabdian_dosen: data.anggotaPengabdian.filter(
-          (item) => item.role == ROLE_ID_DOSEN
-        ),
+        tgl_sk_penugasan: date.formatToInput(data.dataPengabdian[0].tgl_sk_penugasan),
+        anggota_pengabdian_dosen: data.anggotaPengabdian.filter(item => item.role == ROLE_ID_DOSEN),
         anggota_pengabdian_mahasiswa: data.anggotaPengabdian.filter(
-          (item) => item.role == ROLE_ID_MAHASISWA
+          item => item.role == ROLE_ID_MAHASISWA,
         ),
         docs: data.dataDokumen,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if (
-    [user, menu, isDosenLoading, isMahasiswaLoading].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, isDosenLoading, isMahasiswaLoading].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <div className="flex justify-center mt-4">
         <Button
-          onClick={() => window.open(`${prefix + menu.url}/pengabdian/edit/${form.pengabdian_id}`,'_blank')}
+          onClick={() =>
+            window.open(`${prefix + menu.url}/pengabdian/edit/${form.pengabdian_id}`, '_blank')
+          }
           variant="secondary"
           icon={<Icon icon="bx:edit" width={20} height={20} />}
           pill
@@ -154,13 +141,7 @@ export default function PengabdianDetail() {
                 Point <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="point"
-                value={form.point}
-                disabled
-              />
+              <Form.Input type="text" className="flex-1" name="point" value={form.point} disabled />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -187,26 +168,26 @@ export default function PengabdianDetail() {
                 onChange={inputHandler}
                 value={form.kelompok_bidang}
                 options={[
-                  { label: "Pendidikan", value: "Pendidikan" },
-                  { label: "Kesehatan", value: "Kesehatan" },
-                  { label: "Lingkungan", value: "Lingkungan" },
-                  { label: "Sosial", value: "Sosial" },
+                  { label: 'Pendidikan', value: 'Pendidikan' },
+                  { label: 'Kesehatan', value: 'Kesehatan' },
+                  { label: 'Lingkungan', value: 'Lingkungan' },
+                  { label: 'Sosial', value: 'Sosial' },
                   {
-                    label: "Teknologi dan Inovasi",
-                    value: "Teknologi dan Inovasi",
+                    label: 'Teknologi dan Inovasi',
+                    value: 'Teknologi dan Inovasi',
                   },
-                  { label: "Seni dan Budaya", value: "Seni dan Budaya" },
+                  { label: 'Seni dan Budaya', value: 'Seni dan Budaya' },
                   {
-                    label: "Keagamaan dan Etika",
-                    value: "Keagamaan dan Etika",
-                  },
-                  {
-                    label: "Pertanian dan Ketahanan Pangan",
-                    value: "Pertanian dan Ketahanan Pangan",
+                    label: 'Keagamaan dan Etika',
+                    value: 'Keagamaan dan Etika',
                   },
                   {
-                    label: "Pengembangan Wilayah",
-                    value: "Pengembangan Wilayah",
+                    label: 'Pertanian dan Ketahanan Pangan',
+                    value: 'Pertanian dan Ketahanan Pangan',
+                  },
+                  {
+                    label: 'Pengembangan Wilayah',
+                    value: 'Pengembangan Wilayah',
                   },
                 ]}
                 disabled
@@ -276,10 +257,7 @@ export default function PengabdianDetail() {
               <div className="flex-1 block">
                 <div className="space-y-2 mt-2">
                   {form.docs.map((doc, index) => (
-                    <Accordion
-                      key={`doc-${index}`}
-                      title={`Dokumen ${index + 1}`}
-                    >
+                    <Accordion key={`doc-${index}`} title={`Dokumen ${index + 1}`}>
                       <Form.Group className="mb-4">
                         <Form.Label>Nama Dokumen</Form.Label>
                         <Form.Input
@@ -308,10 +286,7 @@ export default function PengabdianDetail() {
                         />
                       </Form.Group>
                       <Form.Group className="mb-4">
-                        <embed
-                          src={`${FILE_URL}/${doc.file}`}
-                          className="w-full h-[256px]"
-                        />
+                        <embed src={`${FILE_URL}/${doc.file}`} className="w-full h-[256px]" />
                       </Form.Group>
                     </Accordion>
                   ))}
@@ -326,23 +301,14 @@ export default function PengabdianDetail() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Dosen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -361,7 +327,7 @@ export default function PengabdianDetail() {
                       value={form.anggota_pengabdian_dosen[index].user_id}
                       options={
                         listDosen &&
-                        listDosen.map((dosen) => ({
+                        listDosen.map(dosen => ({
                           label: dosen.nama_lengkap,
                           value: dosen.user_id,
                         }))
@@ -377,8 +343,8 @@ export default function PengabdianDetail() {
                     onChange={inputHandler}
                     value={form.anggota_pengabdian_dosen[index].peran}
                     options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
+                      { label: 'Ketua', value: 'ketua' },
+                      { label: 'Anggota', value: 'anggota' },
                     ]}
                     disabled
                   />
@@ -391,7 +357,7 @@ export default function PengabdianDetail() {
                       onChange={inputHandler}
                       checked={form.anggota_pengabdian_dosen[index].status}
                       disabled
-                    />{" "}
+                    />{' '}
                     Aktif
                   </Form.Label>
                 </td>
@@ -403,10 +369,7 @@ export default function PengabdianDetail() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              ></td>
+              <td colSpan={4} className="text-sm border-2 border-white bg-gray-50"></td>
             </tr>
           </tfoot>
         </table>
@@ -416,23 +379,14 @@ export default function PengabdianDetail() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Mahasiswa
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -451,7 +405,7 @@ export default function PengabdianDetail() {
                       value={form.anggota_pengabdian_mahasiswa[index].user_id}
                       options={
                         listMahasiswa &&
-                        listMahasiswa.map((dosen) => ({
+                        listMahasiswa.map(dosen => ({
                           label: dosen.nama_lengkap,
                           value: dosen.user_id,
                         }))
@@ -467,8 +421,8 @@ export default function PengabdianDetail() {
                     onChange={inputHandler}
                     value={form.anggota_pengabdian_mahasiswa[index].peran}
                     options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
+                      { label: 'Ketua', value: 'ketua' },
+                      { label: 'Anggota', value: 'anggota' },
                     ]}
                     disabled
                   />
@@ -481,7 +435,7 @@ export default function PengabdianDetail() {
                       onChange={inputHandler}
                       checked={form.anggota_pengabdian_mahasiswa[index].status}
                       disabled
-                    />{" "}
+                    />{' '}
                     Aktif
                   </Form.Label>
                 </td>
@@ -493,24 +447,16 @@ export default function PengabdianDetail() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              ></td>
+              <td colSpan={4} className="text-sm border-2 border-white bg-gray-50"></td>
             </tr>
           </tfoot>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

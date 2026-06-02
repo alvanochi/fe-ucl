@@ -1,57 +1,55 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import useDosen from "../../../../repo/dosen";
-import useMahasiswa from "../../../../repo/mahasiswa";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import useDosen from '../../../../repo/dosen'
+import useMahasiswa from '../../../../repo/mahasiswa'
 
 const InvitePesertaDosen = ({ data, onInvite }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
-  const [selectedDosen, setSelectedDosen] = useState(""); 
+  const [selectedDosen, setSelectedDosen] = useState('')
 
   const INITIAL_FORM = {
-    id_meeting: data?.id || "",
-  };
+    id_meeting: data?.id || '',
+  }
 
-  const {form, inputHandler} = useForm(INITIAL_FORM, {
-    rules: [
-      { field: "id_meeting", label: "id_meeting" },
-    ],
-  });
+  const { form, inputHandler } = useForm(INITIAL_FORM, {
+    rules: [{ field: 'id_meeting', label: 'id_meeting' }],
+  })
 
-  const handleDosenChange = (selected) => {
-    setSelectedDosen(selected?.value);
-  };
+  const handleDosenChange = selected => {
+    setSelectedDosen(selected?.value)
+  }
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
-        nip_dosen: selectedDosen
-      };
-      await axios.post(`${process.env.API_ENDPOINT_ABSEN}/meeting-invite/store`, requestData);
-      toastAlert("success", "Invite successfully");
-      close()
-      onInvite();
-    } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
-        return;
+        nip_dosen: selectedDosen,
       }
-      loadingAlert();
-      MySwal.close();
-      toastAlert("error", error.message);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL_ABSEN}/meeting-invite/store`, requestData)
+      toastAlert('success', 'Invite successfully')
+      close()
+      onInvite()
+    } catch (error) {
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
+        return
+      }
+      loadingAlert()
+      MySwal.close()
+      toastAlert('error', error.message)
     }
   }
 
-  const { data: listDosen } = useDosen();
+  const { data: listDosen } = useDosen()
 
   return (
     <>
@@ -79,7 +77,7 @@ const InvitePesertaDosen = ({ data, onInvite }) => {
             <Form.Combobox
               name="nip_dosen"
               onChange={handleDosenChange}
-              value={selectedDosen} 
+              value={selectedDosen}
               options={listDosen?.map(dosen => ({
                 label: dosen.nama_lengkap,
                 value: dosen.nip,
@@ -97,7 +95,7 @@ const InvitePesertaDosen = ({ data, onInvite }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default InvitePesertaDosen;
+export default InvitePesertaDosen

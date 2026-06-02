@@ -1,32 +1,31 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import { Icon } from "@iconify-icon/react";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import { Icon } from '@iconify-icon/react'
 
 export default function ShowQr({ data }) {
-  const [qrCode, setQrCode] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [qrCode, setQrCode] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const handleShowQr = async () => {
     try {
       if (data && data.token) {
-        setLoading(true);
+        setLoading(true)
 
         const response = await axios.get(
-          `${process.env.API_ENDPOINT_ABSEN}/absensi/show-qr?token=${data.token}`
-        );
+          `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi/show-qr?token=${data.token}`,
+        )
 
-        const svgContent = response.data;
-        setQrCode(svgContent);
+        const svgContent = response.data
+        setQrCode(svgContent)
       }
     } catch (error) {
-      console.error("Error fetching QR code:", error);
+      console.error('Error fetching QR code:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
-
+  }
 
   return (
     <>
@@ -35,24 +34,28 @@ export default function ShowQr({ data }) {
         icon={<Icon icon="bx:qr-scan" width={15} height={15} />}
         onClick={handleShowQr}
       />
-      <Modal title={`${data && data.kegiatan ? data.kegiatan : ""}`} show={qrCode !== null} handler={() => setQrCode(null)}>
+      <Modal
+        title={`${data && data.kegiatan ? data.kegiatan : ''}`}
+        show={qrCode !== null}
+        handler={() => setQrCode(null)}
+      >
         {loading ? (
           <p>Loading QR code...</p>
         ) : qrCode ? (
           <>
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
               }}
             >
               <div
                 dangerouslySetInnerHTML={{ __html: qrCode }}
                 style={{
-                  maxWidth: "100%",
-                  maxHeight: "80vh",
+                  maxWidth: '100%',
+                  maxHeight: '80vh',
                 }}
               />
             </div>
@@ -69,5 +72,5 @@ export default function ShowQr({ data }) {
         </div>
       </Modal>
     </>
-  );
+  )
 }

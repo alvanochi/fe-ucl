@@ -1,31 +1,31 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../components/Button";
-import Modal from "../../components/Modal";
-import { Icon } from "@iconify-icon/react";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../components/Button'
+import Modal from '../../components/Modal'
+import { Icon } from '@iconify-icon/react'
 
 export default function ShowQr({ data }) {
-  const [qrCode, setQrCode] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [qrCode, setQrCode] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const handleShowQr = async () => {
     try {
       if (data && data.id) {
-        setLoading(true);
+        setLoading(true)
 
         const response = await axios.get(
-          `${process.env.API_ENDPOINT}/validasi/validasi-dokumen/${data.id}`
-        );
+          `${process.env.NEXT_PUBLIC_API_URL}/validasi/validasi-dokumen/${data.id}`,
+        )
 
-        const svgContent = response.data;
-        setQrCode(svgContent);
+        const svgContent = response.data
+        setQrCode(svgContent)
       }
     } catch (error) {
-      console.error("Error fetching QR code:", error);
+      console.error('Error fetching QR code:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -35,11 +35,7 @@ export default function ShowQr({ data }) {
         onClick={handleShowQr}
       />
 
-      <Modal
-        title={`Link Validasi`}
-        show={qrCode !== null}
-        handler={() => setQrCode(null)}
-      >
+      <Modal title={`Link Validasi`} show={qrCode !== null} handler={() => setQrCode(null)}>
         {loading ? (
           <p>Loading QR code...</p>
         ) : qrCode ? (
@@ -47,10 +43,10 @@ export default function ShowQr({ data }) {
             <div
               dangerouslySetInnerHTML={{ __html: qrCode }}
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
               }}
             />
           </>
@@ -59,15 +55,11 @@ export default function ShowQr({ data }) {
         )}
 
         <div className="flex gap-4 mt-8">
-          <Button
-            onClick={() => setQrCode(null)}
-            variant="primary"
-            className="w-full h-12"
-          >
+          <Button onClick={() => setQrCode(null)} variant="primary" className="w-full h-12">
             Close
           </Button>
         </div>
       </Modal>
     </>
-  );
+  )
 }

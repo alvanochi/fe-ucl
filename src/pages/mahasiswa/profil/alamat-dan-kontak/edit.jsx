@@ -1,69 +1,65 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useCRUD from "../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import { Loading } from '../../../../components/Loading'
 
 export default function AlamatDanKontakEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataPribadi`
 
   const INITIAL_FORM = {
-    dp_id: "",
-    email: "",
-    alamat: "",
-    rt: "",
-    rw: "",
-    desa_kelurahan: "",
-    kota_kabupaten: "",
-    provinsi: "",
-    kode_pos: "",
-    no_hp: "",
-  };
+    dp_id: '',
+    email: '',
+    alamat: '',
+    rt: '',
+    rw: '',
+    desa_kelurahan: '',
+    kota_kabupaten: '',
+    provinsi: '',
+    kode_pos: '',
+    no_hp: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "email", label: "Email" },
-      { field: "alamat", label: "Alamat" },
-      { field: "rt", label: "Rt" },
-      { field: "rw", label: "Rw" },
-      { field: "desa_kelurahan", label: "Desa/Kelurahan" },
-      { field: "kota_kabupaten", label: "Kota/Kabupaten" },
-      { field: "provinsi", label: "Provinsi" },
-      { field: "kode_pos", label: "Kode POS" },
-      { field: "no_hp", label: "No. HP" },
+      { field: 'email', label: 'Email' },
+      { field: 'alamat', label: 'Alamat' },
+      { field: 'rt', label: 'Rt' },
+      { field: 'rw', label: 'Rw' },
+      { field: 'desa_kelurahan', label: 'Desa/Kelurahan' },
+      { field: 'kota_kabupaten', label: 'Kota/Kabupaten' },
+      { field: 'provinsi', label: 'Provinsi' },
+      { field: 'kode_pos', label: 'Kode POS' },
+      { field: 'no_hp', label: 'No. HP' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/profile/editData`;
-  const EDIT_OPTION = { url: `${EDIT_URL}`, method: "PATCH" };
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/editData`
+  const EDIT_OPTION = { url: `${EDIT_URL}`, method: 'PATCH' }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
-    show("");
-  }, [router, user]);
+    if (router.isReady === false || !user) return
+    show('')
+  }, [router, user])
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title={`Edit ${menu.label}`}
-        icon={menu.icon}
-        handler={setActive}
-      />
-      <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+      <PageHeader title={`Edit ${menu.label}`} icon={menu.icon} handler={setActive} />
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)}>
         <Card className="mt-4">
           <Card.Header className="text-center">Alamat dan Kontak</Card.Header>
           <Card.Body className="space-y-4">
@@ -213,12 +209,7 @@ export default function AlamatDanKontakEdit() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -227,5 +218,5 @@ export default function AlamatDanKontakEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

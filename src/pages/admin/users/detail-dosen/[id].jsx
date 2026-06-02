@@ -1,100 +1,94 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useCRUD from "../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import date from "../../../../utils/date";
-import { Icon } from "@iconify-icon/react";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import date from '../../../../utils/date'
+import { Icon } from '@iconify-icon/react'
+import { Loading } from '../../../../components/Loading'
 
 export default function DetailMhs() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/users/detail-user`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/users/detail-user`
 
   const INITIAL_FORM = {
-    nama_lengkap: "",
-    nidn: "",
-    email: "",
-    jenkel: "",
-    tanggal_lahir: "",
-    tempat_lahir: "",
-    ibu_kandung: "",
-    nik: "",
-    agama: "",
-    warga_negara: "",
-    alamat: "",
-    rt: "",
-    rw: "",
-    desa_kelurahan: "",
-    kota_kabupaten: "",
-    provinsi: "",
-    no_hp: "",
+    nama_lengkap: '',
+    nidn: '',
+    email: '',
+    jenkel: '',
+    tanggal_lahir: '',
+    tempat_lahir: '',
+    ibu_kandung: '',
+    nik: '',
+    agama: '',
+    warga_negara: '',
+    alamat: '',
+    rt: '',
+    rw: '',
+    desa_kelurahan: '',
+    kota_kabupaten: '',
+    provinsi: '',
+    no_hp: '',
     status_kawin: 0,
-    nama_pasangan: "",
-    nip_pasangan: "",
-  };
+    nama_pasangan: '',
+    nip_pasangan: '',
+  }
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nidn", label: "NIDN" },
-      { field: "nik", label: "NIK" },
-      { field: "jenkel", label: "Jenis Kelamin" },
-      { field: "nama_lengkap", label: "Nama Lengkap" },
-      { field: "tempat_lahir", label: "Tempat Lahir" },
-      { field: "tanggal_lahir", label: "Tanggal Lahir" },
-      { field: "ibu_kandung", label: "Nama Ibu Kandung" },
-      { field: "agama", label: "Agama" },
-      { field: "warga_negara", label: "Kewarganegaraan" },
-      { field: "nama_pasangan", label: "Nama Suami/Istri" },
-      { field: "nip_pasangan", label: "NIP Suami/Istri" },
-      { field: "pekerjaan_pasangan", label: "Pekerjaan Suami/Istri" },
+      { field: 'nidn', label: 'NIDN' },
+      { field: 'nik', label: 'NIK' },
+      { field: 'jenkel', label: 'Jenis Kelamin' },
+      { field: 'nama_lengkap', label: 'Nama Lengkap' },
+      { field: 'tempat_lahir', label: 'Tempat Lahir' },
+      { field: 'tanggal_lahir', label: 'Tanggal Lahir' },
+      { field: 'ibu_kandung', label: 'Nama Ibu Kandung' },
+      { field: 'agama', label: 'Agama' },
+      { field: 'warga_negara', label: 'Kewarganegaraan' },
+      { field: 'nama_pasangan', label: 'Nama Suami/Istri' },
+      { field: 'nip_pasangan', label: 'NIP Suami/Istri' },
+      { field: 'pekerjaan_pasangan', label: 'Pekerjaan Suami/Istri' },
       {
-        field: "tanggal_pns_pasangan",
-        label: "Terhitung Mulai Tanggal PNS Suami/Istri ",
+        field: 'tanggal_pns_pasangan',
+        label: 'Terhitung Mulai Tanggal PNS Suami/Istri ',
       },
-      { field: "email", label: "Email" },
-      { field: "alamat", label: "Alamat" },
-      { field: "rt", label: "Rt" },
-      { field: "rw", label: "Rw" },
-      { field: "desa_kelurahan", label: "Desa/Kelurahan" },
-      { field: "kota_kabupaten", label: "Kota/Kabupaten" },
-      { field: "provinsi", label: "Provinsi" },
-      { field: "kode_pos", label: "Kode POS" },
-      { field: "no_hp", label: "No. HP" },
+      { field: 'email', label: 'Email' },
+      { field: 'alamat', label: 'Alamat' },
+      { field: 'rt', label: 'Rt' },
+      { field: 'rw', label: 'Rw' },
+      { field: 'desa_kelurahan', label: 'Desa/Kelurahan' },
+      { field: 'kota_kabupaten', label: 'Kota/Kabupaten' },
+      { field: 'provinsi', label: 'Provinsi' },
+      { field: 'kode_pos', label: 'Kode POS' },
+      { field: 'no_hp', label: 'No. HP' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
-        tanggal_lahir: data.tanggal_lahir
-          ? date.formatToInput(data.tanggal_lahir)
-          : "",
+        tanggal_lahir: data.tanggal_lahir ? date.formatToInput(data.tanggal_lahir) : '',
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title={`Detail ${menu.label}`}
-        icon={menu.icon}
-        handler={setActive}
-      />
+      <PageHeader title={`Detail ${menu.label}`} icon={menu.icon} handler={setActive} />
       <Form>
         <Card className="mt-4">
           <Card.Header className="text-center">Detail Dosen</Card.Header>
@@ -152,7 +146,7 @@ export default function DetailMhs() {
                     name="jenkel"
                     value="L"
                     onChange={inputHandler}
-                    checked={form.jenkel == "L"}
+                    checked={form.jenkel == 'L'}
                   />
                   Laki-Laki
                 </Form.Label>
@@ -161,7 +155,7 @@ export default function DetailMhs() {
                     name="jenkel"
                     value="P"
                     onChange={inputHandler}
-                    checked={form.jenkel == "P"}
+                    checked={form.jenkel == 'P'}
                   />
                   Perempuan
                 </Form.Label>
@@ -349,15 +343,9 @@ export default function DetailMhs() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Status Perkawinan
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Status Perkawinan</Form.Label>
               <span>:</span>
-              {form.status_kawin == 1 ? (
-                <p>Sudah Menikah</p>
-              ) : (
-                <p>Belum Menikah</p>
-              )}
+              {form.status_kawin == 1 ? <p>Sudah Menikah</p> : <p>Belum Menikah</p>}
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -390,16 +378,11 @@ export default function DetailMhs() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

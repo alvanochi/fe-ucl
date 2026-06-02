@@ -1,61 +1,61 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useCRUD from "../../../../hooks/useCRUD";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useCRUD from '../../../../hooks/useCRUD'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import { Loading } from '../../../../components/Loading'
 
 export default function PendidikanFormalCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/kualifikasi/addPend`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/kualifikasi/addPend`
   const INITIAL_FORM = {
-    asal: "",
-    jenjang_studi: "",
-    program_studi: "",
-    gelar_akademik: "",
-    tahun_masuk: "",
-    tahun_lulus: "",
-    tgl_lulus: "",
-    nomor_induk: "",
-    jmlh_semester: "",
-    jmlh_sks: "",
-    ipk_lulus: "",
-    no_sk_penyetaraan: "",
-    tgl_sk_penyetaraan: "",
-    no_ijazah: "",
-    judul_tesis: "",
-  };
+    asal: '',
+    jenjang_studi: '',
+    program_studi: '',
+    gelar_akademik: '',
+    tahun_masuk: '',
+    tahun_lulus: '',
+    tgl_lulus: '',
+    nomor_induk: '',
+    jmlh_semester: '',
+    jmlh_sks: '',
+    ipk_lulus: '',
+    no_sk_penyetaraan: '',
+    tgl_sk_penyetaraan: '',
+    no_ijazah: '',
+    judul_tesis: '',
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "asal", label: "Asal" },
-      { field: "jenjang_studi", label: "Jenjang Studi" },
-      { field: "program_studi", label: "Program Studi" },
-      { field: "gelar_akademik", label: "Gelar Akademik" },
-      { field: "tahun_masuk", label: "Tahun Masuk" },
-      { field: "tahun_lulus", label: "Tahun Lulus" },
-      { field: "nomor_induk", label: "Nomor Induk" },
-      { field: "jmlh_semester", label: "Jumlah Semester" },
-      { field: "jmlh_sks", label: "Jumlah SKS" },
-      { field: "ipk_lulus", label: "IPK Lulus" },
-      { field: "no_sk_penyetaraan", label: "Nomor SK Penyetaraan" },
-      { field: "tgl_sk_penyetaraan", label: "Tanggal SK Penyetaraan" },
-      { field: "no_ijazah", label: "Nomor Ijazah" },
-      { field: "judul_tesis", label: "Judul Tesisi" },
+      { field: 'asal', label: 'Asal' },
+      { field: 'jenjang_studi', label: 'Jenjang Studi' },
+      { field: 'program_studi', label: 'Program Studi' },
+      { field: 'gelar_akademik', label: 'Gelar Akademik' },
+      { field: 'tahun_masuk', label: 'Tahun Masuk' },
+      { field: 'tahun_lulus', label: 'Tahun Lulus' },
+      { field: 'nomor_induk', label: 'Nomor Induk' },
+      { field: 'jmlh_semester', label: 'Jumlah Semester' },
+      { field: 'jmlh_sks', label: 'Jumlah SKS' },
+      { field: 'ipk_lulus', label: 'IPK Lulus' },
+      { field: 'no_sk_penyetaraan', label: 'Nomor SK Penyetaraan' },
+      { field: 'tgl_sk_penyetaraan', label: 'Tanggal SK Penyetaraan' },
+      { field: 'no_ijazah', label: 'Nomor Ijazah' },
+      { field: 'judul_tesis', label: 'Judul Tesisi' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -74,13 +74,13 @@ export default function PendidikanFormalCreate() {
                 onChange={inputHandler}
                 value={form.jenjang_studi}
                 options={[
-                  { label: "SD", value: "SD" },
-                  { label: "SMP", value: "SMP" },
-                  { label: "SMA/SMK/MA", value: "SMA/SMK/MA" },
-                  { label: "D3", value: "D3" },
-                  { label: "S1", value: "S1" },
-                  { label: "S2", value: "S2" },
-                  { label: "S3", value: "S3" },
+                  { label: 'SD', value: 'SD' },
+                  { label: 'SMP', value: 'SMP' },
+                  { label: 'SMA/SMK/MA', value: 'SMA/SMK/MA' },
+                  { label: 'D3', value: 'D3' },
+                  { label: 'S1', value: 'S1' },
+                  { label: 'S2', value: 'S2' },
+                  { label: 'S3', value: 'S3' },
                 ]}
               />
             </Form.Group>
@@ -131,8 +131,8 @@ export default function PendidikanFormalCreate() {
                 value={form.tahun_masuk}
                 options={Array.from(
                   { length: new Date().getFullYear() - 1970 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
+                  (_, i) => new Date().getFullYear() - i,
+                ).map(item => ({
                   label: item,
                   value: item,
                 }))}
@@ -150,8 +150,8 @@ export default function PendidikanFormalCreate() {
                 value={form.tahun_lulus}
                 options={Array.from(
                   { length: new Date().getFullYear() - 1970 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
+                  (_, i) => new Date().getFullYear() - i,
+                ).map(item => ({
                   label: item,
                   value: item,
                 }))}
@@ -182,9 +182,7 @@ export default function PendidikanFormalCreate() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Jumlah Semester Tempuh
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Jumlah Semester Tempuh</Form.Label>
               <span>:</span>
               <Form.Input
                 type="number"
@@ -195,9 +193,7 @@ export default function PendidikanFormalCreate() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Jumlah SKS Kelulusan
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Jumlah SKS Kelulusan</Form.Label>
               <span>:</span>
               <Form.Input
                 type="number"
@@ -219,9 +215,7 @@ export default function PendidikanFormalCreate() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Nomor SK Penyetaraan
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Nomor SK Penyetaraan</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -232,9 +226,7 @@ export default function PendidikanFormalCreate() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Tanggal SK Penyetaraan
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Tanggal SK Penyetaraan</Form.Label>
               <span>:</span>
               <Form.Input
                 type="date"
@@ -256,9 +248,7 @@ export default function PendidikanFormalCreate() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Judul Tesis Disertasi
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Judul Tesis Disertasi</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -273,22 +263,12 @@ export default function PendidikanFormalCreate() {
                 Unggah File <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="file"
-                className="flex-1"
-                name="file_pend"
-                onChange={inputHandler}
-              />
+              <Form.Input type="file" className="flex-1" name="file_pend" onChange={inputHandler} />
             </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -297,5 +277,5 @@ export default function PendidikanFormalCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

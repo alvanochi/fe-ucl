@@ -1,40 +1,40 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import useDatatable from "../../../../hooks/useDatatable";
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import useDatatable from '../../../../hooks/useDatatable'
+import { useEffect, useRef, useState } from 'react'
+import Link from 'next/link'
 
 export default function TugasAkhirModule({ baseURL }) {
-  const [openedDropdownId, setOpenedDropdownId] = useState(null);
-  const dropdownRef = useRef(null);
+  const [openedDropdownId, setOpenedDropdownId] = useState(null)
+  const dropdownRef = useRef(null)
 
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        closeDropdown();
+        closeDropdown()
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside)
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const toggleDropdown = (rowId) => {
-    if (openedDropdownId === rowId) {
-      setOpenedDropdownId(null);
-    } else {
-      setOpenedDropdownId(rowId);
+      document.removeEventListener('mousedown', handleClickOutside)
     }
-  };
+  }, [])
+
+  const toggleDropdown = rowId => {
+    if (openedDropdownId === rowId) {
+      setOpenedDropdownId(null)
+    } else {
+      setOpenedDropdownId(rowId)
+    }
+  }
 
   const closeDropdown = () => {
-    setOpenedDropdownId(null);
-  };
+    setOpenedDropdownId(null)
+  }
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/tugas-akhir/get-by-mhs`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/get-by-mhs`
 
   const {
     data,
@@ -50,15 +50,13 @@ export default function TugasAkhirModule({ baseURL }) {
     sortBy,
     getSortBy,
     totalData,
-  } = useDatatable(DATA_URL);
+  } = useDatatable(DATA_URL)
 
   return (
     <>
       <div className="flex items-center justify-center gap-2 mb-8">
         <Button
-          onClick={() =>
-            window.open(`${baseURL}/tugas-akhir/pengajuan_sk`, "_blank")
-          }
+          onClick={() => window.open(`${baseURL}/tugas-akhir/pengajuan_sk`, '_blank')}
           variant="primary"
           icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
           pill
@@ -77,44 +75,30 @@ export default function TugasAkhirModule({ baseURL }) {
               <div className="flex items-center gap-2 cursor-pointer">No</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Semester
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Semester</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Judul Skripsi
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Judul Skripsi</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Action
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Action</div>
             </th>
           </tr>
         </thead>
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -122,23 +106,19 @@ export default function TugasAkhirModule({ baseURL }) {
           {!loading &&
             data &&
             data.map((row, index) => {
-              const startNumber = (page - 1) * 10 + 1;
+              const startNumber = (page - 1) * 10 + 1
 
-              const rowNumber = startNumber + index;
+              const rowNumber = startNumber + index
               return (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {rowNumber}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{rowNumber}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                     {row.status}
                   </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.semester}</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.semester}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {`${row.judul_skripsi.split(" ").slice(0, 6).join(" ")}${
-                      row.judul_skripsi.split(" ").length > 6 ? "..." : ""
+                    {`${row.judul_skripsi.split(' ').slice(0, 6).join(' ')}${
+                      row.judul_skripsi.split(' ').length > 6 ? '...' : ''
                     }`}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 relative">
@@ -147,11 +127,7 @@ export default function TugasAkhirModule({ baseURL }) {
                         onClick={() => toggleDropdown(row.id)}
                         className="flex items-center gap-2 bg-blue-500 text-white px-3 py-2 rounded-md focus:outline-none z-10"
                       >
-                        <Icon
-                          icon="fluent:settings-24-filled"
-                          width={20}
-                          height={20}
-                        />
+                        <Icon icon="fluent:settings-24-filled" width={20} height={20} />
                       </button>
                       {openedDropdownId === row.id && (
                         <div
@@ -162,16 +138,15 @@ export default function TugasAkhirModule({ baseURL }) {
                             <button
                               onClick={closeDropdown}
                               className={`w-full px-4 py-2 text-sm ${
-                                row.status === "pengajuan-sk" &&
-                                row.status_approved === false
-                                  ? "text-blue-500 underline font-bold"
-                                  : (row.status === "menuju-kolokium" ||
-                                      row.status === "menuju-sidang" ||
-                                      row.status === "menyelesaikan-revisi" ||
-                                      row.status === "selesai") &&
-                                    row.status_approved === true
-                                  ? "text-black font-semibold"
-                                  : "text-gray-500"
+                                row.status === 'pengajuan-sk' && row.status_approved === false
+                                  ? 'text-blue-500 underline font-bold'
+                                  : (row.status === 'menuju-kolokium' ||
+                                        row.status === 'menuju-sidang' ||
+                                        row.status === 'menyelesaikan-revisi' ||
+                                        row.status === 'selesai') &&
+                                      row.status_approved === true
+                                    ? 'text-black font-semibold'
+                                    : 'text-gray-500'
                               } hover:bg-gray-200`}
                             >
                               <Link
@@ -189,30 +164,30 @@ export default function TugasAkhirModule({ baseURL }) {
                                   className="text-green-400 "
                                 />
                               ) : (
-                                ""
+                                ''
                               )}
                             </button>
 
                             <button
                               onClick={closeDropdown}
                               className={`w-full px-4 py-2 text-sm ${
-                                row.status === "menuju-kolokium" &&
+                                row.status === 'menuju-kolokium' &&
                                 row.status_approved_kolo === false
-                                  ? "text-blue-500 underline font-bold"
-                                  : (row.status === "menuju-kolokium" ||
-                                      row.status === "menuju-sidang" ||
-                                      row.status === "menyelesaikan-revisi" ||
-                                      row.status === "selesai") &&
-                                    row.status_approved_kolo === true
-                                  ? "text-black font-semibold"
-                                  : "text-gray-500"
+                                  ? 'text-blue-500 underline font-bold'
+                                  : (row.status === 'menuju-kolokium' ||
+                                        row.status === 'menuju-sidang' ||
+                                        row.status === 'menyelesaikan-revisi' ||
+                                        row.status === 'selesai') &&
+                                      row.status_approved_kolo === true
+                                    ? 'text-black font-semibold'
+                                    : 'text-gray-500'
                               } hover:bg-gray-200`}
                             >
                               <span>
-                                {row.status === "menuju-kolokium" ||
-                                row.status === "menuju-sidang" ||
-                                row.status === "menyelesaikan-revisi" ||
-                                row.status === "selesai" ? (
+                                {row.status === 'menuju-kolokium' ||
+                                row.status === 'menuju-sidang' ||
+                                row.status === 'menyelesaikan-revisi' ||
+                                row.status === 'selesai' ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pengajuan_kolo/${row.sk_id}`}
                                     target="_blank"
@@ -232,31 +207,31 @@ export default function TugasAkhirModule({ baseURL }) {
                                   className="text-green-400 "
                                 />
                               ) : (
-                                ""
+                                ''
                               )}
                             </button>
 
                             <button
                               onClick={closeDropdown}
                               className={`w-full px-4 py-2 text-sm ${
-                                row.status === "menuju-kolokium" &&
+                                row.status === 'menuju-kolokium' &&
                                 row.status_penilaian === false &&
                                 row.status_approved_kolo === true
-                                  ? "text-blue-500 underline font-bold"
-                                  : (row.status === "menuju-kolokium" ||
-                                      row.status === "menuju-sidang" ||
-                                      row.status === "menyelesaikan-revisi" ||
-                                      row.status === "selesai") &&
-                                    row.status_penilaian === true
-                                  ? "text-black font-semibold"
-                                  : "text-gray-500"
+                                  ? 'text-blue-500 underline font-bold'
+                                  : (row.status === 'menuju-kolokium' ||
+                                        row.status === 'menuju-sidang' ||
+                                        row.status === 'menyelesaikan-revisi' ||
+                                        row.status === 'selesai') &&
+                                      row.status_penilaian === true
+                                    ? 'text-black font-semibold'
+                                    : 'text-gray-500'
                               } hover:bg-gray-200`}
                             >
                               <span>
-                                {(row.status === "menuju-kolokium" ||
-                                  row.status === "menuju-sidang" ||
-                                  row.status === "menyelesaikan-revisi" ||
-                                  row.status === "selesai") &&
+                                {(row.status === 'menuju-kolokium' ||
+                                  row.status === 'menuju-sidang' ||
+                                  row.status === 'menyelesaikan-revisi' ||
+                                  row.status === 'selesai') &&
                                 row.status_approved_kolo === true ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pelaks_kolo/${row.sk_id}`}
@@ -277,29 +252,29 @@ export default function TugasAkhirModule({ baseURL }) {
                                   className="text-green-400 "
                                 />
                               ) : (
-                                ""
+                                ''
                               )}
                             </button>
 
                             <button
                               onClick={closeDropdown}
                               className={`w-full px-4 py-2 text-sm ${
-                                row.status === "menuju-sidang" &&
+                                row.status === 'menuju-sidang' &&
                                 row.status_approved_sidang === false
-                                  ? "text-blue-500 underline font-bold"
-                                  : (row.status === "menuju-kolokium" ||
-                                      row.status === "menuju-sidang" ||
-                                      row.status === "menyelesaikan-revisi" ||
-                                      row.status === "selesai") &&
-                                    row.status_approved_sidang === true
-                                  ? "text-black font-semibold"
-                                  : "text-gray-500"
+                                  ? 'text-blue-500 underline font-bold'
+                                  : (row.status === 'menuju-kolokium' ||
+                                        row.status === 'menuju-sidang' ||
+                                        row.status === 'menyelesaikan-revisi' ||
+                                        row.status === 'selesai') &&
+                                      row.status_approved_sidang === true
+                                    ? 'text-black font-semibold'
+                                    : 'text-gray-500'
                               } hover:bg-gray-200`}
                             >
                               <span>
-                                {(row.status === "selesai" ||
-                                  row.status === "menuju-sidang" ||
-                                  row.status === "menyelesaikan-revisi") &&
+                                {(row.status === 'selesai' ||
+                                  row.status === 'menuju-sidang' ||
+                                  row.status === 'menyelesaikan-revisi') &&
                                 row.status_penilaian === true ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pengajuan_sidang/${row.sk_id}`}
@@ -320,30 +295,30 @@ export default function TugasAkhirModule({ baseURL }) {
                                   className="text-green-400 "
                                 />
                               ) : (
-                                ""
+                                ''
                               )}
                             </button>
 
                             <button
                               onClick={closeDropdown}
                               className={`w-full px-4 py-2 text-sm ${
-                                row.status === "menuju-sidang" &&
+                                row.status === 'menuju-sidang' &&
                                 row.status_penilaian_sidang === false &&
                                 row.status_approved_sidang === true
-                                  ? "text-blue-500 underline font-bold"
-                                  : (row.status === "menuju-kolokium" ||
-                                      row.status === "menuju-sidang" ||
-                                      row.status === "menyelesaikan-revisi" ||
-                                      row.status === "selesai") &&
-                                    row.status_penilaian_sidang === true
-                                  ? "text-black font-semibold"
-                                  : "text-gray-500"
+                                  ? 'text-blue-500 underline font-bold'
+                                  : (row.status === 'menuju-kolokium' ||
+                                        row.status === 'menuju-sidang' ||
+                                        row.status === 'menyelesaikan-revisi' ||
+                                        row.status === 'selesai') &&
+                                      row.status_penilaian_sidang === true
+                                    ? 'text-black font-semibold'
+                                    : 'text-gray-500'
                               } hover:bg-gray-200`}
                             >
                               <span>
-                                {(row.status === "selesai" ||
-                                  row.status === "menuju-sidang" ||
-                                  row.status === "menyelesaikan-revisi") &&
+                                {(row.status === 'selesai' ||
+                                  row.status === 'menuju-sidang' ||
+                                  row.status === 'menyelesaikan-revisi') &&
                                 row.status_approved_sidang === true ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pelaks_sidang/${row.sk_id}`}
@@ -364,23 +339,23 @@ export default function TugasAkhirModule({ baseURL }) {
                                   className="text-green-400 "
                                 />
                               ) : (
-                                ""
+                                ''
                               )}
                             </button>
 
                             <button
                               onClick={closeDropdown}
                               className={`w-full px-4 py-2 text-sm ${
-                                row.status === "menyelesaikan-revisi"
-                                  ? "text-blue-500 underline font-bold"
-                                  : row.status === "selesai"
-                                  ? "text-black font-semibold"
-                                  : "text-gray-500"
+                                row.status === 'menyelesaikan-revisi'
+                                  ? 'text-blue-500 underline font-bold'
+                                  : row.status === 'selesai'
+                                    ? 'text-black font-semibold'
+                                    : 'text-gray-500'
                               } hover:bg-gray-200`}
                             >
                               <span>
-                                {row.status === "menyelesaikan-revisi" ||
-                                row.status === "selesai" ? (
+                                {row.status === 'menyelesaikan-revisi' ||
+                                row.status === 'selesai' ? (
                                   <Link
                                     href={`${baseURL}/tugas-akhir/action/pengumpulan_revisi/${row.sk_id}`}
                                     target="_blank"
@@ -392,7 +367,7 @@ export default function TugasAkhirModule({ baseURL }) {
                                   <span>Pengumpulan Revisi</span>
                                 )}
                               </span>
-                              {row.status === "selesai" ? (
+                              {row.status === 'selesai' ? (
                                 <Icon
                                   icon="ph:check-fat-fill"
                                   width={20}
@@ -400,7 +375,7 @@ export default function TugasAkhirModule({ baseURL }) {
                                   className="text-green-400 "
                                 />
                               ) : (
-                                ""
+                                ''
                               )}
                             </button>
                           </div>
@@ -409,10 +384,10 @@ export default function TugasAkhirModule({ baseURL }) {
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </table>
     </>
-  );
+  )
 }

@@ -1,77 +1,77 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import useMahasiswa from "../../../../repo/mahasiswa";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import useMahasiswa from '../../../../repo/mahasiswa'
 
 const TambahMhs = ({ data, onTambahMhs }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const INITIAL_FORM = {
-    id_pembelajaran: data && data.id ? data.id : "",
-    status_absen: "1",
-  };
+    id_pembelajaran: data && data.id ? data.id : '',
+    status_absen: '1',
+  }
 
-  const [selectedMhs, setSelectedMhs] = useState("");
+  const [selectedMhs, setSelectedMhs] = useState('')
 
-  const handleMhsChange = (selected) => {
-    setSelectedMhs(selected?.value);
-  };
+  const handleMhsChange = selected => {
+    setSelectedMhs(selected?.value)
+  }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
-      { field: "id", label: "id" },
-      { field: "status_absen", label: "status_absen" },
+      { field: 'id', label: 'id' },
+      { field: 'status_absen', label: 'status_absen' },
     ],
-  });
+  })
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
         npm: selectedMhs,
-      };
+      }
 
       if (!requestData.status_absen || !requestData.npm) {
-        toastAlert("error", "Pleas fill in all the required fields.");
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
       const request = await axios({
-        url: `${process.env.API_ENDPOINT_ABSEN}/absensi/store`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi/store`,
+        method: 'POST',
         data: requestData,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      form.id_pembelajaran = data && data.id ? data.id : "";
-      form.npm = "";
-      form.status_absen = "1";
+      form.id_pembelajaran = data && data.id ? data.id : ''
+      form.npm = ''
+      form.status_absen = '1'
 
-      toastAlert("success", "Successfully");
-      close();
-      setSelectedMhs("");
-      onTambahMhs();
+      toastAlert('success', 'Successfully')
+      close()
+      setSelectedMhs('')
+      onTambahMhs()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
-  const { data: listMahasiswa } = useMahasiswa();
+  const { data: listMahasiswa } = useMahasiswa()
 
   return (
     <>
@@ -100,7 +100,7 @@ const TambahMhs = ({ data, onTambahMhs }) => {
               name="npm"
               onChange={handleMhsChange}
               value={selectedMhs}
-              options={listMahasiswa?.map((mhs) => ({
+              options={listMahasiswa?.map(mhs => ({
                 label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                 value: mhs.npm,
               }))}
@@ -152,7 +152,7 @@ const TambahMhs = ({ data, onTambahMhs }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default TambahMhs;
+export default TambahMhs

@@ -1,29 +1,29 @@
-import Head from "next/head";
-import dynamic from "next/dynamic";
-import { Icon } from "@iconify-icon/react";
-import useMenu from "../../hooks/useMenu";
-import Layout from "../../components/Layout";
-import Button from "../../components/Button";
-import Card from "../../components/Card";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import useUser from "../../hooks/useUser";
-import useDatatable from "../../hooks/useDatatable";
-import Link from "next/link";
-import resolveConfig from "tailwindcss/resolveConfig";
-import twConfig from "../../../tailwind.config.js";
-import { Loading } from "../../components/Loading";
+import Head from 'next/head'
+import dynamic from 'next/dynamic'
+import { Icon } from '@iconify-icon/react'
+import useMenu from '../../hooks/useMenu'
+import Layout from '../../components/Layout'
+import Button from '../../components/Button'
+import Card from '../../components/Card'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import useUser from '../../hooks/useUser'
+import useDatatable from '../../hooks/useDatatable'
+import Link from 'next/link'
+import resolveConfig from 'tailwindcss/resolveConfig'
+import twConfig from '../../../tailwind.config.js'
+import { Loading } from '../../components/Loading'
 
-const AreaChart = dynamic(() => import("../../components/Chart/area"), {
+const AreaChart = dynamic(() => import('../../components/Chart/area'), {
   ssr: false,
-});
+})
 
 export default function Home() {
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu } = useMenu();
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/dashboard/pegawai`;
-  const { data } = useDatatable(DATA_URL);
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/dashboard/pegawai`
+  const { data } = useDatatable(DATA_URL)
 
   function isUserDataComplete(userData) {
     return (
@@ -42,23 +42,21 @@ export default function Home() {
       userData?.provinsi !== null &&
       userData?.kode_pos !== null &&
       userData?.no_hp !== null
-    );
+    )
   }
 
-  if ([menu, user].some((item) => item == null)) return <Loading />;
+  if ([menu, user].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <Head>
         <title>
-          {menu.label ?? ""} - {process.env.APP_NAME ?? ""}
+          {menu.label ?? ''} - {process.env.APP_NAME ?? ''}
         </title>
       </Head>
       <div className="flex flex-col sm:flex-row gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
         <div className="w-full sm:w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
           <img
-            src={
-              process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image
-            }
+            src={process.env.NEXT_PUBLIC_API_URL + '/foto-profile/' + data.userData?.image}
             alt="Profile"
             className="object-cover object-top w-full h-auto"
           />
@@ -67,7 +65,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex flex-col items-start">
               <h1 className="text-xl sm:text-2xl font-semibold text-primary-600 uppercase mb-2 sm:mb-4">
-                {data.userData?.nama_lengkap || ""}
+                {data.userData?.nama_lengkap || ''}
                 <Icon
                   icon="material-symbols:verified"
                   width={36}
@@ -80,12 +78,7 @@ export default function Home() {
                 NPM : {data.userData?.npm}
               </span>
               <span className="block text-sm sm:text-base text-gray-500 font-normal">
-                <Icon
-                  icon="ri:briefcase-fill"
-                  width={16}
-                  height={16}
-                  className="mr-1"
-                />
+                <Icon icon="ri:briefcase-fill" width={16} height={16} className="mr-1" />
                 STATUS : {data.userData?.kode_mhs}
               </span>
               <span className="block text-sm sm:text-base text-gray-500 font-normal">
@@ -145,5 +138,5 @@ export default function Home() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }

@@ -1,18 +1,18 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import useCRUD from "../../../../hooks/useCRUD";
-import SortIcon from "../../../../components/SortIcon";
-import Form from "../../../../components/Form";
-import ShowQr from "./show-qr";
-import axios from "axios";
-import { toastAlert } from "../../../../lib/sweetalert";
-import { useState } from "react";
-import useNewDataTable from "../../../../hooks/useNewDataTable";
-import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import useCRUD from '../../../../hooks/useCRUD'
+import SortIcon from '../../../../components/SortIcon'
+import Form from '../../../../components/Form'
+import ShowQr from './show-qr'
+import axios from 'axios'
+import { toastAlert } from '../../../../lib/sweetalert'
+import { useState } from 'react'
+import useNewDataTable from '../../../../hooks/useNewDataTable'
+import useNewDataTableNew from '../../../../hooks/useNewDataTableNew'
 
 export default function DaftarHadirModule({ baseURL, user }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/absensi-external/pembelajaran`;
-  const [searchValue, setSearchValue] = useState("");
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/absensi-external/pembelajaran`
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -26,42 +26,40 @@ export default function DaftarHadirModule({ baseURL, user }) {
   } = useNewDataTableNew(
     DATA_URL,
     {
-      filter: "id_dosen",
+      filter: 'id_dosen',
       filterValue: user?.user_id,
     },
-    searchValue
-  );
+    searchValue,
+  )
 
-  const { destroy } = useCRUD(DATA_URL);
+  const { destroy } = useCRUD(DATA_URL)
 
   const handleAction = () => {
-    refreshNew();
-  };
+    refreshNew()
+  }
 
-  const updateLearningDone = async (id) => {
+  const updateLearningDone = async id => {
     try {
       await axios.post(
-        `${process.env.API_ENDPOINT}/absensi-external/pembelajaran/non-active/${id}`
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/absensi-external/pembelajaran/non-active/${id}`,
+      )
 
-      refreshNew();
+      refreshNew()
 
-      toastAlert("success", "Non Active!");
+      toastAlert('success', 'Non Active!')
     } catch (error) {
-      toastAlert("error", error);
+      toastAlert('error', error)
 
-      console.error("Error updating learning done:", error);
+      console.error('Error updating learning done:', error)
     }
-  };
+  }
 
   return (
     <>
       <div className="flex mb-8 justify-end items-center">
         <div className="mr-4">
           <Button
-            onClick={() =>
-              window.open(`${baseURL}/daftar-hadir/generate`, "_blank")
-            }
+            onClick={() => window.open(`${baseURL}/daftar-hadir/generate`, '_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -74,9 +72,9 @@ export default function DaftarHadirModule({ baseURL, user }) {
             type="text"
             name="search"
             placeholder="Search"
-            style={{ width: "400px" }}
+            style={{ width: '400px' }}
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={e => setSearchValue(e.target.value)}
           />
         </div>
       </div>
@@ -90,78 +88,70 @@ export default function DaftarHadirModule({ baseURL, user }) {
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("id")}
+                  onClick={() => sortByNew('id')}
                 >
                   No
-                  <SortIcon sort={getSortByNew("id")} />
+                  <SortIcon sort={getSortByNew('id')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("id_matkul")}
+                  onClick={() => sortByNew('id_matkul')}
                 >
                   Matakuliah
-                  <SortIcon sort={getSortByNew("id_matkul")} />
+                  <SortIcon sort={getSortByNew('id_matkul')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("id_matkul")}
+                  onClick={() => sortByNew('id_matkul')}
                 >
-                  Kode <SortIcon sort={getSortByNew("id_matkul")} />
+                  Kode <SortIcon sort={getSortByNew('id_matkul')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("pertemuan")}
+                  onClick={() => sortByNew('pertemuan')}
                 >
                   Pertemuan
-                  <SortIcon sort={getSortByNew("pertemuan")} />
+                  <SortIcon sort={getSortByNew('pertemuan')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("kelas")}
+                  onClick={() => sortByNew('kelas')}
                 >
                   Kelas
-                  <SortIcon sort={getSortByNew("kelas")} />
+                  <SortIcon sort={getSortByNew('kelas')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("status_kelas")}
+                  onClick={() => sortByNew('status_kelas')}
                 >
                   Status
-                  <SortIcon sort={getSortByNew("status_kelas")} />
+                  <SortIcon sort={getSortByNew('status_kelas')} />
                 </div>
               </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Action
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Action</th>
             </tr>
           </thead>
           <tbody>
             {loadingNew && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Loading...
                 </td>
               </tr>
             )}
             {!loadingNew && dataNew && dataNew.length < 1 && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Tidak ada data
                 </td>
               </tr>
@@ -169,37 +159,31 @@ export default function DaftarHadirModule({ baseURL, user }) {
             {!loadingNew &&
               dataNew &&
               dataNew.map((row, index) => {
-                const startNumber = (pageNew - 1) * 10 + 1;
+                const startNumber = (pageNew - 1) * 10 + 1
 
-                const rowNumber = startNumber + index;
+                const rowNumber = startNumber + index
                 return (
                   <tr key={`row-${index}`}>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {rowNumber}
-                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">{rowNumber}</td>
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {row.matakuliah?.nama_matakuliah &&
                         row.matakuliah?.nama_matakuliah
-                          .split(" ")
+                          .split(' ')
                           .slice(0, 3)
-                          .concat("...")
-                          .join(" ")}
+                          .concat('...')
+                          .join(' ')}
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {row.matakuliah?.kode_matakuliah}
                     </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.pertemuan}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {row.kelas}
-                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">{row.pertemuan}</td>
+                    <td className="text-sm border-2 border-white bg-gray-50">{row.kelas}</td>
                     <td className="text-sm border-2 border-white bg-gray-50">
                       {row.status_kelas === 1
-                        ? "ONLINE"
+                        ? 'ONLINE'
                         : row.status_kelas === 0
-                        ? "OFFLINE"
-                        : "HYBRID"}
+                          ? 'OFFLINE'
+                          : 'HYBRID'}
                     </td>
 
                     <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
@@ -214,23 +198,20 @@ export default function DaftarHadirModule({ baseURL, user }) {
                         />
                         <Button.Icon
                           onClick={() =>
-                            window.open(
-                              `${baseURL}/daftar-hadir/list-mhs/${row.id}`,
-                              "_blank"
-                            )
+                            window.open(`${baseURL}/daftar-hadir/list-mhs/${row.id}`, '_blank')
                           }
                           variant="primary"
                           icon={<Icon icon="bx:group" width={18} height={18} />}
                         />
                         <i
                           className={
-                            row.learning_done == null || row.learning_done == ""
-                              ? " text-sky-600 cursor-pointer transition duration-300 hover:text-blue-500"
-                              : "text-gray-500"
+                            row.learning_done == null || row.learning_done == ''
+                              ? ' text-sky-600 cursor-pointer transition duration-300 hover:text-blue-500'
+                              : 'text-gray-500'
                           }
                           onClick={() => {
                             if (!row.learning_done) {
-                              updateLearningDone(row.id);
+                              updateLearningDone(row.id)
                             }
                           }}
                         >
@@ -239,20 +220,14 @@ export default function DaftarHadirModule({ baseURL, user }) {
                         <Button.Icon
                           variant="danger"
                           icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={18}
-                              height={18}
-                            />
+                            <Icon icon="solar:trash-bin-2-bold-duotone" width={18} height={18} />
                           }
-                          onClick={() =>
-                            destroy(row.id).then(() => refreshNew())
-                          }
+                          onClick={() => destroy(row.id).then(() => refreshNew())}
                         />
                       </div>
                     </td>
                   </tr>
-                );
+                )
               })}
           </tbody>
         </table>
@@ -263,13 +238,7 @@ export default function DaftarHadirModule({ baseURL, user }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPageNew(pageNew - 1)}
             disabled={pageNew <= 1}
             pill
@@ -277,13 +246,7 @@ export default function DaftarHadirModule({ baseURL, user }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPageNew(pageNew + 1)}
             disabled={pageNew >= pageCountNew}
@@ -300,18 +263,13 @@ export default function DaftarHadirModule({ baseURL, user }) {
             max={pageCountNew || 1}
             className="w-20"
             value={pageNew}
-            onChange={(event) =>
-              setPageNew(
-                Math.max(
-                  1,
-                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                )
-              )
+            onChange={event =>
+              setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
             }
           />
           of {pageCountNew || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

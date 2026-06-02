@@ -1,93 +1,91 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import dynamic from "next/dynamic";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useCRUD from "../../../../hooks/useCRUD";
-import resolveConfig from "tailwindcss/resolveConfig";
-import twConfig from "../../../../../tailwind.config";
-import { Loading } from "../../../../components/Loading";
-import { Icon } from "@iconify-icon/react/dist/iconify.js";
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import dynamic from 'next/dynamic'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import resolveConfig from 'tailwindcss/resolveConfig'
+import twConfig from '../../../../../tailwind.config'
+import { Loading } from '../../../../components/Loading'
+import { Icon } from '@iconify-icon/react/dist/iconify.js'
 
-const BarChart = dynamic(() => import("../../../../components/Chart/bar"), {
+const BarChart = dynamic(() => import('../../../../components/Chart/bar'), {
   ssr: false,
-});
+})
 
 export default function VoteDetail() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/voting/question`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/question`
 
-  const { formdata, show } = useCRUD(API_URL);
-  const { form } = formdata;
+  const { formdata, show } = useCRUD(API_URL)
+  const { form } = formdata
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const [valueChart, setValueChart] = useState([]);
-  const [labelsChart, setLabelsChart] = useState([]);
-  const [barColors, setBarColors] = useState("");
+  const [valueChart, setValueChart] = useState([])
+  const [labelsChart, setLabelsChart] = useState([])
+  const [barColors, setBarColors] = useState('')
 
-  const config = resolveConfig(twConfig);
+  const config = resolveConfig(twConfig)
 
   const {
     theme: { colors },
-  } = config;
+  } = config
 
-  const generateDynamicColor = (label) => {
-    const hash = label
-      .split("")
-      .reduce((acc, char) => char.charCodeAt(0) + acc, 0);
-    const dynamicColor = `hsl(${hash % 360}, 70%, 50%)`;
+  const generateDynamicColor = label => {
+    const hash = label.split('').reduce((acc, char) => char.charCodeAt(0) + acc, 0)
+    const dynamicColor = `hsl(${hash % 360}, 70%, 50%)`
 
-    return dynamicColor;
-  };
+    return dynamicColor
+  }
 
   const dataUse = {
     labels: labelsChart,
     datasets: [
       {
         fill: true,
-        label: "Votes",
+        label: 'Votes',
         data: valueChart,
         borderColor: colors.primary[600],
-        backgroundColor: barColors !== "" ? barColors : colors.primary[600],
+        backgroundColor: barColors !== '' ? barColors : colors.primary[600],
       },
     ],
-  };
+  }
 
   useEffect(() => {
     if (form && form.realCount) {
-      const datas = form.realCount.data;
-      const labels = form.realCount.label;
+      const datas = form.realCount.data
+      const labels = form.realCount.label
 
-      setValueChart(datas);
-      setLabelsChart(labels.map((label) => label.toLowerCase()));
+      setValueChart(datas)
+      setLabelsChart(labels.map(label => label.toLowerCase()))
 
-      const dynamicColors = labels.map((label) => generateDynamicColor(label));
+      const dynamicColors = labels.map(label => generateDynamicColor(label))
 
-      setBarColors(dynamicColors);
+      setBarColors(dynamicColors)
     }
-  }, [form]);
+  }, [form])
 
-  const DELETE_URL = `${process.env.API_ENDPOINT}/voting/group-voting`;
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/group-voting`
 
-  const { destroy } = useCRUD(DELETE_URL);
+  const { destroy } = useCRUD(DELETE_URL)
 
-  if ([user, menu, form].some((item) => item == null)) return <Loading />;
+  if ([user, menu, form].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -141,13 +139,9 @@ export default function VoteDetail() {
               <thead>
                 <tr>
                   <th className="text-sm border-2 border-white bg-gray-200">
-                    <div className="flex items-center gap-2 cursor-pointer">
-                      Nama Group
-                    </div>
+                    <div className="flex items-center gap-2 cursor-pointer">Nama Group</div>
                   </th>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Action
-                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -172,15 +166,9 @@ export default function VoteDetail() {
                           variant="danger"
                           type="button"
                           icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
+                            <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                           }
-                          onClick={() =>
-                            destroy(row.id).then(() => router.reload())
-                          }
+                          onClick={() => destroy(row.id).then(() => router.reload())}
                         />
                       </td>
                     </tr>
@@ -205,10 +193,8 @@ export default function VoteDetail() {
             <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
           </svg>
           <div className="ms-3 text-lg font-semibold">
-            Jumlah Suara Masuk:{" "}
-            <span className="underline font-extrabold pl-4">
-              {form?.jmlSuara}
-            </span>
+            Jumlah Suara Masuk:{' '}
+            <span className="underline font-extrabold pl-4">{form?.jmlSuara}</span>
           </div>
         </div>
 
@@ -218,23 +204,14 @@ export default function VoteDetail() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Option
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Value
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Suara
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Value</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Suara</th>
             </tr>
           </thead>
           <tbody>
@@ -272,16 +249,11 @@ export default function VoteDetail() {
         </Card>
 
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

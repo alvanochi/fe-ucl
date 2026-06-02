@@ -1,71 +1,71 @@
-import classNames from "classnames";
-import { Icon } from "@iconify-icon/react";
-import Head from "next/head";
-import Layout from "../../../components/Layout";
-import Card from "../../../components/Card";
-import useMenu from "../../../hooks/useMenu";
-import useUser from "../../../hooks/useUser";
-import Form from "../../../components/Form";
-import Button from "../../../components/Button";
-import KependudukanModule from "../../../modules/profil/kependudukan";
-import AlamatDanKontakModule from "../../../modules/profil/alamat-dan-kontak";
-import KeluargaModule from "../../../modules/profil/keluarga";
-import KepangkatanModule from "../../../modules/profil/kepangkatan";
-import JabatanFungsionalModule from "../../../modules/profil/jabatan-fungsional";
-import useDatatable from "../../../hooks/useDatatable";
-import date from "../../../utils/date";
-import useModal from "../../../hooks/useModal";
-import useForm from "../../../hooks/useForm";
-import Modal from "../../../components/Modal";
-import axios from "axios";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
-import Link from "next/link";
-import { Loading } from "../../../components/Loading";
-import LainyaModule from "../../../modules/profil/lainya";
-import { ROLE_ID_MAHASISWA } from "../../../config/role";
+import classNames from 'classnames'
+import { Icon } from '@iconify-icon/react'
+import Head from 'next/head'
+import Layout from '../../../components/Layout'
+import Card from '../../../components/Card'
+import useMenu from '../../../hooks/useMenu'
+import useUser from '../../../hooks/useUser'
+import Form from '../../../components/Form'
+import Button from '../../../components/Button'
+import KependudukanModule from '../../../modules/profil/kependudukan'
+import AlamatDanKontakModule from '../../../modules/profil/alamat-dan-kontak'
+import KeluargaModule from '../../../modules/profil/keluarga'
+import KepangkatanModule from '../../../modules/profil/kepangkatan'
+import JabatanFungsionalModule from '../../../modules/profil/jabatan-fungsional'
+import useDatatable from '../../../hooks/useDatatable'
+import date from '../../../utils/date'
+import useModal from '../../../hooks/useModal'
+import useForm from '../../../hooks/useForm'
+import Modal from '../../../components/Modal'
+import axios from 'axios'
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
+import Link from 'next/link'
+import { Loading } from '../../../components/Loading'
+import LainyaModule from '../../../modules/profil/lainya'
+import { ROLE_ID_MAHASISWA } from '../../../config/role'
 
 export default function Profil() {
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, active, setActive } = useMenu();
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, active, setActive } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
-  const { data, loading, refresh } = useDatatable(DATA_URL);
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataPribadi`
+  const { data, loading, refresh } = useDatatable(DATA_URL)
 
-  const { form, inputHandler } = useForm({});
-  const { show, toggle, close } = useModal();
+  const { form, inputHandler } = useForm({})
+  const { show, toggle, close } = useModal()
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
-      const formdata = new FormData();
-      formdata.append("file", form.file);
+      const formdata = new FormData()
+      formdata.append('file', form.file)
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/profile/updateImage`,
-        method: "PATCH",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/profile/updateImage`,
+        method: 'PATCH',
         data: formdata,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
       if (response) {
-        loadingAlert();
-        MySwal.close();
+        loadingAlert()
+        MySwal.close()
 
-        close();
+        close()
 
-        return refresh();
+        return refresh()
       }
 
-      throw new Error(response.message);
+      throw new Error(response.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -87,15 +87,15 @@ export default function Profil() {
       userData.kode_pos == null ||
       userData.no_hp == null ||
       userData.singkat_name == null
-    );
+    )
   }
 
-  if ([user, menu, loading].some((item) => item == null)) return <Loading />;
+  if ([user, menu, loading].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <Head>
         <title>
-          {menu.label ?? ""} - {process.env.APP_NAME ?? ""}
+          {menu.label ?? ''} - {process.env.APP_NAME ?? ''}
         </title>
       </Head>
       <Card>
@@ -135,12 +135,7 @@ export default function Profil() {
                 className="w-full h-full object-cover border-2 border-primary-600"
               />
             </div>
-            <Button
-              type="button"
-              variant="primary"
-              className="mx-auto mb-1"
-              onClick={toggle}
-            >
+            <Button type="button" variant="primary" className="mx-auto mb-1" onClick={toggle}>
               Edit Foto Profil
             </Button>
             <Button
@@ -171,13 +166,7 @@ export default function Profil() {
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[12rem]">Jenis Kelamin</Form.Label>
               <span>:</span>
-              <p>
-                {data.jenkel === "L"
-                  ? "Laki-Laki"
-                  : data.jenkel === "P"
-                  ? "Perempuan"
-                  : ""}
-              </p>
+              <p>{data.jenkel === 'L' ? 'Laki-Laki' : data.jenkel === 'P' ? 'Perempuan' : ''}</p>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[12rem]">Tempat Lahir</Form.Label>
@@ -187,10 +176,7 @@ export default function Profil() {
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[12rem]">Tanggal Lahir</Form.Label>
               <span>:</span>
-              <p>
-                {data.tanggal_lahir &&
-                  date.formatToID(new Date(data.tanggal_lahir))}
-              </p>
+              <p>{data.tanggal_lahir && date.formatToID(new Date(data.tanggal_lahir))}</p>
             </Form.Group>
 
             <Form.Group className="flex items-baseline gap-3">
@@ -205,13 +191,13 @@ export default function Profil() {
             <a
               key={`submenu-${index}`}
               href={item.url}
-              className={classNames("flex-1 text-center", {
-                "text-primary-600 font-bold": active.url == item.url,
-                "font-medium": active.url != item.url,
+              className={classNames('flex-1 text-center', {
+                'text-primary-600 font-bold': active.url == item.url,
+                'font-medium': active.url != item.url,
               })}
-              onClick={(event) => {
-                event.preventDefault();
-                setActive(item);
+              onClick={event => {
+                event.preventDefault()
+                setActive(item)
               }}
             >
               {item.label}
@@ -220,22 +206,14 @@ export default function Profil() {
         </Card.Body>
       </Card>
       <div className="my-8">
-        {active.url === "#kependudukan" && (
-          <KependudukanModule baseURL={prefix + menu.url} />
-        )}
-        {active.url === "#alamat-dan-kontak" && (
+        {active.url === '#kependudukan' && <KependudukanModule baseURL={prefix + menu.url} />}
+        {active.url === '#alamat-dan-kontak' && (
           <AlamatDanKontakModule baseURL={prefix + menu.url} />
         )}
-        {active.url === "#keluarga" && (
-          <KeluargaModule baseURL={prefix + menu.url} />
-        )}
-        {active.url === "#lainya" && (
-          <LainyaModule baseURL={prefix + menu.url} />
-        )}
-        {active.url === "#kepangkatan" && (
-          <KepangkatanModule baseURL={prefix + menu.url} />
-        )}
-        {active.url === "#jabatan-fungsional" && (
+        {active.url === '#keluarga' && <KeluargaModule baseURL={prefix + menu.url} />}
+        {active.url === '#lainya' && <LainyaModule baseURL={prefix + menu.url} />}
+        {active.url === '#kepangkatan' && <KepangkatanModule baseURL={prefix + menu.url} />}
+        {active.url === '#jabatan-fungsional' && (
           <JabatanFungsionalModule baseURL={prefix + menu.url} />
         )}
       </div>
@@ -251,5 +229,5 @@ export default function Profil() {
         </Form>
       </Modal>
     </Layout>
-  );
+  )
 }

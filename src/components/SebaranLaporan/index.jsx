@@ -1,46 +1,46 @@
-"use client";
+'use client'
 
-import "leaflet/dist/leaflet.css";
-import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
-import "leaflet-defaulticon-compatibility";
-import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
-import Card from "../Card";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Form from "../Form";
-import Button from "../Button";
+import 'leaflet/dist/leaflet.css'
+import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css'
+import 'leaflet-defaulticon-compatibility'
+import { MapContainer, Marker, Popup, TileLayer } from 'react-leaflet'
+import Card from '../Card'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import Form from '../Form'
+import Button from '../Button'
 
 export default function Map() {
-  const [data, setData] = useState([]);
-  const [tanggalMulai, setTanggalMulai] = useState("");
-  const [tanggalAkhir, setTanggalAkhir] = useState("");
+  const [data, setData] = useState([])
+  const [tanggalMulai, setTanggalMulai] = useState('')
+  const [tanggalAkhir, setTanggalAkhir] = useState('')
 
   const fetchData = async (tanggal_mulai, tanggal_akhir) => {
-    const API_URL = `${process.env.API_ENDPOINT}/laporan/sebaran`;
+    const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/laporan/sebaran`
     try {
       const response = await axios.get(API_URL, {
         params: {
           tanggal_mulai,
           tanggal_akhir,
         },
-      });
+      })
       if (response.data.isSuccess) {
-        setData(response.data.data);
+        setData(response.data.data)
       } else {
-        console.error("Failed to fetch data");
+        console.error('Failed to fetch data')
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error)
     }
-  };
+  }
 
   const handleFilter = () => {
-    fetchData(tanggalMulai, tanggalAkhir);
-  };
+    fetchData(tanggalMulai, tanggalAkhir)
+  }
 
   useEffect(() => {
-    fetchData("", "");
-  }, []);
+    fetchData('', '')
+  }, [])
 
   return (
     <>
@@ -54,7 +54,7 @@ export default function Map() {
                 className="w-full"
                 name="tanggal_mulai"
                 value={tanggalMulai}
-                onChange={(e) => setTanggalMulai(e.target.value)}
+                onChange={e => setTanggalMulai(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="flex-1">
@@ -64,15 +64,11 @@ export default function Map() {
                 className="w-full"
                 name="tanggal_akhir"
                 value={tanggalAkhir}
-                onChange={(e) => setTanggalAkhir(e.target.value)}
+                onChange={e => setTanggalAkhir(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="flex">
-              <Button
-                variant="primary"
-                className="self-stretch w-24 h-12"
-                onClick={handleFilter}
-              >
+              <Button variant="primary" className="self-stretch w-24 h-12" onClick={handleFilter}>
                 Filter
               </Button>
             </Form.Group>
@@ -85,13 +81,13 @@ export default function Map() {
           Peta Sebaran
         </Card.Header>
         <Card.Body>
-          <div className="relative" style={{ height: "700px", width: "100%" }}>
+          <div className="relative" style={{ height: '700px', width: '100%' }}>
             <MapContainer
               preferCanvas={true}
               center={[-6.560879822341944, 106.79239034070446]}
               zoom={20}
               scrollWheelZoom={true}
-              style={{ height: "100%", width: "100%" }}
+              style={{ height: '100%', width: '100%' }}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.esri.com/">Esri</a> contributors'
@@ -108,12 +104,7 @@ export default function Map() {
                     <br />
                     <strong>{location.telp}</strong>
                     <br />
-                    <img
-                      src={location.image}
-                      alt="Profile"
-                      width="500"
-                      className="mt-2"
-                    />
+                    <img src={location.image} alt="Profile" width="500" className="mt-2" />
                   </Popup>
                 </Marker>
               ))}
@@ -122,5 +113,5 @@ export default function Map() {
         </Card.Body>
       </Card>
     </>
-  );
+  )
 }

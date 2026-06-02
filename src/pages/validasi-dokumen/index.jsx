@@ -1,22 +1,22 @@
-import Head from "next/head";
-import { useState } from "react";
-import { Footer } from "../../components/LandingPage/Footer";
-import Button from "../../components/Button";
-import Form from "../../components/Form";
-import { Icon } from "@iconify-icon/react";
-import Link from "next/link";
-import useNewDataTableNew from "../../hooks/useNewDataTableNew";
-import date from "../../utils/date";
-import HeaderOnPage from "../../components/LandingPage/HeaderOnPage";
-import { Breadcrumb } from "../../components/LandingPage/Breadcrumb";
-import useDosen from "../../repo/dosen";
-import useMahasiswa from "../../repo/mahasiswa";
-import ShowQr from "./show-qr";
+import Head from 'next/head'
+import { useState } from 'react'
+import { Footer } from '../../components/LandingPage/Footer'
+import Button from '../../components/Button'
+import Form from '../../components/Form'
+import { Icon } from '@iconify-icon/react'
+import Link from 'next/link'
+import useNewDataTableNew from '../../hooks/useNewDataTableNew'
+import date from '../../utils/date'
+import HeaderOnPage from '../../components/LandingPage/HeaderOnPage'
+import { Breadcrumb } from '../../components/LandingPage/Breadcrumb'
+import useDosen from '../../repo/dosen'
+import useMahasiswa from '../../repo/mahasiswa'
+import ShowQr from './show-qr'
 
 const ValidasiDokumen = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('')
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/validasi/validasi-dokumen`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/validasi/validasi-dokumen`
 
   const {
     dataNew,
@@ -29,7 +29,7 @@ const ValidasiDokumen = () => {
     refreshNew,
     sortByNew,
     getSortByNew,
-  } = useNewDataTableNew(DATA_URL, {}, searchValue);
+  } = useNewDataTableNew(DATA_URL, {}, searchValue)
 
   return (
     <>
@@ -50,12 +50,12 @@ const ValidasiDokumen = () => {
                     <input
                       type="text"
                       id="base-input"
-                      style={{ width: "300px" }}
+                      style={{ width: '300px' }}
                       className="bg-white border text-sm rounded-lg text-black  block  p-2.5 border-gray-600 placeholder-gray-400 text-white-700  focus:border-primary-700"
                       placeholder="Search"
                       name="search"
                       value={searchValue}
-                      onChange={(e) => setSearchValue(e.target.value)}
+                      onChange={e => setSearchValue(e.target.value)}
                     />
                   </div>
                 </div>
@@ -104,31 +104,20 @@ const ValidasiDokumen = () => {
                     {!loadingNew &&
                       dataNew &&
                       dataNew.map((row, index) => {
-                        const startNumber = (pageNew - 1) * 10 + 1;
+                        const startNumber = (pageNew - 1) * 10 + 1
 
-                        const rowNumber = startNumber + index;
+                        const rowNumber = startNumber + index
                         return (
-                          <tr
-                            className={`bg-white border-gray-700`}
-                            key={`row-${index}`}
-                          >
+                          <tr className={`bg-white border-gray-700`} key={`row-${index}`}>
                             <td className="px-6 py-4">{rowNumber}</td>
                             <td className="px-6 py-4">{row?.pelaksana}</td>
-                            <th
-                              scope="row"
-                              className="px-6 py-4 font-medium  whitespace-nowrap"
-                            >
+                            <th scope="row" className="px-6 py-4 font-medium  whitespace-nowrap">
                               <Link
                                 href={`/validasi-dokumen/${row.id}`}
                                 className="text-blue-500 hover:text-blue-300"
                               >
-                                {`${row.nama_kegiatan
-                                  .split(" ")
-                                  .slice(0, 5)
-                                  .join(" ")}${
-                                  row.nama_kegiatan.split(" ").length > 5
-                                    ? "..."
-                                    : ""
+                                {`${row.nama_kegiatan.split(' ').slice(0, 5).join(' ')}${
+                                  row.nama_kegiatan.split(' ').length > 5 ? '...' : ''
                                 }`}
                               </Link>
                             </th>
@@ -144,7 +133,7 @@ const ValidasiDokumen = () => {
                               />
                             </td>
                           </tr>
-                        );
+                        )
                       })}
                   </tbody>
                 </table>
@@ -168,13 +157,7 @@ const ValidasiDokumen = () => {
                     <Button
                       type="button"
                       variant="primary"
-                      icon={
-                        <Icon
-                          icon="material-symbols:chevron-right"
-                          width={20}
-                          height={20}
-                        />
-                      }
+                      icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
                       iconPosition="right"
                       onClick={() => setPageNew(pageNew + 1)}
                       disabled={pageNew >= pageCountNew}
@@ -192,15 +175,9 @@ const ValidasiDokumen = () => {
                       max={pageCountNew || 1}
                       className="w-20 text-primary-700"
                       value={pageNew}
-                      onChange={(event) =>
+                      onChange={event =>
                         setPageNew(
-                          Math.max(
-                            1,
-                            Math.min(
-                              event.target.valueAsNumber,
-                              pageCountNew || 1
-                            )
-                          )
+                          Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)),
                         )
                       }
                     />
@@ -214,7 +191,7 @@ const ValidasiDokumen = () => {
         </main>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ValidasiDokumen;
+export default ValidasiDokumen

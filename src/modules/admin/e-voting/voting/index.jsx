@@ -1,16 +1,16 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import date from "../../../../utils/date";
-import Form from "../../../../components/Form";
-import useCRUD from "../../../../hooks/useCRUD";
-import { useState } from "react";
-import SortIcon from "../../../../components/SortIcon";
-import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import date from '../../../../utils/date'
+import Form from '../../../../components/Form'
+import useCRUD from '../../../../hooks/useCRUD'
+import { useState } from 'react'
+import SortIcon from '../../../../components/SortIcon'
+import useNewDataTableNew from '../../../../hooks/useNewDataTableNew'
 
 export default function VotingModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/voting/question-all`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/voting/question`;
-  const [searchValue, setSearchValue] = useState("");
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/question-all`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/question`
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -21,16 +21,16 @@ export default function VotingModule({ baseURL }) {
     refreshNew,
     sortByNew,
     getSortByNew,
-  } = useNewDataTableNew(DATA_URL, {}, searchValue);
+  } = useNewDataTableNew(DATA_URL, {}, searchValue)
 
-  const { destroy } = useCRUD(DELETE_URL);
+  const { destroy } = useCRUD(DELETE_URL)
 
   return (
     <>
       <div className="flex mb-8 justify-end items-center">
         <div className="mr-4">
           <Button
-            onClick={() => window.open(`${`${baseURL}/create`}`, "_blank")}
+            onClick={() => window.open(`${`${baseURL}/create`}`, '_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -43,9 +43,9 @@ export default function VotingModule({ baseURL }) {
             type="text"
             name="search"
             placeholder="Search"
-            style={{ width: "400px" }}
+            style={{ width: '400px' }}
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={e => setSearchValue(e.target.value)}
           />
         </div>
       </div>
@@ -58,36 +58,36 @@ export default function VotingModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("id")}
+                onClick={() => sortByNew('id')}
               >
-                No <SortIcon sort={getSortByNew("id")} />
+                No <SortIcon sort={getSortByNew('id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("deskripsi")}
+                onClick={() => sortByNew('deskripsi')}
               >
                 deskripsi
-                <SortIcon sort={getSortByNew("deskripsi")} />
+                <SortIcon sort={getSortByNew('deskripsi')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("status_pertanyaan")}
+                onClick={() => sortByNew('status_pertanyaan')}
               >
                 status
-                <SortIcon sort={getSortByNew("status_pertanyaan")} />
+                <SortIcon sort={getSortByNew('status_pertanyaan')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("created_at")}
+                onClick={() => sortByNew('created_at')}
               >
                 Tanggal Dibuat
-                <SortIcon sort={getSortByNew("created_at")} />
+                <SortIcon sort={getSortByNew('created_at')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
@@ -96,20 +96,14 @@ export default function VotingModule({ baseURL }) {
         <tbody>
           {loadingNew && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -118,12 +112,10 @@ export default function VotingModule({ baseURL }) {
             dataNew &&
             dataNew.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {`${row.deskripsi.split(" ").slice(0, 5).join(" ")}${
-                    row.deskripsi.split(" ").length > 5 ? "..." : ""
+                  {`${row.deskripsi.split(' ').slice(0, 5).join(' ')}${
+                    row.deskripsi.split(' ').length > 5 ? '...' : ''
                   }`}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
@@ -143,13 +135,7 @@ export default function VotingModule({ baseURL }) {
                       as="a"
                       href={`${baseURL}/detail-question/${row.id}`}
                       variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
+                      icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                     />
                     <Button.Icon
                       as="a"
@@ -159,13 +145,7 @@ export default function VotingModule({ baseURL }) {
                     />
                     <Button.Icon
                       variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
+                      icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
                       onClick={() => destroy(row.id).then(() => refreshNew())}
                     />
                   </div>
@@ -179,13 +159,7 @@ export default function VotingModule({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPageNew(pageNew - 1)}
             disabled={pageNew <= 1}
             pill
@@ -193,13 +167,7 @@ export default function VotingModule({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPageNew(pageNew + 1)}
             disabled={pageNew >= pageCountNew}
@@ -216,18 +184,13 @@ export default function VotingModule({ baseURL }) {
             max={pageCountNew || 1}
             className="w-20"
             value={pageNew}
-            onChange={(event) =>
-              setPageNew(
-                Math.max(
-                  1,
-                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                )
-              )
+            onChange={event =>
+              setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
             }
           />
           of {pageCountNew || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

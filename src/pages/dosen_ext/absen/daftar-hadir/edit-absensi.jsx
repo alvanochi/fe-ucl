@@ -1,77 +1,74 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
 
 const EditAbsensi = ({ data, onTambahMhs }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const [formData, setFormData] = useState({
     status_absen: null,
-  });
+  })
 
-  const fetchAbsensiData = async (id) => {
+  const fetchAbsensiData = async id => {
     try {
       const response = await axios.get(
-        `${process.env.API_ENDPOINT}/absensi-external/absensi/${id}`
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/absensi-external/absensi/${id}`,
+      )
 
-      const dataResponse = response.data.data;
+      const dataResponse = response.data.data
 
       setFormData({
         status_absen: dataResponse.status_absen,
-      });
+      })
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error)
     }
-  };
+  }
 
   useEffect(() => {
     if (show && data && data.id) {
-      fetchAbsensiData(data.id);
+      fetchAbsensiData(data.id)
     }
-  }, [show, data]);
+  }, [show, data])
 
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const inputHandler = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
-      [name]:
-        name === "status_absen" ? (value !== "" ? parseInt(value) : 0) : value,
-    }));
-  };
+      [name]: name === 'status_absen' ? (value !== '' ? parseInt(value) : 0) : value,
+    }))
+  }
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/absensi-external/absensi/${
-          data?.id || ""
-        }`,
-        formData
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/absensi-external/absensi/${data?.id || ''}`,
+        formData,
+      )
 
-      const responseData = response.data;
-      toastAlert("success", "Updated Successfully");
-      close();
-      onTambahMhs();
+      const responseData = response.data
+      toastAlert('success', 'Updated Successfully')
+      close()
+      onTambahMhs()
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   return (
     <>
@@ -130,7 +127,7 @@ const EditAbsensi = ({ data, onTambahMhs }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default EditAbsensi;
+export default EditAbsensi

@@ -1,6 +1,6 @@
-import useSWR from "swr";
+import useSWR from 'swr'
 
 export default function useDosen(deps = []) {
-	const API_URL = `${process.env.API_ENDPOINT}/users/all-dosen`;
-	return useSWR(Array.isArray(deps) && deps.every((value) => value != null) && API_URL);
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/users/all-dosen`
+  return useSWR(Array.isArray(deps) && deps.every(value => value != null) && API_URL)
 }

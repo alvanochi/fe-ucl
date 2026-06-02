@@ -1,66 +1,65 @@
-import Head from "next/head";
-import React, { useEffect, useState } from "react";
-import Button from "../../components/Button";
-import Router, { useRouter } from "next/router";
-import axios from "axios";
-import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
+import Head from 'next/head'
+import React, { useEffect, useState } from 'react'
+import Button from '../../components/Button'
+import Router, { useRouter } from 'next/router'
+import axios from 'axios'
+import { MySwal, loadingAlert, toastAlert } from '../../lib/sweetalert'
 
 const Verification = () => {
   const [stylesPage, setStylesPage] = useState({
-    displayValue: "flex",
-    widthCard: "w-[32rem]",
-    mLogo: "",
-  });
+    displayValue: 'flex',
+    widthCard: 'w-[32rem]',
+    mLogo: '',
+  })
 
   useEffect(() => {
     const handleResize = () => {
-      const screenWidth = window.innerWidth;
+      const screenWidth = window.innerWidth
       setStylesPage({
-        displayValue: screenWidth <= 780 ? "block" : "flex",
-        widthCard: screenWidth <= 700 ? "w-[20rem]" : "w-[32rem]",
-        mLogo: screenWidth <= 700 ? "mb-11" : "",
-      });
-    };
+        displayValue: screenWidth <= 780 ? 'block' : 'flex',
+        widthCard: screenWidth <= 700 ? 'w-[20rem]' : 'w-[32rem]',
+        mLogo: screenWidth <= 700 ? 'mb-11' : '',
+      })
+    }
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize)
 
-    handleResize();
+    handleResize()
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
-  const router = useRouter();
+  const router = useRouter()
 
   const verifyAccount = async () => {
     try {
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/auth/verifyUser/${router.query.id}`,
-        method: "PATCH",
-      });
+        url: `${process.env.NEXT_PUBLIC_API_URL}/auth/verifyUser/${router.query.id}`,
+        method: 'PATCH',
+      })
 
-      const response = await request;
+      const response = await request
 
       if (response.data) {
-        loadingAlert();
-        MySwal.close();
+        loadingAlert()
+        MySwal.close()
 
-        toastAlert("success", response.data.message);
-        return Router.push("/login");
+        toastAlert('success', response.data.message)
+        return Router.push('/login')
       }
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
-
+      toastAlert('error', error.message)
     }
-  };
+  }
 
   return (
     <>
@@ -76,19 +75,13 @@ const Verification = () => {
           <div className={`block ${stylesPage.mLogo}`}>
             <img src="/img/app_logo.png" alt="App Logo" />
           </div>
-          <div
-            className={`block relative ${stylesPage.widthCard} mx-auto my-auto `}
-          >
+          <div className={`block relative ${stylesPage.widthCard} mx-auto my-auto `}>
             <div>
               <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                 <p className="block text-white text-center text-sm font-semibold">
                   Verify Your Account!!
                 </p>
-                <Button
-                  onClick={verifyAccount}
-                  variant="primary"
-                  className="w-full h-12 mt-8"
-                >
+                <Button onClick={verifyAccount} variant="primary" className="w-full h-12 mt-8">
                   Verify
                 </Button>
                 <img
@@ -102,7 +95,7 @@ const Verification = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Verification;
+export default Verification

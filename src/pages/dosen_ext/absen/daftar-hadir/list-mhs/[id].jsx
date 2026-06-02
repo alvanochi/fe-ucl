@@ -1,37 +1,37 @@
-import useMenu from "../../../../../hooks/useMenu";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import Form from "../../../../../components/Form";
-import Button from "../../../../../components/Button";
-import useUser from "../../../../../hooks/useUser";
-import _ from "underscore";
-import { Icon } from "@iconify-icon/react";
-import TambahMhs from "../tambah-mhs";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import EditAbsensi from "../edit-absensi";
-import { useEffect, useState } from "react";
-import UploadTugas from "../uploadTugas";
-import { Loading } from "../../../../../components/Loading";
-import SortIcon from "../../../../../components/SortIcon";
-import useNewDataTableNew from "../../../../../hooks/useNewDataTableNew";
+import useMenu from '../../../../../hooks/useMenu'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import Form from '../../../../../components/Form'
+import Button from '../../../../../components/Button'
+import useUser from '../../../../../hooks/useUser'
+import _ from 'underscore'
+import { Icon } from '@iconify-icon/react'
+import TambahMhs from '../tambah-mhs'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import EditAbsensi from '../edit-absensi'
+import { useEffect, useState } from 'react'
+import UploadTugas from '../uploadTugas'
+import { Loading } from '../../../../../components/Loading'
+import SortIcon from '../../../../../components/SortIcon'
+import useNewDataTableNew from '../../../../../hooks/useNewDataTableNew'
 
 export default function ListMhs() {
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
-  const [searchValue, setSearchValue] = useState("");
-  const [validId, setValidId] = useState(null);
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
+  const [searchValue, setSearchValue] = useState('')
+  const [validId, setValidId] = useState(null)
 
-  const router = useRouter();
+  const router = useRouter()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/absensi-external/absensi`;
-  const id = router.query.id;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/absensi-external/absensi`
+  const id = router.query.id
 
   useEffect(() => {
     if (id) {
-      setValidId(id);
+      setValidId(id)
     }
-  }, [id]);
+  }, [id])
 
   const {
     dataNew,
@@ -45,19 +45,19 @@ export default function ListMhs() {
   } = useNewDataTableNew(
     DATA_URL,
     {
-      filter: "id_pembelajaran",
+      filter: 'id_pembelajaran',
       filterValue: validId,
     },
-    searchValue
-  );
+    searchValue,
+  )
 
-  const { destroy } = useCRUD(DATA_URL);
+  const { destroy } = useCRUD(DATA_URL)
 
   const handleTambahMhs = () => {
-    refreshNew();
-  };
+    refreshNew()
+  }
 
-  if ([user, menu, loadingNew].some((item) => item == null)) return <Loading />;
+  if ([user, menu, loadingNew].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title="hehehe" icon={menu.icon} handler={setActive} />
@@ -72,9 +72,9 @@ export default function ListMhs() {
               type="text"
               name="search"
               placeholder="Search npm..."
-              style={{ width: "400px" }}
+              style={{ width: '400px' }}
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={e => setSearchValue(e.target.value)}
             />
           </div>
         </div>
@@ -87,32 +87,30 @@ export default function ListMhs() {
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("id")}
+                  onClick={() => sortByNew('id')}
                 >
-                  No <SortIcon sort={getSortByNew("id")} />
+                  No <SortIcon sort={getSortByNew('id')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Nama
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Nama</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("npm")}
+                  onClick={() => sortByNew('npm')}
                 >
                   NPM
-                  <SortIcon sort={getSortByNew("npm")} />
+                  <SortIcon sort={getSortByNew('npm')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("status_absen")}
+                  onClick={() => sortByNew('status_absen')}
                 >
                   Status
-                  <SortIcon sort={getSortByNew("status_absen")} />
+                  <SortIcon sort={getSortByNew('status_absen')} />
                 </div>
               </th>
               {/* <th className="text-sm border-2 border-white bg-gray-200">
@@ -126,29 +124,21 @@ export default function ListMhs() {
                 </div>
               </th> */}
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Action
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Action</div>
               </th>
             </tr>
           </thead>
           <tbody>
             {loadingNew && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Loading...
                 </td>
               </tr>
             )}
             {!loadingNew && dataNew && dataNew.length < 1 && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Tidak ada data
                 </td>
               </tr>
@@ -157,23 +147,19 @@ export default function ListMhs() {
               dataNew &&
               dataNew.map((row, index) => (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     {row.user?.personal_data?.nama_lengkap}
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.user?.npm}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.user?.npm}</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     {row.status_absen === 1
-                      ? "MASUK"
+                      ? 'MASUK'
                       : row.status_absen === 2
-                      ? "SAKIT/IZIN"
-                      : row.status_absen === 0
-                      ? "ALFA"
-                      : ""}
+                        ? 'SAKIT/IZIN'
+                        : row.status_absen === 0
+                          ? 'ALFA'
+                          : ''}
                   </td>
                   {/* <td className="text-sm border-2 border-white bg-gray-50">
                     <UploadTugas
@@ -186,19 +172,10 @@ export default function ListMhs() {
                   </td> */}
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                     <div className="flex items-stretch gap-1">
-                      <EditAbsensi
-                        data={{ id: row.id }}
-                        onTambahMhs={handleTambahMhs}
-                      />
+                      <EditAbsensi data={{ id: row.id }} onTambahMhs={handleTambahMhs} />
                       <Button.Icon
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
                         onClick={() => destroy(row.id).then(() => refreshNew())}
                       />
                     </div>
@@ -213,13 +190,7 @@ export default function ListMhs() {
             as="a"
             href={`${prefix + menu.url}`}
             variant="danger"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             iconPosition="left"
             pill
           >
@@ -229,13 +200,7 @@ export default function ListMhs() {
             <Button.Icon
               type="button"
               variant="outline-primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-left"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
               onClick={() => setPageNew(pageNew - 1)}
               disabled={pageNew <= 1}
               pill
@@ -243,13 +208,7 @@ export default function ListMhs() {
             <Button
               type="button"
               variant="primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-right"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
               iconPosition="right"
               onClick={() => setPageNew(pageNew + 1)}
               disabled={pageNew >= pageCountNew}
@@ -266,13 +225,8 @@ export default function ListMhs() {
               max={pageCountNew || 1}
               className="w-20"
               value={pageNew}
-              onChange={(event) =>
-                setPageNew(
-                  Math.max(
-                    1,
-                    Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                  )
-                )
+              onChange={event =>
+                setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
               }
             />
             of {pageCountNew || 1}
@@ -280,5 +234,5 @@ export default function ListMhs() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }

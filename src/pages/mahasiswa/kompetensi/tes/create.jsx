@@ -1,49 +1,48 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useCRUD from "../../../../hooks/useCRUD";
-import useKategoriSertifikasi from "../../../../repo/kategori-sertifikasi";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import useKategoriSertifikasi from '../../../../repo/kategori-sertifikasi'
+import { Loading } from '../../../../components/Loading'
 
 export default function TesCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/kompetensi/addTes`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/addTes`
   const INITIAL_FORM = {
-    nama_tes: "",
-    jenis_tes: "",
-    penyelenggara: "",
-    tgl_tes: "",
-    skor_tes: "",
-    kategori_id: "",
-  };
+    nama_tes: '',
+    jenis_tes: '',
+    penyelenggara: '',
+    tgl_tes: '',
+    skor_tes: '',
+    kategori_id: '',
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "kategori_id", label: "Kategori Tes" },
-      { field: "nama_tes", label: "Nama Tes" },
-      { field: "jenis_tes", label: "Jenis Tes" },
-      { field: "penyelenggara", label: "Penyelenggara" },
-      { field: "tgl_tes", label: "Tanggal Tes" },
-      { field: "skor_tes", label: "Skor Tes" },
+      { field: 'kategori_id', label: 'Kategori Tes' },
+      { field: 'nama_tes', label: 'Nama Tes' },
+      { field: 'jenis_tes', label: 'Jenis Tes' },
+      { field: 'penyelenggara', label: 'Penyelenggara' },
+      { field: 'tgl_tes', label: 'Tanggal Tes' },
+      { field: 'skor_tes', label: 'Skor Tes' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
   const { data: kategoriSertifikasi, isLoading: isLoadingKategoriSertifikasi } =
-    useKategoriSertifikasi([user]);
+    useKategoriSertifikasi([user])
 
-  if ([user, menu, isLoadingKategoriSertifikasi].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isLoadingKategoriSertifikasi].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -63,7 +62,7 @@ export default function TesCreate() {
                 onChange={inputHandler}
                 options={
                   kategoriSertifikasi &&
-                  kategoriSertifikasi.map((item) => ({
+                  kategoriSertifikasi.map(item => ({
                     label: item.nama_kategori,
                     value: item.id,
                   }))
@@ -82,12 +81,12 @@ export default function TesCreate() {
                 onChange={inputHandler}
                 value={form.jenis_tes}
                 options={[
-                  { label: "Test Bahasa Asing", value: "Test Bahasa Asing" },
+                  { label: 'Test Bahasa Asing', value: 'Test Bahasa Asing' },
                   {
-                    label: "Kompentensi Profesi",
-                    value: "Kompentensi Profesi",
+                    label: 'Kompentensi Profesi',
+                    value: 'Kompentensi Profesi',
                   },
-                  { label: "Lainnya", value: "Lainnya" },
+                  { label: 'Lainnya', value: 'Lainnya' },
                 ]}
                 required
               />
@@ -165,12 +164,7 @@ export default function TesCreate() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -179,5 +173,5 @@ export default function TesCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

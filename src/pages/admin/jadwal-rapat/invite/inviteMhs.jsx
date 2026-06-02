@@ -1,64 +1,61 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import useDosen from "../../../../repo/dosen";
-import useMahasiswa from "../../../../repo/mahasiswa";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import useDosen from '../../../../repo/dosen'
+import useMahasiswa from '../../../../repo/mahasiswa'
 
 const InvitePesertaMhs = ({ data, onInvite }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
-  const [selectedMhs, setSelectedMhs] = useState(""); 
+  const [selectedMhs, setSelectedMhs] = useState('')
 
   const INITIAL_FORM = {
-    id_meeting: data?.id || "",
-  };
+    id_meeting: data?.id || '',
+  }
 
-  const {form, inputHandler} = useForm(INITIAL_FORM, {
-    rules: [
-      { field: "id_meeting", label: "id_meeting" },
-    ],
-  });
+  const { form, inputHandler } = useForm(INITIAL_FORM, {
+    rules: [{ field: 'id_meeting', label: 'id_meeting' }],
+  })
 
-  const handleMhsChange = (selected) => {
-    setSelectedMhs(selected?.value);
-  };
-
+  const handleMhsChange = selected => {
+    setSelectedMhs(selected?.value)
+  }
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
         npm: selectedMhs,
-      };
-
-      if(!requestData.npm){
-        toastAlert("error", "Pleas fill in all the required fields.");
-
-        return;
       }
-      await axios.post(`${process.env.API_ENDPOINT_ABSEN}/meeting-invite/store`, requestData);
-      toastAlert("success", "Invite successfully");
+
+      if (!requestData.npm) {
+        toastAlert('error', 'Pleas fill in all the required fields.')
+
+        return
+      }
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL_ABSEN}/meeting-invite/store`, requestData)
+      toastAlert('success', 'Invite successfully')
       close()
-      onInvite();
+      onInvite()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
-        return;
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
+        return
       }
-      loadingAlert();
-      MySwal.close();
-      toastAlert("error", error.message);
+      loadingAlert()
+      MySwal.close()
+      toastAlert('error', error.message)
     }
   }
 
-  const { data: listMahasiswa } = useMahasiswa();
+  const { data: listMahasiswa } = useMahasiswa()
 
   return (
     <>
@@ -92,7 +89,6 @@ const InvitePesertaMhs = ({ data, onInvite }) => {
                 value: mhs.npm,
               }))}
             />
-
           </Form.Group>
           <div className="flex gap-4 mt-12">
             <Button type="button" variant="secondary" onClick={close}>
@@ -105,7 +101,7 @@ const InvitePesertaMhs = ({ data, onInvite }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default InvitePesertaMhs;
+export default InvitePesertaMhs

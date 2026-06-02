@@ -1,30 +1,30 @@
-import Head from "next/head";
-import dynamic from "next/dynamic";
-import { Icon } from "@iconify-icon/react";
-import useMenu from "../../hooks/useMenu";
-import Layout from "../../components/Layout";
-import Card from "../../components/Card";
-import useUser from "../../hooks/useUser";
-import useDatatable from "../../hooks/useDatatable";
-import Link from "next/link";
-import { Loading } from "../../components/Loading";
-import Accordion from "../../components/Accordion";
-import Form from "../../components/Form";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import Head from 'next/head'
+import dynamic from 'next/dynamic'
+import { Icon } from '@iconify-icon/react'
+import useMenu from '../../hooks/useMenu'
+import Layout from '../../components/Layout'
+import Card from '../../components/Card'
+import useUser from '../../hooks/useUser'
+import useDatatable from '../../hooks/useDatatable'
+import Link from 'next/link'
+import { Loading } from '../../components/Loading'
+import Accordion from '../../components/Accordion'
+import Form from '../../components/Form'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
 
-const AreaChart = dynamic(() => import("../../components/Chart/area"), {
+const AreaChart = dynamic(() => import('../../components/Chart/area'), {
   ssr: false,
-});
+})
 
 export default function Home() {
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu } = useMenu();
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/dashboard`;
-  const { data } = useDatatable(DATA_URL);
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/dashboard`
+  const { data } = useDatatable(DATA_URL)
 
-  const [dataJabatan, setDataJabatan] = useState(null);
+  const [dataJabatan, setDataJabatan] = useState(null)
 
   function isUserDataIncomplete(userData) {
     return (
@@ -43,330 +43,327 @@ export default function Home() {
       userData?.provinsi == null ||
       userData?.kode_pos == null ||
       userData?.no_hp == null
-    );
+    )
   }
 
   const dataCardPembelajaran = [
     {
       id: 1,
-      title: "SKS yang diajar",
-      icon: "solar:bill-bold",
+      title: 'SKS yang diajar',
+      icon: 'solar:bill-bold',
       data: data?.sks,
     },
     {
       id: 8,
-      title: "Buku Ajar (Jumlah Buku Ajar)",
-      icon: "solar:bill-bold",
+      title: 'Buku Ajar (Jumlah Buku Ajar)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 14,
-      title: "Total Pertemuan Perkuliahan",
-      icon: "solar:bill-bold",
+      title: 'Total Pertemuan Perkuliahan',
+      icon: 'solar:bill-bold',
       data: data?.pertemuanPerkuliahan,
     },
     {
       id: 2,
-      title: "Presentase kehadiran (gasal dan genap)",
-      icon: "solar:bill-bold",
+      title: 'Presentase kehadiran (gasal dan genap)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
-  ];
+  ]
 
   const dataCardBimbinganTugasAkhir = [
     {
       id: 3,
-      title: "ketua pembimbing (Pembimbing 1)",
-      icon: "solar:bill-bold",
+      title: 'ketua pembimbing (Pembimbing 1)',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.pembimbing1Count,
     },
     {
       id: 4,
-      title: "Pembimbing Pendamping (Pembimbing 2)",
-      icon: "solar:bill-bold",
+      title: 'Pembimbing Pendamping (Pembimbing 2)',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.pembimbing2Count,
     },
     {
       id: 6,
-      title: "Ketua Penguji (Penguji 1)",
-      icon: "solar:bill-bold",
+      title: 'Ketua Penguji (Penguji 1)',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.penguji1Count,
     },
     {
       id: 7,
-      title: "Anggota Penguji (Penguji 2)",
-      icon: "solar:bill-bold",
+      title: 'Anggota Penguji (Penguji 2)',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.penguji2Count,
     },
     {
       id: 15,
-      title: "Jumlah Mahasiswa Mengajukan SK",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Mengajukan SK',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.pengajuan_sk,
     },
     {
       id: 16,
-      title: "Jumlah Mahasiswa Menuju Kolokium",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Menuju Kolokium',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.menuju_kolokium,
     },
     {
       id: 17,
-      title: "Jumlah Mahasiswa Menuju Sidang",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Menuju Sidang',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.menuju_sidang,
     },
     {
       id: 18,
-      title: "Jumlah Menyelesaikan Revisi",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Menyelesaikan Revisi',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.menyelesaikan_revisi,
     },
     {
       id: 19,
-      title: "Jumlah Mahasiswa Selesai Tugas Akhir",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Selesai Tugas Akhir',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.selesai,
     },
-  ];
+  ]
 
   const dataCardBimbingan = [
     {
       id: 18,
-      title: "Jumlah Mahasiswa Kp Sudah Selesai",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Kp Sudah Selesai',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 18,
-      title: "Jumlah Mahasiswa Bimbingan Kademik",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Bimbingan Kademik',
+      icon: 'solar:bill-bold',
       data: data?.bimbingan_akademik,
     },
     {
       id: 11,
-      title: "Membimbing kegiatan mahasiswa, (jumlah kegiatan mahasiswa)",
-      icon: "solar:bill-bold",
+      title: 'Membimbing kegiatan mahasiswa, (jumlah kegiatan mahasiswa)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
-  ];
+  ]
 
   const dataCardPengembanganDiri = [
     {
       id: 9,
-      title: "Diktat/ Modul Praktikum (jumlah diktat/modul praktikum)",
-      icon: "solar:bill-bold",
+      title: 'Diktat/ Modul Praktikum (jumlah diktat/modul praktikum)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 10,
-      title: "Orasi Ilmiah (Jumlah Orasi Ilmiah)",
-      icon: "solar:bill-bold",
+      title: 'Orasi Ilmiah (Jumlah Orasi Ilmiah)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 12,
-      title: "Jabatan Struktural ",
-      icon: "solar:bill-bold",
+      title: 'Jabatan Struktural ',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 13,
-      title: "Melakukan kegiatan pengembangan diri (jam)",
-      icon: "solar:bill-bold",
+      title: 'Melakukan kegiatan pengembangan diri (jam)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
-  ];
+  ]
 
   const dataCardPenelitian = [
     {
       id: 1,
-      title: "Penelitian",
-      icon: "solar:bill-bold",
+      title: 'Penelitian',
+      icon: 'solar:bill-bold',
       data: data?.penelitian,
     },
     {
       id: 2,
-      title: "Seminar",
-      icon: "solar:bill-bold",
+      title: 'Seminar',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 3,
-      title: "Publikasi Koran/Majalah",
-      icon: "solar:bill-bold",
+      title: 'Publikasi Koran/Majalah',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 4,
-      title: "Menyadur Buku Ilmiah",
-      icon: "solar:bill-bold",
+      title: 'Menyadur Buku Ilmiah',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 4,
-      title: "Paten Nasional",
-      icon: "solar:bill-bold",
+      title: 'Paten Nasional',
+      icon: 'solar:bill-bold',
       data: data?.hki,
     },
     {
       id: 4,
-      title: "Karya Monumental Lokal",
-      icon: "solar:bill-bold",
+      title: 'Karya Monumental Lokal',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 4,
-      title: "Karya Monumental Nasional",
-      icon: "solar:bill-bold",
+      title: 'Karya Monumental Nasional',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 4,
-      title: "Karya Monumental Internasional",
-      icon: "solar:bill-bold",
+      title: 'Karya Monumental Internasional',
+      icon: 'solar:bill-bold',
       data: 0,
     },
-  ];
+  ]
 
   const dataCardPengabdian = [
     {
       id: 1,
-      title: "Publikasi",
-      icon: "solar:bill-bold",
+      title: 'Publikasi',
+      icon: 'solar:bill-bold',
       data: data?.publikasi,
     },
     {
       id: 2,
-      title: "Pembicara/Penyuluhan",
-      icon: "solar:bill-bold",
+      title: 'Pembicara/Penyuluhan',
+      icon: 'solar:bill-bold',
       data: data?.pembicara,
     },
     {
       id: 3,
-      title: "Editor Jurnal Nasional",
-      icon: "solar:bill-bold",
+      title: 'Editor Jurnal Nasional',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 4,
-      title: "Editor Jurnal Internasional",
-      icon: "solar:bill-bold",
+      title: 'Editor Jurnal Internasional',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 5,
-      title: "Pelayanan Masyarakat",
-      icon: "solar:bill-bold",
+      title: 'Pelayanan Masyarakat',
+      icon: 'solar:bill-bold',
       data: 0,
     },
-  ];
+  ]
 
   const dataCardPenunjangTugasDosen = [
     {
       id: 1,
-      title:
-        "Ketua/Wakil Panitia Kegiatan (PT/Pemerintah Pusat/Pemerintah Daerah)",
-      icon: "solar:bill-bold",
+      title: 'Ketua/Wakil Panitia Kegiatan (PT/Pemerintah Pusat/Pemerintah Daerah)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 2,
-      title: "Anggota Panitia Kegiatan (PT/Pemerintah Pusat/Pemerintah Daerah)",
-      icon: "solar:bill-bold",
+      title: 'Anggota Panitia Kegiatan (PT/Pemerintah Pusat/Pemerintah Daerah)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 3,
-      title: "Pengurus (Nasional/Internasional)",
-      icon: "solar:bill-bold",
+      title: 'Pengurus (Nasional/Internasional)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 4,
-      title: "Anggota Atas Permintaan (Nasional/Internasional)",
-      icon: "solar:bill-bold",
+      title: 'Anggota Atas Permintaan (Nasional/Internasional)',
+      icon: 'solar:bill-bold',
       data: 0,
     },
     {
       id: 5,
-      title: "Anggota (Nasional/Internasional)",
-      icon: "icon-park-outline:certificate",
+      title: 'Anggota (Nasional/Internasional)',
+      icon: 'icon-park-outline:certificate',
       data: 0,
     },
     {
       id: 6,
-      title: "Mewakili PT/Lembaga Pemerintah",
-      icon: "icon-park-outline:certificate",
+      title: 'Mewakili PT/Lembaga Pemerintah',
+      icon: 'icon-park-outline:certificate',
       data: 0,
     },
     {
       id: 7,
-      title: "Ketua Delegasi Pertemuan Internsional",
-      icon: "icon-park-outline:certificate",
+      title: 'Ketua Delegasi Pertemuan Internsional',
+      icon: 'icon-park-outline:certificate',
       data: 0,
     },
     {
       id: 8,
-      title: "Anggota Delegasi Pertemuan Internasional",
-      icon: "icon-park-outline:certificate",
+      title: 'Anggota Delegasi Pertemuan Internasional',
+      icon: 'icon-park-outline:certificate',
       data: 0,
     },
     {
       id: 9,
-      title: "Penghargaan",
-      icon: "icon-park-outline:certificate",
+      title: 'Penghargaan',
+      icon: 'icon-park-outline:certificate',
       data: 0,
     },
     {
       id: 10,
-      title: "Menulis Buku SLTA kebawah",
-      icon: "icon-park-outline:certificate",
+      title: 'Menulis Buku SLTA kebawah',
+      icon: 'icon-park-outline:certificate',
       data: 0,
     },
     {
       id: 11,
-      title: "Prestasi Olahraga",
-      icon: "icon-park-outline:certificate",
+      title: 'Prestasi Olahraga',
+      icon: 'icon-park-outline:certificate',
       data: 0,
     },
     {
       id: 12,
-      title: "Asesor PAK, BKD, Hibah dan Pengabdian",
-      icon: "icon-park-outline:certificate",
+      title: 'Asesor PAK, BKD, Hibah dan Pengabdian',
+      icon: 'icon-park-outline:certificate',
       data: 0,
     },
-  ];
+  ]
 
   useEffect(() => {
     async function fetchJabatanStruktural(user) {
       try {
-        const DATA_URL = `${process.env.API_ENDPOINT}/users/user-jabatan`;
-        const response = await axios.get(DATA_URL);
+        const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/users/user-jabatan`
+        const response = await axios.get(DATA_URL)
 
-        setDataJabatan(response.data.data);
+        setDataJabatan(response.data.data)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
     }
 
-    fetchJabatanStruktural();
-  }, [user]);
+    fetchJabatanStruktural()
+  }, [user])
 
-  if ([menu, user].some((item) => item == null)) return <Loading />;
+  if ([menu, user].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <Head>
         <title>
-          {menu.label ?? ""} - {process.env.APP_NAME ?? ""}
+          {menu.label ?? ''} - {process.env.APP_NAME ?? ''}
         </title>
       </Head>
       <div className="flex flex-col sm:flex-row gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
         <div className="w-full sm:w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
           <img
-            src={
-              process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image
-            }
+            src={process.env.NEXT_PUBLIC_API_URL + '/foto-profile/' + data.userData?.image}
             alt="Profile"
             className="object-cover object-top w-full h-auto"
           />
@@ -376,7 +373,7 @@ export default function Home() {
             <div>
               <div className="flex items-center flex-col sm:flex-row">
                 <h1 className="text-xl sm:text-2xl font-semibold text-primary-600 uppercase mb-2 sm:mb-4">
-                  {data.userData?.nama_lengkap || ""}
+                  {data.userData?.nama_lengkap || ''}
                   <Icon
                     icon="material-symbols:verified"
                     width={36}
@@ -391,12 +388,7 @@ export default function Home() {
                 NIDN : {data.userData?.nidn}
               </span>
               <span className="block text-base text-gray-500 font-normal">
-                <Icon
-                  icon="ri:briefcase-fill"
-                  width={16}
-                  height={16}
-                  className="mr-1"
-                />
+                <Icon icon="ri:briefcase-fill" width={16} height={16} className="mr-1" />
                 STATUS : {data.userData?.kode_mhs}
               </span>
               <span className="block text-base text-gray-500 font-normal">
@@ -423,9 +415,9 @@ export default function Home() {
                             {jabatan.jabatan.nama_jabatan} / {jabatan.unit.code}
                           </span>
                         </Card>
-                      );
+                      )
                     })
-                  : ""}
+                  : ''}
               </div>
             </div>
           </div>
@@ -440,12 +432,12 @@ export default function Home() {
             <Form.Select
               name="Tahu_akademik"
               options={[
-                { value: "2023/2024", label: "2023/2024" },
-                { value: "2022/2023", label: "2022/2023" },
-                { value: "2021/2022", label: "2021/2022" },
-                { value: "2020/2021", label: "2020/2021" },
-                { value: "2018/2019", label: "2018/2019" },
-                { value: "2017/2018", label: "2017/2018" },
+                { value: '2023/2024', label: '2023/2024' },
+                { value: '2022/2023', label: '2022/2023' },
+                { value: '2021/2022', label: '2021/2022' },
+                { value: '2020/2021', label: '2020/2021' },
+                { value: '2018/2019', label: '2018/2019' },
+                { value: '2017/2018', label: '2017/2018' },
               ]}
             />
           </Form.Group>
@@ -454,8 +446,8 @@ export default function Home() {
             <Form.Select
               name="Semester"
               options={[
-                { value: "GASAL", label: "GASAL" },
-                { value: "GENAP", label: "GENAP" },
+                { value: 'GASAL', label: 'GASAL' },
+                { value: 'GENAP', label: 'GENAP' },
               ]}
             />
           </Form.Group>
@@ -485,15 +477,13 @@ export default function Home() {
                                   className="text-white"
                                 />
                               </div>
-                              <p className="block text-2xl font-bold leading-relaxed">
-                                {row.data}
-                              </p>
+                              <p className="block text-2xl font-bold leading-relaxed">{row.data}</p>
                               <p className="block text-sm">{row.title}</p>
                             </Link>
                           </Card.Body>
                         </Card>
                       </>
-                    );
+                    )
                   })}
                 </div>
 
@@ -514,15 +504,13 @@ export default function Home() {
                                   className="text-white"
                                 />
                               </div>
-                              <p className="block text-2xl font-bold leading-relaxed">
-                                {row.data}
-                              </p>
+                              <p className="block text-2xl font-bold leading-relaxed">{row.data}</p>
                               <p className="block text-sm">{row.title}</p>
                             </Link>
                           </Card.Body>
                         </Card>
                       </>
-                    );
+                    )
                   })}
                 </div>
                 <h2 className="text-lg font-semibold mb-2 mt-8">Bimbingan</h2>
@@ -542,20 +530,16 @@ export default function Home() {
                                   className="text-white"
                                 />
                               </div>
-                              <p className="block text-2xl font-bold leading-relaxed">
-                                {row.data}
-                              </p>
+                              <p className="block text-2xl font-bold leading-relaxed">{row.data}</p>
                               <p className="block text-sm">{row.title}</p>
                             </Link>
                           </Card.Body>
                         </Card>
                       </>
-                    );
+                    )
                   })}
                 </div>
-                <h2 className="text-lg font-semibold mb-2 mt-8">
-                  Pengembangan Diri
-                </h2>
+                <h2 className="text-lg font-semibold mb-2 mt-8">Pengembangan Diri</h2>
                 <hr />
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 gap-4">
                   {dataCardPengembanganDiri.map((row, index) => {
@@ -572,15 +556,13 @@ export default function Home() {
                                   className="text-white"
                                 />
                               </div>
-                              <p className="block text-2xl font-bold leading-relaxed">
-                                {row.data}
-                              </p>
+                              <p className="block text-2xl font-bold leading-relaxed">{row.data}</p>
                               <p className="block text-sm">{row.title}</p>
                             </Link>
                           </Card.Body>
                         </Card>
                       </>
-                    );
+                    )
                   })}
                 </div>
               </Card.Body>
@@ -610,15 +592,13 @@ export default function Home() {
                                   className="text-white"
                                 />
                               </div>
-                              <p className="block text-2xl font-bold leading-relaxed">
-                                {row.data}
-                              </p>
+                              <p className="block text-2xl font-bold leading-relaxed">{row.data}</p>
                               <p className="block text-sm">{row.title}</p>
                             </Link>
                           </Card.Body>
                         </Card>
                       </>
-                    );
+                    )
                   })}
                 </div>
               </Card.Body>
@@ -648,15 +628,13 @@ export default function Home() {
                                   className="text-white"
                                 />
                               </div>
-                              <p className="block text-2xl font-bold leading-relaxed">
-                                {row.data}
-                              </p>
+                              <p className="block text-2xl font-bold leading-relaxed">{row.data}</p>
                               <p className="block text-sm">{row.title}</p>
                             </Link>
                           </Card.Body>
                         </Card>
                       </>
-                    );
+                    )
                   })}
                 </div>
               </Card.Body>
@@ -686,15 +664,13 @@ export default function Home() {
                                   className="text-white"
                                 />
                               </div>
-                              <p className="block text-2xl font-bold leading-relaxed">
-                                {row.data}
-                              </p>
+                              <p className="block text-2xl font-bold leading-relaxed">{row.data}</p>
                               <p className="block text-sm">{row.title}</p>
                             </Link>
                           </Card.Body>
                         </Card>
                       </>
-                    );
+                    )
                   })}
                 </div>
               </Card.Body>
@@ -703,5 +679,5 @@ export default function Home() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }

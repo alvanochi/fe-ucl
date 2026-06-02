@@ -1,83 +1,84 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../../hooks/useDatatable";
-import date from "../../../../utils/date";
-import SortIcon from "../../../../components/SortIcon";
-import { loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Pagination from '../../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../../hooks/useDatatable'
+import date from '../../../../utils/date'
+import SortIcon from '../../../../components/SortIcon'
+import { loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export default function SertifikasiModule({ baseURL }) {
-  const approveData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/kompetensi/approveStatusCertif/${id}`;
+  const approveData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/approveStatusCertif/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
-        return;
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
+        return
       }
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const rejectData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/kompetensi/rejectStatusCertif/${id}`;
+  const rejectData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/rejectStatusCertif/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
+        method: 'PATCH',
+      })
 
-      MySwal.close();
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
-      toastAlert("error", error.message);
-
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/sertifikatPending`);
+  const [dataUrl, setDataUrl] = useState(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/sertifikatPending`,
+  )
 
   const handleApproveClick = async () => {
-    await approveData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/sertifikatAprove`);
-  };
+    await approveData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/sertifikatAprove`)
+  }
 
   const handleRejectClick = async () => {
-    await rejectData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/sertifikatReject`);
-  };
+    await rejectData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/sertifikatReject`)
+  }
 
   const handlePendingClick = () => {
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/sertifikatPending`);
-  };
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/sertifikatPending`)
+  }
 
   const {
     data,
@@ -92,12 +93,12 @@ export default function SertifikasiModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-    totalData
-  } = useDatatable(dataUrl);
+    totalData,
+  } = useDatatable(dataUrl)
 
   useEffect(() => {
-    refresh();
-  }, [dataUrl]);
+    refresh()
+  }, [dataUrl])
   return (
     <>
       <div className="flex justify-center gap-2 mb-8">
@@ -107,7 +108,7 @@ export default function SertifikasiModule({ baseURL }) {
           icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
           onClick={handlePendingClick}
           pill
-          >
+        >
           Pending
         </Button>
         <Button
@@ -115,7 +116,7 @@ export default function SertifikasiModule({ baseURL }) {
           icon={<Icon icon="oi:check" width={20} height={20} />}
           onClick={handleApproveClick}
           pill
-          >
+        >
           Aprove
         </Button>
         <Button
@@ -123,65 +124,52 @@ export default function SertifikasiModule({ baseURL }) {
           icon={<Icon icon="oi:x" width={20} height={20} />}
           onClick={handleRejectClick}
           pill
-          >
+        >
           Reject
         </Button>
       </div>
       <div className="flex items-start">
-        <span>Total Data: <b>{totalData}</b></span>
+        <span>
+          Total Data: <b>{totalData}</b>
+        </span>
       </div>
-      <table
-        className="w-full border-collapse rounded-2xl overflow-hidden shadow"
-        cellPadding={10}
-      >
+      <table className="w-full border-collapse rounded-2xl overflow-hidden shadow" cellPadding={10}>
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("kategori_id")}
+                onClick={() => sortBy('kategori_id')}
               >
                 No
-                <SortIcon sort={getSortBy("kategori_id")} />
+                <SortIcon sort={getSortBy('kategori_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
 
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                NPM/NIDN
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">NPM/NIDN</div>
+            </th>
+
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Nama Sertifikasi</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Jenis Sertifikasi</div>
             </th>
 
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-              >
-                Nama Sertifikasi
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-              >
-                Jenis Sertifikasi
-              </div>
-            </th>
-
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_serti")}
+                onClick={() => sortBy('tgl_serti')}
               >
                 Tanggal
-                <SortIcon sort={getSortBy("tgl_serti")} />
+                <SortIcon sort={getSortBy('tgl_serti')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
@@ -190,20 +178,14 @@ export default function SertifikasiModule({ baseURL }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -212,40 +194,26 @@ export default function SertifikasiModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.nama_lengkap}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.npm ? row.npm : row.nidn}
                   <span className="block font-bold">{row.role}</span>
                 </td>
 
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.nama_serti}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.jenis_serti}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.nama_serti}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.jenis_serti}</td>
 
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {date.formatToID(new Date(row.tgl_serti))}
@@ -256,37 +224,24 @@ export default function SertifikasiModule({ baseURL }) {
                       as="a"
                       href={`${baseURL}/detail-sertifikasi/${row.sertifikat_id}`}
                       variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
+                      icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                     />
-                    {
-                      row.status === 0 && (
-                        <>
-                          <Button.Icon
-                            variant="success"
-                            type="button"
-                            icon={<Icon icon="oi:check" width={20} height={20} />}
-                            onClick={() =>
-                              approveData(row.sertifikat_id).then(() => refresh())
-                            }
-                          />
-                          <Button.Icon
-                            variant="danger"
-                            type="button"
-                            icon={<Icon icon="oi:x" width={20} height={20} />}
-                            onClick={() =>
-                              rejectData(row.sertifikat_id).then(() => refresh())
-                            }
-                          />
-                        </>
-
-                      )
-                    }
+                    {row.status === 0 && (
+                      <>
+                        <Button.Icon
+                          variant="success"
+                          type="button"
+                          icon={<Icon icon="oi:check" width={20} height={20} />}
+                          onClick={() => approveData(row.sertifikat_id).then(() => refresh())}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          type="button"
+                          icon={<Icon icon="oi:x" width={20} height={20} />}
+                          onClick={() => rejectData(row.sertifikat_id).then(() => refresh())}
+                        />
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -302,5 +257,5 @@ export default function SertifikasiModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

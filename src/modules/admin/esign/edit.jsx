@@ -1,101 +1,100 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import useModal from "../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
-import Form from "../../../components/Form";
-import useUsersGroup from "../../../repo/users-group";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Button from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import useModal from '../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
+import Form from '../../../components/Form'
+import useUsersGroup from '../../../repo/users-group'
 
 const EditESign = ({ id, onAction }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const [formData, setFormData] = useState({
-    pelaksana: "",
-    tertuju: "",
-    nama_kegiatan: "",
-    link_attachment: "",
-  });
+    pelaksana: '',
+    tertuju: '',
+    nama_kegiatan: '',
+    link_attachment: '',
+  })
 
-  const { data: listUsersGroup, isLoading: isLoadingUsersGroup } =
-    useUsersGroup();
+  const { data: listUsersGroup, isLoading: isLoadingUsersGroup } = useUsersGroup()
 
-  const [selectedPelaksana, setSelectedPelaksana] = useState("");
-  const [selectedTertuju, setSelectedTertuju] = useState("");
+  const [selectedPelaksana, setSelectedPelaksana] = useState('')
+  const [selectedTertuju, setSelectedTertuju] = useState('')
 
-  const handleSelectedPelaksana = (selected) => {
-    setSelectedPelaksana(selected?.value);
-  };
+  const handleSelectedPelaksana = selected => {
+    setSelectedPelaksana(selected?.value)
+  }
 
-  const handleSelectedTertuju = (selected) => {
-    setSelectedTertuju(selected?.value);
-  };
+  const handleSelectedTertuju = selected => {
+    setSelectedTertuju(selected?.value)
+  }
 
-  const getData = async (id) => {
+  const getData = async id => {
     try {
       const response = await axios.get(
-        `${process.env.API_ENDPOINT}/validasi/validasi-dokumen/detail/${id}`
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/validasi/validasi-dokumen/detail/${id}`,
+      )
 
-      const dataResponse = response.data.data;
+      const dataResponse = response.data.data
 
       setFormData({
         nama_kegiatan: dataResponse.nama_kegiatan,
         link_attachment: dataResponse.link_attachment,
-      });
-      setSelectedPelaksana(dataResponse.pelaksana);
-      setSelectedTertuju(dataResponse.tertuju);
+      })
+      setSelectedPelaksana(dataResponse.pelaksana)
+      setSelectedTertuju(dataResponse.tertuju)
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error)
     }
-  };
+  }
 
   useEffect(() => {
     if (show && id) {
-      getData(id);
+      getData(id)
     }
-  }, [show, id]);
+  }, [show, id])
 
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const inputHandler = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
       const requestData = {
         ...formData,
         pelaksana: selectedPelaksana,
         tertuju: selectedTertuju,
-      };
+      }
 
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/validasi/validasi-dokumen/${id || ""}`,
-        requestData
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/validasi/validasi-dokumen/${id || ''}`,
+        requestData,
+      )
 
-      const responseData = response.data;
-      toastAlert("success", "Updated Successfully");
-      close();
-      onAction();
+      const responseData = response.data
+      toastAlert('success', 'Updated Successfully')
+      close()
+      onAction()
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   return (
     <>
@@ -117,29 +116,29 @@ const EditESign = ({ id, onAction }) => {
               onChange={handleSelectedPelaksana}
               value={selectedPelaksana}
               options={listUsersGroup
-                ?.map((item) => {
-                  if (item.type === "users") {
+                ?.map(item => {
+                  if (item.type === 'users') {
                     return {
                       label: item.nama_lengkap,
                       value: item.nama_lengkap,
-                    };
-                  } else if (item.type === "group") {
+                    }
+                  } else if (item.type === 'group') {
                     return {
                       label: item.nama_group,
                       value: item.nama_group,
-                    };
-                  } else if (item.type === "jabatan") {
+                    }
+                  } else if (item.type === 'jabatan') {
                     return {
                       label: item.nama_jabatan,
                       value: item.nama_jabatan,
-                    };
-                  } else if (item.type === "unit") {
+                    }
+                  } else if (item.type === 'unit') {
                     return {
                       label: item.nama_unit,
                       value: item.nama_unit,
-                    };
+                    }
                   }
-                  return null;
+                  return null
                 })
                 .filter(Boolean)}
             />
@@ -154,29 +153,29 @@ const EditESign = ({ id, onAction }) => {
               onChange={handleSelectedTertuju}
               value={selectedTertuju}
               options={listUsersGroup
-                ?.map((item) => {
-                  if (item.type === "users") {
+                ?.map(item => {
+                  if (item.type === 'users') {
                     return {
                       label: item.nama_lengkap,
                       value: item.nama_lengkap,
-                    };
-                  } else if (item.type === "group") {
+                    }
+                  } else if (item.type === 'group') {
                     return {
                       label: item.nama_group,
                       value: item.nama_group,
-                    };
-                  } else if (item.type === "jabatan") {
+                    }
+                  } else if (item.type === 'jabatan') {
                     return {
                       label: item.nama_jabatan,
                       value: item.nama_jabatan,
-                    };
-                  } else if (item.type === "unit") {
+                    }
+                  } else if (item.type === 'unit') {
                     return {
                       label: item.nama_unit,
                       value: item.nama_unit,
-                    };
+                    }
                   }
-                  return null;
+                  return null
                 })
                 .filter(Boolean)}
             />
@@ -216,7 +215,7 @@ const EditESign = ({ id, onAction }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default EditESign;
+export default EditESign

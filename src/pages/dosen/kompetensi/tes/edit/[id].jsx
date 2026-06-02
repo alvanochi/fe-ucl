@@ -1,68 +1,65 @@
-import { useRouter } from "next/router";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import date from "../../../../../utils/date";
-import { Loading } from "../../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import date from '../../../../../utils/date'
+import { Loading } from '../../../../../components/Loading'
 
 export default function TesEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/kompetensi/detailTes`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/file-tes`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/detailTes`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/file-tes`
 
   const INITIAL_FORM = {
-    tes_id: "",
-    nama_tes: "",
-    jenis_tes: "",
-    penyelenggara: "",
-    tgl_tes: "",
-    skor_tes: "",
-    file: "",
-  };
+    tes_id: '',
+    nama_tes: '',
+    jenis_tes: '',
+    penyelenggara: '',
+    tgl_tes: '',
+    skor_tes: '',
+    file: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nama_tes", label: "Nama Tes" },
-      { field: "jenis_tes", label: "Jenis Tes" },
-      { field: "penyelenggara", label: "Penyelenggara" },
-      { field: "tgl_tes", label: "Tanggal Tes" },
-      { field: "skor_tes", label: "Skor Tes" },
+      { field: 'nama_tes', label: 'Nama Tes' },
+      { field: 'jenis_tes', label: 'Jenis Tes' },
+      { field: 'penyelenggara', label: 'Penyelenggara' },
+      { field: 'tgl_tes', label: 'Tanggal Tes' },
+      { field: 'skor_tes', label: 'Skor Tes' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/kompetensi/editTes`;
-  const EDIT_OPTION = { url: `${EDIT_URL}/${form.tes_id}`, method: "PATCH" };
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/editTes`
+  const EDIT_OPTION = { url: `${EDIT_URL}/${form.tes_id}`, method: 'PATCH' }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
         tgl_tes: date.formatToInput(data.tgl_tes),
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Tes</Card.Header>
           <Card.Body className="space-y-4">
@@ -77,12 +74,12 @@ export default function TesEdit() {
                 onChange={inputHandler}
                 value={form.jenis_tes}
                 options={[
-                  { label: "Test Bahasa Asing", value: "Test Bahasa Asing" },
+                  { label: 'Test Bahasa Asing', value: 'Test Bahasa Asing' },
                   {
-                    label: "Kompentensi Profesi",
-                    value: "Kompentensi Profesi",
+                    label: 'Kompentensi Profesi',
+                    value: 'Kompentensi Profesi',
                   },
-                  { label: "Lainnya", value: "Lainnya" },
+                  { label: 'Lainnya', value: 'Lainnya' },
                 ]}
                 required
               />
@@ -156,21 +153,13 @@ export default function TesEdit() {
                   name="file_tes"
                   onChange={inputHandler}
                 />
-                <embed
-                  src={`${FILE_URL}/${form.file}`}
-                  className="w-full h-[256px]"
-                />
+                <embed src={`${FILE_URL}/${form.file}`} className="w-full h-[256px]" />
               </div>
             </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -179,5 +168,5 @@ export default function TesEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

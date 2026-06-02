@@ -1,54 +1,55 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import useCRUD from "../../../../../hooks/useCRUD";
-import useKategoriSertifikasi from "../../../../../repo/kategori-sertifikasi";
-import date from "../../../../../utils/date";
-import { Loading } from "../../../../../components/Loading";
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import useCRUD from '../../../../../hooks/useCRUD'
+import useKategoriSertifikasi from '../../../../../repo/kategori-sertifikasi'
+import date from '../../../../../utils/date'
+import { Loading } from '../../../../../components/Loading'
 
 export default function SertifikasiDetail() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/kompetensi/detailCertif`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/file-sertifikasi`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/detailCertif`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/file-sertifikasi`
 
-  const { formdata, show } = useCRUD(API_URL);
-  const { form } = formdata;
+  const { formdata, show } = useCRUD(API_URL)
+  const { form } = formdata
 
   const { data: kategoriSertifikasi, isLoading: isLoadingKategoriSertifikasi } =
-    useKategoriSertifikasi([user]);
+    useKategoriSertifikasi([user])
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
         tgl_serti: date.formatToInput(data.tgl_serti),
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if (
-    [user, menu, form, isLoadingKategoriSertifikasi].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, form, isLoadingKategoriSertifikasi].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <div className="flex justify-center mt-4">
         <Button
-          onClick={() => window.open(`${`${prefix + menu.url}/sertifikasi/edit/${form.sertifikat_id}`}`,'_blank')}
+          onClick={() =>
+            window.open(
+              `${`${prefix + menu.url}/sertifikasi/edit/${form.sertifikat_id}`}`,
+              '_blank',
+            )
+          }
           variant="secondary"
           icon={<Icon icon="bx:edit" width={20} height={20} />}
           pill
@@ -71,7 +72,7 @@ export default function SertifikasiDetail() {
                 value={form.kategori_id}
                 options={
                   kategoriSertifikasi &&
-                  kategoriSertifikasi.map((item) => ({
+                  kategoriSertifikasi.map(item => ({
                     label: item.nama_kategori,
                     value: item.id,
                   }))
@@ -84,13 +85,7 @@ export default function SertifikasiDetail() {
                 Point <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="point"
-                value={form.point}
-                disabled
-              />
+              <Form.Input type="text" className="flex-1" name="point" value={form.point} disabled />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -102,14 +97,14 @@ export default function SertifikasiDetail() {
                 name="jenis_serti"
                 value={form.jenis_serti}
                 options={[
-                  { label: "Sertifikasi Dosen", value: "Sertifikasi Dosen" },
+                  { label: 'Sertifikasi Dosen', value: 'Sertifikasi Dosen' },
                   {
-                    label: "Sertifikai Keahlian",
-                    value: "Sertifikai Keahlian",
+                    label: 'Sertifikai Keahlian',
+                    value: 'Sertifikai Keahlian',
                   },
                   {
-                    label: "Sertifikasi Kegiatan",
-                    value: "Sertifikasi Kegiatan",
+                    label: 'Sertifikasi Kegiatan',
+                    value: 'Sertifikasi Kegiatan',
                   },
                 ]}
                 disabled
@@ -126,24 +121,22 @@ export default function SertifikasiDetail() {
                 name="bidang_studi"
                 options={[
                   {
-                    label: "Software Engineering",
-                    value: "Software Engineering",
+                    label: 'Software Engineering',
+                    value: 'Software Engineering',
                   },
                   {
-                    label: "Computer System and Network",
-                    value: "Computer System and Network",
+                    label: 'Computer System and Network',
+                    value: 'Computer System and Network',
                   },
                   {
-                    label: "Geospatial Information Technology",
-                    value: "Geospatial Information Technology",
+                    label: 'Geospatial Information Technology',
+                    value: 'Geospatial Information Technology',
                   },
                   {
-                    label:
-                      "Knowledge Engineering and Reliable Intelligent System",
-                    value:
-                      "Knowledge Engineering and Reliable Intelligent System",
+                    label: 'Knowledge Engineering and Reliable Intelligent System',
+                    value: 'Knowledge Engineering and Reliable Intelligent System',
                   },
-                  { label: "Lainya...", value: "Lainya..." },
+                  { label: 'Lainya...', value: 'Lainya...' },
                 ]}
                 disabled
               />
@@ -192,36 +185,21 @@ export default function SertifikasiDetail() {
                 No. SK Sertifikasi <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                value={form.nomor_sk}
-                disabled
-              />
+              <Form.Input type="text" className="flex-1" value={form.nomor_sk} disabled />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Nomor Peserta <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                value={form.nomor_peserta}
-                disabled
-              />
+              <Form.Input type="text" className="flex-1" value={form.nomor_peserta} disabled />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Nomor Registrasi <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                value={form.nomor_regist}
-                disabled
-              />
+              <Form.Input type="text" className="flex-1" value={form.nomor_regist} disabled />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -229,27 +207,18 @@ export default function SertifikasiDetail() {
               </Form.Label>
               <span>:</span>
               <embed
-                src={
-                  form.file.startsWith("https")
-                    ? `${form.file}`
-                    : `${FILE_URL}/${form.file}`
-                }
+                src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
                 className="w-full h-[256px]"
               />
             </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

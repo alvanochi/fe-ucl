@@ -1,45 +1,45 @@
-import Head from "next/head";
-import { Footer } from "../../components/LandingPage/Footer";
-import HeaderOnPage from "../../components/LandingPage/HeaderOnPage";
-import { Breadcrumb } from "../../components/LandingPage/Breadcrumb";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import axios from "axios";
-import { Icon } from "@iconify-icon/react";
-import Button from "../../components/Button";
-import Form from "../../components/Form";
+import Head from 'next/head'
+import { Footer } from '../../components/LandingPage/Footer'
+import HeaderOnPage from '../../components/LandingPage/HeaderOnPage'
+import { Breadcrumb } from '../../components/LandingPage/Breadcrumb'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
+import axios from 'axios'
+import { Icon } from '@iconify-icon/react'
+import Button from '../../components/Button'
+import Form from '../../components/Form'
 
 const DetailValidasi = () => {
-  const router = useRouter();
+  const router = useRouter()
 
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     if (router.query.id) {
       const fetchData = async () => {
         try {
-          const DATA_URL = `${process.env.API_ENDPOINT}/validasi/validasi-dokumen`;
+          const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/validasi/validasi-dokumen`
 
           const response = await axios.get(DATA_URL, {
             params: {
               dataTable: false,
-              filter: ["id"],
+              filter: ['id'],
               filterValue: [router.query.id],
             },
-          });
-          setData(response.data.data);
+          })
+          setData(response.data.data)
         } catch (error) {
-          setError(error);
+          setError(error)
         } finally {
-          setLoading(false);
+          setLoading(false)
         }
-      };
+      }
 
-      fetchData();
+      fetchData()
     }
-  }, [router.query.id]);
+  }, [router.query.id])
 
   return (
     <>
@@ -61,10 +61,7 @@ const DetailValidasi = () => {
                     className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray text-color-white"
                   >
                     {loading ? (
-                      <div
-                        role="status"
-                        className="flex justify-center items-center"
-                      >
+                      <div role="status" className="flex justify-center items-center">
                         <svg
                           aria-hidden="true"
                           className="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-purple-600"
@@ -87,27 +84,17 @@ const DetailValidasi = () => {
                       <>
                         <div>
                           <Form.Group className="flex items-baseline gap-3">
-                            <label className="min-w-[8rem] text-primary-700 ">
-                              Pelaksana
-                            </label>
+                            <label className="min-w-[8rem] text-primary-700 ">Pelaksana</label>
                             <span className="text-primary-700">:</span>
-                            <p className="text-sm text-primary-700">
-                              {data.rows[0]?.pelaksana}
-                            </p>
+                            <p className="text-sm text-primary-700">{data.rows[0]?.pelaksana}</p>
                           </Form.Group>
                           <Form.Group className="flex items-baseline gap-3 mt-4">
-                            <label className="min-w-[8rem]  text-primary-700">
-                              Tertuju
-                            </label>
+                            <label className="min-w-[8rem]  text-primary-700">Tertuju</label>
                             <span className="text-primary-700">:</span>
-                            <p className="text-sm text-primary-700">
-                              {data.rows[0]?.tertuju}
-                            </p>
+                            <p className="text-sm text-primary-700">{data.rows[0]?.tertuju}</p>
                           </Form.Group>
                           <Form.Group className="flex items-baseline gap-3 mt-4">
-                            <label className="min-w-[8rem] text-primary-700">
-                              Kegiatan
-                            </label>
+                            <label className="min-w-[8rem] text-primary-700">Kegiatan</label>
                             <span className="text-primary-700">:</span>
                             <p className="text-sm text-primary-700">
                               {data.rows[0]?.nama_kegiatan}
@@ -126,7 +113,7 @@ const DetailValidasi = () => {
         </main>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default DetailValidasi;
+export default DetailValidasi

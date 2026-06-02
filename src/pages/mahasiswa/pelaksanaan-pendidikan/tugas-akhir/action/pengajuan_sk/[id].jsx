@@ -1,60 +1,49 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../../components/Button";
-import Card from "../../../../../../components/Card";
-import Form from "../../../../../../components/Form";
-import Layout from "../../../../../../components/Layout";
-import PageHeader from "../../../../../../components/PageHeader";
-import useMenu from "../../../../../../hooks/useMenu";
-import useUser from "../../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../../hooks/useCRUD";
-import useDosen from "../../../../../../repo/dosen";
-import useMahasiswa from "../../../../../../repo/mahasiswa";
-import { useEffect } from "react";
-import date from "../../../../../../utils/date";
-import { Loading } from "../../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../../components/Button'
+import Card from '../../../../../../components/Card'
+import Form from '../../../../../../components/Form'
+import Layout from '../../../../../../components/Layout'
+import PageHeader from '../../../../../../components/PageHeader'
+import useMenu from '../../../../../../hooks/useMenu'
+import useUser from '../../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../../hooks/useCRUD'
+import useDosen from '../../../../../../repo/dosen'
+import useMahasiswa from '../../../../../../repo/mahasiswa'
+import { useEffect } from 'react'
+import date from '../../../../../../utils/date'
+import { Loading } from '../../../../../../components/Loading'
 
 export default function PengajuanSkAction() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/foto-profile`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/foto-profile`
 
-  const { formdata, show } = useCRUD(API_URL);
-  const { form } = formdata;
+  const { formdata, show } = useCRUD(API_URL)
+  const { form } = formdata
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
-  const pembimbing1Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.sk_pembimbing_1
-  );
-  const pembimbing2Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.sk_pembimbing_2
-  );
-  const pembimbing3Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.sk_pembimbing_3
-  );
-  const kepalaLabData = listDosen?.find(
-    (dosen) => dosen.user_id === form?.kepala_lab
-  );
+  const pembimbing1Data = listDosen?.find(dosen => dosen.user_id === form?.sk_pembimbing_1)
+  const pembimbing2Data = listDosen?.find(dosen => dosen.user_id === form?.sk_pembimbing_2)
+  const pembimbing3Data = listDosen?.find(dosen => dosen.user_id === form?.sk_pembimbing_3)
+  const kepalaLabData = listDosen?.find(dosen => dosen.user_id === form?.kepala_lab)
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
-        tgl_sk: data.tgl_sk ? date.formatToInput(data.tgl_sk) : "",
+        tgl_sk: data.tgl_sk ? date.formatToInput(data.tgl_sk) : '',
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if ([user, menu, form, isDosenLoading].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, form, isDosenLoading].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -120,35 +109,29 @@ export default function PengajuanSkAction() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Nomor Nota Dinas
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Nomor Nota Dinas</Form.Label>
               <span>:</span>
               <Form.Input
                 type="link"
                 className="flex-1 border-none"
                 name="nomor_nota_dinas"
-                value={form.nomor_nota_dinas || "-"}
+                value={form.nomor_nota_dinas || '-'}
                 disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Nomor SK Penugasan
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Nomor SK Penugasan</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
                 className="flex-1 border-none"
                 name="nomor_sk"
-                value={form.nomor_sk || "-"}
+                value={form.nomor_sk || '-'}
                 disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Tanggal SK Penugasan
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Tanggal SK Penugasan</Form.Label>
               <span>:</span>
               {form.tgl_sk && (
                 <Form.Input
@@ -176,7 +159,7 @@ export default function PengajuanSkAction() {
                 type="link"
                 className="flex-1 border-none"
                 name="link_dokumen_sk"
-                value={form.link_dokumen_sk || "-"}
+                value={form.link_dokumen_sk || '-'}
                 disabled
               />
             </Form.Group>
@@ -185,9 +168,7 @@ export default function PengajuanSkAction() {
 
         <div className="w-full max-w-md p-4 mt-4 mb-4 bg-white border border-gray-200 rounded-lg shadow sm:p-8 mx-auto">
           <div className="flex items-center justify-between mb-4">
-            <h5 className="text-xl font-bold leading-none text-gray-900">
-              Mengetahui
-            </h5>
+            <h5 className="text-xl font-bold leading-none text-gray-900">Mengetahui</h5>
           </div>
           <div className="flow-root">
             <ul role="list" className="divide-y divide-gray-200">
@@ -196,16 +177,14 @@ export default function PengajuanSkAction() {
                   <div className="flex-shrink-0">
                     <img
                       className="w-8 h-8 rounded-full"
-                      src={`${FILE_URL}/${pembimbing1Data?.image || "-"}`}
+                      src={`${FILE_URL}/${pembimbing1Data?.image || '-'}`}
                       alt="Neil image"
                     />
                   </div>
                   <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      Pembimbing 1
-                    </p>
+                    <p className="text-sm font-medium text-gray-900 truncate">Pembimbing 1</p>
                     <p className="text-md text-gray-500 truncate">
-                      {pembimbing1Data?.nama_lengkap || "-"}
+                      {pembimbing1Data?.nama_lengkap || '-'}
                     </p>
                   </div>
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
@@ -222,16 +201,14 @@ export default function PengajuanSkAction() {
                   <div className="flex-shrink-0">
                     <img
                       className="w-8 h-8 rounded-full"
-                      src={`${FILE_URL}/${pembimbing2Data?.image || "-"}`}
+                      src={`${FILE_URL}/${pembimbing2Data?.image || '-'}`}
                       alt="Neil image"
                     />
                   </div>
                   <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      Pembimbing 2
-                    </p>
+                    <p className="text-sm font-medium text-gray-900 truncate">Pembimbing 2</p>
                     <p className="text-md text-gray-500 truncate">
-                      {pembimbing2Data?.nama_lengkap || "-"}
+                      {pembimbing2Data?.nama_lengkap || '-'}
                     </p>
                   </div>
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
@@ -277,16 +254,14 @@ export default function PengajuanSkAction() {
                   <div className="flex-shrink-0">
                     <img
                       className="w-8 h-8 rounded-full"
-                      src={`${FILE_URL}/${kepalaLabData?.image || "-"}`}
+                      src={`${FILE_URL}/${kepalaLabData?.image || '-'}`}
                       alt="Neil image"
                     />
                   </div>
                   <div className="flex-1 min-w-0 ms-4">
-                    <p className="text-sm font-medium text-gray-900 truncate">
-                      Kepala Lab
-                    </p>
+                    <p className="text-sm font-medium text-gray-900 truncate">Kepala Lab</p>
                     <p className="text-md text-gray-500 truncate">
-                      {kepalaLabData?.nama_lengkap || "-"}
+                      {kepalaLabData?.nama_lengkap || '-'}
                     </p>
                   </div>
                   <div className="inline-flex items-center text-base font-semibold text-gray-900">
@@ -303,16 +278,11 @@ export default function PengajuanSkAction() {
         </div>
 
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

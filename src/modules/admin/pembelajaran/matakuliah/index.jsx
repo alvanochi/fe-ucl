@@ -1,16 +1,16 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Form from "../../../../components/Form";
-import useCRUD from "../../../../hooks/useCRUD";
-import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
-import { useState } from "react";
-import SortIcon from "../../../../components/SortIcon";
-import CreateMatakuliah from "./create";
-import EditMatakuliah from "./edit";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Form from '../../../../components/Form'
+import useCRUD from '../../../../hooks/useCRUD'
+import useNewDataTableNew from '../../../../hooks/useNewDataTableNew'
+import { useState } from 'react'
+import SortIcon from '../../../../components/SortIcon'
+import CreateMatakuliah from './create'
+import EditMatakuliah from './edit'
 
 export default function MatakuliahModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/kategori/matakuliah`;
-  const [searchValue, setSearchValue] = useState("");
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/kategori/matakuliah`
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -21,13 +21,13 @@ export default function MatakuliahModule({ baseURL }) {
     refreshNew,
     sortByNew,
     getSortByNew,
-  } = useNewDataTableNew(DATA_URL, {}, searchValue);
+  } = useNewDataTableNew(DATA_URL, {}, searchValue)
 
-  const { destroy } = useCRUD(DATA_URL);
+  const { destroy } = useCRUD(DATA_URL)
 
   const handleAction = () => {
-    refreshNew();
-  };
+    refreshNew()
+  }
   return (
     <>
       <div className="my-8">
@@ -40,9 +40,9 @@ export default function MatakuliahModule({ baseURL }) {
               type="text"
               name="search"
               placeholder="Search"
-              style={{ width: "400px" }}
+              style={{ width: '400px' }}
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={e => setSearchValue(e.target.value)}
             />
           </div>
         </div>
@@ -55,69 +55,61 @@ export default function MatakuliahModule({ baseURL }) {
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("id")}
+                  onClick={() => sortByNew('id')}
                 >
-                  No <SortIcon sort={getSortByNew("id")} />
+                  No <SortIcon sort={getSortByNew('id')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("nama_matakuliah")}
+                  onClick={() => sortByNew('nama_matakuliah')}
                 >
                   Matakuliah
-                  <SortIcon sort={getSortByNew("nama_matakuliah")} />
+                  <SortIcon sort={getSortByNew('nama_matakuliah')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("kode_matakuliah")}
+                  onClick={() => sortByNew('kode_matakuliah')}
                 >
                   Kode
-                  <SortIcon sort={getSortByNew("kode_matakuliah")} />
+                  <SortIcon sort={getSortByNew('kode_matakuliah')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("kurikulum")}
+                  onClick={() => sortByNew('kurikulum')}
                 >
                   Kurikulum
-                  <SortIcon sort={getSortByNew("kurikulum")} />
+                  <SortIcon sort={getSortByNew('kurikulum')} />
                 </div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("sks")}
+                  onClick={() => sortByNew('sks')}
                 >
                   SKS
-                  <SortIcon sort={getSortByNew("sks")} />
+                  <SortIcon sort={getSortByNew('sks')} />
                 </div>
               </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Action
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Action</th>
             </tr>
           </thead>
           <tbody>
             {loadingNew && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Loading...
                 </td>
               </tr>
             )}
             {!loadingNew && dataNew && dataNew.length < 1 && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Tidak ada data
                 </td>
               </tr>
@@ -126,9 +118,7 @@ export default function MatakuliahModule({ baseURL }) {
               dataNew &&
               dataNew.map((row, index) => (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row?.nama_matakuliah}
                   </td>
@@ -138,9 +128,7 @@ export default function MatakuliahModule({ baseURL }) {
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row?.data_kurikulum?.kurikulum}
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row?.sks}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">{row?.sks}</td>
 
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
@@ -148,13 +136,7 @@ export default function MatakuliahModule({ baseURL }) {
 
                       <Button.Icon
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
                         onClick={() => destroy(row.id).then(() => refreshNew())}
                       />
                     </div>
@@ -168,13 +150,7 @@ export default function MatakuliahModule({ baseURL }) {
             <Button.Icon
               type="button"
               variant="outline-primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-left"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
               onClick={() => setPageNew(pageNew - 1)}
               disabled={pageNew <= 1}
               pill
@@ -182,13 +158,7 @@ export default function MatakuliahModule({ baseURL }) {
             <Button
               type="button"
               variant="primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-right"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
               iconPosition="right"
               onClick={() => setPageNew(pageNew + 1)}
               disabled={pageNew >= pageCountNew}
@@ -205,13 +175,8 @@ export default function MatakuliahModule({ baseURL }) {
               max={pageCountNew || 1}
               className="w-20"
               value={pageNew}
-              onChange={(event) =>
-                setPageNew(
-                  Math.max(
-                    1,
-                    Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                  )
-                )
+              onChange={event =>
+                setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
               }
             />
             of {pageCountNew || 1}
@@ -219,5 +184,5 @@ export default function MatakuliahModule({ baseURL }) {
         </div>
       </div>
     </>
-  );
+  )
 }

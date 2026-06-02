@@ -1,110 +1,110 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import Form from "../../../components/Form";
-import useModal from "../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Button from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import Form from '../../../components/Form'
+import useModal from '../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
 
 const UploadSk = ({ nip, academic_year, semester }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const [formData, setFormData] = useState({
-    nip: "",
-    academic_year: "",
-    semester: "",
-    file: "",
-  });
-  const [dokumenPreview, setDokumenPreview] = useState(null);
+    nip: '',
+    academic_year: '',
+    semester: '',
+    file: '',
+  })
+  const [dokumenPreview, setDokumenPreview] = useState(null)
 
   useEffect(() => {
     if (show && nip && academic_year && semester) {
       const fetchDokumen = async (nip, academic_year, semester) => {
         try {
           const response = await axios.get(
-            `${process.env.API_ENDPOINT}/absensi/dokumen-sk`,
+            `${process.env.NEXT_PUBLIC_API_URL}/absensi/dokumen-sk`,
             {
               params: {
                 nip: nip,
                 academic_year: academic_year,
                 semester: semester,
               },
-            }
-          );
+            },
+          )
 
-          const dataDokumen = response.data.data;
+          const dataDokumen = response.data.data
 
           setFormData({
             nip: dataDokumen.nip,
             academic_year: dataDokumen.academic_year,
             semester: dataDokumen.semester,
             file: dataDokumen.file,
-          });
+          })
         } catch (error) {
-          console.error("Error fetching data:", error);
+          console.error('Error fetching data:', error)
         }
-      };
-
-      fetchDokumen(nip, academic_year, semester);
-    }
-  }, [show, nip, academic_year, semester]);
-
-  const inputHandler = (e) => {
-    const { name, files } = e.target;
-
-    if (files && files.length > 0) {
-      const file = files[0];
-
-      if (file.type !== "application/pdf") {
-        toastAlert("error", "Only PDF files are allowed");
-        e.target.value = null;
-        return;
       }
 
-      setDokumenPreview(URL.createObjectURL(e.target.files[0]));
+      fetchDokumen(nip, academic_year, semester)
+    }
+  }, [show, nip, academic_year, semester])
 
-      setFormData((prevData) => ({
+  const inputHandler = e => {
+    const { name, files } = e.target
+
+    if (files && files.length > 0) {
+      const file = files[0]
+
+      if (file.type !== 'application/pdf') {
+        toastAlert('error', 'Only PDF files are allowed')
+        e.target.value = null
+        return
+      }
+
+      setDokumenPreview(URL.createObjectURL(e.target.files[0]))
+
+      setFormData(prevData => ({
         ...prevData,
         nip: nip,
         academic_year: academic_year,
         semester: semester,
         [name]: file,
-      }));
+      }))
     }
-  };
+  }
 
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-sk-perkuliahan/${formData.file}`;
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-sk-perkuliahan/${formData.file}`
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
       const response = await axios.post(
-        `${process.env.API_ENDPOINT}/absensi/upload-dokumen-sk`,
+        `${process.env.NEXT_PUBLIC_API_URL}/absensi/upload-dokumen-sk`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
-        }
-      );
+        },
+      )
 
-      const responseData = response.data;
-      toastAlert("success", "Updated Successfully");
-      close();
+      const responseData = response.data
+      toastAlert('success', 'Updated Successfully')
+      close()
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   return (
     <>
@@ -119,8 +119,7 @@ const UploadSk = ({ nip, academic_year, semester }) => {
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group>
             <Form.Label>
-              Upload Dokumen{" "}
-              <span className="text-danger-600">Only PDF file*</span>
+              Upload Dokumen <span className="text-danger-600">Only PDF file*</span>
             </Form.Label>
             <Form.Input type="file" name="file" onChange={inputHandler} />
             {formData.file ? (
@@ -140,8 +139,8 @@ const UploadSk = ({ nip, academic_year, semester }) => {
               type="button"
               variant="secondary"
               onClick={() => {
-                close();
-                setDokumenPreview(null);
+                close()
+                setDokumenPreview(null)
               }}
             >
               Tutup
@@ -153,7 +152,7 @@ const UploadSk = ({ nip, academic_year, semester }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default UploadSk;
+export default UploadSk

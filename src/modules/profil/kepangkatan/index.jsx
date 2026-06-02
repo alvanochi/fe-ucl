@@ -1,15 +1,15 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import date from "../../../utils/date";
-import SortIcon from "../../../components/SortIcon";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Pagination from '../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../hooks/useDatatable'
+import useCRUD from '../../../hooks/useCRUD'
+import date from '../../../utils/date'
+import SortIcon from '../../../components/SortIcon'
 
 export default function KepangkatanModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataKepangkatan`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/profile/deletePangkat`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataKepangkatan`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/deletePangkat`
 
   const {
     data,
@@ -24,14 +24,14 @@ export default function KepangkatanModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(DATA_URL);
-  const { destroy } = useCRUD(DELETE_URL);
+  } = useDatatable(DATA_URL)
+  const { destroy } = useCRUD(DELETE_URL)
 
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-8">
         <Button
-          onClick={() => window.open(`${baseURL}/kepangkatan/create`,'_blank')}
+          onClick={() => window.open(`${baseURL}/kepangkatan/create`, '_blank')}
           variant="primary"
           icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
           pill
@@ -49,75 +49,65 @@ export default function KepangkatanModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pangkat_id")}
+                onClick={() => sortBy('pangkat_id')}
               >
                 No
-                <SortIcon sort={getSortBy("pangkat_id")} />
+                <SortIcon sort={getSortBy('pangkat_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("gol_pangkat")}
+                onClick={() => sortBy('gol_pangkat')}
               >
                 Golongan/Pangkat
-                <SortIcon sort={getSortBy("gol_pangkat")} />
+                <SortIcon sort={getSortBy('gol_pangkat')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("nomor_sk")}
+                onClick={() => sortBy('nomor_sk')}
               >
                 No. SK
-                <SortIcon sort={getSortBy("nomor_sk")} />
+                <SortIcon sort={getSortBy('nomor_sk')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_mulai")}
+                onClick={() => sortBy('tgl_mulai')}
               >
                 Terhitung Mulai Tanggal
-                <SortIcon sort={getSortBy("tgl_mulai")} />
+                <SortIcon sort={getSortBy('tgl_mulai')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_sk")}
+                onClick={() => sortBy('tgl_sk')}
               >
                 Tanggal SK
-                <SortIcon sort={getSortBy("tgl_sk")} />
+                <SortIcon sort={getSortBy('tgl_sk')} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -126,32 +116,20 @@ export default function KepangkatanModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.gol_pangkat}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.nomor_sk}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.gol_pangkat}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.nomor_sk}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {date.formatToID(new Date(row.tgl_mulai))}
                 </td>
@@ -160,20 +138,14 @@ export default function KepangkatanModule({ baseURL }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.status == 1 ? (
-                    ""
+                    ''
                   ) : (
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/kepangkatan/detail/${row.pangkat_id}`}
                         variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                       />
                       <Button.Icon
                         as="a"
@@ -183,16 +155,8 @@ export default function KepangkatanModule({ baseURL }) {
                       />
                       <Button.Icon
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.pangkat_id).then(() => refresh())
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => destroy(row.pangkat_id).then(() => refresh())}
                       />
                     </div>
                   )}
@@ -210,5 +174,5 @@ export default function KepangkatanModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

@@ -1,141 +1,117 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import KolabolatorEksternal from "../../../../../modules/pelaksanaan-penelitian/penelitian/kolaborator-eksternal";
-import UploadDokumen from "../../../../../modules/pelaksanaan-penelitian/penelitian/upload-dokumen";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import useDosen from "../../../../../repo/dosen";
-import useMahasiswa from "../../../../../repo/mahasiswa";
-import date from "../../../../../utils/date";
-import { useEffect } from "react";
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
-import _ from "underscore";
-import Accordion from "../../../../../components/Accordion";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import KolabolatorEksternal from '../../../../../modules/pelaksanaan-penelitian/penelitian/kolaborator-eksternal'
+import UploadDokumen from '../../../../../modules/pelaksanaan-penelitian/penelitian/upload-dokumen'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import useDosen from '../../../../../repo/dosen'
+import useMahasiswa from '../../../../../repo/mahasiswa'
+import date from '../../../../../utils/date'
+import { useEffect } from 'react'
+import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../../config/role'
+import _ from 'underscore'
+import Accordion from '../../../../../components/Accordion'
+import { Loading } from '../../../../../components/Loading'
 
 export default function PembicaraEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penelitian/detailPenelitian`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-penelitian`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/detailPenelitian`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-penelitian`
 
   const INITIAL_ANGGOTA = {
-    user_id: "",
-    peran: "",
-    status: "",
-    role: "",
-  };
+    user_id: '',
+    peran: '',
+    status: '',
+    role: '',
+  }
 
   const INITIAL_FORM = {
-    penelitian_id: "",
-    judul_kegiatan: "",
-    kelompok_bidang: "",
-    lokasi_kegiatan: "",
-    tahun_usulan: "",
-    tahun_kegiatan: "",
-    tahun_pelaksanaan: "",
-    lama_kegiatan: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    nama_dok: "",
-    keterangan: "",
-    tautan_dok: "",
+    penelitian_id: '',
+    judul_kegiatan: '',
+    kelompok_bidang: '',
+    lokasi_kegiatan: '',
+    tahun_usulan: '',
+    tahun_kegiatan: '',
+    tahun_pelaksanaan: '',
+    lama_kegiatan: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    nama_dok: '',
+    keterangan: '',
+    tautan_dok: '',
     anggota_penelitian_dosen: [],
     anggota_penelitian_mahasiswa: [],
     docs: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
-    transformData: (data) =>
+    transformData: data =>
       _.omit(
         {
           ...data,
           anggota_penelitian: JSON.stringify([
-            ...data.anggota_penelitian_dosen.map((item) =>
-              _.omit(item, ["role"])
-            ),
-            ...data.anggota_penelitian_mahasiswa.map((item) =>
-              _.omit(item, ["role"])
-            ),
+            ...data.anggota_penelitian_dosen.map(item => _.omit(item, ['role'])),
+            ...data.anggota_penelitian_mahasiswa.map(item => _.omit(item, ['role'])),
           ]),
         },
-        ["anggota_penelitian_dosen", "anggota_penelitian_mahasiswa"]
+        ['anggota_penelitian_dosen', 'anggota_penelitian_mahasiswa'],
       ),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/penelitian/editPenelitian`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/editPenelitian`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.penelitian_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
   const removeFromUser = (key, index, role) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-      [key]: state[key].filter(
-        (item, idx) => item.role == role && idx != index
-      ),
-    }));
+      [key]: state[key].filter((item, idx) => item.role == role && idx != index),
+    }))
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...INITIAL_FORM,
         ...data.dataPenelitian[0],
-        tgl_sk_penugasan: date.formatToInput(
-          data.dataPenelitian[0].tgl_sk_penugasan
-        ),
-        anggota_penelitian_dosen: data.anggotaPenelitian.filter(
-          (item) => item.role == ROLE_ID_DOSEN
-        ),
+        tgl_sk_penugasan: date.formatToInput(data.dataPenelitian[0].tgl_sk_penugasan),
+        anggota_penelitian_dosen: data.anggotaPenelitian.filter(item => item.role == ROLE_ID_DOSEN),
         anggota_penelitian_mahasiswa: data.anggotaPenelitian.filter(
-          (item) => item.role == ROLE_ID_MAHASISWA
+          item => item.role == ROLE_ID_MAHASISWA,
         ),
         docs: data.dataDokumen,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const DELETE_FILE_URL = `${process.env.API_ENDPOINT}/penelitian/deleteDokumen`;
+  const DELETE_FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/deleteDokumen`
 
-  const { destroy } = useCRUD(DELETE_FILE_URL);
+  const { destroy } = useCRUD(DELETE_FILE_URL)
 
-  if (
-    [user, menu, isDosenLoading, isMahasiswaLoading].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, isDosenLoading, isMahasiswaLoading].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title={`Edit ${menu.label}`}
-        icon={menu.icon}
-        handler={setActive}
-      />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <PageHeader title={`Edit ${menu.label}`} icon={menu.icon} handler={setActive} />
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Penelitian</Card.Header>
           <Card.Body className="space-y-4">
@@ -189,13 +165,12 @@ export default function PembicaraEdit() {
                 name="tahun_usulan"
                 onChange={inputHandler}
                 value={form.tahun_usulan}
-                options={Array.from(
-                  { length: 6 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
-                  label: item,
-                  value: item,
-                }))}
+                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
+                  item => ({
+                    label: item,
+                    value: item,
+                  }),
+                )}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -208,13 +183,12 @@ export default function PembicaraEdit() {
                 name="tahun_kegiatan"
                 onChange={inputHandler}
                 value={form.tahun_kegiatan}
-                options={Array.from(
-                  { length: 6 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
-                  label: item,
-                  value: item,
-                }))}
+                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
+                  item => ({
+                    label: item,
+                    value: item,
+                  }),
+                )}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -227,13 +201,12 @@ export default function PembicaraEdit() {
                 name="tahun_pelaksanaan"
                 onChange={inputHandler}
                 value={form.tahun_pelaksanaan}
-                options={Array.from(
-                  { length: 6 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
-                  label: item,
-                  value: item,
-                }))}
+                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
+                  item => ({
+                    label: item,
+                    value: item,
+                  }),
+                )}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -314,48 +287,29 @@ export default function PembicaraEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Dokumen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Dokumen
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Keteranagan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Tautan Dokumen
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Dokumen</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Keteranagan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Tautan Dokumen</th>
 
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Action
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Action</th>
             </tr>
           </thead>
           <tbody>
             {form.docs.map((doc, index) => (
               <tr key={`anggota-dosen-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.nama_dok}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.keterangan}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.tautan_dok}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.nama_dok}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.keterangan}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.tautan_dok}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
                       as="a"
-                      href={`${prefix + menu.url}/penelitian/dokumenEdit/${
-                        doc.dokumen_id
-                      }`}
+                      href={`${prefix + menu.url}/penelitian/dokumenEdit/${doc.dokumen_id}`}
                       variant="secondary"
                       icon={<Icon icon="bx:edit" width={20} height={20} />}
                     />
@@ -370,10 +324,8 @@ export default function PembicaraEdit() {
                           onClick={() =>
                             destroy(doc.dokumen_id).then(() =>
                               router.push(
-                                `${prefix + menu.url}/penelitian/edit/${
-                                  form.penelitian_id
-                                }`
-                              )
+                                `${prefix + menu.url}/penelitian/edit/${form.penelitian_id}`,
+                              ),
                             )
                           }
                         />
@@ -392,23 +344,14 @@ export default function PembicaraEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Dosen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -423,7 +366,7 @@ export default function PembicaraEdit() {
                     value={form.anggota_penelitian_dosen[index].user_id}
                     options={
                       listDosen &&
-                      listDosen.map((dosen) => ({
+                      listDosen.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -437,8 +380,8 @@ export default function PembicaraEdit() {
                     onChange={inputHandler}
                     value={form.anggota_penelitian_dosen[index].peran}
                     options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
+                      { label: 'Ketua', value: 'ketua' },
+                      { label: 'Anggota', value: 'anggota' },
                     ]}
                   />
                 </td>
@@ -449,7 +392,7 @@ export default function PembicaraEdit() {
                       name="anggota_penelitian_dosen.status"
                       onChange={inputHandler}
                       checked={form.anggota_penelitian_dosen[index].status}
-                    />{" "}
+                    />{' '}
                     Aktif
                   </Form.Label>
                 </td>
@@ -459,20 +402,8 @@ export default function PembicaraEdit() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          removeFromUser(
-                            "anggota_penelitian_dosen",
-                            index,
-                            "Dosen"
-                          )
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => removeFromUser('anggota_penelitian_dosen', index, 'Dosen')}
                       />
                     )}
                   </div>
@@ -482,20 +413,17 @@ export default function PembicaraEdit() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       anggota_penelitian_dosen: [
                         ...state.anggota_penelitian_dosen,
-                        { ...INITIAL_ANGGOTA, role: "Dosen" },
+                        { ...INITIAL_ANGGOTA, role: 'Dosen' },
                       ],
                     }))
                   }
@@ -512,23 +440,14 @@ export default function PembicaraEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Mahasiswa
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -543,7 +462,7 @@ export default function PembicaraEdit() {
                     value={form.anggota_penelitian_mahasiswa[index].user_id}
                     options={
                       listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
+                      listMahasiswa.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -557,8 +476,8 @@ export default function PembicaraEdit() {
                     onChange={inputHandler}
                     value={form.anggota_penelitian_mahasiswa[index].peran}
                     options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
+                      { label: 'Ketua', value: 'ketua' },
+                      { label: 'Anggota', value: 'anggota' },
                     ]}
                   />
                 </td>
@@ -569,7 +488,7 @@ export default function PembicaraEdit() {
                       name="anggota_penelitian_mahasiswa.status"
                       onChange={inputHandler}
                       checked={form.anggota_penelitian_mahasiswa[index].status}
-                    />{" "}
+                    />{' '}
                     Aktif
                   </Form.Label>
                 </td>
@@ -579,19 +498,9 @@ export default function PembicaraEdit() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
                         onClick={() =>
-                          removeFromUser(
-                            "anggota_penelitian_mahasiswa",
-                            index,
-                            "Mahasiswa"
-                          )
+                          removeFromUser('anggota_penelitian_mahasiswa', index, 'Mahasiswa')
                         }
                       />
                     )}
@@ -602,20 +511,17 @@ export default function PembicaraEdit() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       anggota_penelitian_mahasiswa: [
                         ...state.anggota_penelitian_mahasiswa,
-                        { ...INITIAL_ANGGOTA, role: "Mahasiswa" },
+                        { ...INITIAL_ANGGOTA, role: 'Mahasiswa' },
                       ],
                     }))
                   }
@@ -627,12 +533,7 @@ export default function PembicaraEdit() {
           </tfoot>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -641,5 +542,5 @@ export default function PembicaraEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

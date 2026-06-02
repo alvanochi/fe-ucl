@@ -1,29 +1,29 @@
-import useMenu from "../../../hooks/useMenu";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
-import Form from "../../../components/Form";
-import Button from "../../../components/Button";
-import useUser from "../../../hooks/useUser";
-import useForm from "../../../hooks/useForm";
-import { toastAlert } from "../../../lib/sweetalert";
-import { useRouter } from "next/router";
-import axios from "axios";
-import _ from "underscore";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import SortIcon from "../../../components/SortIcon";
-import { Icon } from "@iconify-icon/react";
-import { Loading } from "../../../components/Loading";
+import useMenu from '../../../hooks/useMenu'
+import Layout from '../../../components/Layout'
+import PageHeader from '../../../components/PageHeader'
+import Form from '../../../components/Form'
+import Button from '../../../components/Button'
+import useUser from '../../../hooks/useUser'
+import useForm from '../../../hooks/useForm'
+import { toastAlert } from '../../../lib/sweetalert'
+import { useRouter } from 'next/router'
+import axios from 'axios'
+import _ from 'underscore'
+import useDatatable from '../../../hooks/useDatatable'
+import useCRUD from '../../../hooks/useCRUD'
+import SortIcon from '../../../components/SortIcon'
+import { Icon } from '@iconify-icon/react'
+import { Loading } from '../../../components/Loading'
 
 export default function GamifyTias() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/achievments`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/achievments`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/gamify`;
-  const FILE_URL_LENCANA = `${process.env.API_ENDPOINT}/gamify/lencana`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/achievments`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/achievments`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/gamify`
+  const FILE_URL_LENCANA = `${process.env.NEXT_PUBLIC_API_URL}/gamify/lencana`
 
   const {
     data,
@@ -38,18 +38,13 @@ export default function GamifyTias() {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(DATA_URL);
-  const { destroy } = useCRUD(DELETE_URL);
+  } = useDatatable(DATA_URL)
+  const { destroy } = useCRUD(DELETE_URL)
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title="UCL Gamify"
-        icon={menu.icon}
-        items={menu.submenus}
-        handler={setActive}
-      />
+      <PageHeader title="UCL Gamify" icon={menu.icon} items={menu.submenus} handler={setActive} />
       <div className="my-8">
         <div className="flex items-center justify-center gap-2 mb-8 mt-8">
           <Button
@@ -72,57 +67,37 @@ export default function GamifyTias() {
                 <div className="flex items-center gap-2 cursor-pointer">No</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Kode
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Kode</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Name
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Name</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Gamify
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Gamify</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Point
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Point</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Lencana
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Lencana</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Image
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Image</div>
               </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Action
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Action</th>
             </tr>
           </thead>
           <tbody>
             {loading && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Loading...
                 </td>
               </tr>
             )}
             {!loading && data && data.length < 1 && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Tidak ada data
                 </td>
               </tr>
@@ -131,9 +106,7 @@ export default function GamifyTias() {
               data &&
               data.map((row, index) => (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                     {row.kode}
                   </td>
@@ -155,12 +128,7 @@ export default function GamifyTias() {
                     />
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
-                    <img
-                      src={`${FILE_URL}/${row.image}`}
-                      alt="gamify"
-                      width={80}
-                      height={80}
-                    />
+                    <img src={`${FILE_URL}/${row.image}`} alt="gamify" width={80} height={80} />
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                     <div className="flex items-stretch gap-1">
@@ -193,13 +161,7 @@ export default function GamifyTias() {
             <Button.Icon
               type="button"
               variant="outline-primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-left"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
               onClick={() => setPage(page - 1)}
               disabled={!canPrev}
               pill
@@ -207,13 +169,7 @@ export default function GamifyTias() {
             <Button
               type="button"
               variant="primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-right"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
               iconPosition="right"
               onClick={() => setPage(page + 1)}
               disabled={!canNext}
@@ -230,9 +186,8 @@ export default function GamifyTias() {
               max={pageCount}
               className="w-20"
               value={page}
-              onChange={(event) =>
-                event.target.valueAsNumber <= pageCount &&
-                setPage(event.target.value)
+              onChange={event =>
+                event.target.valueAsNumber <= pageCount && setPage(event.target.value)
               }
             />
             of {pageCount || 1}
@@ -240,5 +195,5 @@ export default function GamifyTias() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }

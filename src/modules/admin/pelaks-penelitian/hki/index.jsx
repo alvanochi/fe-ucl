@@ -1,86 +1,84 @@
-import { Icon } from "@iconify-icon/react";
-import useDatatable from "../../../../hooks/useDatatable";
-import Button from "../../../../components/Button";
-import Filter from "./filter";
-import SortIcon from "../../../../components/SortIcon";
-import Pagination from "../../../../components/Pagination";
-import date from "../../../../utils/date";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Icon } from '@iconify-icon/react'
+import useDatatable from '../../../../hooks/useDatatable'
+import Button from '../../../../components/Button'
+import Filter from './filter'
+import SortIcon from '../../../../components/SortIcon'
+import Pagination from '../../../../components/Pagination'
+import date from '../../../../utils/date'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export default function HKIModule({ baseURL }) {
-  const approveData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/penelitian/hki/approveStatus/${id}`;
+  const approveData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/hki/approveStatus/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
-
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const rejectData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/penelitian/hki/rejectStatus/${id}`;
+  const rejectData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/hki/rejectStatus/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
-
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/hkiPending`)
+  const [dataUrl, setDataUrl] = useState(`${process.env.NEXT_PUBLIC_API_URL}/admin/hkiPending`)
 
   const handleApproveClick = async () => {
-    await approveData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/hkiAprove`);
-  };
+    await approveData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/hkiAprove`)
+  }
 
   const handleRejectClick = async () => {
-    await rejectData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/hkiReject`);
-  };
+    await rejectData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/hkiReject`)
+  }
 
   const handlePendingClick = () => {
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/hkiPending`);
-  };
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/hkiPending`)
+  }
 
   const {
     data,
@@ -95,11 +93,11 @@ export default function HKIModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(dataUrl);
+  } = useDatatable(dataUrl)
 
   useEffect(() => {
-    refresh();
-  }, [dataUrl]);
+    refresh()
+  }, [dataUrl])
 
   return (
     <>
@@ -110,7 +108,7 @@ export default function HKIModule({ baseURL }) {
           icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
           onClick={handlePendingClick}
           pill
-          >
+        >
           Pending
         </Button>
         <Button
@@ -118,7 +116,7 @@ export default function HKIModule({ baseURL }) {
           icon={<Icon icon="oi:check" width={20} height={20} />}
           onClick={handleApproveClick}
           pill
-          >
+        >
           Aprove
         </Button>
         <Button
@@ -126,7 +124,7 @@ export default function HKIModule({ baseURL }) {
           icon={<Icon icon="oi:x" width={20} height={20} />}
           onClick={handleRejectClick}
           pill
-          >
+        >
           Reject
         </Button>
       </div>
@@ -139,50 +137,46 @@ export default function HKIModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("hki_id")}
+                onClick={() => sortBy('hki_id')}
               >
                 No
-                <SortIcon sort={getSortBy("hki_id")} />
+                <SortIcon sort={getSortBy('hki_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                NPM/NIDN
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">NPM/NIDN</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("judul_hki")}
+                onClick={() => sortBy('judul_hki')}
               >
                 Judul
-                <SortIcon sort={getSortBy("judul_hki")} />
+                <SortIcon sort={getSortBy('judul_hki')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jenis_hki")}
+                onClick={() => sortBy('jenis_hki')}
               >
                 Jenis Publikasi
-                <SortIcon sort={getSortBy("jenis_hki")} />
+                <SortIcon sort={getSortBy('jenis_hki')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_terbit_hki")}
+                onClick={() => sortBy('tgl_terbit_hki')}
               >
                 Tanggal Terbit
-                <SortIcon sort={getSortBy("tgl_terbit_hki")} />
+                <SortIcon sort={getSortBy('tgl_terbit_hki')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
@@ -191,20 +185,14 @@ export default function HKIModule({ baseURL }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="5"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="5" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="5"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="5" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -213,30 +201,20 @@ export default function HKIModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
 
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.nama_lengkap}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.npm ? row.npm : row.nidn}
                   <span className="block font-bold">{row.role}</span>
@@ -244,9 +222,7 @@ export default function HKIModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
                   {row.judul_hki}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.jenis_hki}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.jenis_hki}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {date.formatToID(new Date(row.tgl_terbit_hki))}
                 </td>
@@ -256,36 +232,24 @@ export default function HKIModule({ baseURL }) {
                       as="a"
                       href={`${baseURL}/detail-hki/${row.hki_id}`}
                       variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
+                      icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                     />
-                    {
-                      row.status === 0 && (
-                        <>
-                          <Button.Icon
-                            variant="success"
-                            type="button"
-                            icon={<Icon icon="oi:check" width={20} height={20} />}
-                            onClick={() =>
-                              approveData(row.hki_id).then(() => refresh())
-                            }
-                          />
-                          <Button.Icon
-                            variant="danger"
-                            type="button"
-                            icon={<Icon icon="oi:x" width={20} height={20} />}
-                            onClick={() =>
-                              rejectData(row.hki_id).then(() => refresh())
-                            }
-                          />
-                        </>
-                      )
-                    }
+                    {row.status === 0 && (
+                      <>
+                        <Button.Icon
+                          variant="success"
+                          type="button"
+                          icon={<Icon icon="oi:check" width={20} height={20} />}
+                          onClick={() => approveData(row.hki_id).then(() => refresh())}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          type="button"
+                          icon={<Icon icon="oi:x" width={20} height={20} />}
+                          onClick={() => rejectData(row.hki_id).then(() => refresh())}
+                        />
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -301,5 +265,5 @@ export default function HKIModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

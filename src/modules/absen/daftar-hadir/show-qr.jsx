@@ -1,31 +1,31 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import { Icon } from "@iconify-icon/react";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import { Icon } from '@iconify-icon/react'
 
 export default function ShowQr({ data }) {
-  const [qrCode, setQrCode] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [qrCode, setQrCode] = useState(null)
+  const [loading, setLoading] = useState(false)
 
   const handleShowQr = async () => {
     try {
       if (data && data.token) {
-        setLoading(true);
+        setLoading(true)
 
         const response = await axios.get(
-          `${process.env.API_ENDPOINT_ABSEN}/absensi/show-qr?token=${data.token}`
-        );
+          `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi/show-qr?token=${data.token}`,
+        )
 
-        const svgContent = response.data;
-        setQrCode(svgContent);
+        const svgContent = response.data
+        setQrCode(svgContent)
       }
     } catch (error) {
-      console.error("Error fetching QR code:", error);
+      console.error('Error fetching QR code:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -35,9 +35,9 @@ export default function ShowQr({ data }) {
         onClick={handleShowQr}
       />
       <Modal
-        title={`${data && data.matkul ? data.matkul : ""} ${
-          data && data.pertemuan ? data.pertemuan : ""
-        } | ${data && data.kelas ? data.kelas : ""}`}
+        title={`${data && data.matkul ? data.matkul : ''} ${
+          data && data.pertemuan ? data.pertemuan : ''
+        } | ${data && data.kelas ? data.kelas : ''}`}
         show={qrCode !== null}
         handler={() => setQrCode(null)}
       >
@@ -47,38 +47,32 @@ export default function ShowQr({ data }) {
           <>
             <div
               style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100%",
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '100%',
               }}
             >
               <div
                 dangerouslySetInnerHTML={{ __html: qrCode }}
                 style={{
-                  maxWidth: "100%",
-                  maxHeight: "80vh",
+                  maxWidth: '100%',
+                  maxHeight: '80vh',
                 }}
               />
             </div>
-            <h1 className="text-center font-bold text-4xl pt-4">
-              {data.token}
-            </h1>
+            <h1 className="text-center font-bold text-4xl pt-4">{data.token}</h1>
           </>
         ) : (
           <p>No QR code available.</p>
         )}
 
         <div className="flex gap-4 mt-8">
-          <Button
-            onClick={() => setQrCode(null)}
-            variant="primary"
-            className="w-full h-12"
-          >
+          <Button onClick={() => setQrCode(null)} variant="primary" className="w-full h-12">
             Close
           </Button>
         </div>
       </Modal>
     </>
-  );
+  )
 }

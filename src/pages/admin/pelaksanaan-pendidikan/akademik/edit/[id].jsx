@@ -1,91 +1,80 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import useDosen from "../../../../../repo/dosen";
-import useMahasiswa from "../../../../../repo/mahasiswa";
-import date from "../../../../../utils/date";
-import { useEffect } from "react";
-import _ from "underscore";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import useDosen from '../../../../../repo/dosen'
+import useMahasiswa from '../../../../../repo/mahasiswa'
+import date from '../../../../../utils/date'
+import { useEffect } from 'react'
+import _ from 'underscore'
+import { Loading } from '../../../../../components/Loading'
 
 export default function AkademikEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/bimbingan-akademik`
 
   const INITIAL_MHS = {
-    mhs_id: "",
-  };
+    mhs_id: '',
+  }
 
   const INITIAL_FORM = {
-    id: "",
-    dosen_id: "",
-    tahun_angkatan: "",
+    id: '',
+    dosen_id: '',
+    tahun_angkatan: '',
     mhs_bimbingan: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
-    transformData: (data) =>
+    transformData: data =>
       _.omit({
         ...data,
         mhs_bimbingan: JSON.stringify(data.mhs_bimbingan),
       }),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
   const EDIT_OPTION = {
     url: `${API_URL}/${form.id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...INITIAL_FORM,
         ...data.dataBimbingan,
         mhs_bimbingan: data.mhsBimbingan,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const DELETE_MHS = `${process.env.API_ENDPOINT}/bimbingan-akademik/mhs-bimbingan`;
+  const DELETE_MHS = `${process.env.NEXT_PUBLIC_API_URL}/bimbingan-akademik/mhs-bimbingan`
 
-  const { destroy } = useCRUD(DELETE_MHS);
+  const { destroy } = useCRUD(DELETE_MHS)
 
-  if (
-    [user, menu, isDosenLoading, isMahasiswaLoading].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, isDosenLoading, isMahasiswaLoading].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title={`Edit ${menu.label}`}
-        icon={menu.icon}
-        handler={setActive}
-      />
-      <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+      <PageHeader title={`Edit ${menu.label}`} icon={menu.icon} handler={setActive} />
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)}>
         <Card className="mt-4">
           <Card.Header className="text-center">Bimbingan Akademik</Card.Header>
           <Card.Body className="space-y-4">
@@ -110,10 +99,10 @@ export default function AkademikEdit() {
               <Form.Combobox
                 name="dosen_id.user_id"
                 className="z-10 absolute"
-                onChange={(selected) =>
+                onChange={selected =>
                   inputHandler({
                     target: {
-                      name: "dosen_id",
+                      name: 'dosen_id',
                       value: selected?.value,
                     },
                   })
@@ -122,7 +111,7 @@ export default function AkademikEdit() {
                 options={
                   listDosen &&
                   Array.isArray(listDosen) &&
-                  listDosen.map((dosen) => ({
+                  listDosen.map(dosen => ({
                     label: dosen.nama_lengkap,
                     value: dosen.user_id,
                   }))
@@ -139,17 +128,12 @@ export default function AkademikEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 Mahasiswa Bimbingan
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -165,7 +149,7 @@ export default function AkademikEdit() {
                       <Form.Combobox
                         index={index}
                         name="mhs_bimbingan.mhs_id"
-                        onChange={(selected) =>
+                        onChange={selected =>
                           inputHandler({
                             target: {
                               attributes: {
@@ -173,16 +157,16 @@ export default function AkademikEdit() {
                                   value: index,
                                 },
                               },
-                              name: "mhs_bimbingan.mhs_id",
+                              name: 'mhs_bimbingan.mhs_id',
                               value: selected?.value,
                             },
                           })
                         }
-                        value={form.mhs_bimbingan[index].mhs_id || ""}
+                        value={form.mhs_bimbingan[index].mhs_id || ''}
                         options={
                           listMahasiswa &&
                           Array.isArray(listMahasiswa) &&
-                          listMahasiswa.map((mhs) => ({
+                          listMahasiswa.map(mhs => ({
                             label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                             value: mhs.user_id,
                           }))
@@ -196,42 +180,26 @@ export default function AkademikEdit() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(item.id).then(() =>
-                            router.push(prefix + menu.url)
-                          )
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => destroy(item.id).then(() => router.push(prefix + menu.url))}
                       />
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
-                      mhs_bimbingan: [
-                        ...state.mhs_bimbingan,
-                        { ...INITIAL_MHS },
-                      ],
+                      mhs_bimbingan: [...state.mhs_bimbingan, { ...INITIAL_MHS }],
                     }))
                   }
                 >
@@ -243,12 +211,7 @@ export default function AkademikEdit() {
         </table>
 
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -257,5 +220,5 @@ export default function AkademikEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

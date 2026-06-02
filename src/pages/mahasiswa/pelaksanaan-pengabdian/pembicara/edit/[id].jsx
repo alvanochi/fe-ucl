@@ -1,109 +1,99 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import UploadDokumen from "../../../../../modules/pelaksanaan-pengabdian/pembicara/upload-dokumen";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import date from "../../../../../utils/date";
-import Accordion from "../../../../../components/Accordion";
-import _ from "underscore";
-import useKategoriPublikasi from "../../../../../repo/kategori-publikasi";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import UploadDokumen from '../../../../../modules/pelaksanaan-pengabdian/pembicara/upload-dokumen'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import date from '../../../../../utils/date'
+import Accordion from '../../../../../components/Accordion'
+import _ from 'underscore'
+import useKategoriPublikasi from '../../../../../repo/kategori-publikasi'
+import { Loading } from '../../../../../components/Loading'
 
 export default function PembicaraEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/detailPembicara`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/pembicara/detailPembicara`
 
   const INITIAL_FORM = {
-    pembicara_id: "",
-    kategori_id: "",
-    kategori_pembicara: "",
-    judul_makalah: "",
-    nama_pertemuan: "",
-    penyelenggara: "",
-    tingkat_pertemuan: "",
-    tgl_pelaksanaan: "",
-    bahasa: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    nama_dok: "",
-    keterangan: "",
-    tautan_dok: "",
+    pembicara_id: '',
+    kategori_id: '',
+    kategori_pembicara: '',
+    judul_makalah: '',
+    nama_pertemuan: '',
+    penyelenggara: '',
+    tingkat_pertemuan: '',
+    tgl_pelaksanaan: '',
+    bahasa: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    nama_dok: '',
+    keterangan: '',
+    tautan_dok: '',
     docs: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "kategori_pembicara", label: "Kategori Pembicara" },
-      { field: "kategori_id", label: "Kategori" },
-      { field: "judul_makalah", label: "Judul Makalah" },
-      { field: "nama_pertemuan", label: "Nama Pertemuan" },
-      { field: "penyelenggara", label: "Penyelenggara" },
-      { field: "tingkat_pertemuan", label: "Tingkat Pertemuan" },
-      { field: "tgl_pelaksanaan", label: "Tanggal Pelaksanaan" },
-      { field: "bahasa", label: "Bahasa" },
-      { field: "no_sk_penugasan", label: "No. SK Penugasan" },
-      { field: "tgl_sk_penugasan", label: "Tanggal SK Penugasan" },
-      { field: "nama_dok", label: "Nama Dokumen" },
-      { field: "keterangan", label: "Keterangan Dokumen" },
-      { field: "tautan_dok", label: "Tautan Dokumen" },
+      { field: 'kategori_pembicara', label: 'Kategori Pembicara' },
+      { field: 'kategori_id', label: 'Kategori' },
+      { field: 'judul_makalah', label: 'Judul Makalah' },
+      { field: 'nama_pertemuan', label: 'Nama Pertemuan' },
+      { field: 'penyelenggara', label: 'Penyelenggara' },
+      { field: 'tingkat_pertemuan', label: 'Tingkat Pertemuan' },
+      { field: 'tgl_pelaksanaan', label: 'Tanggal Pelaksanaan' },
+      { field: 'bahasa', label: 'Bahasa' },
+      { field: 'no_sk_penugasan', label: 'No. SK Penugasan' },
+      { field: 'tgl_sk_penugasan', label: 'Tanggal SK Penugasan' },
+      { field: 'nama_dok', label: 'Nama Dokumen' },
+      { field: 'keterangan', label: 'Keterangan Dokumen' },
+      { field: 'tautan_dok', label: 'Tautan Dokumen' },
     ],
-    transformData: (data) => _.omit(data, ["docs"]),
+    transformData: data => _.omit(data, ['docs']),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } =
-    useKategoriPublikasi([user]);
+  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } = useKategoriPublikasi([
+    user,
+  ])
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/editPembicara`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/pembicara/editPembicara`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.pembicara_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data.dataPembicara[0],
-        tgl_sk_penugasan: date.formatToInput(
-          data.dataPembicara[0].tgl_sk_penugasan
-        ),
-        tgl_pelaksanaan: date.formatToInput(
-          data.dataPembicara[0].tgl_pelaksanaan
-        ),
+        tgl_sk_penugasan: date.formatToInput(data.dataPembicara[0].tgl_sk_penugasan),
+        tgl_pelaksanaan: date.formatToInput(data.dataPembicara[0].tgl_pelaksanaan),
         docs: data.dataDokumen,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const DELETE_FILE_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/deleteDokumen`;
+  const DELETE_FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/pembicara/deleteDokumen`
 
-  const { destroy } = useCRUD(DELETE_FILE_URL);
+  const { destroy } = useCRUD(DELETE_FILE_URL)
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title={`Edit ${menu.label}`}
-        icon={menu.icon}
-        handler={setActive}
-      />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <PageHeader title={`Edit ${menu.label}`} icon={menu.icon} handler={setActive} />
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Pembicara</Card.Header>
           <Card.Body className="space-y-4">
@@ -119,7 +109,7 @@ export default function PembicaraEdit() {
                 onChange={inputHandler}
                 options={
                   kategoriPublikasi &&
-                  kategoriPublikasi.map((item) => ({
+                  kategoriPublikasi.map(item => ({
                     label: `${item.nama_kategori} - ${item.tingkatan}`,
                     value: item.id,
                   }))
@@ -139,15 +129,13 @@ export default function PembicaraEdit() {
                 value={form.kategori_pembicara}
                 options={[
                   {
-                    label: "Pembicara pada pertemuan ilmiah",
-                    value: "Pembicara pada pertemuan ilmiah",
+                    label: 'Pembicara pada pertemuan ilmiah',
+                    value: 'Pembicara pada pertemuan ilmiah',
                   },
-                  { label: "Pembicara kunci", value: "Pembicara kunci" },
+                  { label: 'Pembicara kunci', value: 'Pembicara kunci' },
                   {
-                    label:
-                      "Pembicara/narasumber pada pelatihan/penyuluhan/ceramah",
-                    value:
-                      "Pembicara/narasumber pada pelatihan/penyuluhan/ceramah",
+                    label: 'Pembicara/narasumber pada pelatihan/penyuluhan/ceramah',
+                    value: 'Pembicara/narasumber pada pelatihan/penyuluhan/ceramah',
                   },
                 ]}
               />
@@ -295,48 +283,29 @@ export default function PembicaraEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Dokumen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Dokumen
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Keteranagan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Tautan Dokumen
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Dokumen</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Keteranagan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Tautan Dokumen</th>
 
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Action
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Action</th>
             </tr>
           </thead>
           <tbody>
             {form.docs.map((doc, index) => (
               <tr key={`anggota-dosen-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.nama_dok}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.keterangan}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.tautan_dok}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.nama_dok}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.keterangan}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.tautan_dok}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
                       as="a"
-                      href={`${prefix + menu.url}/pembicara/dokumenEdit/${
-                        doc.dokumen_id
-                      }`}
+                      href={`${prefix + menu.url}/pembicara/dokumenEdit/${doc.dokumen_id}`}
                       variant="secondary"
                       icon={<Icon icon="bx:edit" width={20} height={20} />}
                     />
@@ -351,10 +320,8 @@ export default function PembicaraEdit() {
                           onClick={() =>
                             destroy(doc.dokumen_id).then(() =>
                               router.push(
-                                `${prefix + menu.url}/pembicara/edit/${
-                                  form.pembicara_id
-                                }`
-                              )
+                                `${prefix + menu.url}/pembicara/edit/${form.pembicara_id}`,
+                              ),
                             )
                           }
                         />
@@ -367,12 +334,7 @@ export default function PembicaraEdit() {
           </tbody>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -381,5 +343,5 @@ export default function PembicaraEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

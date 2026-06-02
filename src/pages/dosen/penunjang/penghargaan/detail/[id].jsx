@@ -1,59 +1,59 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import { Loading } from '../../../../../components/Loading'
 
 export default function PenghargaanDetail() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penunjang/detailPenghargaan`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/file-penghargaan`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penunjang/detailPenghargaan`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/file-penghargaan`
 
   const INITIAL_FORM = {
-    kategori_id: "",
-    tingkat_peng: "",
-    jenis_peng: "",
-    nama_peng: "",
-    tahun_peng: "",
-    instansi_pemberi: "",
-    file: "",
-  };
+    kategori_id: '',
+    tingkat_peng: '',
+    jenis_peng: '',
+    nama_peng: '',
+    tahun_peng: '',
+    instansi_pemberi: '',
+    file: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "tingkat_peng", label: "tingkat Penghargaan" },
-      { field: "jenis_peng", label: "Jenis Penghargaan" },
-      { field: "nama_peng", label: "Nama Penghargaan" },
-      { field: "tahun_peng", label: "Tahun Penghargaan" },
-      { field: "instansi_peberi", label: "Instansi Pemberi" },
+      { field: 'tingkat_peng', label: 'tingkat Penghargaan' },
+      { field: 'jenis_peng', label: 'Jenis Penghargaan' },
+      { field: 'nama_peng', label: 'Nama Penghargaan' },
+      { field: 'tahun_peng', label: 'Tahun Penghargaan' },
+      { field: 'instansi_peberi', label: 'Instansi Pemberi' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form } = formdata;
+  const { form } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/penunjang/editPenghargaan`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/penunjang/editPenghargaan`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.penghargaan_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
-    show(router.query.id);
-  }, [router, user]);
+    if (router.isReady === false || !user) return
+    show(router.query.id)
+  }, [router, user])
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -68,10 +68,7 @@ export default function PenghargaanDetail() {
           Edit
         </Button>
       </div>
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Penghargaan</Card.Header>
           <Card.Body className="space-y-4">
@@ -85,11 +82,11 @@ export default function PenghargaanDetail() {
                 name="tingkat_peng"
                 value={form.tingkat_peng}
                 options={[
-                  { label: "Lokal", value: "Lokal" },
-                  { label: "Daerah", value: "Daerah" },
-                  { label: "Nasional", value: "Nasional" },
-                  { label: "Internasional", value: "Internasional" },
-                  { label: "Lainnya", value: "Lainnya" },
+                  { label: 'Lokal', value: 'Lokal' },
+                  { label: 'Daerah', value: 'Daerah' },
+                  { label: 'Nasional', value: 'Nasional' },
+                  { label: 'Internasional', value: 'Internasional' },
+                  { label: 'Lainnya', value: 'Lainnya' },
                 ]}
                 disabled
               />
@@ -132,8 +129,8 @@ export default function PenghargaanDetail() {
                 value={form.tahun_peng}
                 options={Array.from(
                   { length: new Date().getFullYear() - 1970 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
+                  (_, i) => new Date().getFullYear() - i,
+                ).map(item => ({
                   label: item,
                   value: item,
                 }))}
@@ -158,25 +155,17 @@ export default function PenghargaanDetail() {
               </Form.Label>
               <span>:</span>
               <div className="block flex-1 space-y-2">
-                <embed
-                  src={`${FILE_URL}/${form.file}`}
-                  className="w-full h-[256px]"
-                />
+                <embed src={`${FILE_URL}/${form.file}`} className="w-full h-[256px]" />
               </div>
             </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

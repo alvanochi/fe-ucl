@@ -1,20 +1,20 @@
-import Head from "next/head";
-import Router from "next/router";
-import axios from "axios";
-import Slider from "react-slick";
-import Button from "../../components/Button";
-import useForm from "../../hooks/useForm";
+import Head from 'next/head'
+import Router from 'next/router'
+import axios from 'axios'
+import Slider from 'react-slick'
+import Button from '../../components/Button'
+import useForm from '../../hooks/useForm'
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import styles from "./register.module.css";
-import Link from "next/link";
-import { toastAlert } from "../../lib/sweetalert";
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import styles from './register.module.css'
+import Link from 'next/link'
+import { toastAlert } from '../../lib/sweetalert'
 
 export const Verify = () => {
   const INITIAL_FORM = {
-    token: "",
-  };
+    token: '',
+  }
 
   const settings = {
     dots: true,
@@ -24,39 +24,37 @@ export const Verify = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
-    dotsClass: styles["slick-dots"],
+    dotsClass: styles['slick-dots'],
     customPaging: function (i) {
-      return (
-        <div className="w-full rounded-full h-1 bg-white bg-opacity-20 dots"></div>
-      );
+      return <div className="w-full rounded-full h-1 bg-white bg-opacity-20 dots"></div>
     },
-  };
+  }
 
-  const { form, inputHandler } = useForm(INITIAL_FORM, {});
+  const { form, inputHandler } = useForm(INITIAL_FORM, {})
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/auth/verifyUser/${form.token}`,
-        method: "PATCH",
-      });
-      const response = await request.data;
-      if (response.message == "Account verification successfully") {
-        toastAlert("success", response.message);
+        url: `${process.env.NEXT_PUBLIC_API_URL}/auth/verifyUser/${form.token}`,
+        method: 'PATCH',
+      })
+      const response = await request.data
+      if (response.message == 'Account verification successfully') {
+        toastAlert('success', response.message)
       }
 
-      toastAlert("error", response.message);
-      Router.push("/");
+      toastAlert('error', response.message)
+      Router.push('/')
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -76,12 +74,10 @@ export const Verify = () => {
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <h3 className="block text-3xl text-white font-bold mb-12">
-                    Platform <br /> Digital Untuk <br /> Mempermudah <br />{" "}
-                    Administrasi
+                    Platform <br /> Digital Untuk <br /> Mempermudah <br /> Administrasi
                   </h3>
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -93,8 +89,7 @@ export const Verify = () => {
                     className="mx-auto mb-2 h-72"
                   />
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -106,8 +101,7 @@ export const Verify = () => {
                     className="mx-auto mb-2 h-72"
                   />
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -120,18 +114,13 @@ export const Verify = () => {
         >
           <div className="block w-3/5">
             <div className="block mb-6">
-              <h1 className="block text-2xl font-bold text-primary-600">
-                Verifikasi Akun
-              </h1>
+              <h1 className="block text-2xl font-bold text-primary-600">Verifikasi Akun</h1>
               <p className="block text-gray-600 text-sm">
-                Verifikasi akunmu dengan kode verifikasi yang kami kirimkan ke
-                emailmu!
+                Verifikasi akunmu dengan kode verifikasi yang kami kirimkan ke emailmu!
               </p>
             </div>
             <div className="block mb-6">
-              <label className="block text-sm font-medium mb-1">
-                Kode Verifikasi
-              </label>
+              <label className="block text-sm font-medium mb-1">Kode Verifikasi</label>
               <input
                 type="text"
                 className="form-input"
@@ -148,7 +137,7 @@ export const Verify = () => {
         </form>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Verify;
+export default Verify

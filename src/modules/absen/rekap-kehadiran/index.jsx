@@ -1,78 +1,78 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Form from "../../../components/Form";
-import Link from "next/link";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { toastAlert } from "../../../lib/sweetalert";
-import UploadSk from "./upload-sk";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Form from '../../../components/Form'
+import Link from 'next/link'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { toastAlert } from '../../../lib/sweetalert'
+import UploadSk from './upload-sk'
 
 export default function RekapKehadiran({ baseURL, user }) {
-  const [dataGasal, setDataGasal] = useState(null);
-  const [dataGenap, setDataGenap] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [academicYear, setAcademicYear] = useState("2024/2025");
-  const [nip, setNip] = useState(null);
+  const [dataGasal, setDataGasal] = useState(null)
+  const [dataGenap, setDataGenap] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+  const [academicYear, setAcademicYear] = useState('2024/2025')
+  const [nip, setNip] = useState(null)
 
-  const handleYearChange = (event) => {
-    setAcademicYear(event.target.value);
-  };
+  const handleYearChange = event => {
+    setAcademicYear(event.target.value)
+  }
 
   useEffect(() => {
-    if (!user) return;
+    if (!user) return
 
-    const cleanedNip = user.nip.trim();
+    const cleanedNip = user.nip.trim()
 
-    setNip(cleanedNip);
+    setNip(cleanedNip)
 
     const fetchDataGasal = async () => {
       try {
-        const DATA_URL = `${process.env.API_ENDPOINT}/absensi/rekap-perkuliahan`;
+        const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/absensi/rekap-perkuliahan`
 
         const response = await axios.get(DATA_URL, {
           params: {
             dataTable: true,
-            filter: ["semester"],
-            filterValue: ["gasal"],
+            filter: ['semester'],
+            filterValue: ['gasal'],
             code: user && user.nip,
             academic_year: academicYear,
           },
-        });
-        setDataGasal(response.data.data);
+        })
+        setDataGasal(response.data.data)
       } catch (error) {
-        setError(error);
+        setError(error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     const fetchDataGenap = async () => {
       try {
-        const DATA_URL = `${process.env.API_ENDPOINT}/absensi/rekap-perkuliahan`;
+        const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/absensi/rekap-perkuliahan`
 
         const response = await axios.get(DATA_URL, {
           params: {
             dataTable: true,
-            filter: ["semester"],
-            filterValue: ["genap"],
+            filter: ['semester'],
+            filterValue: ['genap'],
             code: user && user.nip,
             academic_year: academicYear,
           },
-        });
-        setDataGenap(response.data.data);
+        })
+        setDataGenap(response.data.data)
       } catch (error) {
-        setError(error);
+        setError(error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchDataGenap();
-    fetchDataGasal();
-  }, [user, academicYear]);
+    fetchDataGenap()
+    fetchDataGasal()
+  }, [user, academicYear])
 
-  const GENERATE_URL = `${process.env.API_ENDPOINT}/absensi/list-pertemuan/excel`;
+  const GENERATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/absensi/list-pertemuan/excel`
 
   async function generate(semester) {
     try {
@@ -82,37 +82,35 @@ export default function RekapKehadiran({ baseURL, user }) {
             semester: semester,
             nip: user && user.nip,
           },
-          responseType: "blob",
-        });
+          responseType: 'blob',
+        })
 
-        const contentDisposition = response.headers["content-disposition"];
-        const filename = contentDisposition
-          .split("filename=")[1]
-          .replace(/"/g, "");
+        const contentDisposition = response.headers['content-disposition']
+        const filename = contentDisposition.split('filename=')[1].replace(/"/g, '')
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const url = window.URL.createObjectURL(new Blob([response.data]))
 
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", filename);
-        document.body.appendChild(link);
-        link.click();
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', filename)
+        document.body.appendChild(link)
+        link.click()
 
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
 
-        toastAlert("success", "Exported!");
+        toastAlert('success', 'Exported!')
       }
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("warning", error.response.data);
-        return;
+      if (error.name === 'AxiosError') {
+        toastAlert('warning', error.response.data)
+        return
       }
-      toastAlert("error", error);
+      toastAlert('error', error)
     }
   }
 
-  const GENERATE_URL_REKAP = `${process.env.API_ENDPOINT}/absensi/rekap-pertemuan/excel`;
+  const GENERATE_URL_REKAP = `${process.env.NEXT_PUBLIC_API_URL}/absensi/rekap-pertemuan/excel`
 
   async function generateRekap(id_matkul, kelas) {
     try {
@@ -122,33 +120,31 @@ export default function RekapKehadiran({ baseURL, user }) {
             id_matkul: id_matkul,
             kelas: kelas,
           },
-          responseType: "blob",
-        });
+          responseType: 'blob',
+        })
 
-        const contentDisposition = response.headers["content-disposition"];
-        const filename = contentDisposition
-          .split("filename=")[1]
-          .replace(/"/g, "");
+        const contentDisposition = response.headers['content-disposition']
+        const filename = contentDisposition.split('filename=')[1].replace(/"/g, '')
 
-        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const url = window.URL.createObjectURL(new Blob([response.data]))
 
-        const link = document.createElement("a");
-        link.href = url;
-        link.setAttribute("download", filename);
-        document.body.appendChild(link);
-        link.click();
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', filename)
+        document.body.appendChild(link)
+        link.click()
 
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+        document.body.removeChild(link)
+        window.URL.revokeObjectURL(url)
 
-        toastAlert("success", "Exported!");
+        toastAlert('success', 'Exported!')
       }
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("warning", error.response.statusText);
-        return;
+      if (error.name === 'AxiosError') {
+        toastAlert('warning', error.response.statusText)
+        return
       }
-      toastAlert("error", error);
+      toastAlert('error', error)
     }
   }
 
@@ -184,13 +180,13 @@ export default function RekapKehadiran({ baseURL, user }) {
           value={academicYear}
           onChange={handleYearChange}
           options={[
-            { value: "2024/2025", label: "2024/2025" },
-            { value: "2023/2024", label: "2023/2024" },
-            { value: "2022/2023", label: "2022/2023" },
-            { value: "2021/2022", label: "2021/2022" },
-            { value: "2020/2021", label: "2020/2021" },
-            { value: "2018/2019", label: "2018/2019" },
-            { value: "2017/2018", label: "2017/2018" },
+            { value: '2024/2025', label: '2024/2025' },
+            { value: '2023/2024', label: '2023/2024' },
+            { value: '2022/2023', label: '2022/2023' },
+            { value: '2021/2022', label: '2021/2022' },
+            { value: '2020/2021', label: '2020/2021' },
+            { value: '2018/2019', label: '2018/2019' },
+            { value: '2017/2018', label: '2017/2018' },
           ]}
         />
       </div>
@@ -198,12 +194,12 @@ export default function RekapKehadiran({ baseURL, user }) {
       <div className="flex justify-between items-start">
         <span className="mt-6">Semester: GASAL</span>
         <div className="flex space-x-2">
-          <UploadSk nip={nip} academic_year={academicYear} semester={"GASAL"} />
+          <UploadSk nip={nip} academic_year={academicYear} semester={'GASAL'} />
           <Button.Icon
             className="mb-2"
             variant="success"
             icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
-            onClick={() => generate("gasal")}
+            onClick={() => generate('gasal')}
           />
         </div>
       </div>
@@ -217,39 +213,25 @@ export default function RekapKehadiran({ baseURL, user }) {
               <div className="flex items-center gap-2 cursor-pointer">No</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Export
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Export</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Kurikulum
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Kurikulum</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Matakuliah
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Matakuliah</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Kelas
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Kelas</div>
             </th>
             {[...Array(7)].map((_, index) => (
-              <th
-                key={index}
-                className="text-sm border-2 border-white bg-gray-200"
-              >
+              <th key={index} className="text-sm border-2 border-white bg-gray-200">
                 {index + 1}
               </th>
             ))}
             <th className="text-sm border-2 border-white bg-gray-200">UTS</th>
             {[...Array(7)].map((_, index) => (
-              <th
-                key={index + 7}
-                className="text-sm border-2 border-white bg-gray-200"
-              >
+              <th key={index + 7} className="text-sm border-2 border-white bg-gray-200">
                 {index + 8}
               </th>
             ))}
@@ -260,10 +242,7 @@ export default function RekapKehadiran({ baseURL, user }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="20"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="20" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
@@ -272,9 +251,7 @@ export default function RekapKehadiran({ baseURL, user }) {
             dataGasal &&
             dataGasal.map((row, index) => (
               <tr key={index}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <i className="cursor-pointer">
                     <Icon
@@ -285,9 +262,7 @@ export default function RekapKehadiran({ baseURL, user }) {
                     />
                   </i>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.curr_code}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.curr_code}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Link
                     href={`${baseURL}/rekap-kehadiran/list-mhs/${row.course_code}-${row.class}-${row.curr_code}`}
@@ -296,20 +271,18 @@ export default function RekapKehadiran({ baseURL, user }) {
                     {row.name_matkul}
                   </Link>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.class}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.class}</td>
                 {[...Array(7)].map((_, columnIndex) => (
                   <td
                     key={columnIndex}
                     className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
-                      row.pertemuan_statusKelas[columnIndex] === "Offline"
-                        ? "bg-green-400"
-                        : row.pertemuan_statusKelas[columnIndex] === "Online"
-                        ? "bg-blue-400"
-                        : row.pertemuan_statusKelas[columnIndex] === "Hybrid"
-                        ? "bg-purple-400"
-                        : "bg-gray-400"
+                      row.pertemuan_statusKelas[columnIndex] === 'Offline'
+                        ? 'bg-green-400'
+                        : row.pertemuan_statusKelas[columnIndex] === 'Online'
+                          ? 'bg-blue-400'
+                          : row.pertemuan_statusKelas[columnIndex] === 'Hybrid'
+                            ? 'bg-purple-400'
+                            : 'bg-gray-400'
                     }`}
                   >
                     <div className="flex items-stretch gap-1"></div>
@@ -322,15 +295,13 @@ export default function RekapKehadiran({ baseURL, user }) {
                   <td
                     key={columnIndex + 7}
                     className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
-                      row.pertemuan_statusKelas[columnIndex + 7] === "Offline"
-                        ? "bg-green-400"
-                        : row.pertemuan_statusKelas[columnIndex + 7] ===
-                          "Online"
-                        ? "bg-blue-400"
-                        : row.pertemuan_statusKelas[columnIndex + 7] ===
-                          "Hybrid"
-                        ? "bg-purple-400"
-                        : "bg-gray-400"
+                      row.pertemuan_statusKelas[columnIndex + 7] === 'Offline'
+                        ? 'bg-green-400'
+                        : row.pertemuan_statusKelas[columnIndex + 7] === 'Online'
+                          ? 'bg-blue-400'
+                          : row.pertemuan_statusKelas[columnIndex + 7] === 'Hybrid'
+                            ? 'bg-purple-400'
+                            : 'bg-gray-400'
                     }`}
                   >
                     <div className="flex items-stretch gap-1"></div>
@@ -341,13 +312,11 @@ export default function RekapKehadiran({ baseURL, user }) {
                 </td>
                 <td
                   className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
-                    parseInt(row.persentase) > 70
-                      ? "bg-green-500"
-                      : "bg-red-500"
+                    parseInt(row.persentase) > 70 ? 'bg-green-500' : 'bg-red-500'
                   }`}
                 >
                   <div className="flex items-stretch gap-1 text-white">
-                    {parseInt(row.persentase) > 100 ? "100%" : row.persentase}
+                    {parseInt(row.persentase) > 100 ? '100%' : row.persentase}
                   </div>
                 </td>
               </tr>
@@ -358,12 +327,12 @@ export default function RekapKehadiran({ baseURL, user }) {
       <div className="flex justify-between items-start mt-8">
         <span className="mt-6">Semester: GENAP</span>
         <div className="flex space-x-2">
-          <UploadSk nip={nip} academic_year={academicYear} semester={"GENAP"} />
+          <UploadSk nip={nip} academic_year={academicYear} semester={'GENAP'} />
           <Button.Icon
             className="mb-2"
             variant="success"
             icon={<Icon icon="ri:file-excel-2-line" width={40} height={40} />}
-            onClick={() => generate("genap")}
+            onClick={() => generate('genap')}
           />
         </div>
       </div>
@@ -376,36 +345,22 @@ export default function RekapKehadiran({ baseURL, user }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">No</div>
             </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Export</th>
+            <th className="text-sm border-2 border-white bg-gray-200">Kurikulum</th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              Export
+              <div className="flex items-center gap-2 cursor-pointer">Matakuliah</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              Kurikulum
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Matakuliah
-              </div>
-            </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Kelas
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Kelas</div>
             </th>
             {[...Array(7)].map((_, index) => (
-              <th
-                key={index}
-                className="text-sm border-2 border-white bg-gray-200"
-              >
+              <th key={index} className="text-sm border-2 border-white bg-gray-200">
                 {index + 1}
               </th>
             ))}
             <th className="text-sm border-2 border-white bg-gray-200">UTS</th>
             {[...Array(7)].map((_, index) => (
-              <th
-                key={index + 7}
-                className="text-sm border-2 border-white bg-gray-200"
-              >
+              <th key={index + 7} className="text-sm border-2 border-white bg-gray-200">
                 {index + 8}
               </th>
             ))}
@@ -416,10 +371,7 @@ export default function RekapKehadiran({ baseURL, user }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="20"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="20" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
@@ -428,9 +380,7 @@ export default function RekapKehadiran({ baseURL, user }) {
             dataGenap &&
             dataGenap.map((row, index) => (
               <tr key={index}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <i className="cursor-pointer">
                     <Icon
@@ -441,9 +391,7 @@ export default function RekapKehadiran({ baseURL, user }) {
                     />
                   </i>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.curr_code}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.curr_code}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Link
                     href={`${baseURL}/rekap-kehadiran/list-mhs/${row.course_code}-${row.class}-${row.curr_code}`}
@@ -452,20 +400,18 @@ export default function RekapKehadiran({ baseURL, user }) {
                     {row.name_matkul}
                   </Link>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.class}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.class}</td>
                 {[...Array(7)].map((_, columnIndex) => (
                   <td
                     key={columnIndex}
                     className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
-                      row.pertemuan_statusKelas[columnIndex] === "Offline"
-                        ? "bg-green-400"
-                        : row.pertemuan_statusKelas[columnIndex] === "Online"
-                        ? "bg-blue-400"
-                        : row.pertemuan_statusKelas[columnIndex] === "Hybrid"
-                        ? "bg-purple-400"
-                        : "bg-gray-400"
+                      row.pertemuan_statusKelas[columnIndex] === 'Offline'
+                        ? 'bg-green-400'
+                        : row.pertemuan_statusKelas[columnIndex] === 'Online'
+                          ? 'bg-blue-400'
+                          : row.pertemuan_statusKelas[columnIndex] === 'Hybrid'
+                            ? 'bg-purple-400'
+                            : 'bg-gray-400'
                     }`}
                   >
                     <div className="flex items-stretch gap-1"></div>
@@ -478,15 +424,13 @@ export default function RekapKehadiran({ baseURL, user }) {
                   <td
                     key={columnIndex + 7}
                     className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
-                      row.pertemuan_statusKelas[columnIndex + 7] === "Offline"
-                        ? "bg-green-400"
-                        : row.pertemuan_statusKelas[columnIndex + 7] ===
-                          "Online"
-                        ? "bg-blue-400"
-                        : row.pertemuan_statusKelas[columnIndex + 7] ===
-                          "Hybrid"
-                        ? "bg-purple-400"
-                        : "bg-gray-400"
+                      row.pertemuan_statusKelas[columnIndex + 7] === 'Offline'
+                        ? 'bg-green-400'
+                        : row.pertemuan_statusKelas[columnIndex + 7] === 'Online'
+                          ? 'bg-blue-400'
+                          : row.pertemuan_statusKelas[columnIndex + 7] === 'Hybrid'
+                            ? 'bg-purple-400'
+                            : 'bg-gray-400'
                     }`}
                   >
                     <div className="flex items-stretch gap-1"></div>
@@ -497,13 +441,11 @@ export default function RekapKehadiran({ baseURL, user }) {
                 </td>
                 <td
                   className={`text-sm border-2 border-white max-w-[8rem] truncate mx-auto ${
-                    parseInt(row.persentase) > 70
-                      ? "bg-green-700"
-                      : "bg-red-500"
+                    parseInt(row.persentase) > 70 ? 'bg-green-700' : 'bg-red-500'
                   }`}
                 >
                   <div className="flex items-stretch gap-1 text-white">
-                    {parseInt(row.persentase) > 100 ? "100%" : row.persentase}
+                    {parseInt(row.persentase) > 100 ? '100%' : row.persentase}
                   </div>
                 </td>
               </tr>
@@ -511,5 +453,5 @@ export default function RekapKehadiran({ baseURL, user }) {
         </tbody>
       </table>
     </>
-  );
+  )
 }

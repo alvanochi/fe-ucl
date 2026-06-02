@@ -1,111 +1,103 @@
-import useMenu from "../../../../hooks/useMenu";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import Form from "../../../../components/Form";
-import Button from "../../../../components/Button";
-import useUser from "../../../../hooks/useUser";
-import _ from "underscore";
-import { Icon } from "@iconify-icon/react";
-import { useRouter } from "next/router";
-import useDatatableAbsensi from "../../../../hooks/useDataTableAbsensi";
-import useCRUD from "../../../../hooks/useCRUD";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import AddAbsensiRapat from "./absensi";
-import EditAbsensi from "./editAbsensi";
-import Card from "../../../../components/Card";
-import { data } from "autoprefixer";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import { Loading } from "../../../../components/Loading";
+import useMenu from '../../../../hooks/useMenu'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import Form from '../../../../components/Form'
+import Button from '../../../../components/Button'
+import useUser from '../../../../hooks/useUser'
+import _ from 'underscore'
+import { Icon } from '@iconify-icon/react'
+import { useRouter } from 'next/router'
+import useDatatableAbsensi from '../../../../hooks/useDataTableAbsensi'
+import useCRUD from '../../../../hooks/useCRUD'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import AddAbsensiRapat from './absensi'
+import EditAbsensi from './editAbsensi'
+import Card from '../../../../components/Card'
+import { data } from 'autoprefixer'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import { Loading } from '../../../../components/Loading'
 
 export default function DetailList() {
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const router = useRouter();
+  const router = useRouter()
 
-  const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi-meeting`;
-  const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi-meeting/delete`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi-meeting`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi-meeting/delete`
 
-  const id = router.query.id;
+  const id = router.query.id
 
   const [dataMeet, setDataMeet] = useState({
-    nm_pengundang: "",
-    nm_kegiatan: "",
-    ruangan: "",
-    pertemuan: "",
-    tanggal: "",
-    waktu: "",
-    notulen: "",
-    bukti_foto: "",
-    status_ruangan: "",
-  });
+    nm_pengundang: '',
+    nm_kegiatan: '',
+    ruangan: '',
+    pertemuan: '',
+    tanggal: '',
+    waktu: '',
+    notulen: '',
+    bukti_foto: '',
+    status_ruangan: '',
+  })
 
   useEffect(() => {
     const fetchDetailMeet = async () => {
       try {
         if (id) {
-          const response = await axios.get(
-            `${process.env.API_ENDPOINT_ABSEN}/meeting`,
-            {
-              params: {
-                filter: ["id"],
-                filterValue: [id],
-              },
-            }
-          );
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL_ABSEN}/meeting`, {
+            params: {
+              filter: ['id'],
+              filterValue: [id],
+            },
+          })
 
-          const dataMeet = response.data.data;
-          setDataMeet(dataMeet[0]);
+          const dataMeet = response.data.data
+          setDataMeet(dataMeet[0])
         }
       } catch (error) {
-        console.error("Error fetching pertemuan:", error);
+        console.error('Error fetching pertemuan:', error)
       }
-    };
+    }
 
-    fetchDetailMeet();
-  }, [id]);
+    fetchDetailMeet()
+  }, [id])
 
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setDataMeet((prevData) => ({
+  const inputHandler = e => {
+    const { name, value } = e.target
+    setDataMeet(prevData => ({
       ...prevData,
-      [name]:
-        name === "status_ruangan"
-          ? value !== ""
-            ? parseInt(value)
-            : 0
-          : value,
-    }));
-  };
+      [name]: name === 'status_ruangan' ? (value !== '' ? parseInt(value) : 0) : value,
+    }))
+  }
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
       const response = await axios.post(
-        `${process.env.API_ENDPOINT_ABSEN}/meeting/update/${id || ""}`,
-        dataMeet
-      );
+        `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/meeting/update/${id || ''}`,
+        dataMeet,
+      )
 
-      const responseData = response.data;
+      const responseData = response.data
 
       if (responseData) {
-        toastAlert("success", "Updated Successfully");
-        router.push(prefix + menu.url);
+        toastAlert('success', 'Updated Successfully')
+        router.push(prefix + menu.url)
       }
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   const {
     dataAbsensi,
@@ -116,20 +108,19 @@ export default function DetailList() {
     setPageAbsensi,
     refreshAbsensi,
   } = useDatatableAbsensi(DATA_URL, {
-    filter: ["id_meeting"],
+    filter: ['id_meeting'],
     filterValue: [id],
-  });
+  })
 
-  const { destroy } = useCRUD(DELETE_URL);
+  const { destroy } = useCRUD(DELETE_URL)
 
   const handleAbsensi = () => {
-    refreshAbsensi();
-  };
+    refreshAbsensi()
+  }
 
-  const FILE_URL = `https://absen.ft.uika-bogor.ac.id/storage/meeting/photo/${dataMeet.bukti_foto}`;
+  const FILE_URL = `https://absen.ft.uika-bogor.ac.id/storage/meeting/photo/${dataMeet.bukti_foto}`
 
-  if ([user, menu, loadingAbsensi].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, loadingAbsensi].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader
@@ -288,11 +279,7 @@ export default function DetailList() {
                     onChange={inputHandler}
                     disabled
                   />
-                  <img
-                    src={FILE_URL}
-                    className="w-full h-[256px]"
-                    alt="dokumentasi"
-                  />
+                  <img src={FILE_URL} className="w-full h-[256px]" alt="dokumentasi" />
                 </div>
               </Form.Group>
             </Card.Body>
@@ -325,44 +312,30 @@ export default function DetailList() {
                 <div className="flex items-center gap-2 cursor-pointer">No</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Nama
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Nama</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  NIP/NPM
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">NIP/NPM</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Status
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Status</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Action
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Action</div>
               </th>
             </tr>
           </thead>
           <tbody>
             {loadingAbsensi && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Loading...
                 </td>
               </tr>
             )}
             {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Tidak ada data
                 </td>
               </tr>
@@ -371,23 +344,17 @@ export default function DetailList() {
               dataAbsensi &&
               dataAbsensi.map((row, index) => (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.name_absen}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.code}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.name_absen}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.code}</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     {row.status_absen === 1
-                      ? "MASUK"
+                      ? 'MASUK'
                       : row.status_absen === 2
-                      ? "SAKIT/IZIN"
-                      : row.status_absen === 0
-                      ? "ALFA"
-                      : ""}
+                        ? 'SAKIT/IZIN'
+                        : row.status_absen === 0
+                          ? 'ALFA'
+                          : ''}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                     <div className="flex items-stretch gap-1">
@@ -417,13 +384,7 @@ export default function DetailList() {
             as="a"
             href={`${prefix + menu.url}`}
             variant="danger"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             iconPosition="left"
             pill
           >
@@ -433,13 +394,7 @@ export default function DetailList() {
             <Button.Icon
               type="button"
               variant="outline-primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-left"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
               onClick={() => setPageAbsensi(pageAbsensi - 1)}
               disabled={pageAbsensi <= 1}
               pill
@@ -447,13 +402,7 @@ export default function DetailList() {
             <Button
               type="button"
               variant="primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-right"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
               iconPosition="right"
               onClick={() => setPageAbsensi(pageAbsensi + 1)}
               disabled={pageAbsensi >= pageCountAbsensi}
@@ -470,12 +419,9 @@ export default function DetailList() {
               max={pageCountAbsensi || 1}
               className="w-20"
               value={pageAbsensi}
-              onChange={(event) =>
+              onChange={event =>
                 setPageAbsensi(
-                  Math.max(
-                    1,
-                    Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)
-                  )
+                  Math.max(1, Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)),
                 )
               }
             />
@@ -484,5 +430,5 @@ export default function DetailList() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }

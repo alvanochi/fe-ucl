@@ -1,87 +1,86 @@
-import { Icon } from "@iconify-icon/react";
-import useDatatable from "../../../../hooks/useDatatable";
-import Button from "../../../../components/Button";
-import Filter from "./filter";
-import SortIcon from "../../../../components/SortIcon";
-import Pagination from "../../../../components/Pagination";
-import date from "../../../../utils/date";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Icon } from '@iconify-icon/react'
+import useDatatable from '../../../../hooks/useDatatable'
+import Button from '../../../../components/Button'
+import Filter from './filter'
+import SortIcon from '../../../../components/SortIcon'
+import Pagination from '../../../../components/Pagination'
+import date from '../../../../utils/date'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export default function PembicaraModule({ baseURL }) {
-  const approveData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/approveStatusPembicara/${id}`;
+  const approveData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/pembicara/approveStatusPembicara/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
-
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const rejectData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/rejectStatusPembicara/${id}`;
+  const rejectData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/pembicara/rejectStatusPembicara/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
-
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/pembicaraPending`)
-
+  const [dataUrl, setDataUrl] = useState(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/pembicaraPending`,
+  )
 
   const handleApproveClick = async () => {
-    await approveData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/pembicaraAprove`);
-  };
+    await approveData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/pembicaraAprove`)
+  }
 
   const handleRejectClick = async () => {
-    await rejectData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/pembicaraReject`);
-  };
+    await rejectData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/pembicaraReject`)
+  }
 
   const handlePendingClick = () => {
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/pembicaraPending`);
-  };
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/pembicaraPending`)
+  }
 
   const {
     data,
@@ -96,11 +95,11 @@ export default function PembicaraModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(dataUrl);
+  } = useDatatable(dataUrl)
 
   useEffect(() => {
-    refresh();
-  }, [dataUrl]);
+    refresh()
+  }, [dataUrl])
 
   return (
     <>
@@ -111,7 +110,7 @@ export default function PembicaraModule({ baseURL }) {
           icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
           onClick={handlePendingClick}
           pill
-          >
+        >
           Pending
         </Button>
         <Button
@@ -119,7 +118,7 @@ export default function PembicaraModule({ baseURL }) {
           icon={<Icon icon="oi:check" width={20} height={20} />}
           onClick={handleApproveClick}
           pill
-          >
+        >
           Aprove
         </Button>
         <Button
@@ -127,7 +126,7 @@ export default function PembicaraModule({ baseURL }) {
           icon={<Icon icon="oi:x" width={20} height={20} />}
           onClick={handleRejectClick}
           pill
-          >
+        >
           Reject
         </Button>
       </div>
@@ -140,51 +139,47 @@ export default function PembicaraModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pembicara_id")}
+                onClick={() => sortBy('pembicara_id')}
               >
                 No
-                <SortIcon sort={getSortBy("pembicara_id")} />
+                <SortIcon sort={getSortBy('pembicara_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
 
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                NPM/NIDN
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">NPM/NIDN</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("judul_makalah")}
+                onClick={() => sortBy('judul_makalah')}
               >
                 Judul Makalah
-                <SortIcon sort={getSortBy("judul_makalah")} />
+                <SortIcon sort={getSortBy('judul_makalah')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("penyelenggara")}
+                onClick={() => sortBy('penyelenggara')}
               >
                 Penyelenggara
-                <SortIcon sort={getSortBy("penyelenggara")} />
+                <SortIcon sort={getSortBy('penyelenggara')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_pelaksanaan")}
+                onClick={() => sortBy('tgl_pelaksanaan')}
               >
                 Tanggal Pelaksanaan
-                <SortIcon sort={getSortBy("tgl_pelaksanaan")} />
+                <SortIcon sort={getSortBy('tgl_pelaksanaan')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
@@ -193,20 +188,14 @@ export default function PembicaraModule({ baseURL }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="5"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="5" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="5"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="5" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -215,29 +204,19 @@ export default function PembicaraModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.nama_lengkap}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.npm ? row.npm : row.nidn}
                   <span className="block font-bold">{row.role}</span>
@@ -245,9 +224,7 @@ export default function PembicaraModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[20rem]">
                   <p className="truncate">{row.judul_makalah}</p>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.penyelenggara}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.penyelenggara}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {date.formatToID(new Date(row.tgl_pelaksanaan))}
                 </td>
@@ -257,37 +234,24 @@ export default function PembicaraModule({ baseURL }) {
                       as="a"
                       href={`${baseURL}/detail-pembicara/${row.pembicara_id}`}
                       variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
+                      icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                     />
-                    {
-                      row.status === 0 && (
-                        <>
-                          <Button.Icon
-                            variant="success"
-                            type="button"
-                            icon={<Icon icon="oi:check" width={20} height={20} />}
-                            onClick={() =>
-                              approveData(row.pembicara_id).then(() => refresh())
-                            }
-                          />
-                          <Button.Icon
-                            variant="danger"
-                            type="button"
-                            icon={<Icon icon="oi:x" width={20} height={20} />}
-                            onClick={() =>
-                              rejectData(row.pembicara_id).then(() => refresh())
-                            }
-                          />                        
-                        </>
-                      )
-                    }
-                    
+                    {row.status === 0 && (
+                      <>
+                        <Button.Icon
+                          variant="success"
+                          type="button"
+                          icon={<Icon icon="oi:check" width={20} height={20} />}
+                          onClick={() => approveData(row.pembicara_id).then(() => refresh())}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          type="button"
+                          icon={<Icon icon="oi:x" width={20} height={20} />}
+                          onClick={() => rejectData(row.pembicara_id).then(() => refresh())}
+                        />
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -303,5 +267,5 @@ export default function PembicaraModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

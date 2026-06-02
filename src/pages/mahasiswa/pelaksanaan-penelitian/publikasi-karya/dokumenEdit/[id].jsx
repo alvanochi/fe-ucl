@@ -1,67 +1,62 @@
-import React, { useEffect } from "react";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import Form from "../../../../../components/Form";
-import Card from "../../../../../components/Card";
-import { useRouter } from "next/router";
-import useUser from "../../../../../hooks/useUser";
-import useMenu from "../../../../../hooks/useMenu";
-import useCRUD from "../../../../../hooks/useCRUD";
-import Button from "../../../../../components/Button";
-import { Loading } from "../../../../../components/Loading";
+import React, { useEffect } from 'react'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import Form from '../../../../../components/Form'
+import Card from '../../../../../components/Card'
+import { useRouter } from 'next/router'
+import useUser from '../../../../../hooks/useUser'
+import useMenu from '../../../../../hooks/useMenu'
+import useCRUD from '../../../../../hooks/useCRUD'
+import Button from '../../../../../components/Button'
+import { Loading } from '../../../../../components/Loading'
 
 const DokumenEdit = () => {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penelitian/publikasi-karya/detailDokumen`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-publikasi-karya`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/publikasi-karya/detailDokumen`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-publikasi-karya`
 
   const INITIAL_FORM = {
-    publikasi_id: "",
-    dokumen_id: "",
-    nama_dok: "",
-    keterangan_dok: "",
-    tautan_dok: "",
-    file: "",
-  };
+    publikasi_id: '',
+    dokumen_id: '',
+    nama_dok: '',
+    keterangan_dok: '',
+    tautan_dok: '',
+    file: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nama_dok", label: "Nama Dokumen" },
-      { field: "keterangan_dok", label: "Keterangan Dokumen" },
-      { field: "tautan_dok", label: "Tautan Dokumen" },
+      { field: 'nama_dok', label: 'Nama Dokumen' },
+      { field: 'keterangan_dok', label: 'Keterangan Dokumen' },
+      { field: 'tautan_dok', label: 'Tautan Dokumen' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/penelitian/publikasi-karya/editDokumen`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/publikasi-karya/editDokumen`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.dokumen_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
 
-    show(router.query.id, { transformData: (data) => ({ ...data }) });
-  }, [router, user]);
+    show(router.query.id, { transformData: data => ({ ...data }) })
+  }, [router, user])
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
-          <Card.Header className="text-center">
-            Edit Dokumen Publikasi Karya
-          </Card.Header>
+          <Card.Header className="text-center">Edit Dokumen Publikasi Karya</Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -115,10 +110,7 @@ const DokumenEdit = () => {
                   name="file_profesi"
                   onChange={inputHandler}
                 />
-                <embed
-                  src={`${FILE_URL}/${form.file}`}
-                  className="w-full h-[256px]"
-                />
+                <embed src={`${FILE_URL}/${form.file}`} className="w-full h-[256px]" />
               </div>
             </Form.Group>
           </Card.Body>
@@ -126,9 +118,7 @@ const DokumenEdit = () => {
         <div className="flex gap-4 mt-4">
           <Button
             as="a"
-            href={`${prefix + menu.url}/publikasi-karya/edit/${
-              form.publikasi_id
-            }`}
+            href={`${prefix + menu.url}/publikasi-karya/edit/${form.publikasi_id}`}
             variant="secondary"
             className="w-full h-12"
           >
@@ -140,7 +130,7 @@ const DokumenEdit = () => {
         </div>
       </Form>
     </Layout>
-  );
-};
+  )
+}
 
-export default DokumenEdit;
+export default DokumenEdit

@@ -1,121 +1,108 @@
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import useDosen from "../../../../../repo/dosen";
-import { useEffect, useState } from "react";
-import { Loading } from "../../../../../components/Loading";
-import axios from "axios";
-import {
-  MySwal,
-  loadingAlert,
-  toastAlert,
-} from "../../../../../lib/sweetalert";
-import date from "../../../../../utils/date";
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import useDosen from '../../../../../repo/dosen'
+import { useEffect, useState } from 'react'
+import { Loading } from '../../../../../components/Loading'
+import axios from 'axios'
+import { MySwal, loadingAlert, toastAlert } from '../../../../../lib/sweetalert'
+import date from '../../../../../utils/date'
 
 export default function PengajuanSkAction() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-for-dosen`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/foto-profile`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-for-dosen`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/foto-profile`
 
-  const { formdata, show } = useCRUD(API_URL);
-  const { form } = formdata;
+  const { formdata, show } = useCRUD(API_URL)
+  const { form } = formdata
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
 
-  const pembimbing1Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.sk_pembimbing_1
-  );
-  const pembimbing2Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.sk_pembimbing_2
-  );
-  const pembimbing3Data = listDosen?.find(
-    (dosen) => dosen.user_id === form?.sk_pembimbing_3
-  );
-  const kepalaLabData = listDosen?.find(
-    (dosen) => dosen.user_id === form?.kepala_lab
-  );
+  const pembimbing1Data = listDosen?.find(dosen => dosen.user_id === form?.sk_pembimbing_1)
+  const pembimbing2Data = listDosen?.find(dosen => dosen.user_id === form?.sk_pembimbing_2)
+  const pembimbing3Data = listDosen?.find(dosen => dosen.user_id === form?.sk_pembimbing_3)
+  const kepalaLabData = listDosen?.find(dosen => dosen.user_id === form?.kepala_lab)
 
-  const [isChecked1, setIsChecked1] = useState(false);
-  const [isChecked2, setIsChecked2] = useState(false);
-  const [isChecked3, setIsChecked3] = useState(false);
-  const [isCheckedLab, setIsCheckedLab] = useState(false);
+  const [isChecked1, setIsChecked1] = useState(false)
+  const [isChecked2, setIsChecked2] = useState(false)
+  const [isChecked3, setIsChecked3] = useState(false)
+  const [isCheckedLab, setIsCheckedLab] = useState(false)
 
   const handleCheckboxChange = async (event, id) => {
-    const { name, checked } = event.target;
-    if (name === "sk_status_pem_1") {
-      setIsChecked1(checked);
-    } else if (name === "sk_status_pem_2") {
-      setIsChecked2(checked);
-    } else if (name === "sk_status_pem_3") {
-      setIsChecked3(checked);
-    } else if (name === "status_kepala_lab") {
-      setIsCheckedLab(checked);
+    const { name, checked } = event.target
+    if (name === 'sk_status_pem_1') {
+      setIsChecked1(checked)
+    } else if (name === 'sk_status_pem_2') {
+      setIsChecked2(checked)
+    } else if (name === 'sk_status_pem_3') {
+      setIsChecked3(checked)
+    } else if (name === 'status_kepala_lab') {
+      setIsCheckedLab(checked)
     }
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/approve/${id}`,
         {
           [name]: true,
-          db: "ta_pengajuan_sk",
+          db: 'ta_pengajuan_sk',
         },
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-        }
-      );
-      toastAlert("success", "Successfully approved");
+        },
+      )
+      toastAlert('success', 'Successfully approved')
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
-        return;
+      console.error('There was a problem with the fetch operation:', error)
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
+        return
       }
-      loadingAlert();
-      MySwal.close();
-      toastAlert("error", error.message);
+      loadingAlert()
+      MySwal.close()
+      toastAlert('error', error.message)
     }
-  };
+  }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
-        tgl_sk: data.tgl_sk ? date.formatToInput(data.tgl_sk) : "",
+        tgl_sk: data.tgl_sk ? date.formatToInput(data.tgl_sk) : '',
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
   useEffect(() => {
     if (form) {
       if (form?.sk_status_pem_1 == true) {
-        setIsChecked1(true);
+        setIsChecked1(true)
       }
       if (form?.sk_status_pem_2 == true) {
-        setIsChecked2(true);
+        setIsChecked2(true)
       }
       if (form?.sk_status_pem_3 == true) {
-        setIsChecked3(true);
+        setIsChecked3(true)
       }
       if (form?.status_kepala_lab == true) {
-        setIsCheckedLab(true);
+        setIsCheckedLab(true)
       }
     }
-  }, [form]);
+  }, [form])
 
-  if ([user, menu, form, isDosenLoading].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, form, isDosenLoading].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -179,35 +166,29 @@ export default function PengajuanSkAction() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Nomor Nota Dinas
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Nomor Nota Dinas</Form.Label>
               <span>:</span>
               <Form.Input
                 type="link"
                 className="flex-1 border-none"
                 name="nomor_nota_dinas"
-                value={form.nomor_nota_dinas || "-"}
+                value={form.nomor_nota_dinas || '-'}
                 disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Nomor SK Penugasan
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Nomor SK Penugasan</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
                 className="flex-1 border-none"
                 name="nomor_sk"
-                value={form.nomor_sk || "-"}
+                value={form.nomor_sk || '-'}
                 disabled
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Tanggal SK Penugasan
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Tanggal SK Penugasan</Form.Label>
               <span>:</span>
               {form.tgl_sk && (
                 <Form.Input
@@ -235,7 +216,7 @@ export default function PengajuanSkAction() {
                 type="link"
                 className="flex-1 border-none"
                 name="link_dokumen_sk"
-                value={form.link_dokumen_sk || "-"}
+                value={form.link_dokumen_sk || '-'}
                 disabled
               />
             </Form.Group>
@@ -258,10 +239,9 @@ export default function PengajuanSkAction() {
             </svg>
             <span className="sr-only">Info</span>
             <div>
-              <span className="font-medium">Catatan!</span> Silahkan tandai
-              kotak di bawah ini jika Anda menyetujui untuk diajukan sebagai
-              Pembimbing / Kepala Lab mahasiswa terkait dalam Surat Keputusan
-              (SK)
+              <span className="font-medium">Catatan!</span> Silahkan tandai kotak di bawah ini jika
+              Anda menyetujui untuk diajukan sebagai Pembimbing / Kepala Lab mahasiswa terkait dalam
+              Surat Keputusan (SK)
             </div>
           </div>
           <div className="flow-root">
@@ -272,7 +252,7 @@ export default function PengajuanSkAction() {
                     <div className="flex-shrink-0">
                       <img
                         className="w-8 h-8 rounded-full"
-                        src={`${FILE_URL}/${pembimbing1Data?.image || "-"}`}
+                        src={`${FILE_URL}/${pembimbing1Data?.image || '-'}`}
                         alt="Neil image"
                       />
                     </div>
@@ -281,7 +261,7 @@ export default function PengajuanSkAction() {
                         Pembimbing {form.statusDosen}
                       </p>
                       <p className="text-md text-gray-500 truncate">
-                        {pembimbing1Data?.nama_lengkap || "-"}
+                        {pembimbing1Data?.nama_lengkap || '-'}
                       </p>
                     </div>
                     <div className="inline-flex items-center text-base font-semibold text-gray-900">
@@ -289,9 +269,7 @@ export default function PengajuanSkAction() {
                         className="cursor-pointer"
                         type="checkbox"
                         checked={isChecked1}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, form.id)
-                        }
+                        onChange={event => handleCheckboxChange(event, form.id)}
                         name="sk_status_pem_1"
                         disabled={isChecked1}
                       />
@@ -305,7 +283,7 @@ export default function PengajuanSkAction() {
                     <div className="flex-shrink-0">
                       <img
                         className="w-8 h-8 rounded-full"
-                        src={`${FILE_URL}/${pembimbing2Data?.image || "-"}`}
+                        src={`${FILE_URL}/${pembimbing2Data?.image || '-'}`}
                         alt="Neil image"
                       />
                     </div>
@@ -314,7 +292,7 @@ export default function PengajuanSkAction() {
                         Pembimbing {form.statusDosen}
                       </p>
                       <p className="text-md text-gray-500 truncate">
-                        {pembimbing2Data?.nama_lengkap || "-"}
+                        {pembimbing2Data?.nama_lengkap || '-'}
                       </p>
                     </div>
                     <div className="inline-flex items-center text-base font-semibold text-gray-900">
@@ -322,9 +300,7 @@ export default function PengajuanSkAction() {
                         className="cursor-pointer"
                         type="checkbox"
                         checked={isChecked2}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, form.id)
-                        }
+                        onChange={event => handleCheckboxChange(event, form.id)}
                         name="sk_status_pem_2"
                         disabled={isChecked2}
                       />
@@ -338,7 +314,7 @@ export default function PengajuanSkAction() {
                     <div className="flex-shrink-0">
                       <img
                         className="w-8 h-8 rounded-full"
-                        src={`${FILE_URL}/${pembimbing3Data?.image || "-"}`}
+                        src={`${FILE_URL}/${pembimbing3Data?.image || '-'}`}
                         alt="Neil image"
                       />
                     </div>
@@ -347,7 +323,7 @@ export default function PengajuanSkAction() {
                         Pembimbing {form.statusDosen}
                       </p>
                       <p className="text-md text-gray-500 truncate">
-                        {pembimbing3Data?.nama_lengkap || "-"}
+                        {pembimbing3Data?.nama_lengkap || '-'}
                       </p>
                     </div>
                     <div className="inline-flex items-center text-base font-semibold text-gray-900">
@@ -355,9 +331,7 @@ export default function PengajuanSkAction() {
                         className="cursor-pointer"
                         type="checkbox"
                         checked={isChecked3}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, form.id)
-                        }
+                        onChange={event => handleCheckboxChange(event, form.id)}
                         name="sk_status_pem_3"
                         disabled={isChecked3}
                       />
@@ -372,16 +346,14 @@ export default function PengajuanSkAction() {
                     <div className="flex-shrink-0">
                       <img
                         className="w-8 h-8 rounded-full"
-                        src={`${FILE_URL}/${kepalaLabData?.image || "-"}`}
+                        src={`${FILE_URL}/${kepalaLabData?.image || '-'}`}
                         alt="Neil image"
                       />
                     </div>
                     <div className="flex-1 min-w-0 ms-4">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        Kepala Lab
-                      </p>
+                      <p className="text-sm font-medium text-gray-900 truncate">Kepala Lab</p>
                       <p className="text-md text-gray-500 truncate">
-                        {kepalaLabData?.nama_lengkap || "-"}
+                        {kepalaLabData?.nama_lengkap || '-'}
                       </p>
                     </div>
                     <div className="inline-flex items-center text-base font-semibold text-gray-900">
@@ -389,9 +361,7 @@ export default function PengajuanSkAction() {
                         className="cursor-pointer"
                         type="checkbox"
                         checked={isCheckedLab}
-                        onChange={(event) =>
-                          handleCheckboxChange(event, form.id)
-                        }
+                        onChange={event => handleCheckboxChange(event, form.id)}
                         name="status_kepala_lab"
                         disabled={isCheckedLab}
                       />
@@ -404,16 +374,11 @@ export default function PengajuanSkAction() {
         </div>
 
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

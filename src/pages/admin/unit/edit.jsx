@@ -1,76 +1,74 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import useModal from "../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
-import Form from "../../../components/Form";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Button from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import useModal from '../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
+import Form from '../../../components/Form'
 
 const EditUnit = ({ id, onAction }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const [formData, setFormData] = useState({
-    code: "",
-    nama_unit: "",
-  });
+    code: '',
+    nama_unit: '',
+  })
 
-  const getData = async (id) => {
+  const getData = async id => {
     try {
-      const response = await axios.get(
-        `${process.env.API_ENDPOINT}/kategori/unit/${id}`
-      );
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/kategori/unit/${id}`)
 
-      const dataResponse = response.data.data;
+      const dataResponse = response.data.data
 
       setFormData({
         code: dataResponse.code,
         nama_unit: dataResponse.nama_unit,
-      });
+      })
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error)
     }
-  };
+  }
 
   useEffect(() => {
     if (show && id) {
-      getData(id);
+      getData(id)
     }
-  }, [show, id]);
+  }, [show, id])
 
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const inputHandler = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/kategori/unit/${id || ""}`,
-        formData
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/kategori/unit/${id || ''}`,
+        formData,
+      )
 
-      const responseData = response.data;
-      toastAlert("success", "Updated Successfully");
-      close();
-      onAction();
+      const responseData = response.data
+      toastAlert('success', 'Updated Successfully')
+      close()
+      onAction()
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   return (
     <>
@@ -118,7 +116,7 @@ const EditUnit = ({ id, onAction }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default EditUnit;
+export default EditUnit

@@ -1,16 +1,16 @@
-import { Icon } from "@iconify-icon/react";
-import Filter from "./filter";
+import { Icon } from '@iconify-icon/react'
+import Filter from './filter'
 
-import axios from "axios";
-import SortIcon from "../../../../components/SortIcon";
-import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
-import useDatatable from "../../../../hooks/useDatatable";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import { useEffect, useState } from "react";
+import axios from 'axios'
+import SortIcon from '../../../../components/SortIcon'
+import Button from '../../../../components/Button'
+import Pagination from '../../../../components/Pagination'
+import useDatatable from '../../../../hooks/useDatatable'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import { useEffect, useState } from 'react'
 
 export default function IPModule({ baseURL }) {
-  const dataUrl = `${process.env.API_ENDPOINT}/admin/all-ip`;
+  const dataUrl = `${process.env.NEXT_PUBLIC_API_URL}/admin/all-ip`
 
   const {
     data,
@@ -25,11 +25,11 @@ export default function IPModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(dataUrl);
+  } = useDatatable(dataUrl)
 
   useEffect(() => {
-    refresh();
-  }, [dataUrl]);
+    refresh()
+  }, [dataUrl])
 
   return (
     <>
@@ -45,10 +45,10 @@ export default function IPModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("ip_id")}
+                onClick={() => sortBy('ip_id')}
               >
                 No
-                <SortIcon sort={getSortBy("ip_id")} />
+                <SortIcon sort={getSortBy('ip_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -60,28 +60,25 @@ export default function IPModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("semester")}
+                onClick={() => sortBy('semester')}
               >
                 Semester
-                <SortIcon sort={getSortBy("semester")} />
+                <SortIcon sort={getSortBy('semester')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tahun")}
+                onClick={() => sortBy('tahun')}
               >
                 Tahun
-                <SortIcon sort={getSortBy("tahun")} />
+                <SortIcon sort={getSortBy('tahun')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div
-                className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("ip")}
-              >
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => sortBy('ip')}>
                 IPS
-                <SortIcon sort={getSortBy("ip")} />
+                <SortIcon sort={getSortBy('ip')} />
               </div>
             </th>
 
@@ -91,20 +88,14 @@ export default function IPModule({ baseURL }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -113,9 +104,7 @@ export default function IPModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
                   {row.nama_lengkap}
                 </td>
@@ -148,5 +137,5 @@ export default function IPModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

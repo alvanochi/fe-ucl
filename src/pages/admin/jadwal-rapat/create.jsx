@@ -1,111 +1,102 @@
-import { useRouter } from "next/router";
-import Button from "../../../components/Button";
-import Card from "../../../components/Card";
-import Form from "../../../components/Form";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
-import useMenu from "../../../hooks/useMenu";
-import useUser from "../../../hooks/useUser";
-import useDatatable from "../../../hooks/useDatatable";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import useDosen from "../../../repo/dosen";
-import useMahasiswa from "../../../repo/mahasiswa";
-import useForm from "../../../hooks/useForm";
-import useCRUD from "../../../hooks/useCRUD";
+import { useRouter } from 'next/router'
+import Button from '../../../components/Button'
+import Card from '../../../components/Card'
+import Form from '../../../components/Form'
+import Layout from '../../../components/Layout'
+import PageHeader from '../../../components/PageHeader'
+import useMenu from '../../../hooks/useMenu'
+import useUser from '../../../hooks/useUser'
+import useDatatable from '../../../hooks/useDatatable'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import useDosen from '../../../repo/dosen'
+import useMahasiswa from '../../../repo/mahasiswa'
+import useForm from '../../../hooks/useForm'
+import useCRUD from '../../../hooks/useCRUD'
 
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
-import { ROLE_ID_ADMIN } from "../../../config/role";
-import { Icon } from "@iconify-icon/react";
-import _ from "underscore";
-import { Loading } from "../../../components/Loading";
-import useGroup from "../../../repo/group";
-import useKategoriKegiatan from "../../../repo/kategori-kegiatan";
-import useRuangan from "../../../repo/ruangan";
-import useUsers from "../../../repo/users";
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
+import { ROLE_ID_ADMIN } from '../../../config/role'
+import { Icon } from '@iconify-icon/react'
+import _ from 'underscore'
+import { Loading } from '../../../components/Loading'
+import useGroup from '../../../repo/group'
+import useKategoriKegiatan from '../../../repo/kategori-kegiatan'
+import useRuangan from '../../../repo/ruangan'
+import useUsers from '../../../repo/users'
 
 export default function CreateJadwal() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const STORE_URL = `${process.env.API_ENDPOINT}/meet/store`;
+  const STORE_URL = `${process.env.NEXT_PUBLIC_API_URL}/meet/store`
 
   const INITIAL_PESERTA_DOSEN = {
-    nip: "",
-  };
+    nip: '',
+  }
   const INITIAL_PESERTA_MHS = {
-    npm: "",
-  };
+    npm: '',
+  }
   const INITIAL_GROUPS = {
-    id: "",
-  };
+    id: '',
+  }
 
   const INITIAL_FORM = {
-    nm_pengundang: "",
-    nm_kegiatan: "",
-    pertemuan: "",
-    ruangan: "",
-    status_ruangan: "",
-    tanggal: "",
-    waktu: "",
-    waktu_end: "",
-    narsum: "",
-    ket_narsum: "",
-    link_online: "",
-    tipe_kegiatan: "",
+    nm_pengundang: '',
+    nm_kegiatan: '',
+    pertemuan: '',
+    ruangan: '',
+    status_ruangan: '',
+    tanggal: '',
+    waktu: '',
+    waktu_end: '',
+    narsum: '',
+    ket_narsum: '',
+    link_online: '',
+    tipe_kegiatan: '',
     peserta_dosen: [],
     peserta_mahasiswa: [],
     groups: [],
-  };
+  }
 
   const { formdata, submitHandler } = useCRUD(STORE_URL, INITIAL_FORM, {
     rules: [
-      { field: "nm_pengundang", label: "Nama Pengundang" },
-      { field: "nm_kegiatan", label: "Nama Kegiatan" },
-      { field: "pertemuan", label: "Pertemuan" },
-      { field: "ruangan", label: "Ruangan" },
-      { field: "status_ruangan", label: "Status Ruangan" },
-      { field: "tanggal", label: "Tanggal" },
-      { field: "waktu", label: "Waktu" },
+      { field: 'nm_pengundang', label: 'Nama Pengundang' },
+      { field: 'nm_kegiatan', label: 'Nama Kegiatan' },
+      { field: 'pertemuan', label: 'Pertemuan' },
+      { field: 'ruangan', label: 'Ruangan' },
+      { field: 'status_ruangan', label: 'Status Ruangan' },
+      { field: 'tanggal', label: 'Tanggal' },
+      { field: 'waktu', label: 'Waktu' },
     ],
-    transformData: (data) =>
+    transformData: data =>
       _.omit(
         {
           ...data,
           peserta: JSON.stringify({
-            peserta_mhs: data.peserta_mahasiswa.map((item) =>
-              _.omit(item, ["role"])
-            ),
-            peserta_dosen: data.peserta_dosen.map((item) =>
-              _.omit(item, ["role"])
-            ),
-            groups: data.groups.map((item) => _.omit(item, ["role"])),
+            peserta_mhs: data.peserta_mahasiswa.map(item => _.omit(item, ['role'])),
+            peserta_dosen: data.peserta_dosen.map(item => _.omit(item, ['role'])),
+            groups: data.groups.map(item => _.omit(item, ['role'])),
           }),
         },
-        ["peserta_dosen", "peserta_mahasiswa", "groups"]
+        ['peserta_dosen', 'peserta_mahasiswa', 'groups'],
       ),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
-  const { data: listKegiatan, isLoading: isKegiatanLoading } =
-    useKategoriKegiatan([user]);
-  const { data: listGroup, isLoading: isGroupLoading } = useGroup([user]);
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
-  const { data: listRuangan, isLoading: isRuanganLoading } = useRuangan([user]);
-  const { data: listUsers, isLoading: isUsersLoading } = useUsers([user]);
+  const { form, inputHandler, setForm } = formdata
+  const { data: listKegiatan, isLoading: isKegiatanLoading } = useKategoriKegiatan([user])
+  const { data: listGroup, isLoading: isGroupLoading } = useGroup([user])
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
+  const { data: listRuangan, isLoading: isRuanganLoading } = useRuangan([user])
+  const { data: listUsers, isLoading: isUsersLoading } = useUsers([user])
 
   const removeFromUser = (key, index, role) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-      [key]: state[key].filter(
-        (item, idx) => item.role == role && idx != index
-      ),
-    }));
+      [key]: state[key].filter((item, idx) => item.role == role && idx != index),
+    }))
 
   if (
     [
@@ -117,9 +108,9 @@ export default function CreateJadwal() {
       isKegiatanLoading,
       isRuanganLoading,
       isUsersLoading,
-    ].some((item) => item == null)
+    ].some(item => item == null)
   )
-    return <Loading />;
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -149,7 +140,7 @@ export default function CreateJadwal() {
               <Form.Combobox
                 className="border-blue-900"
                 name="tipe_kegiatan"
-                onChange={(selected) =>
+                onChange={selected =>
                   inputHandler({
                     target: {
                       attributes: {
@@ -157,7 +148,7 @@ export default function CreateJadwal() {
                           value: selected?.value,
                         },
                       },
-                      name: "tipe_kegiatan",
+                      name: 'tipe_kegiatan',
                       value: selected?.value,
                     },
                   })
@@ -166,7 +157,7 @@ export default function CreateJadwal() {
                 options={
                   listKegiatan &&
                   Array.isArray(listKegiatan) &&
-                  listKegiatan.map((keg) => ({
+                  listKegiatan.map(keg => ({
                     label: keg.nama_kegiatan,
                     value: keg.id,
                   }))
@@ -224,7 +215,7 @@ export default function CreateJadwal() {
               <Form.Combobox
                 className="border-blue-900"
                 name="narsum"
-                onChange={(selected) =>
+                onChange={selected =>
                   inputHandler({
                     target: {
                       attributes: {
@@ -232,7 +223,7 @@ export default function CreateJadwal() {
                           value: selected?.value,
                         },
                       },
-                      name: "narsum",
+                      name: 'narsum',
                       value: selected?.value,
                     },
                   })
@@ -241,7 +232,7 @@ export default function CreateJadwal() {
                 options={
                   listUsers &&
                   Array.isArray(listUsers) &&
-                  listUsers.map((user) => ({
+                  listUsers.map(user => ({
                     label: `${user.personal_data?.nama_lengkap} - ${
                       user.npm ? user.npm : user.personal_data?.nip
                     }`,
@@ -273,7 +264,7 @@ export default function CreateJadwal() {
               <Form.Combobox
                 className="border-blue-900"
                 name="ruangan"
-                onChange={(selected) =>
+                onChange={selected =>
                   inputHandler({
                     target: {
                       attributes: {
@@ -281,7 +272,7 @@ export default function CreateJadwal() {
                           value: selected?.value,
                         },
                       },
-                      name: "ruangan",
+                      name: 'ruangan',
                       value: selected?.value,
                     },
                   })
@@ -290,7 +281,7 @@ export default function CreateJadwal() {
                 options={
                   listRuangan &&
                   Array.isArray(listRuangan) &&
-                  listRuangan.map((ruang) => ({
+                  listRuangan.map(ruang => ({
                     label: ruang.nama_ruangan,
                     value: ruang.id,
                   }))
@@ -372,27 +363,15 @@ export default function CreateJadwal() {
               <span>:</span>
               <div className="flex gap-4">
                 <Form.Label>
-                  <Form.Radio
-                    name="status_ruangan"
-                    onChange={inputHandler}
-                    value={0}
-                  />
+                  <Form.Radio name="status_ruangan" onChange={inputHandler} value={0} />
                   Offline
                 </Form.Label>
                 <Form.Label>
-                  <Form.Radio
-                    name="status_ruangan"
-                    onChange={inputHandler}
-                    value={1}
-                  />
+                  <Form.Radio name="status_ruangan" onChange={inputHandler} value={1} />
                   Online
                 </Form.Label>
                 <Form.Label>
-                  <Form.Radio
-                    name="status_ruangan"
-                    onChange={inputHandler}
-                    value={2}
-                  />
+                  <Form.Radio name="status_ruangan" onChange={inputHandler} value={2} />
                   Hybird
                 </Form.Label>
               </div>
@@ -407,25 +386,18 @@ export default function CreateJadwal() {
               cellPadding={10}
             >
               <colgroup>
-                <col style={{ width: "80%" }} />
-                <col style={{ width: "20%" }} />
+                <col style={{ width: '80%' }} />
+                <col style={{ width: '20%' }} />
               </colgroup>
               <thead>
                 <tr>
-                  <th
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     Undang Group
                   </th>
                 </tr>
                 <tr>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Nama Group
-                  </th>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Action
-                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Nama Group</th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -435,7 +407,7 @@ export default function CreateJadwal() {
                       <Form.Combobox
                         index={index}
                         name="groups.id"
-                        onChange={(selected) =>
+                        onChange={selected =>
                           inputHandler({
                             target: {
                               attributes: {
@@ -443,7 +415,7 @@ export default function CreateJadwal() {
                                   value: index,
                                 },
                               },
-                              name: "groups.id",
+                              name: 'groups.id',
                               value: selected?.value,
                             },
                           })
@@ -452,7 +424,7 @@ export default function CreateJadwal() {
                         options={
                           listGroup &&
                           Array.isArray(listGroup) &&
-                          listGroup.map((group) => ({
+                          listGroup.map(group => ({
                             label: group.nama_group,
                             value: group.id,
                           }))
@@ -466,15 +438,9 @@ export default function CreateJadwal() {
                           type="button"
                           variant="danger"
                           icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
+                            <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                           }
-                          onClick={() =>
-                            removeFromUser("groups", index, "Groups")
-                          }
+                          onClick={() => removeFromUser('groups', index, 'Groups')}
                         />
                       </div>
                     </td>
@@ -483,21 +449,15 @@ export default function CreateJadwal() {
               </tbody>
               <tfoot>
                 <tr>
-                  <td
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     <Button
                       type="button"
                       variant="primary"
                       className="mx-auto"
                       onClick={() =>
-                        setForm((state) => ({
+                        setForm(state => ({
                           ...state,
-                          groups: [
-                            ...state.groups,
-                            { ...INITIAL_GROUPS, role: "Admin" },
-                          ],
+                          groups: [...state.groups, { ...INITIAL_GROUPS, role: 'Admin' }],
                         }))
                       }
                     >
@@ -517,25 +477,18 @@ export default function CreateJadwal() {
               cellPadding={10}
             >
               <colgroup>
-                <col style={{ width: "80%" }} />
-                <col style={{ width: "20%" }} />
+                <col style={{ width: '80%' }} />
+                <col style={{ width: '20%' }} />
               </colgroup>
               <thead>
                 <tr>
-                  <th
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     Undang Peserta Rapat Pendidik(Dosen)
                   </th>
                 </tr>
                 <tr>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Nama
-                  </th>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Action
-                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -545,7 +498,7 @@ export default function CreateJadwal() {
                       <Form.Combobox
                         index={index}
                         name="peserta_dosen.nip"
-                        onChange={(selected) =>
+                        onChange={selected =>
                           inputHandler({
                             target: {
                               attributes: {
@@ -553,7 +506,7 @@ export default function CreateJadwal() {
                                   value: index,
                                 },
                               },
-                              name: "peserta_dosen.nip",
+                              name: 'peserta_dosen.nip',
                               value: selected?.value,
                             },
                           })
@@ -562,7 +515,7 @@ export default function CreateJadwal() {
                         options={
                           listDosen &&
                           Array.isArray(listDosen) &&
-                          listDosen.map((dosen) => ({
+                          listDosen.map(dosen => ({
                             label: dosen.nama_lengkap,
                             value: dosen.nip,
                           }))
@@ -576,15 +529,9 @@ export default function CreateJadwal() {
                           type="button"
                           variant="danger"
                           icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
+                            <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                           }
-                          onClick={() =>
-                            removeFromUser("peserta_dosen", index, "Dosen")
-                          }
+                          onClick={() => removeFromUser('peserta_dosen', index, 'Dosen')}
                         />
                       </div>
                     </td>
@@ -593,20 +540,17 @@ export default function CreateJadwal() {
               </tbody>
               <tfoot>
                 <tr>
-                  <td
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     <Button
                       type="button"
                       variant="primary"
                       className="mx-auto"
                       onClick={() =>
-                        setForm((state) => ({
+                        setForm(state => ({
                           ...state,
                           peserta_dosen: [
                             ...state.peserta_dosen,
-                            { ...INITIAL_PESERTA_DOSEN, role: "Dosen" },
+                            { ...INITIAL_PESERTA_DOSEN, role: 'Dosen' },
                           ],
                         }))
                       }
@@ -624,25 +568,18 @@ export default function CreateJadwal() {
               cellPadding={10}
             >
               <colgroup>
-                <col style={{ width: "80%" }} />
-                <col style={{ width: "20%" }} />
+                <col style={{ width: '80%' }} />
+                <col style={{ width: '20%' }} />
               </colgroup>
               <thead>
                 <tr>
-                  <th
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     Undang Peserta Rapat Mahasiswa
                   </th>
                 </tr>
                 <tr>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Nama
-                  </th>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Action
-                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -652,7 +589,7 @@ export default function CreateJadwal() {
                       <Form.Combobox
                         index={index}
                         name="peserta_mahasiswa.npm"
-                        onChange={(selected) =>
+                        onChange={selected =>
                           inputHandler({
                             target: {
                               attributes: {
@@ -660,7 +597,7 @@ export default function CreateJadwal() {
                                   value: index,
                                 },
                               },
-                              name: "peserta_mahasiswa.npm",
+                              name: 'peserta_mahasiswa.npm',
                               value: selected?.value,
                             },
                           })
@@ -669,7 +606,7 @@ export default function CreateJadwal() {
                         options={
                           listMahasiswa &&
                           Array.isArray(listMahasiswa) &&
-                          listMahasiswa.map((mahasiswa) => ({
+                          listMahasiswa.map(mahasiswa => ({
                             label: `${mahasiswa.nama_lengkap} - ${mahasiswa.npm}`,
                             value: mahasiswa.npm,
                           }))
@@ -683,19 +620,9 @@ export default function CreateJadwal() {
                           type="button"
                           variant="danger"
                           icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
+                            <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                           }
-                          onClick={() =>
-                            removeFromUser(
-                              "peserta_mahasiswa",
-                              index,
-                              "Mahasiswa"
-                            )
-                          }
+                          onClick={() => removeFromUser('peserta_mahasiswa', index, 'Mahasiswa')}
                         />
                       </div>
                     </td>
@@ -704,20 +631,17 @@ export default function CreateJadwal() {
               </tbody>
               <tfoot>
                 <tr>
-                  <td
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     <Button
                       type="button"
                       variant="primary"
                       className="mx-auto"
                       onClick={() =>
-                        setForm((state) => ({
+                        setForm(state => ({
                           ...state,
                           peserta_mahasiswa: [
                             ...state.peserta_mahasiswa,
-                            { ...INITIAL_PESERTA_MHS, role: "Mahasiswa" },
+                            { ...INITIAL_PESERTA_MHS, role: 'Mahasiswa' },
                           ],
                         }))
                       }
@@ -732,12 +656,7 @@ export default function CreateJadwal() {
         </div>
 
         <div className="flex gap-4 mt-8 mb-8">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -746,5 +665,5 @@ export default function CreateJadwal() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

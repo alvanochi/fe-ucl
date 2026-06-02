@@ -1,13 +1,13 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../components/Button";
-import Card from "../../components/Card";
-import Form from "../../components/Form";
-import useDatatable from "../../hooks/useDatatable";
-import date from "../../utils/date";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../components/Button'
+import Card from '../../components/Card'
+import Form from '../../components/Form'
+import useDatatable from '../../hooks/useDatatable'
+import date from '../../utils/date'
 
 export default function WaliModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
-  const { data, loading } = useDatatable(DATA_URL);
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataPribadi`
+  const { data, loading } = useDatatable(DATA_URL)
 
   return (
     <>
@@ -43,5 +43,5 @@ export default function WaliModule({ baseURL }) {
         </Card.Body>
       </Card>
     </>
-  );
+  )
 }

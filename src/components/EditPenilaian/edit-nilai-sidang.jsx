@@ -1,58 +1,56 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Button from "../Button";
-import Modal from "../Modal";
-import Form from "../Form";
-import useModal from "../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Button from '../Button'
+import Modal from '../Modal'
+import Form from '../Form'
+import useModal from '../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import { MySwal, loadingAlert, toastAlert } from '../../lib/sweetalert'
 
 const EditNilaiSidang = ({ title, data, name, id, onSuccess, db }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
-  const [formData, setFormData] = useState(0);
+  const [formData, setFormData] = useState(0)
 
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setFormData(value);
-  };
+  const inputHandler = e => {
+    const { name, value } = e.target
+    setFormData(value)
+  }
 
   useEffect(() => {
-    setFormData(data);
-  }, [setFormData, data]);
+    setFormData(data)
+  }, [setFormData, data])
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
       const dataToEdit = {
         db: db,
         [name]: formData,
-      };
+      }
 
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/tugas-akhir/update-nilai-sidang/${
-          id || ""
-        }`,
-        dataToEdit
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/update-nilai-sidang/${id || ''}`,
+        dataToEdit,
+      )
 
-      const responseData = response.data;
-      toastAlert("success", "Updated Successfully");
-      close();
-      onSuccess();
+      const responseData = response.data
+      toastAlert('success', 'Updated Successfully')
+      close()
+      onSuccess()
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   return (
     <>
@@ -88,7 +86,7 @@ const EditNilaiSidang = ({ title, data, name, id, onSuccess, db }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default EditNilaiSidang;
+export default EditNilaiSidang

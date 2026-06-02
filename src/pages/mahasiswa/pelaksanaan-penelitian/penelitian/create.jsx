@@ -1,114 +1,102 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import KolabolatorEksternal from "../../../../modules/pelaksanaan-penelitian/penelitian/kolaborator-eksternal";
-import UploadDokumen from "../../../../modules/pelaksanaan-penelitian/penelitian/upload-dokumen";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import useDosen from "../../../../repo/dosen";
-import useMahasiswa from "../../../../repo/mahasiswa";
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../config/role";
-import _ from "underscore";
-import useKategoriPublikasi from "../../../../repo/kategori-publikasi";
-import { Loading } from "../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import KolabolatorEksternal from '../../../../modules/pelaksanaan-penelitian/penelitian/kolaborator-eksternal'
+import UploadDokumen from '../../../../modules/pelaksanaan-penelitian/penelitian/upload-dokumen'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import useDosen from '../../../../repo/dosen'
+import useMahasiswa from '../../../../repo/mahasiswa'
+import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../config/role'
+import _ from 'underscore'
+import useKategoriPublikasi from '../../../../repo/kategori-publikasi'
+import { Loading } from '../../../../components/Loading'
 
 export default function PenelitianCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penelitian/addPenelitian`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/addPenelitian`
 
   const INITIAL_ANGGOTA = {
-    user_id: "",
-    peran: "",
+    user_id: '',
+    peran: '',
     status: false,
-    role: "",
-  };
+    role: '',
+  }
 
   const INITIAL_FORM = {
-    kategori_id: "",
-    judul_kegiatan: "",
-    kelompok_bidang: "",
-    lokasi_kegiatan: "",
-    tahun_usulan: "",
-    tahun_kegiatan: "",
-    tahun_pelaksanaan: "",
-    lama_kegiatan: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    nama_dok: "",
-    keterangan: "",
-    tautan_dok: "",
+    kategori_id: '',
+    judul_kegiatan: '',
+    kelompok_bidang: '',
+    lokasi_kegiatan: '',
+    tahun_usulan: '',
+    tahun_kegiatan: '',
+    tahun_pelaksanaan: '',
+    lama_kegiatan: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    nama_dok: '',
+    keterangan: '',
+    tautan_dok: '',
     anggota_penelitian_dosen: [],
     anggota_penelitian_mahasiswa: [],
-  };
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     success: () => router.push(prefix + menu.url),
-    transformData: (data) =>
+    transformData: data =>
       _.omit(
         {
           ...data,
           anggota_penelitian: JSON.stringify([
-            ...data.anggota_penelitian_dosen.map((item) =>
-              _.omit(item, ["role"])
-            ),
-            ...data.anggota_penelitian_mahasiswa.map((item) =>
-              _.omit(item, ["role"])
-            ),
+            ...data.anggota_penelitian_dosen.map(item => _.omit(item, ['role'])),
+            ...data.anggota_penelitian_mahasiswa.map(item => _.omit(item, ['role'])),
           ]),
         },
-        ["anggota_penelitian_dosen", "anggota_penelitian_mahasiswa"]
+        ['anggota_penelitian_dosen', 'anggota_penelitian_mahasiswa'],
       ),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } =
-    useKategoriPublikasi([user]);
-
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
+  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } = useKategoriPublikasi([
     user,
-  ]);
+  ])
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
+
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
   const removeFromUser = (key, index, role) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-      [key]: state[key].filter(
-        (item, idx) => item.role == role && idx != index
-      ),
-    }));
+      [key]: state[key].filter((item, idx) => item.role == role && idx != index),
+    }))
 
   useEffect(() => {
-    if (!user) return;
-    setForm((state) => ({
+    if (!user) return
+    setForm(state => ({
       ...state,
       [`anggota_penelitian_${String(user?.role).toLowerCase()}`]: [
         { ...INITIAL_ANGGOTA, user_id: user?.user_id, role: user?.role },
       ],
-    }));
-  }, [user]);
+    }))
+  }, [user])
 
   if (
-    [
-      user,
-      menu,
-      isDosenLoading,
-      isMahasiswaLoading,
-      isLoadingKategoriPublikasi,
-    ].some((item) => item == null)
+    [user, menu, isDosenLoading, isMahasiswaLoading, isLoadingKategoriPublikasi].some(
+      item => item == null,
+    )
   )
-    return <Loading />;
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -128,7 +116,7 @@ export default function PenelitianCreate() {
                 onChange={inputHandler}
                 options={
                   kategoriPublikasi &&
-                  kategoriPublikasi.map((item) => ({
+                  kategoriPublikasi.map(item => ({
                     label: `${item.nama_kategori} - ${item.tingkatan}`,
                     value: item.id,
                   }))
@@ -186,13 +174,12 @@ export default function PenelitianCreate() {
                 name="tahun_usulan"
                 onChange={inputHandler}
                 value={form.tahun_usulan}
-                options={Array.from(
-                  { length: 6 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
-                  label: item,
-                  value: item,
-                }))}
+                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
+                  item => ({
+                    label: item,
+                    value: item,
+                  }),
+                )}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -205,13 +192,12 @@ export default function PenelitianCreate() {
                 name="tahun_kegiatan"
                 onChange={inputHandler}
                 value={form.tahun_kegiatan}
-                options={Array.from(
-                  { length: 6 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
-                  label: item,
-                  value: item,
-                }))}
+                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
+                  item => ({
+                    label: item,
+                    value: item,
+                  }),
+                )}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -224,13 +210,12 @@ export default function PenelitianCreate() {
                 name="tahun_pelaksanaan"
                 onChange={inputHandler}
                 value={form.tahun_pelaksanaan}
-                options={Array.from(
-                  { length: 6 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
-                  label: item,
-                  value: item,
-                }))}
+                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
+                  item => ({
+                    label: item,
+                    value: item,
+                  }),
+                )}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -287,23 +272,14 @@ export default function PenelitianCreate() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Dosen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -314,7 +290,7 @@ export default function PenelitianCreate() {
                   <Form.Combobox
                     index={index}
                     name="anggota_penelitian_dosen.user_id"
-                    onChange={(selected) =>
+                    onChange={selected =>
                       inputHandler({
                         target: {
                           attributes: {
@@ -322,7 +298,7 @@ export default function PenelitianCreate() {
                               value: index,
                             },
                           },
-                          name: "anggota_penelitian_dosen.user_id",
+                          name: 'anggota_penelitian_dosen.user_id',
                           value: selected?.value,
                         },
                       })
@@ -331,7 +307,7 @@ export default function PenelitianCreate() {
                     options={
                       listDosen &&
                       Array.isArray(listDosen) &&
-                      listDosen.map((dosen) => ({
+                      listDosen.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -346,8 +322,8 @@ export default function PenelitianCreate() {
                     onChange={inputHandler}
                     value={form.anggota_penelitian_dosen[index].peran}
                     options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
+                      { label: 'Ketua', value: 'ketua' },
+                      { label: 'Anggota', value: 'anggota' },
                     ]}
                   />
                 </td>
@@ -358,7 +334,7 @@ export default function PenelitianCreate() {
                       name="anggota_penelitian_dosen.status"
                       onChange={inputHandler}
                       checked={form.anggota_penelitian_dosen[index].status}
-                    />{" "}
+                    />{' '}
                     Aktif
                   </Form.Label>
                 </td>
@@ -368,20 +344,8 @@ export default function PenelitianCreate() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          removeFromUser(
-                            "anggota_penelitian_dosen",
-                            index,
-                            "Dosen"
-                          )
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => removeFromUser('anggota_penelitian_dosen', index, 'Dosen')}
                       />
                     )}
                   </div>
@@ -391,20 +355,17 @@ export default function PenelitianCreate() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       anggota_penelitian_dosen: [
                         ...state.anggota_penelitian_dosen,
-                        { ...INITIAL_ANGGOTA, role: "Dosen" },
+                        { ...INITIAL_ANGGOTA, role: 'Dosen' },
                       ],
                     }))
                   }
@@ -421,23 +382,14 @@ export default function PenelitianCreate() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Mahasiswa
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -448,7 +400,7 @@ export default function PenelitianCreate() {
                   <Form.Combobox
                     index={index}
                     name="anggota_penelitian_mahasiswa.user_id"
-                    onChange={(selected) =>
+                    onChange={selected =>
                       inputHandler({
                         target: {
                           attributes: {
@@ -456,18 +408,16 @@ export default function PenelitianCreate() {
                               value: index,
                             },
                           },
-                          name: "anggota_penelitian_mahasiswa.user_id",
+                          name: 'anggota_penelitian_mahasiswa.user_id',
                           value: selected?.value,
                         },
                       })
                     }
-                    value={
-                      form.anggota_penelitian_mahasiswa[index].user_id || ""
-                    }
+                    value={form.anggota_penelitian_mahasiswa[index].user_id || ''}
                     options={
                       listMahasiswa &&
                       Array.isArray(listMahasiswa) &&
-                      listMahasiswa.map((mhs) => ({
+                      listMahasiswa.map(mhs => ({
                         label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                         value: mhs.user_id,
                       }))
@@ -482,8 +432,8 @@ export default function PenelitianCreate() {
                     onChange={inputHandler}
                     value={form.anggota_penelitian_mahasiswa[index].peran}
                     options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
+                      { label: 'Ketua', value: 'ketua' },
+                      { label: 'Anggota', value: 'anggota' },
                     ]}
                     required
                   />
@@ -496,7 +446,7 @@ export default function PenelitianCreate() {
                       onChange={inputHandler}
                       checked={form.anggota_penelitian_mahasiswa[index].status}
                       required
-                    />{" "}
+                    />{' '}
                     Aktif
                   </Form.Label>
                 </td>
@@ -506,19 +456,9 @@ export default function PenelitianCreate() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
                         onClick={() =>
-                          removeFromUser(
-                            "anggota_penelitian_mahasiswa",
-                            index,
-                            "Mahasiswa"
-                          )
+                          removeFromUser('anggota_penelitian_mahasiswa', index, 'Mahasiswa')
                         }
                       />
                     )}
@@ -529,20 +469,17 @@ export default function PenelitianCreate() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       anggota_penelitian_mahasiswa: [
                         ...state.anggota_penelitian_mahasiswa,
-                        { ...INITIAL_ANGGOTA, role: "Mahasiswa" },
+                        { ...INITIAL_ANGGOTA, role: 'Mahasiswa' },
                       ],
                     }))
                   }
@@ -554,12 +491,7 @@ export default function PenelitianCreate() {
           </tfoot>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -568,5 +500,5 @@ export default function PenelitianCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

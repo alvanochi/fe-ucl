@@ -1,25 +1,25 @@
-import { useRouter } from "next/router";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import useDatatableAbsensi from "../../../../../hooks/useDataTableAbsensi";
-import Button from "../../../../../components/Button";
-import { Icon } from "@iconify-icon/react";
-import { useEffect, useState } from "react";
-import useDatatable from "../../../../../hooks/useDatatable";
-import UploadTugas from "../uploadTugas";
-import { Loading } from "../../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import useDatatableAbsensi from '../../../../../hooks/useDataTableAbsensi'
+import Button from '../../../../../components/Button'
+import { Icon } from '@iconify-icon/react'
+import { useEffect, useState } from 'react'
+import useDatatable from '../../../../../hooks/useDatatable'
+import UploadTugas from '../uploadTugas'
+import { Loading } from '../../../../../components/Loading'
 
 export default function ListPerkuliahan() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/absensi/get-absensi-mhs`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/absensi/get-absensi-mhs`
 
-  const id = router.query.id || "";
-  const [idmatkul, kelas] = id.split("-");
+  const id = router.query.id || ''
+  const [idmatkul, kelas] = id.split('-')
 
   const {
     data,
@@ -37,20 +37,16 @@ export default function ListPerkuliahan() {
   } = useDatatable(DATA_URL, {
     id_matkul: idmatkul,
     kelas: kelas,
-  });
+  })
 
   const handleEditDok = () => {
-    refresh();
-  };
+    refresh()
+  }
 
-  if ([user, menu, loading].some((item) => item == null)) return <Loading />;
+  if ([user, menu, loading].some(item => item == null)) return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title={"Presensi Perkuliahan"}
-        icon={menu.icon}
-        handler={setActive}
-      />
+      <PageHeader title={'Presensi Perkuliahan'} icon={menu.icon} handler={setActive} />
       <div className="flex justify-center gap-2 mb-8"></div>
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
@@ -62,24 +58,16 @@ export default function ListPerkuliahan() {
               <div className="flex items-center gap-2 cursor-pointer">No</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Matakuliah
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Matakuliah</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Pertemuan
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Pertemuan</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status Kelas
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status Kelas</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status Absen
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status Absen</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">Tugas</th>
             <th className="text-sm border-2 border-white bg-gray-200">Nilai</th>
@@ -88,20 +76,14 @@ export default function ListPerkuliahan() {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -110,9 +92,7 @@ export default function ListPerkuliahan() {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.pembelajaran.matkul?.name}
                 </td>
@@ -121,30 +101,27 @@ export default function ListPerkuliahan() {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.pembelajaran?.status_kelas === 1
-                    ? "ONLINE"
+                    ? 'ONLINE'
                     : row.pembelajaran?.status_kelas === 0
-                    ? "OFFLINE"
-                    : "HYBRID"}
+                      ? 'OFFLINE'
+                      : 'HYBRID'}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.status_absen === 1
-                    ? "MASUK"
+                    ? 'MASUK'
                     : row.status_absen === 2
-                    ? "SAKIT"
-                    : row.status_absen === 0
-                    ? "ALFA"
-                    : ""}
+                      ? 'SAKIT'
+                      : row.status_absen === 0
+                        ? 'ALFA'
+                        : ''}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                   <div className="flex items-stretch gap-1">
-                    <UploadTugas
-                      data={{ id: row.id }}
-                      onEditAbsensi={handleEditDok}
-                    />
+                    <UploadTugas data={{ id: row.id }} onEditAbsensi={handleEditDok} />
                   </div>
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.nilai ? row.nilai : "-"}
+                  {row.nilai ? row.nilai : '-'}
                 </td>
               </tr>
             ))}
@@ -156,9 +133,7 @@ export default function ListPerkuliahan() {
           as="a"
           href={`${prefix + menu.url}`}
           variant="danger"
-          icon={
-            <Icon icon="material-symbols:chevron-left" width={20} height={20} />
-          }
+          icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
           iconPosition="left"
           pill
         >
@@ -166,5 +141,5 @@ export default function ListPerkuliahan() {
         </Button>
       </div>
     </Layout>
-  );
+  )
 }

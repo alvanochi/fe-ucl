@@ -1,80 +1,80 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useCRUD from "../../../../hooks/useCRUD";
-import { Icon } from "@iconify-icon/react";
-import { useEffect, useState } from "react";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import { Icon } from '@iconify-icon/react'
+import { useEffect, useState } from 'react'
+import { Loading } from '../../../../components/Loading'
 
 export default function CreateQuestion() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const [jawaban, setJawaban] = useState([{ jawaban: "", status_jawaban: 0 }]);
+  const [jawaban, setJawaban] = useState([{ jawaban: '', status_jawaban: 0 }])
 
-  const API_URL = `${process.env.API_ENDPOINT}/voting/question-detail`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/question-detail`
 
   const INITIAL_FORM = {
-    id: "",
-    deskripsi: "",
-    status_pertanyaan: "",
+    id: '',
+    deskripsi: '',
+    status_pertanyaan: '',
     dataOptions: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, setForm } = formdata;
+  const { form, setForm } = formdata
 
   const tambahJawaban = () => {
     const newOption = {
-      jawaban: "",
+      jawaban: '',
       status_jawaban: 0,
       id_pertanyaan: form.id,
-    }; // Sertakan id_pertanyaan saat menambahkan jawaban baru
-    setForm((prevForm) => ({
+    } // Sertakan id_pertanyaan saat menambahkan jawaban baru
+    setForm(prevForm => ({
       ...prevForm,
       dataOptions: [...prevForm.dataOptions, newOption],
-    }));
-  };
+    }))
+  }
 
-  const hapusJawaban = (index) => {
-    setForm((prevForm) => ({
+  const hapusJawaban = index => {
+    setForm(prevForm => ({
       ...prevForm,
       dataOptions: prevForm.dataOptions.filter((_, i) => i !== index),
-    }));
-  };
+    }))
+  }
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/voting/question`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/question`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
   useEffect(() => {
-    if (!router.isReady || !user) return;
+    if (!router.isReady || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...INITIAL_FORM,
         ...data.dataPertanyaan[0],
         dataOptions: data.dataOptions,
       }),
-    });
-  }, [router.isReady, user]);
+    })
+  }, [router.isReady, user])
 
-  if (!user || !menu) return <Loading />;
+  if (!user || !menu) return <Loading />
 
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)}>
         <Card className="mt-4">
           <Card.Header className="text-center">Pertanyaan</Card.Header>
           <Card.Body className="space-y-4">
@@ -88,8 +88,8 @@ export default function CreateQuestion() {
                 rows="5"
                 name="deskripsi"
                 value={form.deskripsi}
-                onChange={(e) =>
-                  setForm((prevForm) => ({
+                onChange={e =>
+                  setForm(prevForm => ({
                     ...prevForm,
                     deskripsi: e.target.value,
                   }))
@@ -109,7 +109,7 @@ export default function CreateQuestion() {
                     value={1}
                     checked={form.status_pertanyaan === 1}
                     onChange={() =>
-                      setForm((prevForm) => ({
+                      setForm(prevForm => ({
                         ...prevForm,
                         status_pertanyaan: 1,
                       }))
@@ -123,7 +123,7 @@ export default function CreateQuestion() {
                     value={0}
                     checked={form.status_pertanyaan === 0}
                     onChange={() =>
-                      setForm((prevForm) => ({
+                      setForm(prevForm => ({
                         ...prevForm,
                         status_pertanyaan: 0,
                       }))
@@ -143,25 +143,18 @@ export default function CreateQuestion() {
               cellPadding={10}
             >
               <colgroup>
-                <col style={{ width: "80%" }} />
-                <col style={{ width: "20%" }} />
+                <col style={{ width: '80%' }} />
+                <col style={{ width: '20%' }} />
               </colgroup>
               <thead>
                 <tr>
-                  <th
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     Option
                   </th>
                 </tr>
                 <tr>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Value
-                  </th>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Status
-                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Value</th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Status</th>
                   {/* <th className="text-sm border-2 border-white bg-gray-200">
                     Action
                   </th> */}
@@ -176,13 +169,13 @@ export default function CreateQuestion() {
                         className="flex-1"
                         name="jawaban"
                         value={item.jawaban}
-                        onChange={(e) => {
-                          const newDataOptions = [...form.dataOptions]; // Gunakan data dari form.dataOptions
-                          newDataOptions[index].jawaban = e.target.value;
-                          setForm((prevForm) => ({
+                        onChange={e => {
+                          const newDataOptions = [...form.dataOptions] // Gunakan data dari form.dataOptions
+                          newDataOptions[index].jawaban = e.target.value
+                          setForm(prevForm => ({
                             ...prevForm,
                             dataOptions: newDataOptions,
-                          }));
+                          }))
                         }}
                         required
                       />
@@ -195,12 +188,12 @@ export default function CreateQuestion() {
                             value={1}
                             checked={item.status_jawaban === 1}
                             onChange={() => {
-                              const newDataOptions = [...form.dataOptions]; // Gunakan data dari form.dataOptions
-                              newDataOptions[index].status_jawaban = 1;
-                              setForm((prevForm) => ({
+                              const newDataOptions = [...form.dataOptions] // Gunakan data dari form.dataOptions
+                              newDataOptions[index].status_jawaban = 1
+                              setForm(prevForm => ({
                                 ...prevForm,
                                 dataOptions: newDataOptions,
-                              }));
+                              }))
                             }}
                           />
                           ACTIVE
@@ -211,12 +204,12 @@ export default function CreateQuestion() {
                             value={0}
                             checked={item.status_jawaban === 0}
                             onChange={() => {
-                              const newDataOptions = [...form.dataOptions]; // Gunakan data dari form.dataOptions
-                              newDataOptions[index].status_jawaban = 0;
-                              setForm((prevForm) => ({
+                              const newDataOptions = [...form.dataOptions] // Gunakan data dari form.dataOptions
+                              newDataOptions[index].status_jawaban = 0
+                              setForm(prevForm => ({
                                 ...prevForm,
                                 dataOptions: newDataOptions,
-                              }));
+                              }))
                             }}
                           />
                           NON ACTIVE
@@ -244,12 +237,7 @@ export default function CreateQuestion() {
               </tbody>
             </table>
             <div>
-              <Button
-                type="button"
-                variant="primary"
-                className="mx-auto"
-                onClick={tambahJawaban}
-              >
+              <Button type="button" variant="primary" className="mx-auto" onClick={tambahJawaban}>
                 Tambah Jawaban
               </Button>
             </div>
@@ -257,12 +245,7 @@ export default function CreateQuestion() {
         </div>
 
         <div className="flex gap-4 mt-8 mb-8">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -271,5 +254,5 @@ export default function CreateQuestion() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

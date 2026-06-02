@@ -1,16 +1,16 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import useCRUD from "../../../hooks/useCRUD";
-import SortIcon from "../../../components/SortIcon";
-import Form from "../../../components/Form";
-import { useState } from "react";
-import useDataTableBk from "../../../hooks/useDataTableBk";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import useCRUD from '../../../hooks/useCRUD'
+import SortIcon from '../../../components/SortIcon'
+import Form from '../../../components/Form'
+import { useState } from 'react'
+import useDataTableBk from '../../../hooks/useDataTableBk'
 
 export default function AkademikModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik/get`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/bimbingan-akademik/get`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/bimbingan-akademik`
 
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataAbsensi,
@@ -21,7 +21,7 @@ export default function AkademikModule({ baseURL }) {
     refreshAbsensi,
     canPrevAbsensi,
     canNextAbsensi,
-  } = useDataTableBk(DATA_URL, {}, searchValue);
+  } = useDataTableBk(DATA_URL, {}, searchValue)
 
   return (
     <>
@@ -31,9 +31,9 @@ export default function AkademikModule({ baseURL }) {
             type="text"
             name="search"
             placeholder="Search Mahasiswa"
-            style={{ width: "400px" }}
+            style={{ width: '400px' }}
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={e => setSearchValue(e.target.value)}
           />
         </div>
       </div>
@@ -47,32 +47,22 @@ export default function AkademikModule({ baseURL }) {
               <div className="flex items-center gap-2 cursor-pointer">No</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Tahun Angkatan
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Tahun Angkatan</div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loadingAbsensi && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -80,34 +70,26 @@ export default function AkademikModule({ baseURL }) {
           {!loadingAbsensi &&
             dataAbsensi &&
             dataAbsensi.map((row, index) => {
-              const startNumber = (pageAbsensi - 1) * 10 + 1;
+              const startNumber = (pageAbsensi - 1) * 10 + 1
 
-              const rowNumber = startNumber + index;
+              const rowNumber = startNumber + index
               return (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {rowNumber}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.tahun_angkatan}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{rowNumber}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.tahun_angkatan}</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        onClick={() => window.open(`${baseURL}/akademik/detail/${row.id}`,'_blank')}
-                        variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
+                        onClick={() =>
+                          window.open(`${baseURL}/akademik/detail/${row.id}`, '_blank')
                         }
+                        variant="info"
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                       />
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </table>
@@ -116,13 +98,7 @@ export default function AkademikModule({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPageAbsensi(pageAbsensi - 1)}
             disabled={!canPrevAbsensi || pageAbsensi === 1} // Tambahkan kondisi page === 1
             pill
@@ -130,13 +106,7 @@ export default function AkademikModule({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPageAbsensi(pageAbsensi + 1)}
             disabled={!canNextAbsensi || pageAbsensi === pageCountAbsensi} // Tambahkan kondisi page === pageCount
@@ -153,14 +123,13 @@ export default function AkademikModule({ baseURL }) {
             max={pageCountAbsensi}
             className="w-20"
             value={pageAbsensi}
-            onChange={(event) =>
-              event.target.valueAsNumber <= pageCountAbsensi &&
-              setPageAbsensi(event.target.value)
+            onChange={event =>
+              event.target.valueAsNumber <= pageCountAbsensi && setPageAbsensi(event.target.value)
             }
           />
           of {pageCountAbsensi || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

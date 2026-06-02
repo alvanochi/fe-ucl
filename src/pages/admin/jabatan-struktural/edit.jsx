@@ -1,67 +1,67 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import Form from "../../../components/Form";
-import useModal from "../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
-import useDosen from "../../../repo/dosen";
-import useJabatan from "../../../repo/jabatan";
-import useUnit from "../../../repo/unit";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Button from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import Form from '../../../components/Form'
+import useModal from '../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
+import useDosen from '../../../repo/dosen'
+import useJabatan from '../../../repo/jabatan'
+import useUnit from '../../../repo/unit'
 
 const EditStruktural = ({ id, onAction }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen();
-  const { data: listDepartemen, isLoading: isDepartemenLoading } = useUnit();
-  const { data: listJabatan, isLoading: isJabatanLoading } = useJabatan();
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen()
+  const { data: listDepartemen, isLoading: isDepartemenLoading } = useUnit()
+  const { data: listJabatan, isLoading: isJabatanLoading } = useJabatan()
 
-  const [selectedDosen, setSelectedDosen] = useState("");
-  const [selectedDepartemen, setSelectedDepartemen] = useState("");
-  const [selectedJabatan, setSelectedJabatan] = useState("");
-  const [keterangan, setKeterangan] = useState(null);
+  const [selectedDosen, setSelectedDosen] = useState('')
+  const [selectedDepartemen, setSelectedDepartemen] = useState('')
+  const [selectedJabatan, setSelectedJabatan] = useState('')
+  const [keterangan, setKeterangan] = useState(null)
 
-  const handleDosenChange = (selected) => {
-    setSelectedDosen(selected?.value);
-  };
-  const handleDepartemenChange = (selected) => {
-    setSelectedDepartemen(selected?.value);
-  };
-  const handleJabatanChange = (selected) => {
-    setSelectedJabatan(selected?.value);
-  };
+  const handleDosenChange = selected => {
+    setSelectedDosen(selected?.value)
+  }
+  const handleDepartemenChange = selected => {
+    setSelectedDepartemen(selected?.value)
+  }
+  const handleJabatanChange = selected => {
+    setSelectedJabatan(selected?.value)
+  }
 
-  const handleInputChangeKeterangan = (e) => {
-    const { name, value } = e.target;
-    setKeterangan(value);
-  };
+  const handleInputChangeKeterangan = e => {
+    const { name, value } = e.target
+    setKeterangan(value)
+  }
 
-  const getData = async (id) => {
+  const getData = async id => {
     try {
       const response = await axios.get(
-        `${process.env.API_ENDPOINT}/users/jabatan-struktural/${id}`
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/users/jabatan-struktural/${id}`,
+      )
 
-      const dataResponse = response.data.data;
+      const dataResponse = response.data.data
 
-      setSelectedDosen(dataResponse.user_id);
-      setSelectedDepartemen(dataResponse.unit_id);
-      setSelectedJabatan(dataResponse.jabatan_id);
-      setKeterangan(dataResponse.keterangan);
+      setSelectedDosen(dataResponse.user_id)
+      setSelectedDepartemen(dataResponse.unit_id)
+      setSelectedJabatan(dataResponse.jabatan_id)
+      setKeterangan(dataResponse.keterangan)
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error)
     }
-  };
+  }
 
   useEffect(() => {
     if (show && id) {
-      getData(id);
+      getData(id)
     }
-  }, [show, id]);
+  }, [show, id])
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
       const requestData = {
@@ -69,28 +69,28 @@ const EditStruktural = ({ id, onAction }) => {
         unit_id: selectedDepartemen,
         jabatan_id: selectedJabatan,
         keterangan: keterangan,
-      };
+      }
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/users/jabatan-struktural/${id || ""}`,
-        requestData
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/users/jabatan-struktural/${id || ''}`,
+        requestData,
+      )
 
-      const responseData = response.data;
-      toastAlert("success", "Updated Successfully");
-      close();
-      onAction();
+      const responseData = response.data
+      toastAlert('success', 'Updated Successfully')
+      close()
+      onAction()
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   return (
     <>
@@ -100,12 +100,7 @@ const EditStruktural = ({ id, onAction }) => {
         onClick={toggle}
       />
 
-      <Modal
-        title="Edit Jabatan Struktural"
-        show={show}
-        handler={toggle}
-        size="lg"
-      >
+      <Modal title="Edit Jabatan Struktural" show={show} handler={toggle} size="lg">
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">
@@ -116,7 +111,7 @@ const EditStruktural = ({ id, onAction }) => {
               name="unit_id"
               onChange={handleDepartemenChange}
               value={selectedDepartemen}
-              options={listDepartemen?.map((item) => ({
+              options={listDepartemen?.map(item => ({
                 label: `${item.code} - ${item.nama_unit}`,
                 value: item.id,
               }))}
@@ -131,7 +126,7 @@ const EditStruktural = ({ id, onAction }) => {
               name="jabatan_id"
               onChange={handleJabatanChange}
               value={selectedJabatan}
-              options={listJabatan?.map((item) => ({
+              options={listJabatan?.map(item => ({
                 label: item.nama_jabatan,
                 value: item.id,
               }))}
@@ -146,7 +141,7 @@ const EditStruktural = ({ id, onAction }) => {
               name="user_id"
               onChange={handleDosenChange}
               value={selectedDosen}
-              options={listDosen?.map((dosen) => ({
+              options={listDosen?.map(dosen => ({
                 label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                 value: dosen.user_id,
                 nip: dosen.nip,
@@ -175,7 +170,7 @@ const EditStruktural = ({ id, onAction }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default EditStruktural;
+export default EditStruktural

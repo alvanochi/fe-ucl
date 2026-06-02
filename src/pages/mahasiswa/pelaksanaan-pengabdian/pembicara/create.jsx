@@ -1,63 +1,63 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import UploadDokumen from "../../../../modules/pelaksanaan-pengabdian/pembicara/upload-dokumen";
-import useCRUD from "../../../../hooks/useCRUD";
-import useKategoriPublikasi from "../../../../repo/kategori-publikasi";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import UploadDokumen from '../../../../modules/pelaksanaan-pengabdian/pembicara/upload-dokumen'
+import useCRUD from '../../../../hooks/useCRUD'
+import useKategoriPublikasi from '../../../../repo/kategori-publikasi'
+import { Loading } from '../../../../components/Loading'
 
 export default function PembicaraCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/addPembicara`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/pembicara/addPembicara`
 
   const INITIAL_FORM = {
-    kategori_id: "",
-    kategori_pembicara: "",
-    judul_makalah: "",
-    nama_pertemuan: "",
-    penyelenggara: "",
-    tingkat_pertemuan: "",
-    tgl_pelaksanaan: "",
-    bahasa: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    nama_dok: "",
-    keterangan: "",
-    tautan_dok: "",
-  };
+    kategori_id: '',
+    kategori_pembicara: '',
+    judul_makalah: '',
+    nama_pertemuan: '',
+    penyelenggara: '',
+    tingkat_pertemuan: '',
+    tgl_pelaksanaan: '',
+    bahasa: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    nama_dok: '',
+    keterangan: '',
+    tautan_dok: '',
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "kategori_pembicara", label: "Kategori Pembicara" },
-      { field: "judul_makalah", label: "Judul Makalah" },
-      { field: "nama_pertemuan", label: "Nama Pertemuan" },
-      { field: "penyelenggara", label: "Penyelenggara" },
-      { field: "tingkat_pertemuan", label: "Tingkat Pertemuan" },
-      { field: "tgl_pelaksanaan", label: "Tanggal Pelaksanaan" },
-      { field: "bahasa", label: "Bahasa" },
-      { field: "no_sk_penugasan", label: "No. SK Penugasan" },
-      { field: "tgl_sk_penugasan", label: "Tanggal SK Penugasan" },
-      { field: "nama_dok", label: "Nama Dokumen" },
-      { field: "keterangan", label: "Keterangan Dokumen" },
-      { field: "tautan_dok", label: "Tautan Dokumen" },
+      { field: 'kategori_pembicara', label: 'Kategori Pembicara' },
+      { field: 'judul_makalah', label: 'Judul Makalah' },
+      { field: 'nama_pertemuan', label: 'Nama Pertemuan' },
+      { field: 'penyelenggara', label: 'Penyelenggara' },
+      { field: 'tingkat_pertemuan', label: 'Tingkat Pertemuan' },
+      { field: 'tgl_pelaksanaan', label: 'Tanggal Pelaksanaan' },
+      { field: 'bahasa', label: 'Bahasa' },
+      { field: 'no_sk_penugasan', label: 'No. SK Penugasan' },
+      { field: 'tgl_sk_penugasan', label: 'Tanggal SK Penugasan' },
+      { field: 'nama_dok', label: 'Nama Dokumen' },
+      { field: 'keterangan', label: 'Keterangan Dokumen' },
+      { field: 'tautan_dok', label: 'Tautan Dokumen' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } =
-    useKategoriPublikasi([user]);
-  const { form, inputHandler } = formdata;
+  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } = useKategoriPublikasi([
+    user,
+  ])
+  const { form, inputHandler } = formdata
 
-  if ([user, menu, isLoadingKategoriPublikasi].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isLoadingKategoriPublikasi].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -77,7 +77,7 @@ export default function PembicaraCreate() {
                 onChange={inputHandler}
                 options={
                   kategoriPublikasi &&
-                  kategoriPublikasi.map((item) => ({
+                  kategoriPublikasi.map(item => ({
                     label: `${item.nama_kategori} - ${item.tingkatan}`,
                     value: item.id,
                   }))
@@ -97,15 +97,13 @@ export default function PembicaraCreate() {
                 value={form.kategori_pembicara}
                 options={[
                   {
-                    label: "Pembicara pada pertemuan ilmiah",
-                    value: "Pembicara pada pertemuan ilmiah",
+                    label: 'Pembicara pada pertemuan ilmiah',
+                    value: 'Pembicara pada pertemuan ilmiah',
                   },
-                  { label: "Pembicara kunci", value: "Pembicara kunci" },
+                  { label: 'Pembicara kunci', value: 'Pembicara kunci' },
                   {
-                    label:
-                      "Pembicara/narasumber pada pelatihan/penyuluhan/ceramah",
-                    value:
-                      "Pembicara/narasumber pada pelatihan/penyuluhan/ceramah",
+                    label: 'Pembicara/narasumber pada pelatihan/penyuluhan/ceramah',
+                    value: 'Pembicara/narasumber pada pelatihan/penyuluhan/ceramah',
                   },
                 ]}
               />
@@ -224,12 +222,7 @@ export default function PembicaraCreate() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -238,5 +231,5 @@ export default function PembicaraCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

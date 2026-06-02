@@ -1,49 +1,49 @@
-"use client";
-import Head from "next/head";
-import Link from "next/link";
-import dynamic from "next/dynamic";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import styles from "./registDosenExt.module.css";
-import Button from "../../components/Button";
-import { useRouter } from "next/router";
-import useForm from "../../hooks/useForm";
-import { toastAlert } from "../../lib/sweetalert";
-import { MySwal, loadingAlert } from "../../lib/sweetalert";
+'use client'
+import Head from 'next/head'
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import styles from './registDosenExt.module.css'
+import Button from '../../components/Button'
+import { useRouter } from 'next/router'
+import useForm from '../../hooks/useForm'
+import { toastAlert } from '../../lib/sweetalert'
+import { MySwal, loadingAlert } from '../../lib/sweetalert'
 
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Form from "../../components/Form";
-import { Icon } from "@iconify-icon/react/dist/iconify.js";
-const Slider = dynamic(() => import("react-slick"), { ssr: false });
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import Form from '../../components/Form'
+import { Icon } from '@iconify-icon/react/dist/iconify.js'
+const Slider = dynamic(() => import('react-slick'), { ssr: false })
 
 const RegisterDosenExt = () => {
   const [stylesPage, setStylesPage] = useState({
-    displayValue: "flex",
-    formWidth: "w-2/5",
-    formContainer: "w-3/5",
-  });
+    displayValue: 'flex',
+    formWidth: 'w-2/5',
+    formContainer: 'w-3/5',
+  })
 
   useEffect(() => {
     const handleResize = () => {
-      const screenWidth = window.innerWidth;
+      const screenWidth = window.innerWidth
       setStylesPage({
-        displayValue: screenWidth <= 780 ? "block" : "flex",
-        formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
-        formContainer: screenWidth <= 880 ? "w-10/12" : "w-3/5",
-      });
-    };
+        displayValue: screenWidth <= 780 ? 'block' : 'flex',
+        formWidth: screenWidth <= 880 ? 'w-4/5' : 'w-2/5',
+        formContainer: screenWidth <= 880 ? 'w-10/12' : 'w-3/5',
+      })
+    }
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize)
 
-    handleResize();
+    handleResize()
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
-  const router = useRouter();
+  const router = useRouter()
 
   const settings = {
     dots: true,
@@ -53,101 +53,89 @@ const RegisterDosenExt = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
-    dotsClass: styles["slick-dots"],
+    dotsClass: styles['slick-dots'],
     customPaging: function (i) {
-      return (
-        <div className="w-full rounded-full h-1 bg-white bg-opacity-20 dots"></div>
-      );
+      return <div className="w-full rounded-full h-1 bg-white bg-opacity-20 dots"></div>
     },
-  };
+  }
 
   const INITIAL_FORM = {
-    nama_lengkap: "",
-    jenkel: "",
-    tanggal_lahir: "",
-    tempat_lahir: "",
-    agama: "",
-    email: "",
-    no_hp: "",
-    nip: "",
-    instansi: "",
-    password: "",
-    password2: "",
-  };
+    nama_lengkap: '',
+    jenkel: '',
+    tanggal_lahir: '',
+    tempat_lahir: '',
+    agama: '',
+    email: '',
+    no_hp: '',
+    nip: '',
+    instansi: '',
+    password: '',
+    password2: '',
+  }
 
-  const [upperCase, setUpperCase] = useState(false);
-  const [num, setNum] = useState(false);
-  const [specialChar, setSpecialChar] = useState(false);
-  const [passLength, setPassLength] = useState(false);
+  const [upperCase, setUpperCase] = useState(false)
+  const [num, setNum] = useState(false)
+  const [specialChar, setSpecialChar] = useState(false)
+  const [passLength, setPassLength] = useState(false)
 
   const timesIcon = (
-    <Icon
-      icon="solar:close-square-bold"
-      width="20"
-      height="20"
-      className="text-red-600"
-    />
-  );
+    <Icon icon="solar:close-square-bold" width="20" height="20" className="text-red-600" />
+  )
   const checkIcon = (
-    <Icon
-      icon="solar:check-square-bold"
-      width="20"
-      height="20"
-      className="text-green-500 "
-    />
-  );
+    <Icon icon="solar:check-square-bold" width="20" height="20" className="text-green-500 " />
+  )
 
-  const switchIcon = (condition) => {
+  const switchIcon = condition => {
     if (condition) {
-      return checkIcon;
+      return checkIcon
     }
-    return timesIcon;
-  };
+    return timesIcon
+  }
 
-  const { form, inputHandler } = useForm(INITIAL_FORM);
+  const { form, inputHandler } = useForm(INITIAL_FORM)
 
   useEffect(() => {
     // Check Lower and Uppercase
     if (form?.password.match(/([a-z].*[A-Z])|([A-Z].*[a-z])/)) {
-      setUpperCase(true);
+      setUpperCase(true)
     } else {
-      setUpperCase(false);
+      setUpperCase(false)
     }
 
     // Check For Numbers
     if (form?.password.match(/([0-9])/)) {
-      setNum(true);
+      setNum(true)
     } else {
-      setNum(false);
+      setNum(false)
     }
 
     // Check For Special Character
     if (form?.password.match(/([!,%,&,@,#,$,^,*,?,_,~])/)) {
-      setSpecialChar(true);
+      setSpecialChar(true)
     } else {
-      setSpecialChar(false);
+      setSpecialChar(false)
     }
 
     // Check Password Length
     if (form?.password.length > 7) {
-      setPassLength(true);
+      setPassLength(true)
     } else {
-      setPassLength(false);
+      setPassLength(false)
     }
-  }, [form]);
+  }, [form])
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false)
   const togglePassword = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
 
-  const [showPassword2, setShowPassword2] = useState(false);
+  const [showPassword2, setShowPassword2] = useState(false)
   const togglePassword2 = () => {
-    setShowPassword2(!showPassword2);
-  };
+    setShowPassword2(!showPassword2)
+  }
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
 
     if (
       !form.nama_lengkap ||
@@ -162,34 +150,34 @@ const RegisterDosenExt = () => {
       !form.password ||
       !form.password2
     ) {
-      return toastAlert("error", "Please fill required field");
+      return toastAlert('error', 'Please fill required field')
     }
 
     if (form.password !== form.password2) {
-      return toastAlert("error", "Password do not match.");
+      return toastAlert('error', 'Password do not match.')
     }
 
     try {
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/auth/register-dosen-ext`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/auth/register-dosen-ext`,
+        method: 'POST',
         data: form,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      toastAlert("info", response.message);
-      router.push("/login");
+      toastAlert('info', response.message)
+      router.push('/login')
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -204,23 +192,17 @@ const RegisterDosenExt = () => {
         style={{ display: stylesPage.displayValue }}
       >
         <form
-          className={`flex items-center justify-center shrink-0 h-full bg-white ml-auto rounded-l-3xl overflow-y-auto ${styles["form"]} ${stylesPage.formWidth}`}
-          style={{ maxHeight: "100vh" }}
+          className={`flex items-center justify-center shrink-0 h-full bg-white ml-auto rounded-l-3xl overflow-y-auto ${styles['form']} ${stylesPage.formWidth}`}
+          style={{ maxHeight: '100vh' }}
           onSubmit={submitHandler}
         >
           <div className={`block ${stylesPage.formContainer}`}>
-            <div className="block mb-6" style={{ marginTop: "70vh" }}>
-              <h1 className="block text-2xl font-bold text-primary-600">
-                Registrasi
-              </h1>
-              <p className="block text-2xl font-bold text-primary-600">
-                Dosen External
-              </p>
+            <div className="block mb-6" style={{ marginTop: '70vh' }}>
+              <h1 className="block text-2xl font-bold text-primary-600">Registrasi</h1>
+              <p className="block text-2xl font-bold text-primary-600">Dosen External</p>
             </div>
             <div className="block mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Nama Lengkap
-              </label>
+              <label className="block text-sm font-medium mb-1">Nama Lengkap</label>
               <input
                 type="text"
                 className="form-input"
@@ -231,9 +213,7 @@ const RegisterDosenExt = () => {
               />
             </div>
             <div className="block mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Nama Instansi
-              </label>
+              <label className="block text-sm font-medium mb-1">Nama Instansi</label>
               <input
                 type="text"
                 className="form-input"
@@ -244,16 +224,14 @@ const RegisterDosenExt = () => {
               />
             </div>
             <div className="block mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Jenis Kelamin
-              </label>
+              <label className="block text-sm font-medium mb-1">Jenis Kelamin</label>
               <div className="flex flex-row">
                 <Form.Label className="mr-8">
                   <Form.Radio
                     name="jenkel"
                     value="L"
                     onChange={inputHandler}
-                    checked={form.jenkel == "L"}
+                    checked={form.jenkel == 'L'}
                   />
                   Laki-Laki
                 </Form.Label>
@@ -262,16 +240,14 @@ const RegisterDosenExt = () => {
                     name="jenkel"
                     value="P"
                     onChange={inputHandler}
-                    checked={form.jenkel == "P"}
+                    checked={form.jenkel == 'P'}
                   />
                   Perempuan
                 </Form.Label>
               </div>
             </div>
             <div className="block mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Tanggal Lahir
-              </label>
+              <label className="block text-sm font-medium mb-1">Tanggal Lahir</label>
               <input
                 type="date"
                 className="form-input"
@@ -282,9 +258,7 @@ const RegisterDosenExt = () => {
               />
             </div>
             <div className="block mb-4">
-              <label className="block text-sm font-medium mb-1">
-                Tempat Lahir
-              </label>
+              <label className="block text-sm font-medium mb-1">Tempat Lahir</label>
               <input
                 type="text"
                 className="form-input"
@@ -341,7 +315,7 @@ const RegisterDosenExt = () => {
             <div className="block relative mb-4">
               <label className="block text-sm font-medium mb-1">Password</label>
               <input
-                type={showPassword ? "text" : "password"}
+                type={showPassword ? 'text' : 'password'}
                 className="form-input"
                 name="password"
                 onChange={inputHandler}
@@ -361,19 +335,17 @@ const RegisterDosenExt = () => {
             </div>
 
             <div className="block relative mb-2">
-              <label className="block text-sm font-medium mb-1">
-                Konfirmasi Password
-              </label>
+              <label className="block text-sm font-medium mb-1">Konfirmasi Password</label>
               <input
-                type={showPassword2 ? "text" : "password"}
+                type={showPassword2 ? 'text' : 'password'}
                 className="form-input"
                 name="password2"
                 onChange={inputHandler}
                 value={form.password2}
-                onPaste={(e) => {
-                  e.preventDefault();
-                  toastAlert("error", "Cannot paste into input field.");
-                  return false;
+                onPaste={e => {
+                  e.preventDefault()
+                  toastAlert('error', 'Cannot paste into input field.')
+                  return false
                 }}
                 required
               />
@@ -430,21 +402,17 @@ const RegisterDosenExt = () => {
             </div>
           </div>
         </form>
-        <div
-          className={`relative flex flex-col grow py-12 px-10 ${styles["slider"]}`}
-        >
+        <div className={`relative flex flex-col grow py-12 px-10 ${styles['slider']}`}>
           <div className="block relative w-[32rem] mx-auto my-auto">
             {/* SLIDER HERE */}
-            <Slider {...settings} arrows={false} className={styles["slider"]}>
+            <Slider {...settings} arrows={false} className={styles['slider']}>
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <h3 className="block text-3xl text-white font-bold mb-12">
-                    Platform <br /> Digital Untuk <br /> Mempermudah <br />{" "}
-                    Administrasi
+                    Platform <br /> Digital Untuk <br /> Mempermudah <br /> Administrasi
                   </h3>
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -456,8 +424,7 @@ const RegisterDosenExt = () => {
                     className="mx-auto mb-2 h-72"
                   />
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -469,8 +436,7 @@ const RegisterDosenExt = () => {
                     className="mx-auto mb-2 h-72"
                   />
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -479,7 +445,7 @@ const RegisterDosenExt = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default RegisterDosenExt;
+export default RegisterDosenExt

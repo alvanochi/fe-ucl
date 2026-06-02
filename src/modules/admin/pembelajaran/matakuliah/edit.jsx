@@ -1,38 +1,38 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import Form from "../../../../components/Form";
-import useKurikulum from "../../../../repo/kurikulum";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import Form from '../../../../components/Form'
+import useKurikulum from '../../../../repo/kurikulum'
 
 const EditMatakuliah = ({ id, onAction }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const [formData, setFormData] = useState({
-    kode_matakuliah: "",
-    nama_matakuliah: "",
-    kurikulum: "",
-    sks: "",
-    materi: "",
-  });
+    kode_matakuliah: '',
+    nama_matakuliah: '',
+    kurikulum: '',
+    sks: '',
+    materi: '',
+  })
 
-  const { data: listKurikulum, isLoading: isKurkulumLoading } = useKurikulum();
-  const [selectedKurikulum, setSelectedKurikulum] = useState(1);
+  const { data: listKurikulum, isLoading: isKurkulumLoading } = useKurikulum()
+  const [selectedKurikulum, setSelectedKurikulum] = useState(1)
 
-  const handleKurikulumChange = (selected) => {
-    setSelectedKurikulum(selected?.value);
-  };
+  const handleKurikulumChange = selected => {
+    setSelectedKurikulum(selected?.value)
+  }
 
-  const getData = async (id) => {
+  const getData = async id => {
     try {
       const response = await axios.get(
-        `${process.env.API_ENDPOINT}/kategori/matakuliah/${id}`
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/kategori/matakuliah/${id}`,
+      )
 
-      const dataResponse = response.data.data;
+      const dataResponse = response.data.data
 
       setFormData({
         code: dataResponse.code,
@@ -41,57 +41,57 @@ const EditMatakuliah = ({ id, onAction }) => {
         nama_matakuliah: dataResponse.nama_matakuliah,
         sks: dataResponse.sks,
         materi: dataResponse.materi,
-      });
-      setSelectedKurikulum(dataResponse.kurikulum);
+      })
+      setSelectedKurikulum(dataResponse.kurikulum)
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error)
     }
-  };
+  }
 
   useEffect(() => {
     if (show && id) {
-      getData(id);
+      getData(id)
     }
-  }, [show, id]);
+  }, [show, id])
 
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const inputHandler = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
       const requestData = {
         ...formData,
         kurikulum: selectedKurikulum,
-      };
+      }
 
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/kategori/matakuliah/${id || ""}`,
-        requestData
-      );
+        `${process.env.NEXT_PUBLIC_API_URL}/kategori/matakuliah/${id || ''}`,
+        requestData,
+      )
 
-      const responseData = response.data;
-      toastAlert("success", "Updated Successfully");
-      close();
-      onAction();
+      const responseData = response.data
+      toastAlert('success', 'Updated Successfully')
+      close()
+      onAction()
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   return (
     <>
@@ -140,7 +140,7 @@ const EditMatakuliah = ({ id, onAction }) => {
               name="kurikulum"
               onChange={handleKurikulumChange}
               value={selectedKurikulum}
-              options={listKurikulum?.map((item) => ({
+              options={listKurikulum?.map(item => ({
                 label: item.kurikulum,
                 value: item.id,
               }))}
@@ -182,7 +182,7 @@ const EditMatakuliah = ({ id, onAction }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default EditMatakuliah;
+export default EditMatakuliah

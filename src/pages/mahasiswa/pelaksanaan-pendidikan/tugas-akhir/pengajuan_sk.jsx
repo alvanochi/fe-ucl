@@ -1,74 +1,73 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import useDosen from "../../../../repo/dosen";
-import useCRUD from "../../../../hooks/useCRUD";
-import { Loading } from "../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import useDosen from '../../../../repo/dosen'
+import useCRUD from '../../../../hooks/useCRUD'
+import { Loading } from '../../../../components/Loading'
 
 export default function BimbinganMahasiswaCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
 
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir`
 
   const INITIAL_FORM = {
-    judul_skripsi: "",
-    lokasi_kegiatan: "",
-    semester: "",
-    sk_pembimbing_1: "",
-    sk_pembimbing_2: "",
+    judul_skripsi: '',
+    lokasi_kegiatan: '',
+    semester: '',
+    sk_pembimbing_1: '',
+    sk_pembimbing_2: '',
     sk_pembimbing_3: null,
-    kepala_lab: "",
-  };
+    kepala_lab: '',
+  }
 
-  const handlePembimbing1 = (selected) => {
+  const handlePembimbing1 = selected => {
     inputHandler({
-      target: { name: "sk_pembimbing_1", value: selected?.value },
-    });
-  };
+      target: { name: 'sk_pembimbing_1', value: selected?.value },
+    })
+  }
 
-  const handlePembimbing2 = (selected) => {
+  const handlePembimbing2 = selected => {
     inputHandler({
-      target: { name: "sk_pembimbing_2", value: selected?.value },
-    });
-  };
+      target: { name: 'sk_pembimbing_2', value: selected?.value },
+    })
+  }
 
-  const handlePembimbing3 = (selected) => {
+  const handlePembimbing3 = selected => {
     inputHandler({
-      target: { name: "sk_pembimbing_3", value: selected?.value },
-    });
-  };
+      target: { name: 'sk_pembimbing_3', value: selected?.value },
+    })
+  }
 
-  const handleKepalaLab = (selected) => {
-    inputHandler({ target: { name: "kepala_lab", value: selected?.value } });
-  };
+  const handleKepalaLab = selected => {
+    inputHandler({ target: { name: 'kepala_lab', value: selected?.value } })
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "judul_skripsi", label: "Judul Skripsi" },
-      { field: "lokasi_kegiatan", label: "Lokasi Kegiatan" },
-      { field: "semester", label: "semester" },
-      { field: "sk_pembimbing_1", label: "Pembimbing 1" },
-      { field: "sk_pembimbing_2", label: "Pembimbing 2" },
-      { field: "kepala_lab", label: "Kepala Lab" },
+      { field: 'judul_skripsi', label: 'Judul Skripsi' },
+      { field: 'lokasi_kegiatan', label: 'Lokasi Kegiatan' },
+      { field: 'semester', label: 'semester' },
+      { field: 'sk_pembimbing_1', label: 'Pembimbing 1' },
+      { field: 'sk_pembimbing_2', label: 'Pembimbing 2' },
+      { field: 'kepala_lab', label: 'Kepala Lab' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, inputHandlerComboBox } = formdata;
+  const { form, inputHandler, inputHandlerComboBox } = formdata
 
-  if ([user, menu, isDosenLoading].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isDosenLoading].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -130,16 +129,12 @@ export default function BimbinganMahasiswaCreate() {
         >
           <thead>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Mahasasiswa
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Mahasasiswa</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td className="text-sm border-2 border-white text-center">
-                {user?.nama_lengkap}
-              </td>
+              <td className="text-sm border-2 border-white text-center">{user?.nama_lengkap}</td>
             </tr>
           </tbody>
         </table>
@@ -151,33 +146,25 @@ export default function BimbinganMahasiswaCreate() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 Dosen Terkait
                 <div className="mt-2">
                   <span className="font-normal">
-                    <b>Catatan:</b> Pastikan sudah berkomunikasi dengan dosen
-                    terkait sebelum mengajukan SK Pembimbing Tugas Akhir.
+                    <b>Catatan:</b> Pastikan sudah berkomunikasi dengan dosen terkait sebelum
+                    mengajukan SK Pembimbing Tugas Akhir.
                   </span>
                 </div>
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Dosen
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Dosen</th>
             </tr>
           </thead>
           <tbody>
             <tr>
               <td className="text-sm border-2 border-white text-center font-bold">
-                <span>Pembimbing 1</span>{" "}
-                <span className="text-danger-600">*</span>
+                <span>Pembimbing 1</span> <span className="text-danger-600">*</span>
               </td>
               <td className="text-sm border-2 border-white">
                 <Form.Group className="flex items-baseline gap-3">
@@ -185,7 +172,7 @@ export default function BimbinganMahasiswaCreate() {
                     name="sk_pembimbing_1"
                     onChange={handlePembimbing1}
                     value={form.sk_pembimbing_1}
-                    options={listDosen?.map((dosen) => ({
+                    options={listDosen?.map(dosen => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
                     }))}
@@ -205,7 +192,7 @@ export default function BimbinganMahasiswaCreate() {
                     name="sk_pembimbing_2"
                     onChange={handlePembimbing2}
                     value={form.sk_pembimbing_2}
-                    options={listDosen?.map((dosen) => ({
+                    options={listDosen?.map(dosen => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
                     }))}
@@ -224,7 +211,7 @@ export default function BimbinganMahasiswaCreate() {
                     name="sk_pembimbing_3"
                     onChange={handlePembimbing3}
                     value={form.sk_pembimbing_3}
-                    options={listDosen?.map((dosen) => ({
+                    options={listDosen?.map(dosen => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
                     }))}
@@ -235,15 +222,14 @@ export default function BimbinganMahasiswaCreate() {
             </tr>
             <tr>
               <td className="text-sm border-2 border-white text-center font-bold">
-                <span>Kepala Lab</span>{" "}
-                <span className="text-danger-600">*</span>
+                <span>Kepala Lab</span> <span className="text-danger-600">*</span>
               </td>
               <td className="text-sm border-2 border-white">
                 <Form.Group className="flex items-baseline gap-3">
                   <Form.Combobox
                     onChange={handleKepalaLab}
                     value={form.kepala_lab}
-                    options={listDosen?.map((dosen) => ({
+                    options={listDosen?.map(dosen => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
                     }))}
@@ -255,21 +241,13 @@ export default function BimbinganMahasiswaCreate() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              ></td>
+              <td colSpan={3} className="text-sm border-2 border-white bg-gray-50"></td>
             </tr>
           </tfoot>
         </table>
 
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -278,5 +256,5 @@ export default function BimbinganMahasiswaCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

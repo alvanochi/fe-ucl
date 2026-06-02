@@ -1,104 +1,97 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import KolabolatorEksternal from "../../../../modules/pelaksanaan-penelitian/hki/kolaborator-eksternal";
-import UploadDokumen from "../../../../modules/pelaksanaan-penelitian/hki/upload-dokumen";
-import useKategoriHki from "../../../../repo/kategori-hki";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../hooks/useCRUD";
-import useDosen from "../../../../repo/dosen";
-import useMahasiswa from "../../../../repo/mahasiswa";
-import { useEffect } from "react";
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../config/role";
-import _ from "underscore";
-import { Loading } from "../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import KolabolatorEksternal from '../../../../modules/pelaksanaan-penelitian/hki/kolaborator-eksternal'
+import UploadDokumen from '../../../../modules/pelaksanaan-penelitian/hki/upload-dokumen'
+import useKategoriHki from '../../../../repo/kategori-hki'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../hooks/useCRUD'
+import useDosen from '../../../../repo/dosen'
+import useMahasiswa from '../../../../repo/mahasiswa'
+import { useEffect } from 'react'
+import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../config/role'
+import _ from 'underscore'
+import { Loading } from '../../../../components/Loading'
 
 export default function HkiCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penelitian/hki/addHki`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/hki/addHki`
 
   const INITIAL_ANGGOTA = {
-    user_id: "",
-    urutan: "",
-    afiliasi: "",
-    peran: "",
+    user_id: '',
+    urutan: '',
+    afiliasi: '',
+    peran: '',
     correspond: false,
-    role: "",
-  };
+    role: '',
+  }
 
   const INITIAL_FORM = {
-    kategori_id: "eef41188-6506-44cc-9dfd-97002d553bf9",
-    jenis_hki: "",
-    judul_hki: "",
-    tgl_terbit_hki: "",
-    keterangan_hki: "",
-    keterangan: "",
-    nama_dok: "",
-    keterangan_dok: "",
-    tautan_dok: "",
+    kategori_id: 'eef41188-6506-44cc-9dfd-97002d553bf9',
+    jenis_hki: '',
+    judul_hki: '',
+    tgl_terbit_hki: '',
+    keterangan_hki: '',
+    keterangan: '',
+    nama_dok: '',
+    keterangan_dok: '',
+    tautan_dok: '',
     penulis_dosen: [],
     penulis_mahasiswa: [],
-  };
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     success: () => router.push(prefix + menu.url),
-    transformData: (data) =>
+    transformData: data =>
       _.omit(
         {
           ...data,
           penulis: JSON.stringify([
-            ...data.penulis_dosen.map((item) => _.omit(item, ["role"])),
-            ...data.penulis_mahasiswa.map((item) => _.omit(item, ["role"])),
+            ...data.penulis_dosen.map(item => _.omit(item, ['role'])),
+            ...data.penulis_mahasiswa.map(item => _.omit(item, ['role'])),
           ]),
         },
-        ["penulis_dosen", "penulis_mahasiswa"]
+        ['penulis_dosen', 'penulis_mahasiswa'],
       ),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: kategoriHki, isLoading: isLoadingKategoriHki } = useKategoriHki(
-    [user]
-  );
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: kategoriHki, isLoading: isLoadingKategoriHki } = useKategoriHki([user])
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
   const removeFromUser = (key, index, role) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-      [key]: state[key].filter(
-        (item, idx) => item.role == role && idx != index
-      ),
-    }));
+      [key]: state[key].filter((item, idx) => item.role == role && idx != index),
+    }))
 
   useEffect(() => {
-    if (!user) return;
-    setForm((state) => ({
+    if (!user) return
+    setForm(state => ({
       ...state,
       [`penulis_${String(user?.role).toLowerCase()}`]: [
         { ...INITIAL_ANGGOTA, user_id: user?.user_id, role: user?.role },
       ],
-    }));
-  }, [user]);
+    }))
+  }, [user])
 
   if (
     [user, menu, isDosenLoading, isMahasiswaLoading, isLoadingKategoriHki].some(
-      (item) => item == null
+      item => item == null,
     )
   )
-    return <Loading />;
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -125,43 +118,41 @@ export default function HkiCreate() {
                 value={form.jenis_hki}
                 onChange={inputHandler}
                 options={[
-                  { value: "Paten nasional", label: "Paten nasional" },
+                  { value: 'Paten nasional', label: 'Paten nasional' },
                   {
-                    value: "Paten internasional",
-                    label: "Paten internasional",
+                    value: 'Paten internasional',
+                    label: 'Paten internasional',
                   },
-                  { value: "Hak cipta nasional", label: "Hak cipta nasional" },
+                  { value: 'Hak cipta nasional', label: 'Hak cipta nasional' },
                   {
-                    value: "Hak cipta internasional",
-                    label: "Hak cipta internasional",
-                  },
-                  {
-                    value: "Rancangan dan karya seni monumental",
-                    label: "Rancangan dan karya seni monumental",
+                    value: 'Hak cipta internasional',
+                    label: 'Hak cipta internasional',
                   },
                   {
-                    value: "Rancangan dan karya seni rupa",
-                    label: "Rancangan dan karya seni rupa",
+                    value: 'Rancangan dan karya seni monumental',
+                    label: 'Rancangan dan karya seni monumental',
                   },
                   {
-                    value: "Rancangan dan karya seni kriya",
-                    label: "Rancangan dan karya seni kriya",
+                    value: 'Rancangan dan karya seni rupa',
+                    label: 'Rancangan dan karya seni rupa',
                   },
                   {
-                    value: "Rancangan dan karya seni pertunjukan",
-                    label: "Rancangan dan karya seni pertunjukan",
-                  },
-                  { value: "Karya desain", label: "Karya desain" },
-                  { value: "Karya sastra", label: "Karya sastra" },
-                  {
-                    value:
-                      "Hasil penelitian/pemikiran yang tidak dipublikasikan",
-                    label:
-                      "Hasil penelitian/pemikiran yang tidak dipublikasikan",
+                    value: 'Rancangan dan karya seni kriya',
+                    label: 'Rancangan dan karya seni kriya',
                   },
                   {
-                    value: "Hasil kerjasama industri yang tidak dipublikasikan",
-                    label: "Hasil kerjasama industri yang tidak dipublikasikan",
+                    value: 'Rancangan dan karya seni pertunjukan',
+                    label: 'Rancangan dan karya seni pertunjukan',
+                  },
+                  { value: 'Karya desain', label: 'Karya desain' },
+                  { value: 'Karya sastra', label: 'Karya sastra' },
+                  {
+                    value: 'Hasil penelitian/pemikiran yang tidak dipublikasikan',
+                    label: 'Hasil penelitian/pemikiran yang tidak dipublikasikan',
+                  },
+                  {
+                    value: 'Hasil kerjasama industri yang tidak dipublikasikan',
+                    label: 'Hasil kerjasama industri yang tidak dipublikasikan',
                   },
                 ]}
               />
@@ -220,29 +211,16 @@ export default function HkiCreate() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={6}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={6} className="text-sm border-2 border-white bg-gray-50">
                 Penulis Dosen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Urutan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Affiliasi
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Corresponding Author
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Urutan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Affiliasi</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Corresponding Author</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -257,7 +235,7 @@ export default function HkiCreate() {
                     value={form.penulis_dosen[index].user_id}
                     options={
                       listDosen &&
-                      listDosen.map((dosen) => ({
+                      listDosen.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -290,10 +268,10 @@ export default function HkiCreate() {
                     onChange={inputHandler}
                     value={form.penulis_dosen[index].peran}
                     options={[
-                      { label: "Penulis", value: "Penulis" },
-                      { label: "Editor", value: "Editor" },
-                      { label: "Penerjemah", value: "Penerjemah" },
-                      { label: "Penemu/Inventor", value: "Penemu/Inventor" },
+                      { label: 'Penulis', value: 'Penulis' },
+                      { label: 'Editor', value: 'Editor' },
+                      { label: 'Penerjemah', value: 'Penerjemah' },
+                      { label: 'Penemu/Inventor', value: 'Penemu/Inventor' },
                     ]}
                   />
                 </td>
@@ -304,7 +282,7 @@ export default function HkiCreate() {
                       name="penulis_dosen.correspond"
                       onChange={inputHandler}
                       checked={form.penulis_dosen[index].correspond}
-                    />{" "}
+                    />{' '}
                     Ya
                   </Form.Label>
                 </td>
@@ -314,16 +292,8 @@ export default function HkiCreate() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          removeFromUser("penulis_dosen", index, "Dosen")
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => removeFromUser('penulis_dosen', index, 'Dosen')}
                       />
                     )}
                   </div>
@@ -333,20 +303,17 @@ export default function HkiCreate() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={6}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={6} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       penulis_dosen: [
                         ...state.penulis_dosen,
-                        { ...INITIAL_ANGGOTA, role: "Dosen" },
+                        { ...INITIAL_ANGGOTA, role: 'Dosen' },
                       ],
                     }))
                   }
@@ -363,29 +330,16 @@ export default function HkiCreate() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={6}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={6} className="text-sm border-2 border-white bg-gray-50">
                 Penulis Mahasiswa
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Urutan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Affiliasi
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Corresponding Author
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Urutan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Affiliasi</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Corresponding Author</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -400,7 +354,7 @@ export default function HkiCreate() {
                     value={form.penulis_mahasiswa[index].user_id}
                     options={
                       listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
+                      listMahasiswa.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -433,10 +387,10 @@ export default function HkiCreate() {
                     onChange={inputHandler}
                     value={form.penulis_mahasiswa[index].peran}
                     options={[
-                      { label: "Penulis", value: "Penulis" },
-                      { label: "Editor", value: "Editor" },
-                      { label: "Penerjemah", value: "Penerjemah" },
-                      { label: "Penemu/Inventor", value: "Penemu/Inventor" },
+                      { label: 'Penulis', value: 'Penulis' },
+                      { label: 'Editor', value: 'Editor' },
+                      { label: 'Penerjemah', value: 'Penerjemah' },
+                      { label: 'Penemu/Inventor', value: 'Penemu/Inventor' },
                     ]}
                   />
                 </td>
@@ -447,7 +401,7 @@ export default function HkiCreate() {
                       name="penulis_mahasiswa.correspond"
                       onChange={inputHandler}
                       checked={form.penulis_mahasiswa[index].correspond}
-                    />{" "}
+                    />{' '}
                     Ya
                   </Form.Label>
                 </td>
@@ -457,20 +411,8 @@ export default function HkiCreate() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          removeFromUser(
-                            "penulis_mahasiswa",
-                            index,
-                            "Mahasiswa"
-                          )
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => removeFromUser('penulis_mahasiswa', index, 'Mahasiswa')}
                       />
                     )}
                   </div>
@@ -480,20 +422,17 @@ export default function HkiCreate() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={6}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={6} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       penulis_mahasiswa: [
                         ...state.penulis_mahasiswa,
-                        { ...INITIAL_ANGGOTA, role: "Mahasiswa" },
+                        { ...INITIAL_ANGGOTA, role: 'Mahasiswa' },
                       ],
                     }))
                   }
@@ -505,12 +444,7 @@ export default function HkiCreate() {
           </tfoot>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -519,5 +453,5 @@ export default function HkiCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

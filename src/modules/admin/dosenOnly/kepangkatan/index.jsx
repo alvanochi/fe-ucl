@@ -1,81 +1,81 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../../hooks/useDatatable";
-import useCRUD from "../../../../hooks/useCRUD";
-import date from "../../../../utils/date";
-import SortIcon from "../../../../components/SortIcon";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Pagination from '../../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../../hooks/useDatatable'
+import useCRUD from '../../../../hooks/useCRUD'
+import date from '../../../../utils/date'
+import SortIcon from '../../../../components/SortIcon'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 export default function KepangkatanModule({ baseURL }) {
-  const approveData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/profile/approveStatusPangkat/${id}`;
+  const approveData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/approveStatusPangkat/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
-      toastAlert("info", response.data.message);
+      const response = await request
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
-        return;
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
+        return
       }
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const rejectData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/profile/rejectStatusPangkat/${id}`;
+  const rejectData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/rejectStatusPangkat/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
+        method: 'PATCH',
+      })
 
-      MySwal.close();
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
-        return;
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
+        return
       }
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const [dataUrl, setDataUrl] = useState(`${process.env.API_ENDPOINT}/admin/pangkatPending`);
+  const [dataUrl, setDataUrl] = useState(`${process.env.NEXT_PUBLIC_API_URL}/admin/pangkatPending`)
 
   const handleApproveClick = async () => {
-    await approveData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/pangkatAprove`);
-  };
+    await approveData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/pangkatAprove`)
+  }
 
   const handleRejectClick = async () => {
-    await rejectData();
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/pangkatReject`);
-  };
+    await rejectData()
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/pangkatReject`)
+  }
 
   const handlePendingClick = () => {
-    setDataUrl(`${process.env.API_ENDPOINT}/admin/pangkatPending`);
-  };
+    setDataUrl(`${process.env.NEXT_PUBLIC_API_URL}/admin/pangkatPending`)
+  }
 
   const {
     data,
@@ -90,11 +90,11 @@ export default function KepangkatanModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(dataUrl);
+  } = useDatatable(dataUrl)
 
   useEffect(() => {
-    refresh();
-  }, [dataUrl]);
+    refresh()
+  }, [dataUrl])
 
   return (
     <>
@@ -105,7 +105,7 @@ export default function KepangkatanModule({ baseURL }) {
           icon={<Icon icon="oi:loop-circular" width={20} height={20} />}
           onClick={handlePendingClick}
           pill
-          >
+        >
           Pending
         </Button>
         <Button
@@ -113,7 +113,7 @@ export default function KepangkatanModule({ baseURL }) {
           icon={<Icon icon="oi:check" width={20} height={20} />}
           onClick={handleApproveClick}
           pill
-          >
+        >
           Aprove
         </Button>
         <Button
@@ -121,7 +121,7 @@ export default function KepangkatanModule({ baseURL }) {
           icon={<Icon icon="oi:x" width={20} height={20} />}
           onClick={handleRejectClick}
           pill
-          >
+        >
           Reject
         </Button>
       </div>
@@ -134,59 +134,55 @@ export default function KepangkatanModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pangkat_id")}
+                onClick={() => sortBy('pangkat_id')}
               >
                 No
-                <SortIcon sort={getSortBy("pangkat_id")} />
+                <SortIcon sort={getSortBy('pangkat_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                NPM/NIDN
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">NPM/NIDN</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("gol_pangkat")}
+                onClick={() => sortBy('gol_pangkat')}
               >
                 Golongan/Pangkat
-                <SortIcon sort={getSortBy("gol_pangkat")} />
+                <SortIcon sort={getSortBy('gol_pangkat')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("nomor_sk")}
+                onClick={() => sortBy('nomor_sk')}
               >
                 No. SK
-                <SortIcon sort={getSortBy("nomor_sk")} />
+                <SortIcon sort={getSortBy('nomor_sk')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_mulai")}
+                onClick={() => sortBy('tgl_mulai')}
               >
                 Terhitung Mulai Tanggal
-                <SortIcon sort={getSortBy("tgl_mulai")} />
+                <SortIcon sort={getSortBy('tgl_mulai')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_sk")}
+                onClick={() => sortBy('tgl_sk')}
               >
                 Tanggal SK
-                <SortIcon sort={getSortBy("tgl_sk")} />
+                <SortIcon sort={getSortBy('tgl_sk')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
@@ -195,20 +191,14 @@ export default function KepangkatanModule({ baseURL }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -217,39 +207,25 @@ export default function KepangkatanModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.nama_lengkap}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.npm ? row.npm : row.nidn}
                   <span className="block font-bold">{row.role}</span>
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.gol_pangkat}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.nomor_sk}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.gol_pangkat}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.nomor_sk}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {date.formatToID(new Date(row.tgl_mulai))}
                 </td>
@@ -262,36 +238,24 @@ export default function KepangkatanModule({ baseURL }) {
                       as="a"
                       href={`${baseURL}/detail-kepangkatan/${row.pangkat_id}`}
                       variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
+                      icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                     />
-                    {
-                      row.status === 0 && (
-                        <>
-                          <Button.Icon
-                            variant="success"
-                            type="button"
-                            icon={<Icon icon="oi:check" width={20} height={20} />}
-                            onClick={() =>
-                              approveData(row.pangkat_id).then(() => refresh())
-                            }
-                          />
-                          <Button.Icon
-                            variant="danger"
-                            type="button"
-                            icon={<Icon icon="oi:x" width={20} height={20} />}
-                            onClick={() =>
-                              rejectData(row.pangkat_id).then(() => refresh())
-                            }
-                          />
-                        </>
-                      )
-                    }
+                    {row.status === 0 && (
+                      <>
+                        <Button.Icon
+                          variant="success"
+                          type="button"
+                          icon={<Icon icon="oi:check" width={20} height={20} />}
+                          onClick={() => approveData(row.pangkat_id).then(() => refresh())}
+                        />
+                        <Button.Icon
+                          variant="danger"
+                          type="button"
+                          icon={<Icon icon="oi:x" width={20} height={20} />}
+                          onClick={() => rejectData(row.pangkat_id).then(() => refresh())}
+                        />
+                      </>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -307,5 +271,5 @@ export default function KepangkatanModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

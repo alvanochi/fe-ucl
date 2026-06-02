@@ -1,18 +1,18 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import date from "../../../utils/date";
-import SortIcon from "../../../components/SortIcon";
-import Form from "../../../components/Form";
-import axios from "axios";
-import { toastAlert } from "../../../lib/sweetalert";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Pagination from '../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../hooks/useDatatable'
+import useCRUD from '../../../hooks/useCRUD'
+import date from '../../../utils/date'
+import SortIcon from '../../../components/SortIcon'
+import Form from '../../../components/Form'
+import axios from 'axios'
+import { toastAlert } from '../../../lib/sweetalert'
 
 export default function SertifikasiModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/kompetensi/getCertificate`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/kompetensi/deleteCertif`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/getCertificate`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/deleteCertif`
 
   const {
     data,
@@ -28,25 +28,25 @@ export default function SertifikasiModule({ baseURL }) {
     sortBy,
     getSortBy,
     totalData,
-  } = useDatatable(DATA_URL);
-  const { destroy } = useCRUD(DELETE_URL);
+  } = useDatatable(DATA_URL)
+  const { destroy } = useCRUD(DELETE_URL)
 
-  const GENERATE_URL = `${process.env.API_ENDPOINT}/skpi/sertifikasi`;
+  const GENERATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/skpi/sertifikasi`
 
   async function generate() {
     try {
-      const response = await axios.get(GENERATE_URL);
-      refresh();
+      const response = await axios.get(GENERATE_URL)
+      refresh()
 
-      toastAlert("success", response.data.message);
+      toastAlert('success', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("warning", error.response.data);
+      if (error.name === 'AxiosError') {
+        toastAlert('warning', error.response.data)
 
-        return;
+        return
       }
 
-      toastAlert("error", error);
+      toastAlert('error', error)
     }
   }
 
@@ -55,9 +55,7 @@ export default function SertifikasiModule({ baseURL }) {
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-            onClick={() =>
-              window.open(`${`${baseURL}/sertifikasi/create`}`, "_blank")
-            }
+            onClick={() => window.open(`${`${baseURL}/sertifikasi/create`}`, '_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -78,88 +76,77 @@ export default function SertifikasiModule({ baseURL }) {
           />
         </div>
       </div>
-      <table
-        className="w-full border-collapse rounded-2xl overflow-hidden shadow"
-        cellPadding={10}
-      >
+      <table className="w-full border-collapse rounded-2xl overflow-hidden shadow" cellPadding={10}>
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("sertifikat_id")}
+                onClick={() => sortBy('sertifikat_id')}
               >
                 No
-                <SortIcon sort={getSortBy("sertifikat_id")} />
+                <SortIcon sort={getSortBy('sertifikat_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("status")}
+                onClick={() => sortBy('status')}
               >
                 Status
-                <SortIcon sort={getSortBy("status")} />
+                <SortIcon sort={getSortBy('status')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("nama_serti")}
+                onClick={() => sortBy('nama_serti')}
               >
                 Nama Sertifikasi
-                <SortIcon sort={getSortBy("nama_serti")} />
+                <SortIcon sort={getSortBy('nama_serti')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("penyelenggara")}
+                onClick={() => sortBy('penyelenggara')}
               >
                 Penyelenggara
-                <SortIcon sort={getSortBy("penyelenggara")} />
+                <SortIcon sort={getSortBy('penyelenggara')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jenis_serti")}
+                onClick={() => sortBy('jenis_serti')}
               >
                 Jenis Sertifikasi
-                <SortIcon sort={getSortBy("jenis_serti")} />
+                <SortIcon sort={getSortBy('jenis_serti')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_serti")}
+                onClick={() => sortBy('tgl_serti')}
               >
                 Tanggal
-                <SortIcon sort={getSortBy("tgl_serti")} />
+                <SortIcon sort={getSortBy('tgl_serti')} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -167,40 +154,26 @@ export default function SertifikasiModule({ baseURL }) {
           {!loading &&
             data &&
             data.map((row, index) => {
-              const startNumber = (page - 1) * 10 + 1;
+              const startNumber = (page - 1) * 10 + 1
 
-              const rowNumber = startNumber + index;
+              const rowNumber = startNumber + index
               return (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {rowNumber}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{rowNumber}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                     {row.status == 0 && (
-                      <span className="text-base font-bold text-yellow-400">
-                        Proses
-                      </span>
+                      <span className="text-base font-bold text-yellow-400">Proses</span>
                     )}
                     {row.status == 1 && (
-                      <span className="text-base font-bold text-green-400">
-                        Diterima
-                      </span>
+                      <span className="text-base font-bold text-green-400">Diterima</span>
                     )}
                     {row.status == 2 && (
-                      <span className="text-base font-bold text-red-400">
-                        Ditolak
-                      </span>
+                      <span className="text-base font-bold text-red-400">Ditolak</span>
                     )}
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.nama_serti}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.penyelenggara}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.jenis_serti}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.nama_serti}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.penyelenggara}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.jenis_serti}</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     {date.formatToID(new Date(row.tgl_serti))}
                   </td>
@@ -210,17 +183,11 @@ export default function SertifikasiModule({ baseURL }) {
                         onClick={() =>
                           window.open(
                             `${baseURL}/sertifikasi/detail/${row.sertifikat_id}`,
-                            "_blank"
+                            '_blank',
                           )
                         }
                         variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                       />
                       {(row.status === 0 || row.status === 2) && (
                         <>
@@ -228,33 +195,25 @@ export default function SertifikasiModule({ baseURL }) {
                             onClick={() =>
                               window.open(
                                 `${baseURL}/sertifikasi/edit/${row.sertifikat_id}`,
-                                "_blank"
+                                '_blank',
                               )
                             }
                             variant="secondary"
-                            icon={
-                              <Icon icon="bx:edit" width={20} height={20} />
-                            }
+                            icon={<Icon icon="bx:edit" width={20} height={20} />}
                           />
                           <Button.Icon
                             variant="danger"
                             icon={
-                              <Icon
-                                icon="solar:trash-bin-2-bold-duotone"
-                                width={20}
-                                height={20}
-                              />
+                              <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                             }
-                            onClick={() =>
-                              destroy(row.sertifikat_id).then(() => refresh())
-                            }
+                            onClick={() => destroy(row.sertifikat_id).then(() => refresh())}
                           />
                         </>
                       )}
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </table>
@@ -263,13 +222,7 @@ export default function SertifikasiModule({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPage(page - 1)}
             disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
             pill
@@ -277,13 +230,7 @@ export default function SertifikasiModule({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPage(page + 1)}
             disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
@@ -300,14 +247,13 @@ export default function SertifikasiModule({ baseURL }) {
             max={pageCount}
             className="w-20"
             value={page}
-            onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
+            onChange={event =>
+              event.target.valueAsNumber <= pageCount && setPage(event.target.value)
             }
           />
           of {pageCount || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

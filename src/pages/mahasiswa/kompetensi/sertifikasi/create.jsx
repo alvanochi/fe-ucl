@@ -1,55 +1,54 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useCRUD from "../../../../hooks/useCRUD";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useKategoriSertifikasi from "../../../../repo/kategori-sertifikasi";
-import { Loading } from "../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useCRUD from '../../../../hooks/useCRUD'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useKategoriSertifikasi from '../../../../repo/kategori-sertifikasi'
+import { Loading } from '../../../../components/Loading'
 
 export default function SertifikasiCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/kompetensi/addCertificate`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/kompetensi/addCertificate`
   const INITIAL_FORM = {
-    jenis_serti: "",
-    nama_serti: "",
-    bidang_studi: "",
-    nomor_sk: "",
-    tgl_serti: "",
-    kategori_id: "",
-    nomor_peserta: "",
-    nomor_regist: "",
-    penyelenggara: "",
-  };
+    jenis_serti: '',
+    nama_serti: '',
+    bidang_studi: '',
+    nomor_sk: '',
+    tgl_serti: '',
+    kategori_id: '',
+    nomor_peserta: '',
+    nomor_regist: '',
+    penyelenggara: '',
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "kategori_id", label: "Kategori Sertifikasi" },
-      { field: "jenis_serti", label: "Jenis Sertifikasi" },
-      { field: "nama_serti", label: "Nama Sertifikasi" },
-      { field: "bidang_studi", label: "Bidang Studi" },
-      { field: "nomor_sk", label: "Nomor SK" },
-      { field: "tgl_serti", label: "Tanggal Sertifikasi" },
-      { field: "nomor_peserta", label: "Nomor Peserta" },
-      { field: "nomor_regist", label: "Nomor Registrasi" },
-      { field: "penyelenggara", label: "Penyelenggara" },
+      { field: 'kategori_id', label: 'Kategori Sertifikasi' },
+      { field: 'jenis_serti', label: 'Jenis Sertifikasi' },
+      { field: 'nama_serti', label: 'Nama Sertifikasi' },
+      { field: 'bidang_studi', label: 'Bidang Studi' },
+      { field: 'nomor_sk', label: 'Nomor SK' },
+      { field: 'tgl_serti', label: 'Tanggal Sertifikasi' },
+      { field: 'nomor_peserta', label: 'Nomor Peserta' },
+      { field: 'nomor_regist', label: 'Nomor Registrasi' },
+      { field: 'penyelenggara', label: 'Penyelenggara' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
   const { data: kategoriSertifikasi, isLoading: isLoadingKategoriSertifikasi } =
-    useKategoriSertifikasi([user]);
+    useKategoriSertifikasi([user])
 
-  if ([user, menu, isLoadingKategoriSertifikasi].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isLoadingKategoriSertifikasi].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -69,7 +68,7 @@ export default function SertifikasiCreate() {
                 onChange={inputHandler}
                 options={
                   kategoriSertifikasi &&
-                  kategoriSertifikasi.map((item) => ({
+                  kategoriSertifikasi.map(item => ({
                     label: item.nama_kategori,
                     value: item.id,
                   }))
@@ -89,12 +88,12 @@ export default function SertifikasiCreate() {
                 onChange={inputHandler}
                 options={[
                   {
-                    label: "Sertifikai Keahlian",
-                    value: "Sertifikai Keahlian",
+                    label: 'Sertifikai Keahlian',
+                    value: 'Sertifikai Keahlian',
                   },
                   {
-                    label: "Sertifikasi Kegiatan",
-                    value: "Sertifikasi Kegiatan",
+                    label: 'Sertifikasi Kegiatan',
+                    value: 'Sertifikasi Kegiatan',
                   },
                 ]}
                 required
@@ -112,24 +111,22 @@ export default function SertifikasiCreate() {
                 onChange={inputHandler}
                 options={[
                   {
-                    label: "Software Engineering",
-                    value: "Software Engineering",
+                    label: 'Software Engineering',
+                    value: 'Software Engineering',
                   },
                   {
-                    label: "Computer System and Network",
-                    value: "Computer System and Network",
+                    label: 'Computer System and Network',
+                    value: 'Computer System and Network',
                   },
                   {
-                    label: "Geospatial Information Technology",
-                    value: "Geospatial Information Technology",
+                    label: 'Geospatial Information Technology',
+                    value: 'Geospatial Information Technology',
                   },
                   {
-                    label:
-                      "Knowledge Engineering and Reliable Intelligent System",
-                    value:
-                      "Knowledge Engineering and Reliable Intelligent System",
+                    label: 'Knowledge Engineering and Reliable Intelligent System',
+                    value: 'Knowledge Engineering and Reliable Intelligent System',
                   },
-                  { label: "Lainya...", value: "Lainya..." },
+                  { label: 'Lainya...', value: 'Lainya...' },
                 ]}
                 required
               />
@@ -177,9 +174,7 @@ export default function SertifikasiCreate() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                No. SK Sertifikasi
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">No. SK Sertifikasi</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -201,9 +196,7 @@ export default function SertifikasiCreate() {
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Nomor Registrasi
-              </Form.Label>
+              <Form.Label className="min-w-[18rem]">Nomor Registrasi</Form.Label>
               <span>:</span>
               <Form.Input
                 type="text"
@@ -228,12 +221,7 @@ export default function SertifikasiCreate() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -242,5 +230,5 @@ export default function SertifikasiCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

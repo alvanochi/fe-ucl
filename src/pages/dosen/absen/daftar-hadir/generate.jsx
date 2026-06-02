@@ -1,122 +1,112 @@
-import { useRouter } from "next/router";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import useDatatable from "../../../../hooks/useDatatable";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import useForm from "../../../../hooks/useForm";
-import useDosen from "../../../../repo/dosen";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import { Loading } from "../../../../components/Loading";
-import useMahasiswa from "../../../../repo/mahasiswa";
-import useDosenExt from "../../../../repo/dosen-ext";
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useDatatable from '../../../../hooks/useDatatable'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import useForm from '../../../../hooks/useForm'
+import useDosen from '../../../../repo/dosen'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import { Loading } from '../../../../components/Loading'
+import useMahasiswa from '../../../../repo/mahasiswa'
+import useDosenExt from '../../../../repo/dosen-ext'
 
 export default function GenerateQrCode() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
-  const { data, loading, refresh } = useDatatable(DATA_URL);
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataPribadi`
+  const { data, loading, refresh } = useDatatable(DATA_URL)
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
-  const { data: listDosenExt, isLoading: isDosenExtLoading } = useDosenExt([
-    user,
-  ]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
+  const { data: listDosenExt, isLoading: isDosenExtLoading } = useDosenExt([user])
 
-  const [courseOptions, setCourseOptions] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState("");
-  const [pertemuanData, setPertemuanData] = useState(null);
-  const [selectedMhs, setSelectedMhs] = useState("");
+  const [courseOptions, setCourseOptions] = useState([])
+  const [selectedCourse, setSelectedCourse] = useState('')
+  const [pertemuanData, setPertemuanData] = useState(null)
+  const [selectedMhs, setSelectedMhs] = useState('')
 
   const [rps, setRps] = useState({
     rps_dasar: null,
     rps_pelaksanaan: null,
-  });
+  })
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         if (data.nip) {
           const response = await axios.get(
-            `${process.env.API_ENDPOINT_ABSEN}/dosen-for-mk`,
+            `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/dosen-for-mk`,
             {
               params: {
                 code: data.nip,
-                academic_year: "2024/2025",
-                semester: "genap",
+                academic_year: '2024/2025',
+                semester: 'genap',
               },
             },
             {
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
-            }
-          );
+            },
+          )
 
-          const courses = response.data.Data;
+          const courses = response.data.Data
 
-          const options = courses.map((course) => ({
+          const options = courses.map(course => ({
             label: `${course.name} | ${course.class}`,
             value: `${course.course_code} - ${course.class}`,
             dataId: course.id,
             kelas: course.class,
-          }));
+          }))
 
-          setCourseOptions(options);
+          setCourseOptions(options)
         }
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        console.error('Error fetching courses:', error)
       }
-    };
+    }
 
-    fetchCourses();
-  }, [data.nip]);
+    fetchCourses()
+  }, [data.nip])
 
   const INITIAL_FORM = {
-    status_kelas: "",
-    dosen_tamu: "",
-  };
+    status_kelas: '',
+    dosen_tamu: '',
+  }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
-    rules: [{ field: "status_kelas", label: "status_kelas" }],
-  });
+    rules: [{ field: 'status_kelas', label: 'status_kelas' }],
+  })
 
   useEffect(() => {
     const fetchPertemuan = async () => {
       try {
         if (selectedCourse) {
-          const selectedOption = courseOptions.find(
-            (option) => option.value === selectedCourse
-          );
+          const selectedOption = courseOptions.find(option => option.value === selectedCourse)
 
           if (!selectedOption) {
-            console.error("Selected course not found in options");
-            return;
+            console.error('Selected course not found in options')
+            return
           }
 
-          const [selectedCourseCode, selectedClass] = selectedCourse.split("-");
-          const [optionCourseCode, optionClass] =
-            selectedOption.value.split("-");
+          const [selectedCourseCode, selectedClass] = selectedCourse.split('-')
+          const [optionCourseCode, optionClass] = selectedOption.value.split('-')
 
-          if (
-            selectedCourseCode !== optionCourseCode ||
-            selectedClass !== optionClass
-          ) {
-            console.error("Selected course and class don't match with options");
-            return;
+          if (selectedCourseCode !== optionCourseCode || selectedClass !== optionClass) {
+            console.error("Selected course and class don't match with options")
+            return
           }
           if (data.nip) {
             const response = await axios.get(
-              `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/cek-pertemuan`,
+              `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/pembelajaran/cek-pertemuan`,
               {
                 params: {
                   nik_dosen: data.nip,
@@ -124,82 +114,77 @@ export default function GenerateQrCode() {
                   kelas: selectedOption.kelas,
                   id_lecture: selectedOption.dataId,
                 },
-              }
-            );
+              },
+            )
 
-            const pertemuanData = response.data.data.pertemuan_ke;
-            const rps = response.data.data.rps_dasar;
-            const rpsp = response.data.data.rps_pelaksanaan;
-            setPertemuanData(pertemuanData);
+            const pertemuanData = response.data.data.pertemuan_ke
+            const rps = response.data.data.rps_dasar
+            const rpsp = response.data.data.rps_pelaksanaan
+            setPertemuanData(pertemuanData)
             setRps({
-              rps_dasar: rps !== null ? rps : "",
-              rps_pelaksanaan: rpsp !== null ? rpsp : "",
-            });
+              rps_dasar: rps !== null ? rps : '',
+              rps_pelaksanaan: rpsp !== null ? rpsp : '',
+            })
           }
         }
       } catch (error) {
-        console.error("Error fetching pertemuan:", error);
+        console.error('Error fetching pertemuan:', error)
       }
-    };
+    }
 
-    fetchPertemuan();
-  }, [selectedCourse, courseOptions, data.nip]);
+    fetchPertemuan()
+  }, [selectedCourse, courseOptions, data.nip])
 
-  const [selectedDosen, setSelectedDosen] = useState("");
-  const [selectedDosenExt, setSelectedDosenExt] = useState("");
+  const [selectedDosen, setSelectedDosen] = useState('')
+  const [selectedDosenExt, setSelectedDosenExt] = useState('')
 
-  const handleDosenChange = (selected) => {
-    setSelectedDosen(selected?.value);
-  };
+  const handleDosenChange = selected => {
+    setSelectedDosen(selected?.value)
+  }
 
-  const handleDosenExtChange = (selected) => {
-    setSelectedDosenExt(selected?.value);
-  };
+  const handleDosenExtChange = selected => {
+    setSelectedDosenExt(selected?.value)
+  }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setRps((prevState) => ({
+  const handleChange = e => {
+    const { name, value } = e.target
+    setRps(prevState => ({
       ...prevState,
       [name]: value,
-    }));
-  };
+    }))
+  }
 
-  const handleChangePertemuan = (e) => {
-    const { name, value } = e.target;
-    setPertemuanData(value);
-  };
+  const handleChangePertemuan = e => {
+    const { name, value } = e.target
+    setPertemuanData(value)
+  }
 
-  const handleMhsChange = (selected) => {
-    setSelectedMhs(selected?.value);
-  };
+  const handleMhsChange = selected => {
+    setSelectedMhs(selected?.value)
+  }
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
-      const selectedOption = courseOptions.find(
-        (option) => option.value === selectedCourse
-      );
+      const selectedOption = courseOptions.find(option => option.value === selectedCourse)
 
       if (!selectedOption) {
-        console.error("Selected course not found in options");
-        return;
+        console.error('Selected course not found in options')
+        return
       }
 
-      const [selectedCourseCode, selectedClass] = selectedCourse.split("-");
-      const [optionCourseCode, optionClass] = selectedOption.value.split("-");
+      const [selectedCourseCode, selectedClass] = selectedCourse.split('-')
+      const [optionCourseCode, optionClass] = selectedOption.value.split('-')
 
       // Pemeriksaan course_code dan class
-      if (
-        selectedCourseCode !== optionCourseCode ||
-        selectedClass !== optionClass
-      ) {
-        console.error("Selected course and class don't match with options");
-        return;
+      if (selectedCourseCode !== optionCourseCode || selectedClass !== optionClass) {
+        console.error("Selected course and class don't match with options")
+        return
       }
       if (!form.status_kelas) {
-        toastAlert("error", "Pleas fill in all the required fields.");
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
 
       const requestData = {
@@ -213,45 +198,40 @@ export default function GenerateQrCode() {
         nidn_dosen_pengganti: selectedDosen,
         npm_komti: selectedMhs,
         dosen_tamu: selectedDosenExt,
-      };
+      }
 
-      console.log(requestData);
+      console.log(requestData)
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/store`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/pembelajaran/store`,
+        method: 'POST',
         data: requestData,
-      });
+      })
 
-      const response = await request.data;
+      const response = await request.data
 
-      toastAlert("success", "QRCODE created successfully");
-      router.push(prefix + menu.url);
+      toastAlert('success', 'QRCODE created successfully')
+      router.push(prefix + menu.url)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
   if (
-    [
-      user,
-      menu,
-      loading,
-      isDosenLoading,
-      isMahasiswaLoading,
-      isDosenExtLoading,
-    ].some((item) => item == null)
+    [user, menu, loading, isDosenLoading, isMahasiswaLoading, isDosenExtLoading].some(
+      item => item == null,
+    )
   )
-    return <Loading />;
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -281,8 +261,8 @@ export default function GenerateQrCode() {
               <Form.Select
                 className="flex-1"
                 name="id_matkul"
-                onChange={(e) => {
-                  setSelectedCourse(e.target.value);
+                onChange={e => {
+                  setSelectedCourse(e.target.value)
                 }}
                 value={selectedCourse}
                 options={courseOptions}
@@ -309,27 +289,15 @@ export default function GenerateQrCode() {
               <span>:</span>
               <div className="flex gap-4">
                 <Form.Label>
-                  <Form.Radio
-                    name="status_kelas"
-                    onChange={inputHandler}
-                    value={0}
-                  />
+                  <Form.Radio name="status_kelas" onChange={inputHandler} value={0} />
                   Offline
                 </Form.Label>
                 <Form.Label>
-                  <Form.Radio
-                    name="status_kelas"
-                    onChange={inputHandler}
-                    value={1}
-                  />
+                  <Form.Radio name="status_kelas" onChange={inputHandler} value={1} />
                   Online
                 </Form.Label>
                 <Form.Label>
-                  <Form.Radio
-                    name="status_kelas"
-                    onChange={inputHandler}
-                    value={2}
-                  />
+                  <Form.Radio name="status_kelas" onChange={inputHandler} value={2} />
                   Hybird
                 </Form.Label>
               </div>
@@ -364,7 +332,7 @@ export default function GenerateQrCode() {
                 className="flex-1"
                 onChange={handleDosenChange}
                 value={selectedDosen}
-                options={listDosen?.map((dosen) => ({
+                options={listDosen?.map(dosen => ({
                   label: dosen.nama_lengkap,
                   value: dosen.nip,
                 }))}
@@ -379,7 +347,7 @@ export default function GenerateQrCode() {
                 className="flex-1"
                 onChange={handleDosenExtChange}
                 value={selectedDosenExt}
-                options={listDosenExt?.map((dosen) => ({
+                options={listDosenExt?.map(dosen => ({
                   label: dosen.nama_lengkap,
                   value: `${dosen.nama_lengkap} - ${dosen.nip}`,
                 }))}
@@ -402,7 +370,7 @@ export default function GenerateQrCode() {
                 name="npm_komti"
                 onChange={handleMhsChange}
                 value={selectedMhs}
-                options={listMahasiswa?.map((mhs) => ({
+                options={listMahasiswa?.map(mhs => ({
                   label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                   value: mhs.npm,
                 }))}
@@ -412,12 +380,7 @@ export default function GenerateQrCode() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -426,5 +389,5 @@ export default function GenerateQrCode() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

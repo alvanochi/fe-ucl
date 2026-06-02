@@ -1,87 +1,89 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
 
 const EditAbsensi = ({ data, onTambahMhs }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const [formData, setFormData] = useState({
-    npm: "",
+    npm: '',
     status_absen: null,
-  });
+  })
 
-  const fetchAbsensiData = async (id) => {
+  const fetchAbsensiData = async id => {
     try {
-      const response = await axios.get(`${process.env.API_ENDPOINT_ABSEN}/absensi`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi`, {
         params: {
-          filter: ["id"],
+          filter: ['id'],
           filterValue: [id],
         },
-      });
+      })
 
-      const dataAbsensi = response.data.data;
+      const dataAbsensi = response.data.data
 
       if (dataAbsensi && dataAbsensi.length > 0) {
         setFormData({
-          npm: dataAbsensi[0]?.npm || "",
+          npm: dataAbsensi[0]?.npm || '',
           status_absen: parseInt(dataAbsensi[0]?.status_absen) || 0,
-        });
+        })
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error)
     }
-  };
+  }
 
   useEffect(() => {
     if (show && data && data.id) {
-      fetchAbsensiData(data.id);
+      fetchAbsensiData(data.id)
     }
-  }, [show, data]);
+  }, [show, data])
 
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const inputHandler = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
-      [name]: name === "status_absen" ? (value !== "" ? parseInt(value) : 0) : value,
-    }));
-  };
+      [name]: name === 'status_absen' ? (value !== '' ? parseInt(value) : 0) : value,
+    }))
+  }
 
-
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
       const response = await axios.post(
-        `${process.env.API_ENDPOINT_ABSEN}/absensi/update/${data?.id || ""}`,
-        formData
-      );
+        `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi/update/${data?.id || ''}`,
+        formData,
+      )
 
-      const responseData = response.data;
-      toastAlert("success", "Updated Successfully");
-      close();
-      onTambahMhs();
-
+      const responseData = response.data
+      toastAlert('success', 'Updated Successfully')
+      close()
+      onTambahMhs()
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   return (
     <>
-      <Button.Icon variant="secondary" icon={<Icon icon="bx:edit" width={20} height={20} />} onClick={toggle} />
+      <Button.Icon
+        variant="secondary"
+        icon={<Icon icon="bx:edit" width={20} height={20} />}
+        onClick={toggle}
+      />
 
       <Modal title="Edit Absensi" show={show} handler={toggle}>
         <Form className="space-y-4" onSubmit={submitHandler}>
@@ -89,7 +91,13 @@ const EditAbsensi = ({ data, onTambahMhs }) => {
             <Form.Label>
               NPM <span className="text-danger-600">*</span>
             </Form.Label>
-            <Form.Input type="number" name="npm" value={formData.npm} onChange={inputHandler} required />
+            <Form.Input
+              type="number"
+              name="npm"
+              value={formData.npm}
+              onChange={inputHandler}
+              required
+            />
           </Form.Group>
 
           <Form.Group className="flex items-baseline gap-2">
@@ -99,15 +107,30 @@ const EditAbsensi = ({ data, onTambahMhs }) => {
             <span>:</span>
             <div className="flex gap-6">
               <Form.Label>
-                <Form.Radio name="status_absen" value={1} onChange={inputHandler} checked={formData.status_absen === 1} />
+                <Form.Radio
+                  name="status_absen"
+                  value={1}
+                  onChange={inputHandler}
+                  checked={formData.status_absen === 1}
+                />
                 Masuk
               </Form.Label>
               <Form.Label>
-                <Form.Radio name="status_absen" value={2} onChange={inputHandler} checked={formData.status_absen === 2} />
+                <Form.Radio
+                  name="status_absen"
+                  value={2}
+                  onChange={inputHandler}
+                  checked={formData.status_absen === 2}
+                />
                 Sakit/ Izin
               </Form.Label>
               <Form.Label>
-                <Form.Radio name="status_absen" value={0} onChange={inputHandler} checked={formData.status_absen === 0} />
+                <Form.Radio
+                  name="status_absen"
+                  value={0}
+                  onChange={inputHandler}
+                  checked={formData.status_absen === 0}
+                />
                 Alfa
               </Form.Label>
             </div>
@@ -124,9 +147,7 @@ const EditAbsensi = ({ data, onTambahMhs }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default EditAbsensi;
-
-
+export default EditAbsensi

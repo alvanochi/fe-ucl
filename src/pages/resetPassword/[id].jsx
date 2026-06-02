@@ -1,46 +1,46 @@
-import Head from "next/head";
-import Link from "next/link";
-import Slider from "react-slick";
+import Head from 'next/head'
+import Link from 'next/link'
+import Slider from 'react-slick'
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import styles from "./resetPassword.module.css";
-import Button from "../../components/Button";
-import { useRouter } from "next/router";
-import useForm from "../../hooks/useForm";
-import { toastAlert } from "../../lib/sweetalert";
-import { MySwal, loadingAlert } from "../../lib/sweetalert";
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import styles from './resetPassword.module.css'
+import Button from '../../components/Button'
+import { useRouter } from 'next/router'
+import useForm from '../../hooks/useForm'
+import { toastAlert } from '../../lib/sweetalert'
+import { MySwal, loadingAlert } from '../../lib/sweetalert'
 
-import axios from "axios";
-import { useEffect, useState } from "react";
+import axios from 'axios'
+import { useEffect, useState } from 'react'
 
 const ResetPassword = () => {
   const [stylesPage, setStylesPage] = useState({
-    displayValue: "flex",
-    formWidth: "w-2/5",
-    formContainer: "w-3/5",
-  });
+    displayValue: 'flex',
+    formWidth: 'w-2/5',
+    formContainer: 'w-3/5',
+  })
 
   useEffect(() => {
     const handleResize = () => {
-      const screenWidth = window.innerWidth;
+      const screenWidth = window.innerWidth
       setStylesPage({
-        displayValue: screenWidth <= 780 ? "block" : "flex",
-        formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
-        formContainer: screenWidth <= 880 ? "w-10/12" : "w-3/5",
-      });
-    };
+        displayValue: screenWidth <= 780 ? 'block' : 'flex',
+        formWidth: screenWidth <= 880 ? 'w-4/5' : 'w-2/5',
+        formContainer: screenWidth <= 880 ? 'w-10/12' : 'w-3/5',
+      })
+    }
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize)
 
-    handleResize();
+    handleResize()
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
-  const router = useRouter();
+  const router = useRouter()
 
   const settings = {
     dots: true,
@@ -50,66 +50,64 @@ const ResetPassword = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
-    dotsClass: styles["slick-dots"],
+    dotsClass: styles['slick-dots'],
     customPaging: function (i) {
-      return (
-        <div className="w-full rounded-full h-1 bg-white bg-opacity-20 dots"></div>
-      );
+      return <div className="w-full rounded-full h-1 bg-white bg-opacity-20 dots"></div>
     },
-  };
+  }
 
   const INITIAL_FORM = {
-    password: "",
-    password2: "",
-  };
+    password: '',
+    password2: '',
+  }
 
-  const RESET_URL = `${process.env.API_ENDPOINT}/auth/resetPassword/${router.query.id}`;
+  const RESET_URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/resetPassword/${router.query.id}`
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
       {
-        field: "password",
-        label: "New Password",
-        field: "password2",
-        label: "Confirm Password",
+        field: 'password',
+        label: 'New Password',
+        field: 'password2',
+        label: 'Confirm Password',
       },
     ],
-  });
+  })
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const submitHandler = async e => {
+    e.preventDefault()
 
     if (form.password !== form.password2) {
-      return toastAlert("error", "Password do not match.");
+      return toastAlert('error', 'Password do not match.')
     }
 
     try {
-      delete form.password2;
-      loadingAlert("Harap Tunggu", "Memproses permintaan...");
+      delete form.password2
+      loadingAlert('Harap Tunggu', 'Memproses permintaan...')
       const request = await axios({
         url: RESET_URL,
-        method: "PATCH",
+        method: 'PATCH',
         data: form,
-      });
+      })
 
-      MySwal.close();
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
       if (response.status == 200) {
-        toastAlert("info", response.data.message);
-        router.push("/login");
+        toastAlert('info', response.data.message)
+        router.push('/login')
       }
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
-      toastAlert("error", error);
+      toastAlert('error', error)
     }
-  };
+  }
 
   return (
     <>
@@ -124,21 +122,15 @@ const ResetPassword = () => {
         <form
           onSubmit={submitHandler}
           type="formdata"
-          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${stylesPage.formWidth}`}
+          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles['form']} ${stylesPage.formWidth}`}
         >
           <div className={`block ${stylesPage.formContainer}`}>
             <div className="block mb-6">
-              <h1 className="block text-2xl font-bold text-primary-600">
-                Reset Password
-              </h1>
-              <p className="block text-gray-600 text-sm">
-                Silahkan Masukan Password Baru
-              </p>
+              <h1 className="block text-2xl font-bold text-primary-600">Reset Password</h1>
+              <p className="block text-gray-600 text-sm">Silahkan Masukan Password Baru</p>
             </div>
             <div className="block mb-6">
-              <label className="block text-sm font-medium mb-1">
-                New Password
-              </label>
+              <label className="block text-sm font-medium mb-1">New Password</label>
               <input
                 type="password"
                 className="form-input"
@@ -149,9 +141,7 @@ const ResetPassword = () => {
               />
             </div>
             <div className="block mb-6">
-              <label className="block text-sm font-medium mb-1">
-                Confirm Password
-              </label>
+              <label className="block text-sm font-medium mb-1">Confirm Password</label>
               <input
                 type="password"
                 className="form-input"
@@ -173,24 +163,20 @@ const ResetPassword = () => {
             </div>
           </div>
         </form>
-        <div
-          className={`relative flex flex-col grow py-12 px-10 ${styles["slider"]}`}
-        >
+        <div className={`relative flex flex-col grow py-12 px-10 ${styles['slider']}`}>
           <div className="block mb-16">
             <img src="/img/app_logo.png" alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">
             {/* SLIDER HERE */}
-            <Slider {...settings} arrows={false} className={styles["slider"]}>
+            <Slider {...settings} arrows={false} className={styles['slider']}>
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <h3 className="block text-3xl text-white font-bold mb-12">
-                    Platform <br /> Digital Untuk <br /> Mempermudah <br />{" "}
-                    Administrasi
+                    Platform <br /> Digital Untuk <br /> Mempermudah <br /> Administrasi
                   </h3>
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -202,8 +188,7 @@ const ResetPassword = () => {
                     className="mx-auto mb-2 h-72"
                   />
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -215,8 +200,7 @@ const ResetPassword = () => {
                     className="mx-auto mb-2 h-72"
                   />
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -225,7 +209,7 @@ const ResetPassword = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ResetPassword;
+export default ResetPassword

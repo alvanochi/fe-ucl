@@ -1,74 +1,64 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Card from "../../../../components/Card";
-import Form from "../../../../components/Form";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useDosen from "../../../../repo/dosen";
-import useMahasiswa from "../../../../repo/mahasiswa";
-import {
-  ROLE_ID_ADMIN,
-  ROLE_ID_DOSEN,
-  ROLE_ID_MAHASISWA,
-} from "../../../../config/role";
-import useCRUD from "../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import { Loading } from "../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useDosen from '../../../../repo/dosen'
+import useMahasiswa from '../../../../repo/mahasiswa'
+import { ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../config/role'
+import useCRUD from '../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import { Loading } from '../../../../components/Loading'
 
 export default function AkademikCreate() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik/add`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/bimbingan-akademik/add`
 
   const INITIAL_MHS = {
-    user_id: "",
-  };
+    user_id: '',
+  }
 
   const INITIAL_FORM = {
-    dosen_id: "",
-    tahun_angkatan: "",
+    dosen_id: '',
+    tahun_angkatan: '',
     mhs_bimbingan: [],
-  };
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     success: () => router.push(prefix + menu.url),
-    transformData: (data) => ({
+    transformData: data => ({
       ...data,
       mhs_bimbingan: JSON.stringify(data.mhs_bimbingan),
     }),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
   const removeFromUser = (key, index) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
       [key]: state[key].filter((_, idx) => idx != index),
-    }));
+    }))
 
   useEffect(() => {
-    if (!user) return;
-    setForm((state) => ({
+    if (!user) return
+    setForm(state => ({
       ...state,
-    }));
-  }, [user]);
+    }))
+  }, [user])
 
-  if (
-    [user, menu, isDosenLoading, isMahasiswaLoading].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, isDosenLoading, isMahasiswaLoading].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -97,10 +87,10 @@ export default function AkademikCreate() {
               <Form.Combobox
                 name="dosen_id.user_id"
                 className="z-10 absolute"
-                onChange={(selected) =>
+                onChange={selected =>
                   inputHandler({
                     target: {
-                      name: "dosen_id",
+                      name: 'dosen_id',
                       value: selected?.value,
                     },
                   })
@@ -109,7 +99,7 @@ export default function AkademikCreate() {
                 options={
                   listDosen &&
                   Array.isArray(listDosen) &&
-                  listDosen.map((dosen) => ({
+                  listDosen.map(dosen => ({
                     label: dosen.nama_lengkap,
                     value: dosen.user_id,
                   }))
@@ -125,17 +115,12 @@ export default function AkademikCreate() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 Mahasiswa Bimbingan
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -146,7 +131,7 @@ export default function AkademikCreate() {
                   <Form.Combobox
                     index={index}
                     name="mhs_bimbingan.user_id"
-                    onChange={(selected) =>
+                    onChange={selected =>
                       inputHandler({
                         target: {
                           attributes: {
@@ -154,16 +139,16 @@ export default function AkademikCreate() {
                               value: index,
                             },
                           },
-                          name: "mhs_bimbingan.user_id",
+                          name: 'mhs_bimbingan.user_id',
                           value: selected?.value,
                         },
                       })
                     }
-                    value={form.mhs_bimbingan[index].user_id || ""}
+                    value={form.mhs_bimbingan[index].user_id || ''}
                     options={
                       listMahasiswa &&
                       Array.isArray(listMahasiswa) &&
-                      listMahasiswa.map((mhs) => ({
+                      listMahasiswa.map(mhs => ({
                         label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                         value: mhs.user_id,
                       }))
@@ -176,14 +161,8 @@ export default function AkademikCreate() {
                     <Button.Icon
                       type="button"
                       variant="danger"
-                      icon={
-                        <Icon
-                          icon="solar:trash-bin-2-bold-duotone"
-                          width={20}
-                          height={20}
-                        />
-                      }
-                      onClick={() => removeFromUser("mhs_bimbingan", index)}
+                      icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                      onClick={() => removeFromUser('mhs_bimbingan', index)}
                     />
                   </div>
                 </td>
@@ -192,21 +171,15 @@ export default function AkademikCreate() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
-                      mhs_bimbingan: [
-                        ...state.mhs_bimbingan,
-                        { ...INITIAL_MHS },
-                      ],
+                      mhs_bimbingan: [...state.mhs_bimbingan, { ...INITIAL_MHS }],
                     }))
                   }
                 >
@@ -217,12 +190,7 @@ export default function AkademikCreate() {
           </tfoot>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -231,5 +199,5 @@ export default function AkademikCreate() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

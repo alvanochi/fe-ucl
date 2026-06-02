@@ -1,67 +1,59 @@
-import { useRouter } from "next/router";
-import Button from "../../../components/Button";
-import Card from "../../../components/Card";
-import Form from "../../../components/Form";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
-import useMenu from "../../../hooks/useMenu";
-import useUser from "../../../hooks/useUser";
-import useCRUD from "../../../hooks/useCRUD";
-import { useEffect } from "react";
-import { Loading } from "../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../components/Button'
+import Card from '../../../components/Card'
+import Form from '../../../components/Form'
+import Layout from '../../../components/Layout'
+import PageHeader from '../../../components/PageHeader'
+import useMenu from '../../../hooks/useMenu'
+import useUser from '../../../hooks/useUser'
+import useCRUD from '../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import { Loading } from '../../../components/Loading'
 
 export default function EventEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/berita/detail`;
-  const FILE_URL_PAMFLET = `${process.env.API_ENDPOINT}/berita/pamflet`;
-  const FILE_URL_DOKUMEN = `${process.env.API_ENDPOINT}/berita/dokumen`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/berita/detail`
+  const FILE_URL_PAMFLET = `${process.env.NEXT_PUBLIC_API_URL}/berita/pamflet`
+  const FILE_URL_DOKUMEN = `${process.env.NEXT_PUBLIC_API_URL}/berita/dokumen`
 
   const INITIAL_FORM = {
-    id: "",
-    title: "",
-    deskripsi: "",
-    pamflet: "",
-    dokumen: "",
-  };
+    id: '',
+    title: '',
+    deskripsi: '',
+    pamflet: '',
+    dokumen: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "title", label: "Title" },
-      { field: "deskripsi", label: "Deskripsi" },
+      { field: 'title', label: 'Title' },
+      { field: 'deskripsi', label: 'Deskripsi' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/berita`;
-  const EDIT_OPTION = { url: `${EDIT_URL}/${form.id}`, method: "PATCH" };
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/berita`
+  const EDIT_OPTION = { url: `${EDIT_URL}/${form.id}`, method: 'PATCH' }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if (
-    [user, menu, form].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, form].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Edit</Card.Header>
           <Card.Body className="space-y-4">
@@ -98,13 +90,12 @@ export default function EventEdit() {
               </Form.Label>
               <span>:</span>
               <div className="block flex-1 space-y-2">
-                <Form.Input
-                  type="file"
-                  className="flex-1"
-                  name="pamflet"
-                  onChange={inputHandler}
+                <Form.Input type="file" className="flex-1" name="pamflet" onChange={inputHandler} />
+                <img
+                  src={`${FILE_URL_PAMFLET}/${form.pamflet}`}
+                  alt="pamflet"
+                  className="w-full h-[256px]"
                 />
-                <img src={`${FILE_URL_PAMFLET}/${form.pamflet}`} alt="pamflet" className="w-full h-[256px]" />
               </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -113,27 +104,14 @@ export default function EventEdit() {
               </Form.Label>
               <span>:</span>
               <div className="block flex-1 space-y-2">
-                <Form.Input
-                  type="file"
-                  className="flex-1"
-                  name="dokumen"
-                  onChange={inputHandler}
-                />
-                <embed
-                  src={`${FILE_URL_DOKUMEN}/${form.dokumen}`}
-                  className="w-full h-[256px]"
-                />
+                <Form.Input type="file" className="flex-1" name="dokumen" onChange={inputHandler} />
+                <embed src={`${FILE_URL_DOKUMEN}/${form.dokumen}`} className="w-full h-[256px]" />
               </div>
             </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -142,5 +120,5 @@ export default function EventEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

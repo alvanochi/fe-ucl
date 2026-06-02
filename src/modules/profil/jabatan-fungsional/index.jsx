@@ -1,15 +1,15 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import date from "../../../utils/date";
-import SortIcon from "../../../components/SortIcon";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Pagination from '../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../hooks/useDatatable'
+import useCRUD from '../../../hooks/useCRUD'
+import date from '../../../utils/date'
+import SortIcon from '../../../components/SortIcon'
 
 export default function JabatanFungsionalModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataJabatan`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/profile/deleteDataJabatan`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataJabatan`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/deleteDataJabatan`
 
   const {
     data,
@@ -24,14 +24,14 @@ export default function JabatanFungsionalModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(DATA_URL);
-  const { destroy } = useCRUD(DELETE_URL);
+  } = useDatatable(DATA_URL)
+  const { destroy } = useCRUD(DELETE_URL)
 
   return (
     <>
       <div className="flex items-center justify-center gap-2 my-8">
         <Button
-          onClick={() => window.open(`${baseURL}/jabatan-fungsional/create`,'_blank')}
+          onClick={() => window.open(`${baseURL}/jabatan-fungsional/create`, '_blank')}
           variant="primary"
           icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
           pill
@@ -49,24 +49,22 @@ export default function JabatanFungsionalModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jabatan_id")}
+                onClick={() => sortBy('jabatan_id')}
               >
                 No
-                <SortIcon sort={getSortBy("jabatan_id")} />
+                <SortIcon sort={getSortBy('jabatan_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jabatan_fungsi")}
+                onClick={() => sortBy('jabatan_fungsi')}
               >
                 Jabatan Fungsional
-                <SortIcon sort={getSortBy("jabatan_fungsi")} />
+                <SortIcon sort={getSortBy('jabatan_fungsi')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -75,43 +73,35 @@ export default function JabatanFungsionalModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("nomor_sk")}
+                onClick={() => sortBy('nomor_sk')}
               >
                 No. SK
-                <SortIcon sort={getSortBy("nomor_sk")} />
+                <SortIcon sort={getSortBy('nomor_sk')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_mulai")}
+                onClick={() => sortBy('tgl_mulai')}
               >
                 Terhitung Mulai Tanggal
-                <SortIcon sort={getSortBy("tgl_mulai")} />
+                <SortIcon sort={getSortBy('tgl_mulai')} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -120,56 +110,36 @@ export default function JabatanFungsionalModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.jabatan_fungsi}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.jabatan_fungsi}
+                  {row.kel_penelitian + row.kel_pengab_msyrkt + row.kel_keg_penunjang}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.kel_penelitian +
-                    row.kel_pengab_msyrkt +
-                    row.kel_keg_penunjang}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.nomor_sk}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.nomor_sk}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {date.formatToID(new Date(row.tgl_mulai))}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {row.status == 1 ? (
-                    ""
+                    ''
                   ) : (
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
                         as="a"
                         href={`${baseURL}/jabatan-fungsional/detail/${row.jabatan_id}`}
                         variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                       />
                       <Button.Icon
                         as="a"
@@ -179,16 +149,8 @@ export default function JabatanFungsionalModule({ baseURL }) {
                       />
                       <Button.Icon
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.jabatan_id).then(() => refresh())
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => destroy(row.jabatan_id).then(() => refresh())}
                       />
                     </div>
                   )}
@@ -206,5 +168,5 @@ export default function JabatanFungsionalModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

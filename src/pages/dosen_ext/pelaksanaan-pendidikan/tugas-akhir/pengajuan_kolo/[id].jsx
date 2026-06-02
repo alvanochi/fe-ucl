@@ -1,157 +1,156 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import useDosen from "../../../../../repo/dosen";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { Loading } from "../../../../../components/Loading";
-import axios from "axios";
-import { MySwal, toastAlert } from "../../../../../lib/sweetalert";
-import date from "../../../../../utils/date";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import useDosen from '../../../../../repo/dosen'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { Loading } from '../../../../../components/Loading'
+import axios from 'axios'
+import { MySwal, toastAlert } from '../../../../../lib/sweetalert'
+import date from '../../../../../utils/date'
 
 export default function PengajuanKolo() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
 
-  const [defaultData, setDefaultData] = useState({});
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-pengajuan-kolo`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/tugas-akhir/makalah-kolokium`;
+  const [defaultData, setDefaultData] = useState({})
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-pengajuan-kolo`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/makalah-kolokium`
 
   const INITIAL_FORM = {
-    pengajuan_sk_id: "",
-    kolo_id: "",
-    nama_lengkap: "",
-    semester: "",
-    email: "",
-    no_hp: "",
-    npm: "",
-    judul_skripsi: "",
-    link_dok_mhs_aktif: "",
-    link_dok_pembayaran: "",
-    kolo_pembimbing_1: "",
-    kolo_pembimbing_2: "",
+    pengajuan_sk_id: '',
+    kolo_id: '',
+    nama_lengkap: '',
+    semester: '',
+    email: '',
+    no_hp: '',
+    npm: '',
+    judul_skripsi: '',
+    link_dok_mhs_aktif: '',
+    link_dok_pembayaran: '',
+    kolo_pembimbing_1: '',
+    kolo_pembimbing_2: '',
     kolo_pembimbing_3: null,
-    kolo_kepala_lab: "",
-    kolo_status_pem_1: "",
-    kolo_status_pem_2: "",
-    kolo_status_pem_3: "",
-    kolo_status_kepala_lab: "",
-    evaluator_1: "",
-    evaluator_2: "",
-    jadwal_pelaksanaan: "",
-    file_makalah: "",
-    status_kp: "",
-    status_sks_ipk: "",
-    statusDosen: "",
-    ipk: "",
-    jumlah_sks: "",
-    link_dok_makalah: "",
-    judul: "",
-  };
+    kolo_kepala_lab: '',
+    kolo_status_pem_1: '',
+    kolo_status_pem_2: '',
+    kolo_status_pem_3: '',
+    kolo_status_kepala_lab: '',
+    evaluator_1: '',
+    evaluator_2: '',
+    jadwal_pelaksanaan: '',
+    file_makalah: '',
+    status_kp: '',
+    status_sks_ipk: '',
+    statusDosen: '',
+    ipk: '',
+    jumlah_sks: '',
+    link_dok_makalah: '',
+    judul: '',
+  }
 
   const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "link_dok_mhs_aktif", label: "Link Dokumen Mahasiswa Aktif" },
-      { field: "link_dok_pembayaran", label: "Link Dokumen Pembayaran" },
-      { field: "file_makalah", label: "file_makalah" },
+      { field: 'link_dok_mhs_aktif', label: 'Link Dokumen Mahasiswa Aktif' },
+      { field: 'link_dok_pembayaran', label: 'Link Dokumen Pembayaran' },
+      { field: 'file_makalah', label: 'file_makalah' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
         jadwal_pelaksanaan: data.jadwal_pelaksanaan
           ? date.formatToInput(data.jadwal_pelaksanaan)
-          : "",
+          : '',
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const [isChecked1, setIsChecked1] = useState(false);
-  const [isChecked2, setIsChecked2] = useState(false);
-  const [isChecked3, setIsChecked3] = useState(false);
-  const [isCheckedLab, setIsCheckedLab] = useState(false);
+  const [isChecked1, setIsChecked1] = useState(false)
+  const [isChecked2, setIsChecked2] = useState(false)
+  const [isChecked3, setIsChecked3] = useState(false)
+  const [isCheckedLab, setIsCheckedLab] = useState(false)
 
   const handleCheckboxChange = async (event, id) => {
-    const { name, checked } = event.target;
-    if (name === "kolo_status_pem_1") {
-      setIsChecked1(checked);
-    } else if (name === "kolo_status_pem_2") {
-      setIsChecked2(checked);
-    } else if (name === "kolo_status_pem_3") {
-      setIsChecked3(checked);
-    } else if (name == "kolo_status_kepala_lab") {
-      setIsCheckedLab(checked);
+    const { name, checked } = event.target
+    if (name === 'kolo_status_pem_1') {
+      setIsChecked1(checked)
+    } else if (name === 'kolo_status_pem_2') {
+      setIsChecked2(checked)
+    } else if (name === 'kolo_status_pem_3') {
+      setIsChecked3(checked)
+    } else if (name == 'kolo_status_kepala_lab') {
+      setIsCheckedLab(checked)
     }
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/approve/${id}`,
         {
           [name]: true,
-          db: "ta_pendaftaran_kolokium",
+          db: 'ta_pendaftaran_kolokium',
         },
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-        }
-      );
-      toastAlert("success", "Successfully approved");
+        },
+      )
+      toastAlert('success', 'Successfully approved')
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
-        return;
+      console.error('There was a problem with the fetch operation:', error)
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
+        return
       }
-      loadingAlert();
-      MySwal.close();
-      toastAlert("error", error.message);
+      loadingAlert()
+      MySwal.close()
+      toastAlert('error', error.message)
     }
-  };
+  }
 
   useEffect(() => {
     if (form) {
       if (form?.kolo_status_pem_1 == true) {
-        setIsChecked1(true);
+        setIsChecked1(true)
       }
       if (form?.kolo_status_pem_2 == true) {
-        setIsChecked2(true);
+        setIsChecked2(true)
       }
       if (form?.kolo_status_pem_3 == true) {
-        setIsChecked3(true);
+        setIsChecked3(true)
       }
       if (form?.kolo_status_kepala_lab == true) {
-        setIsCheckedLab(true);
+        setIsCheckedLab(true)
       }
     }
-  }, [form]);
+  }, [form])
 
   const handleDownload = () => {
-    const downloadLink = document.createElement("a");
-    downloadLink.href = `${FILE_URL}/${form.file_makalah}`;
-    downloadLink.target = "_blank";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-  };
+    const downloadLink = document.createElement('a')
+    downloadLink.href = `${FILE_URL}/${form.file_makalah}`
+    downloadLink.target = '_blank'
+    document.body.appendChild(downloadLink)
+    downloadLink.click()
+    document.body.removeChild(downloadLink)
+  }
 
-  if ([user, menu, isDosenLoading].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isDosenLoading].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -170,10 +169,9 @@ export default function PengajuanKolo() {
         </svg>
         <span className="sr-only">Info</span>
         <div>
-          <span className="font-medium">Catatan!</span> Silahkan Scroll ke
-          bagian paling bawah, tandai kotak tersebut jika Anda menyetujui untuk
-          diajukan sebagai Pembimbing / Kepala Lab mahasiswa terkait untuk
-          pelaksanaan kolokium
+          <span className="font-medium">Catatan!</span> Silahkan Scroll ke bagian paling bawah,
+          tandai kotak tersebut jika Anda menyetujui untuk diajukan sebagai Pembimbing / Kepala Lab
+          mahasiswa terkait untuk pelaksanaan kolokium
         </div>
       </div>
       <Form>
@@ -264,8 +262,7 @@ export default function PengajuanKolo() {
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
                 <p>
-                  Terdaftar sebagai mahasiswa aktif{" "}
-                  <span className="text-danger-600">*</span>
+                  Terdaftar sebagai mahasiswa aktif <span className="text-danger-600">*</span>
                 </p>
                 <p>dilengkapi dengan bukti pembayaran </p>
               </Form.Label>
@@ -282,8 +279,7 @@ export default function PengajuanKolo() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
-                Telah Melakukan Pembayaran Kolokium{" "}
-                <span className="text-danger-600">*</span>
+                Telah Melakukan Pembayaran Kolokium <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               <Form.Input
@@ -298,16 +294,13 @@ export default function PengajuanKolo() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
-                5 Eksternal Proposal Makalah Kolokium{" "}
-                <span className="text-danger-600">*</span>
+                5 Eksternal Proposal Makalah Kolokium <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
               {form.file_makalah && (
                 <Button
                   variant="info"
-                  icon={
-                    <Icon icon="material-symbols:save" width={20} height={20} />
-                  }
+                  icon={<Icon icon="material-symbols:save" width={20} height={20} />}
                   type="button"
                   onClick={handleDownload}
                 >
@@ -317,9 +310,7 @@ export default function PengajuanKolo() {
             </Form.Group>
 
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Link Dokumen Makalah
-              </Form.Label>
+              <Form.Label className="min-w-[20rem]">Link Dokumen Makalah</Form.Label>
               <span>:</span>
               <Form.Input
                 type="url"
@@ -336,12 +327,7 @@ export default function PengajuanKolo() {
                 Telah Menyelesaikan MK Kerja Praktik
               </Form.Label>
               <span>:</span>
-              <Form.Checkbox
-                type="checkbox"
-                name="status_kp"
-                checked={form.status_kp}
-                disabled
-              />
+              <Form.Checkbox type="checkbox" name="status_kp" checked={form.status_kp} disabled />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
@@ -358,9 +344,7 @@ export default function PengajuanKolo() {
               <span>SKS: {form.jumlah_sks}</span>|<span>IPK: {form.ipk}</span>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Jadwal Pelaksanaan
-              </Form.Label>
+              <Form.Label className="min-w-[20rem]">Jadwal Pelaksanaan</Form.Label>
               <span>:</span>
               <Form.Input
                 type="date"
@@ -381,7 +365,7 @@ export default function PengajuanKolo() {
                 value={form.evaluator_1}
                 options={
                   listDosen &&
-                  listDosen.map((dosen) => ({
+                  listDosen.map(dosen => ({
                     label: dosen.nama_lengkap,
                     value: dosen.user_id,
                   }))
@@ -399,7 +383,7 @@ export default function PengajuanKolo() {
                 value={form.evaluator_2}
                 options={
                   listDosen &&
-                  listDosen.map((dosen) => ({
+                  listDosen.map(dosen => ({
                     label: dosen.nama_lengkap,
                     value: dosen.user_id,
                   }))
@@ -416,30 +400,21 @@ export default function PengajuanKolo() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 <div>Mengetahui</div>
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Dosen
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Dosen</th>
+              <th className="text-sm border-2 border-white bg-gray-200">status</th>
             </tr>
           </thead>
           <tbody>
             {form.statusDosen === 1 && (
               <tr>
                 <td className="text-sm border-2 border-white text-center font-bold">
-                  <span>Pembimbing 1</span>{" "}
+                  <span>Pembimbing 1</span>{' '}
                 </td>
                 <td className="text-sm border-2 border-white">
                   <Form.Group className="flex items-baseline gap-3">
@@ -448,7 +423,7 @@ export default function PengajuanKolo() {
                       value={form.kolo_pembimbing_1}
                       options={
                         listDosen &&
-                        listDosen.map((dosen) => ({
+                        listDosen.map(dosen => ({
                           label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                           value: dosen.user_id,
                         }))
@@ -463,9 +438,7 @@ export default function PengajuanKolo() {
                       className="cursor-pointer"
                       type="checkbox"
                       checked={isChecked1}
-                      onChange={(event) =>
-                        handleCheckboxChange(event, form.kolo_id)
-                      }
+                      onChange={event => handleCheckboxChange(event, form.kolo_id)}
                       name="kolo_status_pem_1"
                       disabled={isChecked1}
                     />
@@ -485,7 +458,7 @@ export default function PengajuanKolo() {
                       value={form.kolo_pembimbing_2}
                       options={
                         listDosen &&
-                        listDosen.map((dosen) => ({
+                        listDosen.map(dosen => ({
                           label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                           value: dosen.user_id,
                         }))
@@ -500,9 +473,7 @@ export default function PengajuanKolo() {
                       className="cursor-pointer"
                       type="checkbox"
                       checked={isChecked2}
-                      onChange={(event) =>
-                        handleCheckboxChange(event, form.kolo_id)
-                      }
+                      onChange={event => handleCheckboxChange(event, form.kolo_id)}
                       name="kolo_status_pem_2"
                       disabled={isChecked2}
                     />
@@ -523,7 +494,7 @@ export default function PengajuanKolo() {
                       value={form.kolo_pembimbing_3}
                       options={
                         listDosen &&
-                        listDosen.map((dosen) => ({
+                        listDosen.map(dosen => ({
                           label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                           value: dosen.user_id,
                         }))
@@ -538,9 +509,7 @@ export default function PengajuanKolo() {
                       className="cursor-pointer"
                       type="checkbox"
                       checked={isChecked3}
-                      onChange={(event) =>
-                        handleCheckboxChange(event, form.kolo_id)
-                      }
+                      onChange={event => handleCheckboxChange(event, form.kolo_id)}
                       name="kolo_status_pem_3"
                       disabled={isChecked3}
                     />
@@ -549,7 +518,7 @@ export default function PengajuanKolo() {
               </tr>
             )}
 
-            {form.statusDosen === "kepala_lab" && (
+            {form.statusDosen === 'kepala_lab' && (
               <tr>
                 <td className="text-sm border-2 border-white text-center font-bold">
                   <span>Kepala Lab</span>
@@ -561,7 +530,7 @@ export default function PengajuanKolo() {
                       value={form.kolo_kepala_lab}
                       options={
                         listDosen &&
-                        listDosen.map((dosen) => ({
+                        listDosen.map(dosen => ({
                           label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                           value: dosen.user_id,
                         }))
@@ -576,9 +545,7 @@ export default function PengajuanKolo() {
                       className="cursor-pointer"
                       type="checkbox"
                       checked={isCheckedLab}
-                      onChange={(event) =>
-                        handleCheckboxChange(event, form.kolo_id)
-                      }
+                      onChange={event => handleCheckboxChange(event, form.kolo_id)}
                       name="kolo_status_kepala_lab"
                       disabled={isCheckedLab}
                     />
@@ -589,25 +556,17 @@ export default function PengajuanKolo() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={3}
-                className="text-sm border-2 border-white bg-gray-50"
-              ></td>
+              <td colSpan={3} className="text-sm border-2 border-white bg-gray-50"></td>
             </tr>
           </tfoot>
         </table>
 
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

@@ -1,49 +1,49 @@
-import Head from "next/head";
-import Slider from "react-slick";
+import Head from 'next/head'
+import Slider from 'react-slick'
 
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import styles from "./forgot-password.module.css";
-import Button from "../../components/Button";
-import Link from "next/link";
-import useForm from "../../hooks/useForm";
-import axios from "axios";
-import { toastAlert } from "../../lib/sweetalert";
-import { useEffect, useState } from "react";
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
+import styles from './forgot-password.module.css'
+import Button from '../../components/Button'
+import Link from 'next/link'
+import useForm from '../../hooks/useForm'
+import axios from 'axios'
+import { toastAlert } from '../../lib/sweetalert'
+import { useEffect, useState } from 'react'
 
 const ForgotPassword = () => {
   const [stylesPage, setStylesPage] = useState({
-    displayValue: "flex",
-    formWidth: "w-2/5",
-    formContainer: "w-3/5",
-  });
+    displayValue: 'flex',
+    formWidth: 'w-2/5',
+    formContainer: 'w-3/5',
+  })
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const handleResize = () => {
-        const screenWidth = window.innerWidth;
+        const screenWidth = window.innerWidth
         setStylesPage({
-          displayValue: screenWidth <= 780 ? "block" : "flex",
-          formWidth: screenWidth <= 880 ? "w-4/5" : "w-2/5",
-          formContainer: screenWidth <= 880 ? "w-10/12" : "w-3/5",
-        });
-      };
+          displayValue: screenWidth <= 780 ? 'block' : 'flex',
+          formWidth: screenWidth <= 880 ? 'w-4/5' : 'w-2/5',
+          formContainer: screenWidth <= 880 ? 'w-10/12' : 'w-3/5',
+        })
+      }
 
-      window.addEventListener("resize", handleResize);
+      window.addEventListener('resize', handleResize)
 
-      handleResize();
+      handleResize()
 
       return () => {
-        window.removeEventListener("resize", handleResize);
-      };
+        window.removeEventListener('resize', handleResize)
+      }
     }
-  }, []);
+  }, [])
 
-  const API_URL = `${process.env.API_ENDPOINT}/auth/forgotPassword`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/auth/forgotPassword`
 
   const INITIAL_FORM = {
-    email: "",
-  };
+    email: '',
+  }
 
   const settings = {
     dots: true,
@@ -53,47 +53,42 @@ const ForgotPassword = () => {
     slidesToScroll: 1,
     autoplay: true,
     autoplaySpeed: 2000,
-    dotsClass: styles["slick-dots"],
+    dotsClass: styles['slick-dots'],
     customPaging: function (i) {
-      return (
-        <div className="w-full rounded-full h-1 bg-white bg-opacity-20 dots"></div>
-      );
+      return <div className="w-full rounded-full h-1 bg-white bg-opacity-20 dots"></div>
     },
-  };
+  }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
-    rules: [{ field: "email", label: "E-Mail" }],
-  });
+    rules: [{ field: 'email', label: 'E-Mail' }],
+  })
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const submitHandler = async e => {
+    e.preventDefault()
 
     try {
       const request = await axios({
         url: API_URL,
-        method: "POST",
+        method: 'POST',
         data: form,
-      });
+      })
 
-      const response = await request;
+      const response = await request
 
       if (response.status == 200) {
-        toastAlert(
-          "info",
-          `${response.data.message}, Check your email for reset password!`
-        );
+        toastAlert('info', `${response.data.message}, Check your email for reset password!`)
       }
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
-  };
+  }
 
   return (
     <>
@@ -104,24 +99,20 @@ const ForgotPassword = () => {
         className={`w-full min-h-screen bg-motion bg-cover bg-no-repeat`}
         style={{ display: stylesPage.displayValue }}
       >
-        <div
-          className={`relative flex flex-col grow py-12 px-10 ${styles["slider"]}`}
-        >
-          <div className={`mb-16 ${styles["logo"]}`}>
+        <div className={`relative flex flex-col grow py-12 px-10 ${styles['slider']}`}>
+          <div className={`mb-16 ${styles['logo']}`}>
             <img src="/img/app_logo.png" alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">
             {/* SLIDER HERE */}
-            <Slider {...settings} arrows={false} className={styles["slider"]}>
+            <Slider {...settings} arrows={false} className={styles['slider']}>
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <h3 className="block text-3xl text-white font-bold mb-12">
-                    Platform <br /> Digital Untuk <br /> Mempermudah <br />{" "}
-                    Administrasi
+                    Platform <br /> Digital Untuk <br /> Mempermudah <br /> Administrasi
                   </h3>
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -133,8 +124,7 @@ const ForgotPassword = () => {
                     className="mx-auto mb-2 h-72"
                   />
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -146,8 +136,7 @@ const ForgotPassword = () => {
                     className="mx-auto mb-2 h-72"
                   />
                   <p className="block text-white text-sm font-semibold">
-                    Kembangkan karir dan relasi anda dengan daftar menjadi
-                    keluarga UCL
+                    Kembangkan karir dan relasi anda dengan daftar menjadi keluarga UCL
                   </p>
                 </div>
               </div>
@@ -157,16 +146,12 @@ const ForgotPassword = () => {
 
         <form
           onSubmit={submitHandler}
-          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles["form"]} ${stylesPage.formWidth}`}
+          className={`flex items-center justify-center  shrink-0 h=full bg-white ml-auto rounded-l-3xl ${styles['form']} ${stylesPage.formWidth}`}
         >
           <div className={`block ${stylesPage.formContainer}`}>
             <div className="block mb-6">
-              <h1 className="block text-2xl font-bold text-primary-600">
-                Lupa Password
-              </h1>
-              <p className="block text-gray-600 text-sm">
-                Silahkan Masukan Email Anda
-              </p>
+              <h1 className="block text-2xl font-bold text-primary-600">Lupa Password</h1>
+              <p className="block text-gray-600 text-sm">Silahkan Masukan Email Anda</p>
             </div>
             <div className="block mb-6">
               <label className="block text-sm font-medium mb-1">E-Mail</label>
@@ -193,7 +178,7 @@ const ForgotPassword = () => {
         </form>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default ForgotPassword;
+export default ForgotPassword

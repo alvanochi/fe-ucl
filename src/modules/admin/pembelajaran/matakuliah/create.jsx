@@ -1,79 +1,79 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import useKurikulum from "../../../../repo/kurikulum";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import useKurikulum from '../../../../repo/kurikulum'
 
 const CreateMatakuliah = ({ onAction }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const INITIAL_FORM = {
-    kode_matakuliah: "",
-    nama_matakuliah: "",
-    kurikulum: "",
-    sks: "",
-    materi: "",
-  };
+    kode_matakuliah: '',
+    nama_matakuliah: '',
+    kurikulum: '',
+    sks: '',
+    materi: '',
+  }
 
-  const { data: listKurikulum, isLoading: isKurkulumLoading } = useKurikulum();
-  const [selectedKurikulum, setSelectedKurikulum] = useState("");
+  const { data: listKurikulum, isLoading: isKurkulumLoading } = useKurikulum()
+  const [selectedKurikulum, setSelectedKurikulum] = useState('')
 
-  const handleKurikulumChange = (selected) => {
-    setSelectedKurikulum(selected?.value);
-  };
+  const handleKurikulumChange = selected => {
+    setSelectedKurikulum(selected?.value)
+  }
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
-      { field: "nama_matakuliah", label: "nama_matakuliah" },
-      { field: "kode_matakuliah", label: "kode_matakuliah" },
+      { field: 'nama_matakuliah', label: 'nama_matakuliah' },
+      { field: 'kode_matakuliah', label: 'kode_matakuliah' },
     ],
-  });
+  })
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
         kurikulum: selectedKurikulum,
-      };
+      }
 
       if (!requestData.nama_matakuliah || !requestData.kode_matakuliah) {
-        toastAlert("error", "Pleas fill in all the required fields.");
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/kategori/matakuliah`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/kategori/matakuliah`,
+        method: 'POST',
         data: requestData,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      form.nama_matakuliah = "";
-      form.kode_matakuliah = "";
-      form.sks = "";
-      form.materi = "";
+      form.nama_matakuliah = ''
+      form.kode_matakuliah = ''
+      form.sks = ''
+      form.materi = ''
 
-      setSelectedKurikulum("");
+      setSelectedKurikulum('')
 
-      toastAlert("success", "Successfully");
-      close();
-      onAction();
+      toastAlert('success', 'Successfully')
+      close()
+      onAction()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.response.data.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.response.data.message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -126,7 +126,7 @@ const CreateMatakuliah = ({ onAction }) => {
               name="kurikulum"
               onChange={handleKurikulumChange}
               value={selectedKurikulum}
-              options={listKurikulum?.map((item) => ({
+              options={listKurikulum?.map(item => ({
                 label: item.kurikulum,
                 value: item.id,
               }))}
@@ -168,7 +168,7 @@ const CreateMatakuliah = ({ onAction }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default CreateMatakuliah;
+export default CreateMatakuliah

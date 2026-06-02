@@ -1,129 +1,112 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import KolabolatorEksternal from "../../../../../modules/pelaksanaan-penelitian/penelitian/kolaborator-eksternal";
-import UploadDokumen from "../../../../../modules/pelaksanaan-penelitian/penelitian/upload-dokumen";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import useDosen from "../../../../../repo/dosen";
-import useMahasiswa from "../../../../../repo/mahasiswa";
-import date from "../../../../../utils/date";
-import { useEffect } from "react";
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
-import _ from "underscore";
-import Accordion from "../../../../../components/Accordion";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import KolabolatorEksternal from '../../../../../modules/pelaksanaan-penelitian/penelitian/kolaborator-eksternal'
+import UploadDokumen from '../../../../../modules/pelaksanaan-penelitian/penelitian/upload-dokumen'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import useDosen from '../../../../../repo/dosen'
+import useMahasiswa from '../../../../../repo/mahasiswa'
+import date from '../../../../../utils/date'
+import { useEffect } from 'react'
+import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../../config/role'
+import _ from 'underscore'
+import Accordion from '../../../../../components/Accordion'
+import { Loading } from '../../../../../components/Loading'
 
 export default function AnggotaProfesiEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penelitian/detailPenelitian`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-penelitian`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/detailPenelitian`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-penelitian`
 
   const INITIAL_ANGGOTA = {
-    user_id: "",
-    peran: "",
-    status: "",
-    role: "",
-  };
+    user_id: '',
+    peran: '',
+    status: '',
+    role: '',
+  }
 
   const INITIAL_FORM = {
-    penelitian_id: "",
-    judul_kegiatan: "",
-    kelompok_bidang: "",
-    lokasi_kegiatan: "",
-    tahun_usulan: "",
-    tahun_kegiatan: "",
-    tahun_pelaksanaan: "",
-    lama_kegiatan: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    nama_dok: "",
-    keterangan: "",
-    tautan_dok: "",
-    nama_kategori: "",
-    tingkatan: "",
-    point: "",
+    penelitian_id: '',
+    judul_kegiatan: '',
+    kelompok_bidang: '',
+    lokasi_kegiatan: '',
+    tahun_usulan: '',
+    tahun_kegiatan: '',
+    tahun_pelaksanaan: '',
+    lama_kegiatan: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    nama_dok: '',
+    keterangan: '',
+    tautan_dok: '',
+    nama_kategori: '',
+    tingkatan: '',
+    point: '',
     anggota_penelitian_dosen: [],
     anggota_penelitian_mahasiswa: [],
     docs: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
-    transformData: (data) =>
+    transformData: data =>
       _.omit(
         {
           ...data,
           anggota_penelitian: JSON.stringify([
-            ...data.anggota_penelitian_dosen.map((item) =>
-              _.omit(item, ["role"])
-            ),
-            ...data.anggota_penelitian_mahasiswa.map((item) =>
-              _.omit(item, ["role"])
-            ),
+            ...data.anggota_penelitian_dosen.map(item => _.omit(item, ['role'])),
+            ...data.anggota_penelitian_mahasiswa.map(item => _.omit(item, ['role'])),
           ]),
         },
-        ["anggota_penelitian_dosen", "anggota_penelitian_mahasiswa"]
+        ['anggota_penelitian_dosen', 'anggota_penelitian_mahasiswa'],
       ),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/penelitian/editPenelitian`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/penelitian/editPenelitian`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.penelitian_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
   const removeFromUser = (key, index, role) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-      [key]: state[key].filter(
-        (item, idx) => item.role == role && idx != index
-      ),
-    }));
+      [key]: state[key].filter((item, idx) => item.role == role && idx != index),
+    }))
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...INITIAL_FORM,
         ...data.dataPenelitian[0],
-        tgl_sk_penugasan: date.formatToInput(
-          data.dataPenelitian[0].tgl_sk_penugasan
-        ),
-        anggota_penelitian_dosen: data.anggotaPenelitian.filter(
-          (item) => item.role == ROLE_ID_DOSEN
-        ),
+        tgl_sk_penugasan: date.formatToInput(data.dataPenelitian[0].tgl_sk_penugasan),
+        anggota_penelitian_dosen: data.anggotaPenelitian.filter(item => item.role == ROLE_ID_DOSEN),
         anggota_penelitian_mahasiswa: data.anggotaPenelitian.filter(
-          (item) => item.role == ROLE_ID_MAHASISWA
+          item => item.role == ROLE_ID_MAHASISWA,
         ),
         docs: data.dataDokumen,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if (
-    [user, menu, isDosenLoading, isMahasiswaLoading].some(
-      (item) => item == null
-    )
-  )
-    return <Loading />;
+  if ([user, menu, isDosenLoading, isMahasiswaLoading].some(item => item == null))
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -138,10 +121,7 @@ export default function AnggotaProfesiEdit() {
           Edit
         </Button>
       </div>
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Penelitian</Card.Header>
           <Card.Body className="space-y-4">
@@ -163,13 +143,7 @@ export default function AnggotaProfesiEdit() {
                 Point <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="point"
-                value={form.point}
-                disabled
-              />
+              <Form.Input type="text" className="flex-1" name="point" value={form.point} disabled />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -225,8 +199,8 @@ export default function AnggotaProfesiEdit() {
                 value={form.tahun_usulan}
                 options={Array.from(
                   { length: new Date().getFullYear() - 1970 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
+                  (_, i) => new Date().getFullYear() - i,
+                ).map(item => ({
                   label: item,
                   value: item,
                 }))}
@@ -245,8 +219,8 @@ export default function AnggotaProfesiEdit() {
                 value={form.tahun_kegiatan}
                 options={Array.from(
                   { length: new Date().getFullYear() - 1970 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
+                  (_, i) => new Date().getFullYear() - i,
+                ).map(item => ({
                   label: item,
                   value: item,
                 }))}
@@ -265,8 +239,8 @@ export default function AnggotaProfesiEdit() {
                 value={form.tahun_pelaksanaan}
                 options={Array.from(
                   { length: new Date().getFullYear() - 1970 },
-                  (_, i) => new Date().getFullYear() - i
-                ).map((item) => ({
+                  (_, i) => new Date().getFullYear() - i,
+                ).map(item => ({
                   label: item,
                   value: item,
                 }))}
@@ -323,10 +297,7 @@ export default function AnggotaProfesiEdit() {
               <div className="flex-1 block">
                 <div className="space-y-2 mt-2">
                   {form.docs.map((doc, index) => (
-                    <Accordion
-                      key={`doc-${index}`}
-                      title={`Dokumen ${index + 1}`}
-                    >
+                    <Accordion key={`doc-${index}`} title={`Dokumen ${index + 1}`}>
                       <Form.Group className="mb-4">
                         <Form.Label>Nama Dokumen</Form.Label>
                         <Form.Input
@@ -355,10 +326,7 @@ export default function AnggotaProfesiEdit() {
                         />
                       </Form.Group>
                       <Form.Group className="mb-4">
-                        <embed
-                          src={`${FILE_URL}/${doc.file}`}
-                          className="w-full h-[256px]"
-                        />
+                        <embed src={`${FILE_URL}/${doc.file}`} className="w-full h-[256px]" />
                       </Form.Group>
                     </Accordion>
                   ))}
@@ -373,23 +341,14 @@ export default function AnggotaProfesiEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Dosen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -404,7 +363,7 @@ export default function AnggotaProfesiEdit() {
                     value={form.anggota_penelitian_dosen[index].user_id}
                     options={
                       listDosen &&
-                      listDosen.map((dosen) => ({
+                      listDosen.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -419,8 +378,8 @@ export default function AnggotaProfesiEdit() {
                     onChange={inputHandler}
                     value={form.anggota_penelitian_dosen[index].peran}
                     options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
+                      { label: 'Ketua', value: 'ketua' },
+                      { label: 'Anggota', value: 'anggota' },
                     ]}
                     disabled
                   />
@@ -433,7 +392,7 @@ export default function AnggotaProfesiEdit() {
                       onChange={inputHandler}
                       checked={form.anggota_penelitian_dosen[index].status}
                       disabled
-                    />{" "}
+                    />{' '}
                     Aktif
                   </Form.Label>
                 </td>
@@ -450,23 +409,14 @@ export default function AnggotaProfesiEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Mahasiswa
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -481,7 +431,7 @@ export default function AnggotaProfesiEdit() {
                     value={form.anggota_penelitian_mahasiswa[index].user_id}
                     options={
                       listMahasiswa &&
-                      listMahasiswa.map((dosen) => ({
+                      listMahasiswa.map(dosen => ({
                         label: dosen.nama_lengkap,
                         value: dosen.user_id,
                       }))
@@ -496,8 +446,8 @@ export default function AnggotaProfesiEdit() {
                     onChange={inputHandler}
                     value={form.anggota_penelitian_mahasiswa[index].peran}
                     options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
+                      { label: 'Ketua', value: 'ketua' },
+                      { label: 'Anggota', value: 'anggota' },
                     ]}
                     disabled
                   />
@@ -510,7 +460,7 @@ export default function AnggotaProfesiEdit() {
                       onChange={inputHandler}
                       checked={form.anggota_penelitian_mahasiswa[index].status}
                       disabled
-                    />{" "}
+                    />{' '}
                     Aktif
                   </Form.Label>
                 </td>
@@ -522,16 +472,11 @@ export default function AnggotaProfesiEdit() {
           </tbody>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

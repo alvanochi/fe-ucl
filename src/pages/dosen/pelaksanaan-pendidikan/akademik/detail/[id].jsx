@@ -1,33 +1,33 @@
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import useDosen from "../../../../../repo/dosen";
-import date from "../../../../../utils/date";
-import { useEffect, useState } from "react";
-import Accordion from "../../../../../components/Accordion";
-import { Icon } from "@iconify-icon/react";
-import axios from "axios";
-import { toastAlert } from "../../../../../lib/sweetalert";
-import { Loading } from "../../../../../components/Loading";
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import useDosen from '../../../../../repo/dosen'
+import date from '../../../../../utils/date'
+import { useEffect, useState } from 'react'
+import Accordion from '../../../../../components/Accordion'
+import { Icon } from '@iconify-icon/react'
+import axios from 'axios'
+import { toastAlert } from '../../../../../lib/sweetalert'
+import { Loading } from '../../../../../components/Loading'
 
 export default function DetailBimbinganAkademik() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
-  const [activeSemester, setActiveSemester] = useState(1);
-  const [mhsBimbingan, setMhsBimbingan] = useState([]);
-  const [dataBimbingan, setDataBimbingan] = useState(null);
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
+  const [activeSemester, setActiveSemester] = useState(1)
+  const [mhsBimbingan, setMhsBimbingan] = useState([])
+  const [dataBimbingan, setDataBimbingan] = useState(null)
 
-  const API_URL = `${process.env.API_ENDPOINT}/bimbingan-akademik`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-frs`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/bimbingan-akademik`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-frs`
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -37,65 +37,62 @@ export default function DetailBimbinganAkademik() {
             headers: {
               token: user?.token,
             },
-          });
+          })
 
-          setDataBimbingan(response.data.data.dataBimbingan);
-          setMhsBimbingan(response.data.data.mhsBimbingan);
+          setDataBimbingan(response.data.data.dataBimbingan)
+          setMhsBimbingan(response.data.data.mhsBimbingan)
         }
       } catch (error) {
-        console.log(error);
-        if (error.name === "AxiosError") {
-          toastAlert("warning", error.response.data);
-          return;
+        console.log(error)
+        if (error.name === 'AxiosError') {
+          toastAlert('warning', error.response.data)
+          return
         }
-        toastAlert("error", error);
+        toastAlert('error', error)
       }
-    };
+    }
 
-    fetchData();
-  }, [router.query, user]);
+    fetchData()
+  }, [router.query, user])
 
   const handleChange = (mhsIndex, semesterIndex, fieldName, value) => {
-    const updatedMhsBimbingan = [...mhsBimbingan];
-    updatedMhsBimbingan[mhsIndex].semesters[semesterIndex][fieldName] = value;
-    setMhsBimbingan(updatedMhsBimbingan);
-  };
+    const updatedMhsBimbingan = [...mhsBimbingan]
+    updatedMhsBimbingan[mhsIndex].semesters[semesterIndex][fieldName] = value
+    setMhsBimbingan(updatedMhsBimbingan)
+  }
 
   const handleEdit = async (id, mhsIndex, semesterIndex, updatedData) => {
     try {
-      await axios.patch(`${API_URL}/edit-dosen/${id}`, updatedData);
+      await axios.patch(`${API_URL}/edit-dosen/${id}`, updatedData)
 
-      const updatedMhsBimbingan = [...mhsBimbingan];
-      updatedMhsBimbingan[mhsIndex].semesters[semesterIndex] = updatedData;
-      setMhsBimbingan(updatedMhsBimbingan);
+      const updatedMhsBimbingan = [...mhsBimbingan]
+      updatedMhsBimbingan[mhsIndex].semesters[semesterIndex] = updatedData
+      setMhsBimbingan(updatedMhsBimbingan)
 
-      toastAlert("success", "Updated!");
+      toastAlert('success', 'Updated!')
     } catch (error) {
-      console.error("Gagal mengubah data:", error);
-      if (error.name === "AxiosError") {
-        toastAlert("warning", error.response.data);
-        return;
+      console.error('Gagal mengubah data:', error)
+      if (error.name === 'AxiosError') {
+        toastAlert('warning', error.response.data)
+        return
       }
-      toastAlert("error", error);
+      toastAlert('error', error)
     }
-  };
+  }
 
-  const formatDate = (dateString) => {
-    if (!dateString) return "";
-    return dateString.substring(0, 10);
-  };
+  const formatDate = dateString => {
+    if (!dateString) return ''
+    return dateString.substring(0, 10)
+  }
 
-  if ([user, menu, isDosenLoading].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isDosenLoading].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <div className="flex justify-center mt-4"></div>
       <Form>
         <Card className="mt-4">
-          <Card.Header className="text-center">
-            Detail Bimbingan Akademik
-          </Card.Header>
+          <Card.Header className="text-center">Detail Bimbingan Akademik</Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -121,7 +118,7 @@ export default function DetailBimbinganAkademik() {
                 value={dataBimbingan?.dosen_id}
                 options={
                   listDosen &&
-                  listDosen.map((dosen) => ({
+                  listDosen.map(dosen => ({
                     label: dosen.nama_lengkap,
                     value: dosen.user_id,
                   }))
@@ -148,17 +145,14 @@ export default function DetailBimbinganAkademik() {
                   >
                     <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
                       <ul className="flex flex-wrap -mb-px">
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((semesterNum) => (
-                          <li
-                            className="me-2"
-                            key={`semester-tab-${semesterNum}`}
-                          >
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map(semesterNum => (
+                          <li className="me-2" key={`semester-tab-${semesterNum}`}>
                             <button
                               onClick={() => setActiveSemester(semesterNum)}
                               className={`inline-block p-4 border-b-2 ${
                                 activeSemester === semesterNum
-                                  ? "border-blue-600 text-blue-600"
-                                  : "border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300 dark:border-gray-300 dark:hover:border-gray-300"
+                                  ? 'border-blue-600 text-blue-600'
+                                  : 'border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-600 dark:hover:text-gray-300 dark:border-gray-300 dark:hover:border-gray-300'
                               }`}
                             >
                               Semester {semesterNum}
@@ -175,8 +169,7 @@ export default function DetailBimbinganAkademik() {
                             <>
                               <Form.Group className="flex items-baseline pt-2 gap-3">
                                 <Form.Label className="min-w-[18rem]">
-                                  Pertemuan 1{" "}
-                                  <span className="text-danger-600">*</span>
+                                  Pertemuan 1 <span className="text-danger-600">*</span>
                                 </Form.Label>
                                 <span>:</span>
                                 <Form.Input
@@ -184,42 +177,25 @@ export default function DetailBimbinganAkademik() {
                                   className="flex-1"
                                   name={`p1-${mhsIndex}-${semesterIndex}`}
                                   value={formatDate(semester.p1)}
-                                  onChange={(e) =>
-                                    handleChange(
-                                      mhsIndex,
-                                      semesterIndex,
-                                      "p1",
-                                      e.target.value
-                                    )
+                                  onChange={e =>
+                                    handleChange(mhsIndex, semesterIndex, 'p1', e.target.value)
                                   }
                                 />
 
                                 <Button.Icon
                                   variant="secondary"
-                                  icon={
-                                    <Icon
-                                      icon="bx:edit"
-                                      width={20}
-                                      height={20}
-                                    />
-                                  }
+                                  icon={<Icon icon="bx:edit" width={20} height={20} />}
                                   onClick={() => {
                                     const updatedData = {
                                       ...semester,
-                                    };
-                                    handleEdit(
-                                      semester.id,
-                                      mhsIndex,
-                                      semesterIndex,
-                                      updatedData
-                                    );
+                                    }
+                                    handleEdit(semester.id, mhsIndex, semesterIndex, updatedData)
                                   }}
                                 />
                               </Form.Group>
                               <Form.Group className="flex items-baseline pt-2 gap-3">
                                 <Form.Label className="min-w-[18rem]">
-                                  Pertemuan 2{" "}
-                                  <span className="text-danger-600">*</span>
+                                  Pertemuan 2 <span className="text-danger-600">*</span>
                                 </Form.Label>
                                 <span>:</span>
                                 <Form.Input
@@ -227,42 +203,25 @@ export default function DetailBimbinganAkademik() {
                                   className="flex-1"
                                   name={`p2-${mhsIndex}-${semesterIndex}`}
                                   value={formatDate(semester.p2)}
-                                  onChange={(e) =>
-                                    handleChange(
-                                      mhsIndex,
-                                      semesterIndex,
-                                      "p2",
-                                      e.target.value
-                                    )
+                                  onChange={e =>
+                                    handleChange(mhsIndex, semesterIndex, 'p2', e.target.value)
                                   }
                                 />
 
                                 <Button.Icon
                                   variant="secondary"
-                                  icon={
-                                    <Icon
-                                      icon="bx:edit"
-                                      width={20}
-                                      height={20}
-                                    />
-                                  }
+                                  icon={<Icon icon="bx:edit" width={20} height={20} />}
                                   onClick={() => {
                                     const updatedData = {
                                       ...semester,
-                                    };
-                                    handleEdit(
-                                      semester.id,
-                                      mhsIndex,
-                                      semesterIndex,
-                                      updatedData
-                                    );
+                                    }
+                                    handleEdit(semester.id, mhsIndex, semesterIndex, updatedData)
                                   }}
                                 />
                               </Form.Group>
                               <Form.Group className="flex items-baseline pt-2 gap-3">
                                 <Form.Label className="min-w-[18rem]">
-                                  Pertemuan 3{" "}
-                                  <span className="text-danger-600">*</span>
+                                  Pertemuan 3 <span className="text-danger-600">*</span>
                                 </Form.Label>
                                 <span>:</span>
                                 <Form.Input
@@ -270,42 +229,25 @@ export default function DetailBimbinganAkademik() {
                                   className="flex-1"
                                   name={`p1-${mhsIndex}-${semesterIndex}`}
                                   value={formatDate(semester.p3)}
-                                  onChange={(e) =>
-                                    handleChange(
-                                      mhsIndex,
-                                      semesterIndex,
-                                      "p3",
-                                      e.target.value
-                                    )
+                                  onChange={e =>
+                                    handleChange(mhsIndex, semesterIndex, 'p3', e.target.value)
                                   }
                                 />
 
                                 <Button.Icon
                                   variant="secondary"
-                                  icon={
-                                    <Icon
-                                      icon="bx:edit"
-                                      width={20}
-                                      height={20}
-                                    />
-                                  }
+                                  icon={<Icon icon="bx:edit" width={20} height={20} />}
                                   onClick={() => {
                                     const updatedData = {
                                       ...semester,
-                                    };
-                                    handleEdit(
-                                      semester.id,
-                                      mhsIndex,
-                                      semesterIndex,
-                                      updatedData
-                                    );
+                                    }
+                                    handleEdit(semester.id, mhsIndex, semesterIndex, updatedData)
                                   }}
                                 />
                               </Form.Group>
                               <Form.Group className="flex items-baseline pt-2 gap-3">
                                 <Form.Label className="min-w-[18rem]">
-                                  Pertemuan 4{" "}
-                                  <span className="text-danger-600">*</span>
+                                  Pertemuan 4 <span className="text-danger-600">*</span>
                                 </Form.Label>
                                 <span>:</span>
                                 <Form.Input
@@ -313,35 +255,19 @@ export default function DetailBimbinganAkademik() {
                                   className="flex-1"
                                   name={`p4-${mhsIndex}-${semesterIndex}`}
                                   value={formatDate(semester.p4)}
-                                  onChange={(e) =>
-                                    handleChange(
-                                      mhsIndex,
-                                      semesterIndex,
-                                      "p4",
-                                      e.target.value
-                                    )
+                                  onChange={e =>
+                                    handleChange(mhsIndex, semesterIndex, 'p4', e.target.value)
                                   }
                                 />
 
                                 <Button.Icon
                                   variant="secondary"
-                                  icon={
-                                    <Icon
-                                      icon="bx:edit"
-                                      width={20}
-                                      height={20}
-                                    />
-                                  }
+                                  icon={<Icon icon="bx:edit" width={20} height={20} />}
                                   onClick={() => {
                                     const updatedData = {
                                       ...semester,
-                                    };
-                                    handleEdit(
-                                      semester.id,
-                                      mhsIndex,
-                                      semesterIndex,
-                                      updatedData
-                                    );
+                                    }
+                                    handleEdit(semester.id, mhsIndex, semesterIndex, updatedData)
                                   }}
                                 />
                               </Form.Group>
@@ -355,35 +281,19 @@ export default function DetailBimbinganAkademik() {
                                   className="flex-1"
                                   rows="5"
                                   name={`catatan-${mhsIndex}-${semesterIndex}`}
-                                  value={semester.catatan || ""}
-                                  onChange={(e) =>
-                                    handleChange(
-                                      mhsIndex,
-                                      semesterIndex,
-                                      "catatan",
-                                      e.target.value
-                                    )
+                                  value={semester.catatan || ''}
+                                  onChange={e =>
+                                    handleChange(mhsIndex, semesterIndex, 'catatan', e.target.value)
                                   }
                                 />
                                 <Button.Icon
                                   variant="secondary"
-                                  icon={
-                                    <Icon
-                                      icon="bx:edit"
-                                      width={20}
-                                      height={20}
-                                    />
-                                  }
+                                  icon={<Icon icon="bx:edit" width={20} height={20} />}
                                   onClick={() => {
                                     const updatedData = {
                                       ...semester,
-                                    };
-                                    handleEdit(
-                                      semester.id,
-                                      mhsIndex,
-                                      semesterIndex,
-                                      updatedData
-                                    );
+                                    }
+                                    handleEdit(semester.id, mhsIndex, semesterIndex, updatedData)
                                   }}
                                 />
                               </Form.Group>
@@ -401,7 +311,7 @@ export default function DetailBimbinganAkademik() {
                             </>
                           )}
                         </div>
-                      );
+                      )
                     })}
                   </Accordion>
                 ))}
@@ -415,9 +325,7 @@ export default function DetailBimbinganAkademik() {
           as="a"
           href={`${prefix + menu.url}`}
           variant="danger"
-          icon={
-            <Icon icon="material-symbols:chevron-left" width={20} height={20} />
-          }
+          icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
           iconPosition="left"
           pill
         >
@@ -425,5 +333,5 @@ export default function DetailBimbinganAkademik() {
         </Button>
       </div>
     </Layout>
-  );
+  )
 }

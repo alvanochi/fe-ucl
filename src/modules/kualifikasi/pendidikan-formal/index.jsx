@@ -1,16 +1,16 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import date from "../../../utils/date";
-import SortIcon from "../../../components/SortIcon";
-import Form from "../../../components/Form";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Pagination from '../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../hooks/useDatatable'
+import useCRUD from '../../../hooks/useCRUD'
+import date from '../../../utils/date'
+import SortIcon from '../../../components/SortIcon'
+import Form from '../../../components/Form'
 
 export default function PendidikanFormalModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/kualifikasi/getDataPend`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/kualifikasi/deletePend`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/kualifikasi/getDataPend`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/kualifikasi/deletePend`
 
   const {
     data,
@@ -26,15 +26,15 @@ export default function PendidikanFormalModule({ baseURL }) {
     sortBy,
     getSortBy,
     totalData,
-  } = useDatatable(DATA_URL);
-  const { destroy } = useCRUD(DELETE_URL);
+  } = useDatatable(DATA_URL)
+  const { destroy } = useCRUD(DELETE_URL)
 
   return (
     <>
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-            onClick={() => window.open(`${`${baseURL}/pendidikan-formal/create`}`,'_blank')}
+            onClick={() => window.open(`${`${baseURL}/pendidikan-formal/create`}`, '_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -49,30 +49,23 @@ export default function PendidikanFormalModule({ baseURL }) {
           </span>
         </div>
       </div>
-      <table
-        className="w-full border-collapse rounded-2xl overflow-hidden shadow"
-        cellPadding={10}
-      >
+      <table className="w-full border-collapse rounded-2xl overflow-hidden shadow" cellPadding={10}>
         <thead>
           <tr>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pend_id")}
+                onClick={() => sortBy('pend_id')}
               >
                 No
-                <SortIcon sort={getSortBy("pend_id")} />
+                <SortIcon sort={getSortBy('pend_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Jenjang
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Jenjang</div>
             </th>
 
             <th className="text-sm border-2 border-white bg-gray-200">
@@ -81,39 +74,29 @@ export default function PendidikanFormalModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tahun_lulus")}
+                onClick={() => sortBy('tahun_lulus')}
               >
                 Tahun Lulus
-                <SortIcon sort={getSortBy("tahun_lulus")} />
+                <SortIcon sort={getSortBy('tahun_lulus')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Gelar
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Gelar</div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="7"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="7" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="7"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="7" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -121,85 +104,65 @@ export default function PendidikanFormalModule({ baseURL }) {
           {!loading &&
             data &&
             data.map((row, index) => {
-              const startNumber = (page - 1) * 10 + 1;
+              const startNumber = (page - 1) * 10 + 1
 
-              const rowNumber = startNumber + index;
+              const rowNumber = startNumber + index
               return (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {rowNumber}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{rowNumber}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                     {row.status == 0 && (
-                      <span className="text-base font-bold text-yellow-400">
-                        Proses
-                      </span>
+                      <span className="text-base font-bold text-yellow-400">Proses</span>
                     )}
                     {row.status == 1 && (
-                      <span className="text-base font-bold text-green-400">
-                        Diterima
-                      </span>
+                      <span className="text-base font-bold text-green-400">Diterima</span>
                     )}
                     {row.status == 2 && (
-                      <span className="text-base font-bold text-red-400">
-                        Ditolak
-                      </span>
+                      <span className="text-base font-bold text-red-400">Ditolak</span>
                     )}
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.jenjang_studi}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.jenjang_studi}</td>
 
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.asal}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.tahun_lulus}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.gelar_akademik}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.asal}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.tahun_lulus}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.gelar_akademik}</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
-                        onClick={() => window.open(`${baseURL}/pendidikan-formal/detail/${row.pend_id}`,'_blank')}
-                        variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
+                        onClick={() =>
+                          window.open(
+                            `${baseURL}/pendidikan-formal/detail/${row.pend_id}`,
+                            '_blank',
+                          )
                         }
+                        variant="info"
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                       />
                       {(row.status === 0 || row.status === 2) && (
                         <>
                           <Button.Icon
-                            onClick={() => window.open(`${baseURL}/pendidikan-formal/edit/${row.pend_id}`,'_blank')}
-                            variant="secondary"
-                            icon={
-                              <Icon icon="bx:edit" width={20} height={20} />
+                            onClick={() =>
+                              window.open(
+                                `${baseURL}/pendidikan-formal/edit/${row.pend_id}`,
+                                '_blank',
+                              )
                             }
+                            variant="secondary"
+                            icon={<Icon icon="bx:edit" width={20} height={20} />}
                           />
                           <Button.Icon
                             variant="danger"
                             icon={
-                              <Icon
-                                icon="solar:trash-bin-2-bold-duotone"
-                                width={20}
-                                height={20}
-                              />
+                              <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                             }
-                            onClick={() =>
-                              destroy(row.pend_id).then(() => refresh())
-                            }
+                            onClick={() => destroy(row.pend_id).then(() => refresh())}
                           />
                         </>
                       )}
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </table>
@@ -209,13 +172,7 @@ export default function PendidikanFormalModule({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPage(page - 1)}
             disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
             pill
@@ -223,13 +180,7 @@ export default function PendidikanFormalModule({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPage(page + 1)}
             disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
@@ -246,14 +197,13 @@ export default function PendidikanFormalModule({ baseURL }) {
             max={pageCount}
             className="w-20"
             value={page}
-            onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
+            onChange={event =>
+              event.target.valueAsNumber <= pageCount && setPage(event.target.value)
             }
           />
           of {pageCount || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

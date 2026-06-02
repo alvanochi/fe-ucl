@@ -1,71 +1,65 @@
-import { useRouter } from "next/router";
-import Button from "../../../components/Button";
-import Card from "../../../components/Card";
-import Form from "../../../components/Form";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
-import useMenu from "../../../hooks/useMenu";
-import useUser from "../../../hooks/useUser";
-import useCRUD from "../../../hooks/useCRUD";
-import { useEffect } from "react";
-import date from "../../../utils/date";
-import { Loading } from "../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../components/Button'
+import Card from '../../../components/Card'
+import Form from '../../../components/Form'
+import Layout from '../../../components/Layout'
+import PageHeader from '../../../components/PageHeader'
+import useMenu from '../../../hooks/useMenu'
+import useUser from '../../../hooks/useUser'
+import useCRUD from '../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import date from '../../../utils/date'
+import { Loading } from '../../../components/Loading'
 
 export default function ProfilEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataPribadi`
 
   const INITIAL_FORM = {
-    dp_id: "",
-    nik: "",
-    jenkel: "",
-    nama_lengkap: "",
-    tempat_lahir: "",
-    tanggal_lahir: "",
-    ibu_kandung: "",
-  };
+    dp_id: '',
+    nik: '',
+    jenkel: '',
+    nama_lengkap: '',
+    tempat_lahir: '',
+    tanggal_lahir: '',
+    ibu_kandung: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nik", label: "NIK" },
-      { field: "jenkel", label: "Jenis Kelamin" },
-      { field: "nama_lengkap", label: "Nama Lengkap" },
-      { field: "tempat_lahir", label: "Tempat Lahir" },
-      { field: "tanggal_lahir", label: "Tanggal Lahir" },
-      { field: "ibu_kandung", label: "Nama Ibu Kandung" },
+      { field: 'nik', label: 'NIK' },
+      { field: 'jenkel', label: 'Jenis Kelamin' },
+      { field: 'nama_lengkap', label: 'Nama Lengkap' },
+      { field: 'tempat_lahir', label: 'Tempat Lahir' },
+      { field: 'tanggal_lahir', label: 'Tanggal Lahir' },
+      { field: 'ibu_kandung', label: 'Nama Ibu Kandung' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/profile/editData`;
-  const EDIT_OPTION = { url: `${EDIT_URL}`, method: "PATCH" };
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/editData`
+  const EDIT_OPTION = { url: `${EDIT_URL}`, method: 'PATCH' }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
-    show("", {
-      transformData: (data) => ({
+    if (router.isReady === false || !user) return
+    show('', {
+      transformData: data => ({
         ...data,
-        tanggal_lahir: data.tanggal_lahir
-          ? date.formatToInput(data.tanggal_lahir)
-          : "",
+        tanggal_lahir: data.tanggal_lahir ? date.formatToInput(data.tanggal_lahir) : '',
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title={`Edit ${menu.label}`}
-        icon={menu.icon}
-        handler={setActive}
-      />
-      <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+      <PageHeader title={`Edit ${menu.label}`} icon={menu.icon} handler={setActive} />
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)}>
         <Card className="mt-4">
           <Card.Header className="text-center">Profil</Card.Header>
           <Card.Body className="space-y-4">
@@ -108,7 +102,7 @@ export default function ProfilEdit() {
                     name="jenkel"
                     value="L"
                     onChange={inputHandler}
-                    checked={form.jenkel == "L"}
+                    checked={form.jenkel == 'L'}
                   />
                   Laki-Laki
                 </Form.Label>
@@ -117,7 +111,7 @@ export default function ProfilEdit() {
                     name="jenkel"
                     value="P"
                     onChange={inputHandler}
-                    checked={form.jenkel == "P"}
+                    checked={form.jenkel == 'P'}
                   />
                   Perempuan
                 </Form.Label>
@@ -168,12 +162,7 @@ export default function ProfilEdit() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -182,5 +171,5 @@ export default function ProfilEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

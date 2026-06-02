@@ -1,131 +1,131 @@
-import { Icon } from "@iconify-icon/react";
-import Card from "../../../../../components/Card";
-import Button from "../../../../../components/Button";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import useDosen from "../../../../../repo/dosen";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { Loading } from "../../../../../components/Loading";
-import date from "../../../../../utils/date";
-import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
-import Accordion from "../../../../../components/Accordion";
-import ReactDOMServer from "react-dom/server";
-import axios from "axios";
+import { Icon } from '@iconify-icon/react'
+import Card from '../../../../../components/Card'
+import Button from '../../../../../components/Button'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import useDosen from '../../../../../repo/dosen'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { Loading } from '../../../../../components/Loading'
+import date from '../../../../../utils/date'
+import EditNilai from '../../../../../components/EditPenilaian/edit-nilai'
+import Accordion from '../../../../../components/Accordion'
+import ReactDOMServer from 'react-dom/server'
+import axios from 'axios'
 
 export default function PelaksanaanKolo() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
-  const FILE_URL = `${process.env.API_ENDPOINT}/ttd`;
-  const FILE_URL_KOP = `${process.env.API_ENDPOINT}/img`;
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/ttd`
+  const FILE_URL_KOP = `${process.env.NEXT_PUBLIC_API_URL}/img`
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
 
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-penilaian-kolo`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-penilaian-kolo`
 
   const INITIAL_FORM = {
-    pengajuan_sk_id: "",
-    kolo_id: "",
-    nama_lengkap: "",
-    semester: "",
-    email: "",
-    no_hp: "",
-    npm: "",
-    judul_skripsi: "",
-    link_dok_mhs_aktif: "",
-    link_dok_pembayaran: "",
-    kolo_pembimbing_1: "",
-    kolo_pembimbing_2: "",
+    pengajuan_sk_id: '',
+    kolo_id: '',
+    nama_lengkap: '',
+    semester: '',
+    email: '',
+    no_hp: '',
+    npm: '',
+    judul_skripsi: '',
+    link_dok_mhs_aktif: '',
+    link_dok_pembayaran: '',
+    kolo_pembimbing_1: '',
+    kolo_pembimbing_2: '',
     kolo_pembimbing_3: null,
-    kolo_status_pem_1: "",
-    kolo_status_pem_2: "",
-    kolo_status_pem_3: "",
-    evaluator_1: "",
-    evaluator_2: "",
-    jadwal_pelaksanaan: "",
-    file_makalah: "",
-    status_kp: "",
-    status_sks_ipk: "",
-    statusDosen: "",
-    penilaian_1: "",
-    penilaian_2: "",
-    penilaian_3: "",
-    penilaian_4: "",
-    penilaian_5: "",
-    komentar_singkat: "",
-    dosen_id: "",
+    kolo_status_pem_1: '',
+    kolo_status_pem_2: '',
+    kolo_status_pem_3: '',
+    evaluator_1: '',
+    evaluator_2: '',
+    jadwal_pelaksanaan: '',
+    file_makalah: '',
+    status_kp: '',
+    status_sks_ipk: '',
+    statusDosen: '',
+    penilaian_1: '',
+    penilaian_2: '',
+    penilaian_3: '',
+    penilaian_4: '',
+    penilaian_5: '',
+    komentar_singkat: '',
+    dosen_id: '',
     penilaian_kolo: null,
     nilai_akhir: {},
-    judul: "",
-    link_dok_makalah: "",
-    nama: "",
-    npm: "",
-    tempat: "",
-    judul: "",
-    tanggal: "",
-    waktu: "",
-    tempat: "",
-    pembimbing_1: "",
-    pembimbing_2: "",
-    evaluator_1: "",
-    evaluator_2: "",
-    komentar: "",
-  };
+    judul: '',
+    link_dok_makalah: '',
+    nama: '',
+    npm: '',
+    tempat: '',
+    judul: '',
+    tanggal: '',
+    waktu: '',
+    tempat: '',
+    pembimbing_1: '',
+    pembimbing_2: '',
+    evaluator_1: '',
+    evaluator_2: '',
+    komentar: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "link_dok_mhs_aktif", label: "Link Dokumen Mahasiswa Aktif" },
-      { field: "link_dok_pembayaran", label: "Link Dokumen Pembayaran" },
-      { field: "file_makalah", label: "file_makalah" },
+      { field: 'link_dok_mhs_aktif', label: 'Link Dokumen Mahasiswa Aktif' },
+      { field: 'link_dok_pembayaran', label: 'Link Dokumen Pembayaran' },
+      { field: 'file_makalah', label: 'file_makalah' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const handlePembimbing1 = (selected) => {
+  const handlePembimbing1 = selected => {
     inputHandler({
-      target: { name: "pembimbing_1", value: selected?.value },
-    });
-  };
+      target: { name: 'pembimbing_1', value: selected?.value },
+    })
+  }
 
-  const handlePembimbing2 = (selected) => {
+  const handlePembimbing2 = selected => {
     inputHandler({
-      target: { name: "pembimbing_2", value: selected?.value },
-    });
-  };
+      target: { name: 'pembimbing_2', value: selected?.value },
+    })
+  }
 
-  const handleEvaluator1 = (selected) => {
+  const handleEvaluator1 = selected => {
     inputHandler({
-      target: { name: "evaluator_1", value: selected?.value },
-    });
-  };
+      target: { name: 'evaluator_1', value: selected?.value },
+    })
+  }
 
-  const handleEvaluator2 = (selected) => {
+  const handleEvaluator2 = selected => {
     inputHandler({
-      target: { name: "evaluator_2", value: selected?.value },
-    });
-  };
+      target: { name: 'evaluator_2', value: selected?.value },
+    })
+  }
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/nilai-akhir-kolo`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/nilai-akhir-kolo`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.kolo_id}`,
-    method: "PUT",
-  };
+    method: 'PUT',
+  }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
         jadwal_pelaksanaan: data.jadwal_pelaksanaan
           ? date.formatToInput(data.jadwal_pelaksanaan)
-          : "",
+          : '',
         pembimbing_1: data.nilai_akhir.pembimbing_1,
         pembimbing_2: data.nilai_akhir.pembimbing_2,
         evaluator_1: data.nilai_akhir.evaluator_1,
@@ -138,117 +138,102 @@ export default function PelaksanaanKolo() {
         waktu: data.nilai_akhir.waktu,
         tanggal: data.nilai_akhir.tanggal,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const [selectedPeran, setSelectedPeran] = useState("");
-  const peranUnik = [
-    ...new Set(form?.penilaian_kolo?.map((item) => item.peran)),
-  ];
-  const selectedContent = form?.penilaian_kolo?.filter(
-    (item) => item.peran === selectedPeran
-  );
+  const [selectedPeran, setSelectedPeran] = useState('')
+  const peranUnik = [...new Set(form?.penilaian_kolo?.map(item => item.peran))]
+  const selectedContent = form?.penilaian_kolo?.filter(item => item.peran === selectedPeran)
 
-  const [dataKaprodi, setDataKaprodi] = useState({});
+  const [dataKaprodi, setDataKaprodi] = useState({})
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const API_URL = `${process.env.API_ENDPOINT}/get-jabatan`;
+        const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/get-jabatan`
         const response = await axios.get(API_URL, {
           params: {
-            nama_jabatan: "Ka Prodi",
-            prodi: "FT_TI",
+            nama_jabatan: 'Ka Prodi',
+            prodi: 'FT_TI',
           },
-        });
-        setDataKaprodi(response.data.data);
+        })
+        setDataKaprodi(response.data.data)
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error('Error fetching data:', error)
       }
-    };
+    }
 
-    fetchData();
-  }, [setDataKaprodi]);
+    fetchData()
+  }, [setDataKaprodi])
 
   const content = () => {
     return (
       <>
         <div className="flex items-center justify-center gap-2 mb-8">
-          <div style={{ margin: "0 auto" }}>
+          <div style={{ margin: '0 auto' }}>
             <img
               src={`${FILE_URL_KOP}/kop_surat.png`}
               alt="Kop Surat"
-              style={{ width: "100%", marginBottom: "20px" }}
+              style={{ width: '100%', marginBottom: '20px' }}
             />
           </div>
         </div>
         <h1
           style={{
-            textAlign: "center",
-            fontWeight: "bold",
-            fontSize: "18px",
-            margin: "10px 0",
-            fontFamily: "Times New Roman",
+            textAlign: 'center',
+            fontWeight: 'bold',
+            fontSize: '18px',
+            margin: '10px 0',
+            fontFamily: 'Times New Roman',
           }}
         >
-          BERITA ACARA DAN PENILAIAN SEMINAR PROPOSAL / KOLOKIUM SKRIPSI
-          MAHASISWA
+          BERITA ACARA DAN PENILAIAN SEMINAR PROPOSAL / KOLOKIUM SKRIPSI MAHASISWA
         </h1>
         <div
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: "0.75rem",
-            marginTop: "1rem",
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '0.75rem',
+            marginTop: '1rem',
           }}
         >
-          <label style={{ minWidth: "188px" }}>Nama</label>
+          <label style={{ minWidth: '188px' }}>Nama</label>
           <span>:</span>
-          <input
-            type="text"
-            style={{ flex: 1 }}
-            name="nama"
-            value={form.nama}
-          />
+          <input type="text" style={{ flex: 1 }} name="nama" value={form.nama} />
         </div>
         <div
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: "0.75rem",
-            marginTop: "1rem",
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '0.75rem',
+            marginTop: '1rem',
           }}
         >
-          <label style={{ minWidth: "188px" }}>NPM</label>
+          <label style={{ minWidth: '188px' }}>NPM</label>
           <span>:</span>
           <input type="text" style={{ flex: 1 }} name="npm" value={form.npm} />
         </div>
         <div
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: "0.75rem",
-            marginTop: "1rem",
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '0.75rem',
+            marginTop: '1rem',
           }}
         >
-          <label style={{ minWidth: "188px" }}>Judul</label>
+          <label style={{ minWidth: '188px' }}>Judul</label>
           <span>:</span>
-          <input
-            type="text"
-            style={{ flex: 1 }}
-            name="judul"
-            value={form.judul}
-          />
+          <input type="text" style={{ flex: 1 }} name="judul" value={form.judul} />
         </div>
         <div
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: "0.75rem",
-            marginTop: "1rem",
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '0.75rem',
+            marginTop: '1rem',
           }}
         >
-          <label style={{ minWidth: "188px" }}>Tanggal/Jam/Tempat</label>
+          <label style={{ minWidth: '188px' }}>Tanggal/Jam/Tempat</label>
           <span>:</span>
           <input
             type="date"
@@ -266,21 +251,20 @@ export default function PelaksanaanKolo() {
         </div>
         <div
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: "0.75rem",
-            marginTop: "1rem",
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '0.75rem',
+            marginTop: '1rem',
           }}
         >
-          <label style={{ minWidth: "188px" }}>Pembimbing yang diusulkan</label>
+          <label style={{ minWidth: '188px' }}>Pembimbing yang diusulkan</label>
           <span>:</span>
           <input
             type="text"
             style={{ flex: 1 }}
             name="tempat"
             defaultValue={
-              listDosen.find((dosen) => dosen.user_id === form.pembimbing_1)
-                ?.nama_lengkap || ""
+              listDosen.find(dosen => dosen.user_id === form.pembimbing_1)?.nama_lengkap || ''
             }
           />
           <input
@@ -288,28 +272,26 @@ export default function PelaksanaanKolo() {
             style={{ flex: 1 }}
             name="tempat"
             defaultValue={
-              listDosen.find((dosen) => dosen.user_id === form.pembimbing_2)
-                ?.nama_lengkap || ""
+              listDosen.find(dosen => dosen.user_id === form.pembimbing_2)?.nama_lengkap || ''
             }
           />
         </div>
         <div
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: "0.75rem",
-            marginTop: "1rem",
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '0.75rem',
+            marginTop: '1rem',
           }}
         >
-          <label style={{ minWidth: "188px" }}>Evaluator</label>
+          <label style={{ minWidth: '188px' }}>Evaluator</label>
           <span>:</span>
           <input
             type="text"
             style={{ flex: 1 }}
             name="tempat"
             defaultValue={
-              listDosen.find((dosen) => dosen.user_id === form.evaluator_1)
-                ?.nama_lengkap || ""
+              listDosen.find(dosen => dosen.user_id === form.evaluator_1)?.nama_lengkap || ''
             }
           />
           <input
@@ -317,41 +299,40 @@ export default function PelaksanaanKolo() {
             style={{ flex: 1 }}
             name="tempat"
             defaultValue={
-              listDosen.find((dosen) => dosen.user_id === form.evaluator_2)
-                ?.nama_lengkap || ""
+              listDosen.find(dosen => dosen.user_id === form.evaluator_2)?.nama_lengkap || ''
             }
           />
         </div>
         <div
           style={{
-            display: "flex",
-            alignItems: "baseline",
-            gap: "0.75rem",
-            marginTop: "1rem",
+            display: 'flex',
+            alignItems: 'baseline',
+            gap: '0.75rem',
+            marginTop: '1rem',
           }}
         >
-          <label style={{ minWidth: "188px" }}>Komentar Singkat</label>
+          <label style={{ minWidth: '188px' }}>Komentar Singkat</label>
           <span>:</span>
-          <textarea style={{ flex: 1, marginTop: "0.25rem" }} name="komentar">
+          <textarea style={{ flex: 1, marginTop: '0.25rem' }} name="komentar">
             {form.komentar}
           </textarea>
         </div>
 
         <table
           style={{
-            width: "100%",
-            borderCollapse: "collapse",
-            overflow: "hidden",
-            marginTop: "1rem",
+            width: '100%',
+            borderCollapse: 'collapse',
+            overflow: 'hidden',
+            marginTop: '1rem',
           }}
         >
           <thead>
             <tr>
               <th
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#f3f4f6",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#f3f4f6',
+                  textAlign: 'center',
                 }}
                 colspan="4"
               >
@@ -361,37 +342,37 @@ export default function PelaksanaanKolo() {
             <tr>
               <th
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#f3f4f6",
-                  width: "3rem",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#f3f4f6',
+                  width: '3rem',
+                  textAlign: 'center',
                 }}
               >
                 No
               </th>
               <th
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#f3f4f6",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#f3f4f6',
+                  textAlign: 'center',
                 }}
               >
                 Aspek Penilaian
               </th>
               <th
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#f3f4f6",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#f3f4f6',
+                  textAlign: 'center',
                 }}
               >
                 Presentase (%)
               </th>
               <th
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#f3f4f6",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#f3f4f6',
+                  textAlign: 'center',
                 }}
               >
                 Nilai
@@ -402,35 +383,35 @@ export default function PelaksanaanKolo() {
             <tr>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 1
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
                 }}
               >
                 Subtansi dan Orientasi Topik Penilitian
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 20%
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 {form?.nilai_akhir.penilaian_1}
@@ -439,36 +420,35 @@ export default function PelaksanaanKolo() {
             <tr>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 2
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
                 }}
               >
-                Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
-                Penelitian
+                Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi Penelitian
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 40%
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 {form?.nilai_akhir.penilaian_2}
@@ -477,9 +457,9 @@ export default function PelaksanaanKolo() {
             <tr>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 3
@@ -487,26 +467,26 @@ export default function PelaksanaanKolo() {
 
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
                 }}
               >
                 Organisasi, kelengkapan dan Teknik Penulisan Makalah
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 10%
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 {form?.nilai_akhir.penilaian_3}
@@ -516,35 +496,35 @@ export default function PelaksanaanKolo() {
             <tr>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 4
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
                 }}
               >
                 Penyajian Makalah dan Tampilan Slide
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 10%
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 {form?.nilai_akhir.penilaian_4}
@@ -553,35 +533,35 @@ export default function PelaksanaanKolo() {
             <tr>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 5
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
                 }}
               >
                 Argumentasi
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 20%
               </td>
               <td
                 style={{
-                  border: "1px solid black",
-                  backgroundColor: "#edf2f7",
-                  textAlign: "center",
+                  border: '1px solid black',
+                  backgroundColor: '#edf2f7',
+                  textAlign: 'center',
                 }}
               >
                 {form?.nilai_akhir.penilaian_5}
@@ -589,41 +569,41 @@ export default function PelaksanaanKolo() {
             </tr>
           </tbody>
         </table>
-        <div style={{ marginTop: "10px" }}>
+        <div style={{ marginTop: '10px' }}>
           <div
             style={{
-              padding: "1rem",
-              display: "flex",
-              flexDirection: "column",
+              padding: '1rem',
+              display: 'flex',
+              flexDirection: 'column',
             }}
           >
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
               <div
                 style={{
-                  fontSize: "0.875rem",
+                  fontSize: '0.875rem',
                   fontWeight: 600,
-                  paddingRight: "1.625rem",
+                  paddingRight: '1.625rem',
                 }}
               >
-                <span style={{ marginRight: "0.5rem" }}>Nilai Akhir :</span>
+                <span style={{ marginRight: '0.5rem' }}>Nilai Akhir :</span>
                 <span>{form?.nilai_akhir.nilai_akhir}</span>
               </div>
             </div>
             <div
               style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                marginTop: "0.625rem",
+                display: 'flex',
+                justifyContent: 'flex-end',
+                marginTop: '0.625rem',
               }}
             >
               <div
                 style={{
-                  fontSize: "0.875rem",
+                  fontSize: '0.875rem',
                   fontWeight: 600,
-                  paddingRight: "1.625rem",
+                  paddingRight: '1.625rem',
                 }}
               >
-                <span style={{ marginRight: "0.5rem" }}>Huruf Mutu :</span>
+                <span style={{ marginRight: '0.5rem' }}>Huruf Mutu :</span>
                 <span>{form?.nilai_akhir.huruf_mutu}</span>
               </div>
             </div>
@@ -631,83 +611,83 @@ export default function PelaksanaanKolo() {
         </div>
         <p
           style={{
-            textIndent: "295px",
-            fontFamily: "Times New Roman",
-            fontSize: "12px",
-            marginTop: "10px",
-            display: "flex",
-            justifyContent: "flex-end",
+            textIndent: '295px',
+            fontFamily: 'Times New Roman',
+            fontSize: '12px',
+            marginTop: '10px',
+            display: 'flex',
+            justifyContent: 'flex-end',
           }}
         >
-          <span style={{ marginRight: "120px" }}>Bogor,</span>
+          <span style={{ marginRight: '120px' }}>Bogor,</span>
         </p>
         <p
           style={{
-            textIndent: "295px",
-            fontFamily: "Times New Roman",
-            fontSize: "12px",
-            marginTop: "0px",
-            display: "flex",
-            justifyContent: "flex-end",
+            textIndent: '295px',
+            fontFamily: 'Times New Roman',
+            fontSize: '12px',
+            marginTop: '0px',
+            display: 'flex',
+            justifyContent: 'flex-end',
           }}
         >
           Ketua Program Studi,
         </p>
         <div
           style={{
-            width: "100px",
-            height: "100px",
-            float: "right",
-            display: "flex",
-            justifyContent: "flex-end",
+            width: '100px',
+            height: '100px',
+            float: 'right',
+            display: 'flex',
+            justifyContent: 'flex-end',
           }}
         >
           <img
             src={`${FILE_URL}/${dataKaprodi.ttd}`}
             alt="TTD"
             style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "contain",
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
             }}
           />
         </div>
-        <div style={{ clear: "both" }}></div>
+        <div style={{ clear: 'both' }}></div>
         <p
           style={{
-            textIndent: "295px",
-            fontFamily: "Times New Roman",
-            fontSize: "12px",
-            fontWeight: "bold",
-            textDecoration: "underline",
-            display: "flex",
-            justifyContent: "flex-end",
+            textIndent: '295px',
+            fontFamily: 'Times New Roman',
+            fontSize: '12px',
+            fontWeight: 'bold',
+            textDecoration: 'underline',
+            display: 'flex',
+            justifyContent: 'flex-end',
           }}
         >
           ({dataKaprodi.nama_lengkap})
         </p>
 
         <div className="flex items-center justify-center gap-2">
-          <div style={{ margin: "0 auto" }}>
+          <div style={{ margin: '0 auto' }}>
             <img
               src={`${FILE_URL_KOP}/foot_kop.png`}
               alt="Kop Surat"
-              style={{ width: "100%", marginTop: "50px" }}
+              style={{ width: '100%', marginTop: '50px' }}
             />
           </div>
         </div>
       </>
-    );
-  };
+    )
+  }
 
   const handlePrint = async () => {
-    const printContent = ReactDOMServer.renderToString(content());
+    const printContent = ReactDOMServer.renderToString(content())
 
     const surat = `
       <div style="margin: 0 auto; max-width: 600px;">
         ${printContent}
       </div>
-    `;
+    `
 
     const combinedContent = `
       <!DOCTYPE html>
@@ -731,52 +711,48 @@ export default function PelaksanaanKolo() {
         ${surat}
       </body>
       </html>
-    `;
+    `
 
-    const iframe = document.createElement("iframe");
-    iframe.style.display = "none";
+    const iframe = document.createElement('iframe')
+    iframe.style.display = 'none'
 
-    const blob = new Blob([combinedContent], { type: "text/html" });
-    const url = URL.createObjectURL(blob);
+    const blob = new Blob([combinedContent], { type: 'text/html' })
+    const url = URL.createObjectURL(blob)
 
-    iframe.src = url;
+    iframe.src = url
 
-    document.body.appendChild(iframe);
+    document.body.appendChild(iframe)
 
     iframe.onload = () => {
-      const iframeWindow = iframe.contentWindow;
+      const iframeWindow = iframe.contentWindow
 
-      iframeWindow.print();
+      iframeWindow.print()
 
       setTimeout(() => {
-        document.body.removeChild(iframe);
-        URL.revokeObjectURL(url);
-      }, 100);
-    };
-  };
+        document.body.removeChild(iframe)
+        URL.revokeObjectURL(url)
+      }, 100)
+    }
+  }
 
-  const handleButtonPrint = (e) => {
-    e.preventDefault();
-    handlePrint();
-  };
+  const handleButtonPrint = e => {
+    e.preventDefault()
+    handlePrint()
+  }
 
-  if ([user, menu, isDosenLoading].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isDosenLoading].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
       <Card className="mt-4">
         <Card.Header className="text-center">
-          <div>
-            BERITA ACARA DAN PENILAIAN SEMINAR PROPOSAL / KOLOKIUM SKRIPSI
-            MAHASISWA
-          </div>
+          <div>BERITA ACARA DAN PENILAIAN SEMINAR PROPOSAL / KOLOKIUM SKRIPSI MAHASISWA</div>
         </Card.Header>
       </Card>
       <div className="flex-1 block">
         <div className="space-y-2 mt-4">
           <Accordion title="Summary">
-            <Form onSubmit={(event) => submitHandler(event, EDIT_OPTION)}>
+            <Form onSubmit={event => submitHandler(event, EDIT_OPTION)}>
               <Card.Body className="mx-6">
                 <Form.Group className="flex items-baseline gap-3 mt-4">
                   <Form.Label className="min-w-[14rem]">Nama</Form.Label>
@@ -812,9 +788,7 @@ export default function PelaksanaanKolo() {
                   />
                 </Form.Group>
                 <Form.Group className="flex items-baseline gap-3 mt-4">
-                  <Form.Label className="min-w-[14rem]">
-                    Jadwal Pelaksanaan
-                  </Form.Label>
+                  <Form.Label className="min-w-[14rem]">Jadwal Pelaksanaan</Form.Label>
                   <span>:</span>
                   <Form.Input
                     type="date"
@@ -840,14 +814,12 @@ export default function PelaksanaanKolo() {
                   />
                 </Form.Group>
                 <Form.Group className="flex items-baseline gap-3 mt-4">
-                  <Form.Label className="min-w-[14rem]">
-                    Pembimbing yang diusulkan
-                  </Form.Label>
+                  <Form.Label className="min-w-[14rem]">Pembimbing yang diusulkan</Form.Label>
                   <span>:</span>
                   <Form.Combobox
                     name="pembimbing_1"
                     value={form.pembimbing_1}
-                    options={listDosen?.map((dosen) => ({
+                    options={listDosen?.map(dosen => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
                     }))}
@@ -857,7 +829,7 @@ export default function PelaksanaanKolo() {
                   <Form.Combobox
                     name="pembimbing_2"
                     value={form.pembimbing_2}
-                    options={listDosen?.map((dosen) => ({
+                    options={listDosen?.map(dosen => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
                     }))}
@@ -871,7 +843,7 @@ export default function PelaksanaanKolo() {
                   <Form.Combobox
                     name="evaluator_1"
                     value={form.evaluator_1}
-                    options={listDosen?.map((dosen) => ({
+                    options={listDosen?.map(dosen => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
                     }))}
@@ -881,7 +853,7 @@ export default function PelaksanaanKolo() {
                   <Form.Combobox
                     name="evaluator_2"
                     value={form.evaluator_2}
-                    options={listDosen?.map((dosen) => ({
+                    options={listDosen?.map(dosen => ({
                       label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                       value: dosen.user_id,
                     }))}
@@ -890,9 +862,7 @@ export default function PelaksanaanKolo() {
                   />
                 </Form.Group>
                 <Form.Group className="flex items-baseline gap-3 mt-4">
-                  <Form.Label className="min-w-[14rem]">
-                    Komentar Singkat
-                  </Form.Label>
+                  <Form.Label className="min-w-[14rem]">Komentar Singkat</Form.Label>
                   <span>:</span>
                   <Form.Textarea
                     className="flex-1 mt-2"
@@ -911,11 +881,7 @@ export default function PelaksanaanKolo() {
                   >
                     Print
                   </Button>
-                  <Button
-                    type="submit"
-                    variant="info"
-                    className="w-1/4 h-12 mt-4"
-                  >
+                  <Button type="submit" variant="info" className="w-1/4 h-12 mt-4">
                     Save
                   </Button>
                 </div>
@@ -927,19 +893,14 @@ export default function PelaksanaanKolo() {
       <table
         className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
         cellPadding={10}
-        style={{ marginTop: "20px" }}
+        style={{ marginTop: '20px' }}
       >
         <thead>
           <tr>
-            <th
-              colSpan={4}
-              className="text-sm border-2 border-white bg-gray-50"
-            >
+            <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
               REKAPITULASI SEMINAR PROPOSAL
               <Button
-                onClick={() =>
-                  window.open(`${form.link_dok_makalah}`, "_blank")
-                }
+                onClick={() => window.open(`${form.link_dok_makalah}`, '_blank')}
                 variant="primary"
                 icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
                 pill
@@ -970,9 +931,7 @@ export default function PelaksanaanKolo() {
             <td className="text-sm border-2 border-white bg-gray-50">
               Subtansi dan Orientasi Topik Penilitian
             </td>
-            <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              20%
-            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">20%</td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               {form?.nilai_akhir.penilaian_1}
             </td>
@@ -980,12 +939,9 @@ export default function PelaksanaanKolo() {
           <tr>
             <td className="text-sm border-2 border-white bg-gray-50">2</td>
             <td className="text-sm border-2 border-white bg-gray-50">
-              Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
-              Penelitian
+              Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi Penelitian
             </td>
-            <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              40%
-            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">40%</td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               {form?.nilai_akhir.penilaian_2}
             </td>
@@ -995,9 +951,7 @@ export default function PelaksanaanKolo() {
             <td className="text-sm border-2 border-white bg-gray-50">
               Organisasi, kelengkapan dan Teknik Penulisan Makalah
             </td>
-            <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              10%
-            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">10%</td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               {form?.nilai_akhir.penilaian_3}
             </td>
@@ -1007,21 +961,15 @@ export default function PelaksanaanKolo() {
             <td className="text-sm border-2 border-white bg-gray-50">
               Penyajian Makalah dan Tampilan Slide
             </td>
-            <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              10%
-            </td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">10%</td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               {form?.nilai_akhir.penilaian_4}
             </td>
           </tr>
           <tr>
             <td className="text-sm border-2 border-white bg-gray-50">5</td>
-            <td className="text-sm border-2 border-white bg-gray-50">
-              Argumentasi
-            </td>
-            <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              20%
-            </td>
+            <td className="text-sm border-2 border-white bg-gray-50">Argumentasi</td>
+            <td className="text-sm border-2 border-white bg-gray-50 text-center">20%</td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
               {form?.nilai_akhir.penilaian_5}
             </td>
@@ -1032,14 +980,13 @@ export default function PelaksanaanKolo() {
         <div className="p-4 flex flex-col">
           <div className="flex justify-end">
             <div className="text-sm font-bold pr-10">
-              <span className="mr-2">Nilai Akhir :</span>{" "}
+              <span className="mr-2">Nilai Akhir :</span>{' '}
               <span>{form?.nilai_akhir.nilai_akhir}</span>
             </div>
           </div>
           <div className="flex justify-end mt-2">
             <div className="text-sm font-bold pr-10">
-              <span className="mr-2">Huruf Mutu :</span>{" "}
-              <span>{form?.nilai_akhir.huruf_mutu}</span>
+              <span className="mr-2">Huruf Mutu :</span> <span>{form?.nilai_akhir.huruf_mutu}</span>
             </div>
           </div>
         </div>
@@ -1052,11 +999,11 @@ export default function PelaksanaanKolo() {
         <select
           id="tabs"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-          onChange={(e) => setSelectedPeran(e.target.value)}
+          onChange={e => setSelectedPeran(e.target.value)}
           value={selectedPeran}
         >
           <option value="">Select Peran</option>
-          {peranUnik.map((peran) => (
+          {peranUnik.map(peran => (
             <option key={peran} value={peran}>
               {peran}
             </option>
@@ -1064,16 +1011,16 @@ export default function PelaksanaanKolo() {
         </select>
       </div>
       <ul className="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex mt-8">
-        {peranUnik.map((peran) => (
+        {peranUnik.map(peran => (
           <li className="w-full focus-within:z-10" key={peran}>
             <a
               href="#"
               className={`inline-block w-full p-4 ${
                 peran === selectedPeran
-                  ? "text-gray-900 bg-gray-300 border-r border-gray-200 rounded-s-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none"
-                  : "bg-white border-r border-gray-200 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none"
+                  ? 'text-gray-900 bg-gray-300 border-r border-gray-200 rounded-s-lg focus:ring-4 focus:ring-blue-300 active focus:outline-none'
+                  : 'bg-white border-r border-gray-200 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none'
               }`}
-              aria-current={peran === selectedPeran ? "page" : undefined}
+              aria-current={peran === selectedPeran ? 'page' : undefined}
               onClick={() => setSelectedPeran(peran)}
             >
               {peran}
@@ -1083,24 +1030,20 @@ export default function PelaksanaanKolo() {
       </ul>
 
       <div className="content-tab">
-        {selectedContent?.map((item) => (
+        {selectedContent?.map(item => (
           <div key={item.id}>
             <table
               className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
               cellPadding={10}
-              style={{ marginTop: "20px" }}
+              style={{ marginTop: '20px' }}
             >
               <thead>
                 <tr>
                   <th className="text-sm border-2 border-white bg-gray-200">
-                    <div className="flex items-center gap-2 cursor-pointer">
-                      No
-                    </div>
+                    <div className="flex items-center gap-2 cursor-pointer">No</div>
                   </th>
                   <th className="text-sm border-2 border-white bg-gray-200">
-                    <div className="flex items-center gap-2 cursor-pointer">
-                      Aspek Penilaian
-                    </div>
+                    <div className="flex items-center gap-2 cursor-pointer">Aspek Penilaian</div>
                   </th>
                   <th className="text-sm border-2 border-white bg-gray-200">
                     <div className="gap-2 cursor-pointer">Presentase (%)</div>
@@ -1115,15 +1058,11 @@ export default function PelaksanaanKolo() {
               </thead>
               <tbody>
                 <tr>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    1
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">1</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     Subtansi dan Orientasi Topik Penilitian
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    20%
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 text-center">20%</td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_1}
                   </td>
@@ -1139,16 +1078,11 @@ export default function PelaksanaanKolo() {
                   </td>
                 </tr>
                 <tr>
+                  <td className="text-sm border-2 border-white bg-gray-50">2</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
-                    2
+                    Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi Penelitian
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    Konsistensi Antara Masalah, Tujuan Penelitian dan Metodologi
-                    Penelitian
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    40%
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 text-center">40%</td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_2}
                   </td>
@@ -1165,15 +1099,11 @@ export default function PelaksanaanKolo() {
                   </td>
                 </tr>
                 <tr>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    3
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">3</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     Organisasi, kelengkapan dan Teknik Penulisan Makalah
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    10%
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 text-center">10%</td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_3}
                   </td>
@@ -1189,15 +1119,11 @@ export default function PelaksanaanKolo() {
                   </td>
                 </tr>
                 <tr>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    4
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">4</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     Penyajian Makalah dan Tampilan Slide
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    10%
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 text-center">10%</td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_4}
                   </td>
@@ -1213,15 +1139,9 @@ export default function PelaksanaanKolo() {
                   </td>
                 </tr>
                 <tr>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    5
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    Argumentasi
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    20%
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">5</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">Argumentasi</td>
+                  <td className="text-sm border-2 border-white bg-gray-50 text-center">20%</td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {item.penilaian_5}
                   </td>
@@ -1242,14 +1162,12 @@ export default function PelaksanaanKolo() {
               <div className="p-4 flex flex-col">
                 <div className="flex justify-end">
                   <div className="text-sm font-bold pr-10">
-                    <span className="mr-2">Nilai Akhir :</span>{" "}
-                    <span>{item.final_nilai}</span>
+                    <span className="mr-2">Nilai Akhir :</span> <span>{item.final_nilai}</span>
                   </div>
                 </div>
                 <div className="flex justify-end mt-2">
                   <div className="text-sm font-bold pr-10">
-                    <span className="mr-2">Huruf Mutu :</span>{" "}
-                    <span>{item.huruf_mutu}</span>
+                    <span className="mr-2">Huruf Mutu :</span> <span>{item.huruf_mutu}</span>
                   </div>
                 </div>
               </div>
@@ -1265,15 +1183,10 @@ export default function PelaksanaanKolo() {
       </div>
 
       <div className="flex gap-4 mt-4">
-        <Button
-          as="a"
-          href={prefix + menu.url}
-          variant="secondary"
-          className="w-full h-12"
-        >
+        <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
           Kembali
         </Button>
       </div>
     </Layout>
-  );
+  )
 }

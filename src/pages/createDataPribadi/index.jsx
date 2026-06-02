@@ -1,90 +1,90 @@
-import Head from "next/head";
-import Button from "../../components/Button";
+import Head from 'next/head'
+import Button from '../../components/Button'
 
-import Form from "../../components/Form";
-import useCRUD from "../../hooks/useCRUD";
-import { useRouter } from "next/router";
-import useUser from "../../hooks/useUser";
-import { useEffect, useState } from "react";
+import Form from '../../components/Form'
+import useCRUD from '../../hooks/useCRUD'
+import { useRouter } from 'next/router'
+import useUser from '../../hooks/useUser'
+import { useEffect, useState } from 'react'
 
 const CreateDataPribadi = () => {
   const [stylesPage, setStylesPage] = useState({
-    widthCard: "w-3/5",
-    widthContent: " w-4/5",
-  });
+    widthCard: 'w-3/5',
+    widthContent: ' w-4/5',
+  })
 
   useEffect(() => {
     const handleResize = () => {
-      const screenWidth = window.innerWidth;
+      const screenWidth = window.innerWidth
       setStylesPage({
-        widthCard: screenWidth <= 700 ? "w-10/12" : "w-3/5",
-        widthContent: screenWidth <= 700 ? " w-11/12" : " w-4/5",
-      });
-    };
+        widthCard: screenWidth <= 700 ? 'w-10/12' : 'w-3/5',
+        widthContent: screenWidth <= 700 ? ' w-11/12' : ' w-4/5',
+      })
+    }
 
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize)
 
-    handleResize();
+    handleResize()
 
     return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      window.removeEventListener('resize', handleResize)
+    }
+  }, [])
 
-  const router = useRouter();
+  const router = useRouter()
 
-  const { user } = useUser({ redirectTo: "/login" });
+  const { user } = useUser({ redirectTo: '/login' })
 
   const INITIAL_FORM = {
-    nama_lengkap: "",
-    ibu_kandung: "",
-    tanggal_lahir: "",
-    tempat_lahir: "",
-    jenkel: "",
-    nik: "",
-    agama: "",
-    warga_negara: "",
-    email: "",
-    alamat: "",
-    rt: "",
-    rw: "",
-    desa_kelurahan: "",
-    kota_kabupaten: "",
-    provinsi: "",
-    kode_pos: "",
-    no_hp: "",
-    status_kawin: "",
-  };
+    nama_lengkap: '',
+    ibu_kandung: '',
+    tanggal_lahir: '',
+    tempat_lahir: '',
+    jenkel: '',
+    nik: '',
+    agama: '',
+    warga_negara: '',
+    email: '',
+    alamat: '',
+    rt: '',
+    rw: '',
+    desa_kelurahan: '',
+    kota_kabupaten: '',
+    provinsi: '',
+    kode_pos: '',
+    no_hp: '',
+    status_kawin: '',
+  }
 
-  const API_URL = `${process.env.API_ENDPOINT}/profile/createData`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/createData`
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nama_lengkap", label: "Nama Lengkap" },
-      { field: "ibu_kandung", label: "Nama Ibu Kandung" },
-      { field: "tanggal_lahir", label: "Tanggal Lahir" },
-      { field: "tempat_lahir", label: "Tempat Lahir" },
-      { field: "jenkel", label: "Jenis Kelamin" },
-      { field: "nik", label: "NIK" },
-      { field: "agama", label: "Agama" },
-      { field: "warga_negara", label: "Warga Negara" },
-      { field: "email", label: "Email" },
-      { field: "alamat", label: "Alamat" },
-      { field: "rt", label: "RT" },
-      { field: "rw", label: "RW" },
-      { field: "desa_kelurahan", label: "Desa/Kelurahan" },
-      { field: "kota_kabupaten", label: "Kota/Kabupaten" },
-      { field: "provinsi", label: "Provinsi" },
-      { field: "kode_pos", label: "Kode Pos" },
-      { field: "no_hp", label: "Nomor Telp." },
-      { field: "status_kawin", label: "Status Kawin" },
+      { field: 'nama_lengkap', label: 'Nama Lengkap' },
+      { field: 'ibu_kandung', label: 'Nama Ibu Kandung' },
+      { field: 'tanggal_lahir', label: 'Tanggal Lahir' },
+      { field: 'tempat_lahir', label: 'Tempat Lahir' },
+      { field: 'jenkel', label: 'Jenis Kelamin' },
+      { field: 'nik', label: 'NIK' },
+      { field: 'agama', label: 'Agama' },
+      { field: 'warga_negara', label: 'Warga Negara' },
+      { field: 'email', label: 'Email' },
+      { field: 'alamat', label: 'Alamat' },
+      { field: 'rt', label: 'RT' },
+      { field: 'rw', label: 'RW' },
+      { field: 'desa_kelurahan', label: 'Desa/Kelurahan' },
+      { field: 'kota_kabupaten', label: 'Kota/Kabupaten' },
+      { field: 'provinsi', label: 'Provinsi' },
+      { field: 'kode_pos', label: 'Kode Pos' },
+      { field: 'no_hp', label: 'Nomor Telp.' },
+      { field: 'status_kawin', label: 'Status Kawin' },
     ],
     success: () => router.push(`/dashboard`),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  if ([user].some((item) => item == null)) return <p>Loading...</p>;
+  if ([user].some(item => item == null)) return <p>Loading...</p>
 
   return (
     <>
@@ -106,16 +106,12 @@ const CreateDataPribadi = () => {
               </p>
             </div>
             <div className="block mb-4">
-              <h2 className="block text-4md  font-bold text-primary-600">
-                Profile
-              </h2>
+              <h2 className="block text-4md  font-bold text-primary-600">Profile</h2>
             </div>
 
             <div className="flex flex-row gap-2 items-center justify-center">
               <div className="block mb-6 basis-3/5">
-                <label className="block text-sm font-medium mb-1">
-                  Nama Lengkap
-                </label>
+                <label className="block text-sm font-medium mb-1">Nama Lengkap</label>
                 <input
                   type="text"
                   className="form-input"
@@ -126,9 +122,7 @@ const CreateDataPribadi = () => {
                 />
               </div>
               <div className="block mb-6 basis-3/5">
-                <label className="block text-sm font-medium mb-1">
-                  Nama Ibu Kandung
-                </label>
+                <label className="block text-sm font-medium mb-1">Nama Ibu Kandung</label>
                 <input
                   type="text"
                   className="form-input"
@@ -142,9 +136,7 @@ const CreateDataPribadi = () => {
 
             <div className="flex flex-row gap-2 items-center justify-center">
               <div className="block mb-6 basis-3/5">
-                <label className="block text-sm font-medium mb-1">
-                  Tempat Lahir
-                </label>
+                <label className="block text-sm font-medium mb-1">Tempat Lahir</label>
                 <input
                   type="text"
                   className="form-input"
@@ -155,9 +147,7 @@ const CreateDataPribadi = () => {
                 />
               </div>
               <div className="block mb-6 basis-3/5">
-                <label className="block text-sm font-medium mb-1">
-                  Tanggal Lahir
-                </label>
+                <label className="block text-sm font-medium mb-1">Tanggal Lahir</label>
                 <input
                   type="date"
                   className="form-input"
@@ -169,9 +159,7 @@ const CreateDataPribadi = () => {
               </div>
             </div>
             <div className="block mb-6 ">
-              <label className="block text-sm font-medium mb-1">
-                Jenis Kelamin
-              </label>
+              <label className="block text-sm font-medium mb-1">Jenis Kelamin</label>
               <div className="flex gap-4">
                 <Form.Label>
                   <Form.Radio name="jenkel" value="L" onChange={inputHandler} />
@@ -185,9 +173,7 @@ const CreateDataPribadi = () => {
             </div>
 
             <div className="block mb-4">
-              <h2 className="block text-4md  font-bold text-primary-600">
-                Kependudukan
-              </h2>
+              <h2 className="block text-4md  font-bold text-primary-600">Kependudukan</h2>
             </div>
 
             <div className="flex flex-row gap-3 items-center justify-center">
@@ -214,9 +200,7 @@ const CreateDataPribadi = () => {
                 />
               </div>
               <div className="block mb-6 basis-2/5">
-                <label className="block text-sm font-medium mb-1">
-                  Warga Negara
-                </label>
+                <label className="block text-sm font-medium mb-1">Warga Negara</label>
                 <input
                   type="text"
                   className="form-input"
@@ -229,9 +213,7 @@ const CreateDataPribadi = () => {
             </div>
 
             <div className="block mb-4">
-              <h2 className="block text-4md font-bold text-primary-600">
-                Alamat dan Kontak
-              </h2>
+              <h2 className="block text-4md font-bold text-primary-600">Alamat dan Kontak</h2>
             </div>
 
             <div className="flex flex-row gap-2 items-center justify-center">
@@ -247,9 +229,7 @@ const CreateDataPribadi = () => {
                 />
               </div>
               <div className="block mb-6 basis-3/5">
-                <label className="block text-sm font-medium mb-1">
-                  Nomor Telp.
-                </label>
+                <label className="block text-sm font-medium mb-1">Nomor Telp.</label>
                 <input
                   type="number"
                   className="form-input"
@@ -285,9 +265,7 @@ const CreateDataPribadi = () => {
                 />
               </div>
               <div className="block mb-6 basis-3/5">
-                <label className="block text-sm font-medium mb-1">
-                  Desa/Kelurahan
-                </label>
+                <label className="block text-sm font-medium mb-1">Desa/Kelurahan</label>
                 <input
                   type="text"
                   className="form-input"
@@ -301,9 +279,7 @@ const CreateDataPribadi = () => {
 
             <div className="flex flex-row gap-3 items-center justify-center">
               <div className="block mb-6 basis-2/5">
-                <label className="block text-sm font-medium mb-1">
-                  Kota/Kabupaten
-                </label>
+                <label className="block text-sm font-medium mb-1">Kota/Kabupaten</label>
                 <input
                   type="text"
                   className="form-input"
@@ -314,9 +290,7 @@ const CreateDataPribadi = () => {
                 />
               </div>
               <div className="block mb-6 basis-2/5">
-                <label className="block text-sm font-medium mb-1">
-                  Provinsi
-                </label>
+                <label className="block text-sm font-medium mb-1">Provinsi</label>
                 <input
                   type="text"
                   className="form-input"
@@ -327,9 +301,7 @@ const CreateDataPribadi = () => {
                 />
               </div>
               <div className="block mb-6 basis-2/5">
-                <label className="block text-sm font-medium mb-1">
-                  Kode Pos
-                </label>
+                <label className="block text-sm font-medium mb-1">Kode Pos</label>
                 <input
                   type="number"
                   className="form-input"
@@ -353,24 +325,14 @@ const CreateDataPribadi = () => {
               />
             </div>
             <div className="block mb-6 ">
-              <label className="block text-sm font-medium mb-1">
-                Status Kawin
-              </label>
+              <label className="block text-sm font-medium mb-1">Status Kawin</label>
               <div className="flex gap-4">
                 <Form.Label>
-                  <Form.Radio
-                    name="status_kawin"
-                    value="0"
-                    onChange={inputHandler}
-                  />
+                  <Form.Radio name="status_kawin" value="0" onChange={inputHandler} />
                   Belum Menikah
                 </Form.Label>
                 <Form.Label>
-                  <Form.Radio
-                    name="status_kawin"
-                    value="1"
-                    onChange={inputHandler}
-                  />
+                  <Form.Radio name="status_kawin" value="1" onChange={inputHandler} />
                   Sudah Menikah
                 </Form.Label>
               </div>
@@ -386,7 +348,7 @@ const CreateDataPribadi = () => {
         </form>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default CreateDataPribadi;
+export default CreateDataPribadi

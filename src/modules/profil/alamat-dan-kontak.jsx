@@ -1,18 +1,18 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../components/Button";
-import Card from "../../components/Card";
-import Form from "../../components/Form";
-import useDatatable from "../../hooks/useDatatable";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../components/Button'
+import Card from '../../components/Card'
+import Form from '../../components/Form'
+import useDatatable from '../../hooks/useDatatable'
 
 export default function AlamatDanKontakModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
-  const { data, loading } = useDatatable(DATA_URL);
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataPribadi`
+  const { data, loading } = useDatatable(DATA_URL)
 
   return (
     <>
       <div className="flex items-center justify-center gap-2 mb-8">
         <Button
-          onClick={() => window.open(`${baseURL}/alamat-dan-kontak/edit`,'_blank')}
+          onClick={() => window.open(`${baseURL}/alamat-dan-kontak/edit`, '_blank')}
           variant="secondary"
           icon={<Icon icon="bx:edit" width={20} height={20} />}
           pill
@@ -72,5 +72,5 @@ export default function AlamatDanKontakModule({ baseURL }) {
         </Card.Body>
       </Card>
     </>
-  );
+  )
 }

@@ -1,71 +1,68 @@
-import { useEffect } from "react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import date from "../../../../../utils/date";
-import { Loading } from "../../../../../components/Loading";
+import { useEffect } from 'react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import date from '../../../../../utils/date'
+import { Loading } from '../../../../../components/Loading'
 
 export default function RiwayatPekerjaanEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/kualifikasi/detailRiwayatPekerjaan`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/file-riwayatPekerjaan`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/kualifikasi/detailRiwayatPekerjaan`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/file-riwayatPekerjaan`
 
   const INITIAL_FORM = {
-    rwyt_pekerjaan_id: "",
-    bidang_usaha: "",
-    jenis_pekerjaan: "",
-    jabatan: "",
-    nama_instansi: "",
-    divisi: "",
-    deskripsi: "",
-    mulai_kerja: "",
-    selesai_kerja: "",
-    area_kerja: "",
-    pendapatan: "",
-    file: "",
-  };
+    rwyt_pekerjaan_id: '',
+    bidang_usaha: '',
+    jenis_pekerjaan: '',
+    jabatan: '',
+    nama_instansi: '',
+    divisi: '',
+    deskripsi: '',
+    mulai_kerja: '',
+    selesai_kerja: '',
+    area_kerja: '',
+    pendapatan: '',
+    file: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/kualifikasi/editRiwayatPekerjaan`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/kualifikasi/editRiwayatPekerjaan`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.rwyt_pekerjaan_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
 
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
         mulai_kerja: date.formatToInput(data.mulai_kerja),
         selesai_kerja: date.formatToInput(data.selesai_kerja),
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if ([user, menu, form].some((item) => item == null)) return <Loading />;
+  if ([user, menu, form].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Riwayat Pekerjaan</Card.Header>
           <Card.Body className="space-y-4">
@@ -81,93 +78,87 @@ export default function RiwayatPekerjaanEdit() {
                 value={form.bidang_usaha}
                 options={[
                   {
-                    value: "Pertanian, Kehutanan dan Perikanan",
-                    label: "Pertanian, Kehutanan dan Perikanan",
+                    value: 'Pertanian, Kehutanan dan Perikanan',
+                    label: 'Pertanian, Kehutanan dan Perikanan',
                   },
                   {
-                    value: "Pertambangan dan Penggalian",
-                    label: "Pertambangan dan Penggalian",
+                    value: 'Pertambangan dan Penggalian',
+                    label: 'Pertambangan dan Penggalian',
                   },
                   {
-                    value: "Industri Pengolahan",
-                    label: "Industri Pengolahan",
+                    value: 'Industri Pengolahan',
+                    label: 'Industri Pengolahan',
                   },
                   {
-                    value:
-                      "Pengadaan Listrik, Gas, Uap/Air Panas Dan Udara Dingin",
-                    label:
-                      "Pengadaan Listrik, Gas, Uap/Air Panas Dan Udara Dingin",
-                  },
-                  {
-                    value:
-                      "Pengelolaan Air, Pengelolaan Air Limbah, Pengelolaan dan Daur Ulang Sampah, dan Aktivitas Remediasi",
-                    label:
-                      "Pengelolaan Air, Pengelolaan Air Limbah, Pengelolaan dan Daur Ulang Sampah, dan Aktivitas Remediasi",
-                  },
-                  { value: "Konstruksi", label: "Konstruksi" },
-                  {
-                    value:
-                      "Perdagangan Besar Dan Eceran; Reparasi Dan Perawatan Mobil Dan Sepeda Motor",
-                    label:
-                      "Perdagangan Besar Dan Eceran; Reparasi Dan Perawatan Mobil Dan Sepeda Motor",
-                  },
-                  {
-                    value: "Pengangkutan dan pergudangan",
-                    label: "Pengangkutan dan pergudangan",
-                  },
-                  {
-                    value: "Penyediaan Akomodasi Dan Penyediaan Makan Minum",
-                    label: "Penyediaan Akomodasi Dan Penyediaan Makan Minum",
-                  },
-                  {
-                    value: "Informasi Dan Komunikasi",
-                    label: "Informasi Dan Komunikasi",
-                  },
-                  {
-                    value: "Aktivitas Keuangan Dan Asuransi",
-                    label: "Aktivitas Keuangan Dan Asuransi",
-                  },
-                  { value: "Real Estat", label: "Real Estat" },
-                  {
-                    value: "Aktivitas Profesional, Ilmiah Dan Teknis",
-                    label: "Aktivitas Profesional, Ilmiah Dan Teknis",
+                    value: 'Pengadaan Listrik, Gas, Uap/Air Panas Dan Udara Dingin',
+                    label: 'Pengadaan Listrik, Gas, Uap/Air Panas Dan Udara Dingin',
                   },
                   {
                     value:
-                      "Aktivitas Penyewaan dan Sewa Guna Usaha Tanpa Hak Opsi, Ketenagakerjaan, Agen Perjalanan dan Penunjang Usaha Lainnya",
+                      'Pengelolaan Air, Pengelolaan Air Limbah, Pengelolaan dan Daur Ulang Sampah, dan Aktivitas Remediasi',
                     label:
-                      "Aktivitas Penyewaan dan Sewa Guna Usaha Tanpa Hak Opsi, Ketenagakerjaan, Agen Perjalanan dan Penunjang Usaha Lainnya",
+                      'Pengelolaan Air, Pengelolaan Air Limbah, Pengelolaan dan Daur Ulang Sampah, dan Aktivitas Remediasi',
+                  },
+                  { value: 'Konstruksi', label: 'Konstruksi' },
+                  {
+                    value:
+                      'Perdagangan Besar Dan Eceran; Reparasi Dan Perawatan Mobil Dan Sepeda Motor',
+                    label:
+                      'Perdagangan Besar Dan Eceran; Reparasi Dan Perawatan Mobil Dan Sepeda Motor',
+                  },
+                  {
+                    value: 'Pengangkutan dan pergudangan',
+                    label: 'Pengangkutan dan pergudangan',
+                  },
+                  {
+                    value: 'Penyediaan Akomodasi Dan Penyediaan Makan Minum',
+                    label: 'Penyediaan Akomodasi Dan Penyediaan Makan Minum',
+                  },
+                  {
+                    value: 'Informasi Dan Komunikasi',
+                    label: 'Informasi Dan Komunikasi',
+                  },
+                  {
+                    value: 'Aktivitas Keuangan Dan Asuransi',
+                    label: 'Aktivitas Keuangan Dan Asuransi',
+                  },
+                  { value: 'Real Estat', label: 'Real Estat' },
+                  {
+                    value: 'Aktivitas Profesional, Ilmiah Dan Teknis',
+                    label: 'Aktivitas Profesional, Ilmiah Dan Teknis',
                   },
                   {
                     value:
-                      "Administrasi Pemerintahan, Pertahanan Dan Jaminan Sosial Wajib",
+                      'Aktivitas Penyewaan dan Sewa Guna Usaha Tanpa Hak Opsi, Ketenagakerjaan, Agen Perjalanan dan Penunjang Usaha Lainnya',
                     label:
-                      "Administrasi Pemerintahan, Pertahanan Dan Jaminan Sosial Wajib",
-                  },
-                  { value: "Pendidikan", label: "Pendidikan" },
-                  {
-                    value: "Aktivitas Kesehatan Manusia Dan Aktivitas Sosial",
-                    label: "Aktivitas Kesehatan Manusia Dan Aktivitas Sosial",
+                      'Aktivitas Penyewaan dan Sewa Guna Usaha Tanpa Hak Opsi, Ketenagakerjaan, Agen Perjalanan dan Penunjang Usaha Lainnya',
                   },
                   {
-                    value: "Kesenian, Hiburan Dan Rekreasi",
-                    label: "Kesenian, Hiburan Dan Rekreasi",
+                    value: 'Administrasi Pemerintahan, Pertahanan Dan Jaminan Sosial Wajib',
+                    label: 'Administrasi Pemerintahan, Pertahanan Dan Jaminan Sosial Wajib',
+                  },
+                  { value: 'Pendidikan', label: 'Pendidikan' },
+                  {
+                    value: 'Aktivitas Kesehatan Manusia Dan Aktivitas Sosial',
+                    label: 'Aktivitas Kesehatan Manusia Dan Aktivitas Sosial',
                   },
                   {
-                    value: "Aktivitas Jasa Lainnya",
-                    label: "Aktivitas Jasa Lainnya",
+                    value: 'Kesenian, Hiburan Dan Rekreasi',
+                    label: 'Kesenian, Hiburan Dan Rekreasi',
+                  },
+                  {
+                    value: 'Aktivitas Jasa Lainnya',
+                    label: 'Aktivitas Jasa Lainnya',
                   },
                   {
                     value:
-                      "Aktivitas Rumah Tangga Sebagai Pemberi Kerja; Aktivitas Yang Menghasilkan Barang Dan Jasa Oleh Rumah Tangga yang Digunakan untuk Memenuhi Kebutuhan Sendiri",
+                      'Aktivitas Rumah Tangga Sebagai Pemberi Kerja; Aktivitas Yang Menghasilkan Barang Dan Jasa Oleh Rumah Tangga yang Digunakan untuk Memenuhi Kebutuhan Sendiri',
                     label:
-                      "Aktivitas Rumah Tangga Sebagai Pemberi Kerja; Aktivitas Yang Menghasilkan Barang Dan Jasa Oleh Rumah Tangga yang Digunakan untuk Memenuhi Kebutuhan Sendiri",
+                      'Aktivitas Rumah Tangga Sebagai Pemberi Kerja; Aktivitas Yang Menghasilkan Barang Dan Jasa Oleh Rumah Tangga yang Digunakan untuk Memenuhi Kebutuhan Sendiri',
                   },
                   {
-                    value:
-                      "Aktivitas Badan Internasional Dan Badan Ekstra Internasional Lainnya",
-                    label:
-                      "Aktivitas Badan Internasional Dan Badan Ekstra Internasional Lainnya",
+                    value: 'Aktivitas Badan Internasional Dan Badan Ekstra Internasional Lainnya',
+                    label: 'Aktivitas Badan Internasional Dan Badan Ekstra Internasional Lainnya',
                   },
                 ]}
                 required
@@ -184,19 +175,19 @@ export default function RiwayatPekerjaanEdit() {
                 onChange={inputHandler}
                 value={form.jenis_pekerjaan}
                 options={[
-                  { label: "Peneliti", value: "Peneliti" },
+                  { label: 'Peneliti', value: 'Peneliti' },
                   {
-                    label: "Tim Ahli / Konsultan",
-                    value: "Tim Ahli / Konsultan",
+                    label: 'Tim Ahli / Konsultan',
+                    value: 'Tim Ahli / Konsultan',
                   },
-                  { label: "Magang", value: "Magang" },
+                  { label: 'Magang', value: 'Magang' },
                   {
-                    label: "Tenaga Pengajar / Instruktur / Fasiltator",
-                    value: "Tenaga Pengajar / Instruktur / Fasiltator",
+                    label: 'Tenaga Pengajar / Instruktur / Fasiltator',
+                    value: 'Tenaga Pengajar / Instruktur / Fasiltator',
                   },
                   {
-                    label: "Pimpinan / Manajerial",
-                    value: "Pimpinan / Manajerial",
+                    label: 'Pimpinan / Manajerial',
+                    value: 'Pimpinan / Manajerial',
                   },
                 ]}
               />
@@ -290,7 +281,7 @@ export default function RiwayatPekerjaanEdit() {
                     name="area_kerja"
                     onChange={inputHandler}
                     value="Dalam Negri"
-                    checked={form.area_kerja == "Dalam Negri"}
+                    checked={form.area_kerja == 'Dalam Negri'}
                   />
                   Dalam Negeri
                 </Form.Label>
@@ -299,7 +290,7 @@ export default function RiwayatPekerjaanEdit() {
                     name="area_kerja"
                     onChange={inputHandler}
                     value="Luar Negri"
-                    checked={form.area_kerja == "Luar Negri"}
+                    checked={form.area_kerja == 'Luar Negri'}
                   />
                   Luar Negeri
                 </Form.Label>
@@ -330,21 +321,13 @@ export default function RiwayatPekerjaanEdit() {
                   name="file_rwyt_pekerjaan"
                   onChange={inputHandler}
                 />
-                <embed
-                  src={`${FILE_URL}/${form.file}`}
-                  className="w-full h-[256px]"
-                />
+                <embed src={`${FILE_URL}/${form.file}`} className="w-full h-[256px]" />
               </div>
             </Form.Group>
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -353,5 +336,5 @@ export default function RiwayatPekerjaanEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

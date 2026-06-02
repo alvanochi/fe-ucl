@@ -1,72 +1,69 @@
-import { useRouter } from "next/router";
-import Button from "../../../components/Button";
-import Card from "../../../components/Card";
-import Form from "../../../components/Form";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
-import useMenu from "../../../hooks/useMenu";
-import useUser from "../../../hooks/useUser";
-import useCRUD from "../../../hooks/useCRUD";
-import { useEffect, useState } from "react";
-import { Loading } from "../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../components/Button'
+import Card from '../../../components/Card'
+import Form from '../../../components/Form'
+import Layout from '../../../components/Layout'
+import PageHeader from '../../../components/PageHeader'
+import useMenu from '../../../hooks/useMenu'
+import useUser from '../../../hooks/useUser'
+import useCRUD from '../../../hooks/useCRUD'
+import { useEffect, useState } from 'react'
+import { Loading } from '../../../components/Loading'
 
 export default function RuanganEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
-  const [previewImage, setPreviewImage] = useState(null);
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
+  const [previewImage, setPreviewImage] = useState(null)
 
-  const API_URL = `${process.env.API_ENDPOINT}/ruangan`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/ruangan`
 
   const INITIAL_FORM = {
-    id: "",
-    nama_ruangan: "",
-    alamat: "",
-    lat: "",
-    long: "",
-    foto: "",
-  };
+    id: '',
+    nama_ruangan: '',
+    alamat: '',
+    lat: '',
+    long: '',
+    foto: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nam_ruangan", label: "nama ruangan" },
-      { field: "alamat", label: "alamat" },
-      { field: "lat", label: "lat" },
-      { field: "long", label: "long" },
+      { field: 'nam_ruangan', label: 'nama ruangan' },
+      { field: 'alamat', label: 'alamat' },
+      { field: 'lat', label: 'lat' },
+      { field: 'long', label: 'long' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_OPTION = { url: `${API_URL}/${form.id}`, method: "PUT" };
+  const EDIT_OPTION = { url: `${API_URL}/${form.id}`, method: 'PUT' }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const handleImageChange = e => {
+    const file = e.target.files[0]
     if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setPreviewImage(imageUrl);
-      inputHandler(e);
+      const imageUrl = URL.createObjectURL(file)
+      setPreviewImage(imageUrl)
+      inputHandler(e)
     }
-  };
+  }
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Laporan</Card.Header>
           <Card.Body className="space-y-4">
@@ -135,18 +132,10 @@ export default function RuanganEdit() {
                   onChange={handleImageChange}
                 />
                 {previewImage ? (
-                  <img
-                    src={previewImage}
-                    alt="foto"
-                    className="w-full h-auto object-cover"
-                  />
+                  <img src={previewImage} alt="foto" className="w-full h-auto object-cover" />
                 ) : (
                   form.foto && (
-                    <img
-                      src={form.foto}
-                      alt="foto"
-                      className="w-full h-auto object-cover"
-                    />
+                    <img src={form.foto} alt="foto" className="w-full h-auto object-cover" />
                   )
                 )}
               </div>
@@ -154,12 +143,7 @@ export default function RuanganEdit() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -168,5 +152,5 @@ export default function RuanganEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

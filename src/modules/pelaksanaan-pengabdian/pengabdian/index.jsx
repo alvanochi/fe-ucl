@@ -1,17 +1,17 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import date from "../../../utils/date";
-import SortIcon from "../../../components/SortIcon";
-import CreateDokumen from "./create-dokumen";
-import Form from "../../../components/Form";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Pagination from '../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../hooks/useDatatable'
+import useCRUD from '../../../hooks/useCRUD'
+import date from '../../../utils/date'
+import SortIcon from '../../../components/SortIcon'
+import CreateDokumen from './create-dokumen'
+import Form from '../../../components/Form'
 
 export default function PengabdianModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/pengabdian/getDataPengabdian`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/pengabdian/deletePengabdian`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/getDataPengabdian`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/deletePengabdian`
 
   const {
     data,
@@ -27,15 +27,15 @@ export default function PengabdianModule({ baseURL }) {
     sortBy,
     getSortBy,
     totalData,
-  } = useDatatable(DATA_URL);
-  const { destroy } = useCRUD(DELETE_URL);
+  } = useDatatable(DATA_URL)
+  const { destroy } = useCRUD(DELETE_URL)
 
   return (
     <>
       <div>
         <div className="flex justify-center gap-2 mb-8">
           <Button
-            onClick={() => window.open(`${`${baseURL}/pengabdian/create`}`,'_blank')}
+            onClick={() => window.open(`${`${baseURL}/pengabdian/create`}`, '_blank')}
             variant="primary"
             icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
             pill
@@ -59,70 +59,62 @@ export default function PengabdianModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("pengabdian_id")}
+                onClick={() => sortBy('pengabdian_id')}
               >
                 No
-                <SortIcon sort={getSortBy("pengabdian_id")} />
+                <SortIcon sort={getSortBy('pengabdian_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("status")}
+                onClick={() => sortBy('status')}
               >
                 Status
-                <SortIcon sort={getSortBy("status")} />
+                <SortIcon sort={getSortBy('status')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("judul_kegiatan")}
+                onClick={() => sortBy('judul_kegiatan')}
               >
                 Judul
-                <SortIcon sort={getSortBy("judul_kegiatab")} />
+                <SortIcon sort={getSortBy('judul_kegiatab')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_sk_penugasan")}
+                onClick={() => sortBy('tgl_sk_penugasan')}
               >
                 Tanggal Pelaksanaan
-                <SortIcon sort={getSortBy("tgl_sk_penugasan")} />
+                <SortIcon sort={getSortBy('tgl_sk_penugasan')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("lama_kegiatan")}
+                onClick={() => sortBy('lama_kegiatan')}
               >
                 Lama Kegiatan
-                <SortIcon sort={getSortBy("lama_kegiatan")} />
+                <SortIcon sort={getSortBy('lama_kegiatan')} />
               </div>
             </th>
-            <th className="text-sm border-2 border-white bg-gray-200">
-              Action
-            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">Action</th>
           </tr>
         </thead>
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="5"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="5" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="5"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="5" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -136,19 +128,13 @@ export default function PengabdianModule({ baseURL }) {
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[20rem]">
@@ -163,39 +149,29 @@ export default function PengabdianModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
-                      onClick={() => window.open(`${baseURL}/pengabdian/detail/${row.pengabdian_id}`,'_blank')}
-                      variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
+                      onClick={() =>
+                        window.open(`${baseURL}/pengabdian/detail/${row.pengabdian_id}`, '_blank')
                       }
+                      variant="info"
+                      icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                     />
                     {(row.status === 0 || row.status === 2) && (
                       <>
-                        <CreateDokumen
-                          id={{ pengabdian_id: row.pengabdian_id }}
-                        />
+                        <CreateDokumen id={{ pengabdian_id: row.pengabdian_id }} />
 
                         <Button.Icon
-                          onClick={() => window.open(`${baseURL}/pengabdian/edit/${row.pengabdian_id}`,'_blank')}
+                          onClick={() =>
+                            window.open(`${baseURL}/pengabdian/edit/${row.pengabdian_id}`, '_blank')
+                          }
                           variant="secondary"
                           icon={<Icon icon="bx:edit" width={20} height={20} />}
                         />
                         <Button.Icon
                           variant="danger"
                           icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
+                            <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                           }
-                          onClick={() =>
-                            destroy(row.pengabdian_id).then(() => refresh())
-                          }
+                          onClick={() => destroy(row.pengabdian_id).then(() => refresh())}
                         />
                       </>
                     )}
@@ -210,13 +186,7 @@ export default function PengabdianModule({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPage(page - 1)}
             disabled={!canPrev || page === 1} // Tambahkan kondisi page === 1
             pill
@@ -224,13 +194,7 @@ export default function PengabdianModule({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPage(page + 1)}
             disabled={!canNext || page === pageCount} // Tambahkan kondisi page === pageCount
@@ -247,14 +211,13 @@ export default function PengabdianModule({ baseURL }) {
             max={pageCount}
             className="w-20"
             value={page}
-            onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
+            onChange={event =>
+              event.target.valueAsNumber <= pageCount && setPage(event.target.value)
             }
           />
           of {pageCount || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

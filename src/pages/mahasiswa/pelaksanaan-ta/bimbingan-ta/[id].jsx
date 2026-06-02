@@ -1,28 +1,28 @@
-import Card from "../../../../components/Card";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import Card from '../../../../components/Card'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
-import { Loading } from "../../../../components/Loading";
-import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
-import Button from "../../../../components/Button";
-import Form from "../../../../components/Form";
-import SortIcon from "../../../../components/SortIcon";
-import { Icon } from "@iconify-icon/react/dist/iconify.js";
-import BackButton from "../../../../components/BackButton";
+import { Loading } from '../../../../components/Loading'
+import useNewDataTableNew from '../../../../hooks/useNewDataTableNew'
+import Button from '../../../../components/Button'
+import Form from '../../../../components/Form'
+import SortIcon from '../../../../components/SortIcon'
+import { Icon } from '@iconify-icon/react/dist/iconify.js'
+import BackButton from '../../../../components/BackButton'
 
 export default function PelaksanaanKolo() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
   const dataUrl = router.query.id
-    ? `${process.env.API_ENDPOINT}/progres-tugas-akhir/list-progres/${router.query.id}`
-    : null;
+    ? `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/list-progres/${router.query.id}`
+    : null
 
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -35,22 +35,21 @@ export default function PelaksanaanKolo() {
     refreshNew,
     filterNew,
     setFilterNew,
-  } = useNewDataTableNew(dataUrl, {}, searchValue);
+  } = useNewDataTableNew(dataUrl, {}, searchValue)
 
   useEffect(() => {
-    if (!router.isReady || !user || !router.query.id || !router.query.mhsid)
-      return;
-  }, [router.isReady, user, router.query.id, router.query.mhsid]);
+    if (!router.isReady || !user || !router.query.id || !router.query.mhsid) return
+  }, [router.isReady, user, router.query.id, router.query.mhsid])
 
   const handleAction = () => {
-    refreshNew();
-  };
+    refreshNew()
+  }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
-  }, [router, user]);
+    if (router.isReady === false || !user) return
+  }, [router, user])
 
-  if ([user, menu, dataUrl].some((item) => item == null)) return <Loading />;
+  if ([user, menu, dataUrl].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader
@@ -75,67 +74,57 @@ export default function PelaksanaanKolo() {
                 <th className="text-sm border-2 border-white bg-gray-200">
                   <div
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => sortByNew("id")}
+                    onClick={() => sortByNew('id')}
                   >
-                    No <SortIcon sort={getSortByNew("id")} />
+                    No <SortIcon sort={getSortByNew('id')} />
                   </div>
                 </th>
                 <th className="text-sm border-2 border-white bg-gray-200">
                   <div
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => sortByNew("last_tgl")}
+                    onClick={() => sortByNew('last_tgl')}
                   >
                     Tanggal
-                    <SortIcon sort={getSortByNew("last_tgl")} />
+                    <SortIcon sort={getSortByNew('last_tgl')} />
                   </div>
                 </th>
                 <th className="text-sm border-2 border-white bg-gray-200">
                   <div
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => sortByNew("count")}
+                    onClick={() => sortByNew('count')}
                   >
                     Pertemuan
-                    <SortIcon sort={getSortByNew("count")} />
+                    <SortIcon sort={getSortByNew('count')} />
                   </div>
                 </th>
                 <th className="text-sm border-2 border-white bg-gray-200">
                   <div
                     className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => sortByNew("bab")}
+                    onClick={() => sortByNew('bab')}
                   >
                     Bab
-                    <SortIcon sort={getSortByNew("bab")} />
+                    <SortIcon sort={getSortByNew('bab')} />
                   </div>
                 </th>
                 <th className="text-sm border-2 border-white bg-gray-200">
-                  <div className="flex items-center gap-2 cursor-pointer">
-                    Deskripsi
-                  </div>
+                  <div className="flex items-center gap-2 cursor-pointer">Deskripsi</div>
                 </th>
                 <th className="text-sm border-2 border-white bg-gray-200">
-                  <div className="flex items-center gap-2 cursor-pointer">
-                    Pembahasan
-                  </div>
+                  <div className="flex items-center gap-2 cursor-pointer">Pembahasan</div>
                 </th>
               </tr>
             </thead>
             <tbody>
               {loadingNew && (
                 <tr>
-                  <td
-                    colSpan="6"
-                    className="text-sm border-2 border-white bg-gray-50 text-center"
-                  >
+                  <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                     Loading...
                   </td>
                 </tr>
               )}
               {!loadingNew && dataNew && dataNew.length < 1 && (
                 <tr>
-                  <td
-                    colSpan="6"
-                    className="text-sm border-2 border-white bg-gray-50 text-center"
-                  >
+                  <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                     Tidak ada data
                   </td>
                 </tr>
@@ -144,24 +133,12 @@ export default function PelaksanaanKolo() {
                 dataNew &&
                 dataNew.map((row, index) => (
                   <tr key={`row-${index}`}>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      {index + 1}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50 ">
-                      {row.last_tgl}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50 ">
-                      {row.count}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50 ">
-                      {row.bab}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50 ">
-                      {row.deskripsi}
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50 ">
-                      {row.pembahasan}
-                    </td>
+                    <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
+                    <td className="text-sm border-2 border-white bg-gray-50 ">{row.last_tgl}</td>
+                    <td className="text-sm border-2 border-white bg-gray-50 ">{row.count}</td>
+                    <td className="text-sm border-2 border-white bg-gray-50 ">{row.bab}</td>
+                    <td className="text-sm border-2 border-white bg-gray-50 ">{row.deskripsi}</td>
+                    <td className="text-sm border-2 border-white bg-gray-50 ">{row.pembahasan}</td>
                   </tr>
                 ))}
             </tbody>
@@ -171,13 +148,7 @@ export default function PelaksanaanKolo() {
               <Button.Icon
                 type="button"
                 variant="outline-primary"
-                icon={
-                  <Icon
-                    icon="material-symbols:chevron-left"
-                    width={20}
-                    height={20}
-                  />
-                }
+                icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
                 onClick={() => setPageNew(pageNew - 1)}
                 disabled={pageNew <= 1}
                 pill
@@ -185,13 +156,7 @@ export default function PelaksanaanKolo() {
               <Button
                 type="button"
                 variant="primary"
-                icon={
-                  <Icon
-                    icon="material-symbols:chevron-right"
-                    width={20}
-                    height={20}
-                  />
-                }
+                icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
                 iconPosition="right"
                 onClick={() => setPageNew(pageNew + 1)}
                 disabled={pageNew >= pageCountNew}
@@ -208,13 +173,8 @@ export default function PelaksanaanKolo() {
                 max={pageCountNew || 1}
                 className="w-20"
                 value={pageNew}
-                onChange={(event) =>
-                  setPageNew(
-                    Math.max(
-                      1,
-                      Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                    )
-                  )
+                onChange={event =>
+                  setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
                 }
               />
               of {pageCountNew || 1}
@@ -223,5 +183,5 @@ export default function PelaksanaanKolo() {
         </Card.Body>
       </Card>
     </Layout>
-  );
+  )
 }

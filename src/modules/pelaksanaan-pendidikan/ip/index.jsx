@@ -1,15 +1,15 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../components/Button";
-import Pagination from "../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../hooks/useDatatable";
-import useCRUD from "../../../hooks/useCRUD";
-import SortIcon from "../../../components/SortIcon";
-import Form from "../../../components/Form";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../components/Button'
+import Pagination from '../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../hooks/useDatatable'
+import useCRUD from '../../../hooks/useCRUD'
+import SortIcon from '../../../components/SortIcon'
+import Form from '../../../components/Form'
 
 export default function IPModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/ipMhs/getDataIp`;
-  const DELETE_URL = `${process.env.API_ENDPOINT}/ipMhs/delete`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/ipMhs/getDataIp`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/ipMhs/delete`
 
   const {
     data,
@@ -25,8 +25,8 @@ export default function IPModule({ baseURL }) {
     sortBy,
     getSortBy,
     totalData,
-  } = useDatatable(DATA_URL);
-  const { destroy } = useCRUD(DELETE_URL);
+  } = useDatatable(DATA_URL)
+  const { destroy } = useCRUD(DELETE_URL)
 
   return (
     <>
@@ -56,63 +56,52 @@ export default function IPModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("ip_id")}
+                onClick={() => sortBy('ip_id')}
               >
                 No
-                <SortIcon sort={getSortBy("ip_id")} />
+                <SortIcon sort={getSortBy('ip_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("semester")}
+                onClick={() => sortBy('semester')}
               >
                 Semester
-                <SortIcon sort={getSortBy("semester")} />
+                <SortIcon sort={getSortBy('semester')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tahun")}
+                onClick={() => sortBy('tahun')}
               >
                 Tahun
-                <SortIcon sort={getSortBy("tahun")} />
+                <SortIcon sort={getSortBy('tahun')} />
               </div>
             </th>
-            <th
-              className="text-sm border-2 border-white bg-gray-200"
-              onClick={() => sortBy("ip")}
-            >
+            <th className="text-sm border-2 border-white bg-gray-200" onClick={() => sortBy('ip')}>
               <div className="flex items-center gap-2 cursor-pointer">
                 [IPS]
-                <SortIcon sort={getSortBy("ip")} />
+                <SortIcon sort={getSortBy('ip')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Point
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Point</div>
             </th>
           </tr>
         </thead>
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -120,14 +109,12 @@ export default function IPModule({ baseURL }) {
           {!loading &&
             data &&
             data.map((row, index) => {
-              const startNumber = (page - 1) * 10 + 1;
+              const startNumber = (page - 1) * 10 + 1
 
-              const rowNumber = startNumber + index;
+              const rowNumber = startNumber + index
               return (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {rowNumber}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{rowNumber}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate">
                     <p className="truncate">{row.semester}</p>
                   </td>
@@ -141,7 +128,7 @@ export default function IPModule({ baseURL }) {
                     {row.point}
                   </td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </table>
@@ -151,13 +138,7 @@ export default function IPModule({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPage(page - 1)}
             disabled={!canPrev}
             pill
@@ -165,13 +146,7 @@ export default function IPModule({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPage(page + 1)}
             disabled={!canNext}
@@ -188,14 +163,13 @@ export default function IPModule({ baseURL }) {
             max={pageCount}
             className="w-20"
             value={page}
-            onChange={(event) =>
-              event.target.valueAsNumber <= pageCount &&
-              setPage(event.target.value)
+            onChange={event =>
+              event.target.valueAsNumber <= pageCount && setPage(event.target.value)
             }
           />
           of {pageCount || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

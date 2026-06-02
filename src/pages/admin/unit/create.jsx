@@ -1,64 +1,64 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import Form from "../../../components/Form";
-import useModal from "../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import Form from '../../../components/Form'
+import useModal from '../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
 
 const CreateUnit = ({ onAction }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const INITIAL_FORM = {
-    code: "",
-    nama_unit: "",
-  };
+    code: '',
+    nama_unit: '',
+  }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
     rules: [
-      { field: "nama_unit", label: "nama_unit" },
-      { field: "code", label: "code" },
+      { field: 'nama_unit', label: 'nama_unit' },
+      { field: 'code', label: 'code' },
     ],
-  });
+  })
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
-      };
+      }
 
       if (!requestData.nama_unit || !requestData.code) {
-        toastAlert("error", "Pleas fill in all the required fields.");
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/kategori/unit`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/kategori/unit`,
+        method: 'POST',
         data: requestData,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      form.nama_unit = "";
-      form.code = "";
+      form.nama_unit = ''
+      form.code = ''
 
-      toastAlert("success", "Successfully");
-      close();
-      onAction();
+      toastAlert('success', 'Successfully')
+      close()
+      onAction()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.response.data.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.response.data.message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -113,7 +113,7 @@ const CreateUnit = ({ onAction }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default CreateUnit;
+export default CreateUnit

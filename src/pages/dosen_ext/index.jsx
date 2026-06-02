@@ -1,26 +1,26 @@
-import Head from "next/head";
-import dynamic from "next/dynamic";
-import { Icon } from "@iconify-icon/react";
-import useMenu from "../../hooks/useMenu";
-import Layout from "../../components/Layout";
-import Card from "../../components/Card";
-import useUser from "../../hooks/useUser";
-import useDatatable from "../../hooks/useDatatable";
-import Link from "next/link";
-import { Loading } from "../../components/Loading";
-import Accordion from "../../components/Accordion";
-import Form from "../../components/Form";
+import Head from 'next/head'
+import dynamic from 'next/dynamic'
+import { Icon } from '@iconify-icon/react'
+import useMenu from '../../hooks/useMenu'
+import Layout from '../../components/Layout'
+import Card from '../../components/Card'
+import useUser from '../../hooks/useUser'
+import useDatatable from '../../hooks/useDatatable'
+import Link from 'next/link'
+import { Loading } from '../../components/Loading'
+import Accordion from '../../components/Accordion'
+import Form from '../../components/Form'
 
-const AreaChart = dynamic(() => import("../../components/Chart/area"), {
+const AreaChart = dynamic(() => import('../../components/Chart/area'), {
   ssr: false,
-});
+})
 
 export default function Home() {
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu } = useMenu();
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/dashboard`;
-  const { data } = useDatatable(DATA_URL);
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/dashboard`
+  const { data } = useDatatable(DATA_URL)
   function isUserDataIncomplete(userData) {
     return (
       userData?.nik == null ||
@@ -38,80 +38,78 @@ export default function Home() {
       userData?.provinsi == null ||
       userData?.kode_pos == null ||
       userData?.no_hp == null
-    );
+    )
   }
 
   const dataCardBimbinganTugasAkhir = [
     {
       id: 3,
-      title: "ketua pembimbing (Pembimbing 1)",
-      icon: "solar:bill-bold",
+      title: 'ketua pembimbing (Pembimbing 1)',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.pembimbing1Count,
     },
     {
       id: 4,
-      title: "Pembimbing Pendamping (Pembimbing 2)",
-      icon: "solar:bill-bold",
+      title: 'Pembimbing Pendamping (Pembimbing 2)',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.pembimbing2Count,
     },
     {
       id: 6,
-      title: "Ketua Penguji (Penguji 1)",
-      icon: "solar:bill-bold",
+      title: 'Ketua Penguji (Penguji 1)',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.penguji1Count,
     },
     {
       id: 7,
-      title: "Anggota Penguji (Penguji 2)",
-      icon: "solar:bill-bold",
+      title: 'Anggota Penguji (Penguji 2)',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.penguji2Count,
     },
     {
       id: 15,
-      title: "Jumlah Mahasiswa Mengajukan SK",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Mengajukan SK',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.pengajuan_sk,
     },
     {
       id: 16,
-      title: "Jumlah Mahasiswa Menuju Kolokium",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Menuju Kolokium',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.menuju_kolokium,
     },
     {
       id: 17,
-      title: "Jumlah Mahasiswa Menuju Sidang",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Menuju Sidang',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.menuju_sidang,
     },
     {
       id: 18,
-      title: "Jumlah Menyelesaikan Revisi",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Menyelesaikan Revisi',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.menyelesaikan_revisi,
     },
     {
       id: 19,
-      title: "Jumlah Mahasiswa Selesai Tugas Akhir",
-      icon: "solar:bill-bold",
+      title: 'Jumlah Mahasiswa Selesai Tugas Akhir',
+      icon: 'solar:bill-bold',
       data: data?.tugas_akhir?.selesai,
     },
-  ];
+  ]
 
-  if ([menu, user].some((item) => item == null)) return <Loading />;
+  if ([menu, user].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <Head>
         <title>
-          {menu.label ?? ""} - {process.env.APP_NAME ?? ""}
+          {menu.label ?? ''} - {process.env.APP_NAME ?? ''}
         </title>
       </Head>
       <div className="flex flex-col sm:flex-row gap-4 p-4 bg-gray-200 mb-4 rounded-2xl">
         <div className="w-full sm:w-28 h-32 rounded-2xl overflow-hidden shrink-0 border-2 border-white">
           <img
-            src={
-              process.env.API_ENDPOINT + "/foto-profile/" + data.userData?.image
-            }
+            src={process.env.NEXT_PUBLIC_API_URL + '/foto-profile/' + data.userData?.image}
             alt="Profile"
             className="object-cover object-top w-full h-auto"
           />
@@ -119,7 +117,7 @@ export default function Home() {
         <div className="flex-1">
           <div className="flex items-center flex-col sm:flex-row">
             <h1 className="text-xl sm:text-2xl font-semibold text-primary-600 uppercase mb-2 sm:mb-4">
-              {data.userData?.nama_lengkap || ""}
+              {data.userData?.nama_lengkap || ''}
               <Icon
                 icon="material-symbols:verified"
                 width={36}
@@ -158,12 +156,12 @@ export default function Home() {
             <Form.Select
               name="Tahu_akademik"
               options={[
-                { value: "2023/2024", label: "2023/2024" },
-                { value: "2022/2023", label: "2022/2023" },
-                { value: "2021/2022", label: "2021/2022" },
-                { value: "2020/2021", label: "2020/2021" },
-                { value: "2018/2019", label: "2018/2019" },
-                { value: "2017/2018", label: "2017/2018" },
+                { value: '2023/2024', label: '2023/2024' },
+                { value: '2022/2023', label: '2022/2023' },
+                { value: '2021/2022', label: '2021/2022' },
+                { value: '2020/2021', label: '2020/2021' },
+                { value: '2018/2019', label: '2018/2019' },
+                { value: '2017/2018', label: '2017/2018' },
               ]}
             />
           </Form.Group>
@@ -172,8 +170,8 @@ export default function Home() {
             <Form.Select
               name="Tahu_akademik"
               options={[
-                { value: "GASAL", label: "GASAL" },
-                { value: "GENAP", label: "GENAP" },
+                { value: 'GASAL', label: 'GASAL' },
+                { value: 'GENAP', label: 'GENAP' },
               ]}
             />
           </Form.Group>
@@ -203,15 +201,13 @@ export default function Home() {
                                   className="text-white"
                                 />
                               </div>
-                              <p className="block text-2xl font-bold leading-relaxed">
-                                {row.data}
-                              </p>
+                              <p className="block text-2xl font-bold leading-relaxed">{row.data}</p>
                               <p className="block text-sm">{row.title}</p>
                             </Link>
                           </Card.Body>
                         </Card>
                       </>
-                    );
+                    )
                   })}
                 </div>
               </Card.Body>
@@ -220,5 +216,5 @@ export default function Home() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }

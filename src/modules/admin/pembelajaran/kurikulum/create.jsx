@@ -1,59 +1,59 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import Form from "../../../../components/Form";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import Form from '../../../../components/Form'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
 
 const CreateKurikulum = ({ onAction }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const INITIAL_FORM = {
-    kurikulum: "",
-  };
+    kurikulum: '',
+  }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
-    rules: [{ field: "kurikulum", label: "kurikulum" }],
-  });
+    rules: [{ field: 'kurikulum', label: 'kurikulum' }],
+  })
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
-      };
+      }
 
       if (!requestData.kurikulum) {
-        toastAlert("error", "Pleas fill in all the required fields.");
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/kategori/kurikulum`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/kategori/kurikulum`,
+        method: 'POST',
         data: requestData,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      form.kurikulum = "";
+      form.kurikulum = ''
 
-      toastAlert("success", "Successfully");
-      close();
-      onAction();
+      toastAlert('success', 'Successfully')
+      close()
+      onAction()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.response.data.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.response.data.message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -95,7 +95,7 @@ const CreateKurikulum = ({ onAction }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default CreateKurikulum;
+export default CreateKurikulum

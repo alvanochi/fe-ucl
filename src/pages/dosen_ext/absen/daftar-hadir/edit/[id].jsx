@@ -1,150 +1,142 @@
-import { useRouter } from "next/router";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import useCRUD from "../../../../../hooks/useCRUD";
-import useForm from "../../../../../hooks/useForm";
-import { useEffect, useState } from "react";
-import useDatatableAbsensi from "../../../../../hooks/useDataTableAbsensi";
-import useDatatable from "../../../../../hooks/useDatatable";
-import axios from "axios";
-import { toastAlert } from "../../../../../lib/sweetalert";
-import { Loading } from "../../../../../components/Loading";
+import { useRouter } from 'next/router'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import useCRUD from '../../../../../hooks/useCRUD'
+import useForm from '../../../../../hooks/useForm'
+import { useEffect, useState } from 'react'
+import useDatatableAbsensi from '../../../../../hooks/useDataTableAbsensi'
+import useDatatable from '../../../../../hooks/useDatatable'
+import axios from 'axios'
+import { toastAlert } from '../../../../../lib/sweetalert'
+import { Loading } from '../../../../../components/Loading'
 
 export default function EditPembelajran() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const DATA_URL = `${process.env.API_ENDPOINT}/profile/getDataPribadi`;
-  const { data, loading, refresh } = useDatatable(DATA_URL);
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataPribadi`
+  const { data, loading, refresh } = useDatatable(DATA_URL)
 
-  const [courseOptions, setCourseOptions] = useState([]);
-  const [selectedCourse, setSelectedCourse] = useState("");
+  const [courseOptions, setCourseOptions] = useState([])
+  const [selectedCourse, setSelectedCourse] = useState('')
 
-  const [classOptions, setClassOptions] = useState([]);
-  const [selectedClass, setSelectedClass] = useState("");
+  const [classOptions, setClassOptions] = useState([])
+  const [selectedClass, setSelectedClass] = useState('')
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         if (data.nip) {
           const response = await axios.post(
-            `${process.env.API_ENDPOINT_ABSEN}/dosen-for-mk`,
+            `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/dosen-for-mk`,
             {
               code: data.nip,
             },
             {
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
-            }
-          );
+            },
+          )
 
-          const courses = response.data.Data;
+          const courses = response.data.Data
 
-          const options = courses.map((course) => ({
+          const options = courses.map(course => ({
             label: course.name,
             value: course.course_code,
-          }));
+          }))
 
-          setCourseOptions(options);
+          setCourseOptions(options)
 
           async function getClass() {
             try {
               const response = await axios.get(
-                `${process.env.API_ENDPOINT}/help/get-class`,
+                `${process.env.NEXT_PUBLIC_API_URL}/help/get-class`,
                 {
                   headers: {
-                    "Content-Type": "application/json",
+                    'Content-Type': 'application/json',
                   },
-                }
-              );
+                },
+              )
 
-              const dataCLass = response.data.data;
+              const dataCLass = response.data.data
 
-              const options = dataCLass.map((classs) => ({
+              const options = dataCLass.map(classs => ({
                 label: classs.name,
                 value: classs.name,
-              }));
+              }))
 
-              setClassOptions(options);
+              setClassOptions(options)
             } catch (error) {
-              console.log(error);
+              console.log(error)
             }
           }
 
-          getClass();
+          getClass()
         }
       } catch (error) {
-        console.error("Error fetching courses:", error);
+        console.error('Error fetching courses:', error)
       }
-    };
-
-    fetchCourses();
-  }, [data.nip]);
-
-  const DATA_URL_ABSENSI = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran`;
-  const id = router.query.id;
-  const { dataAbsensi, loadingAbsensi } = useDatatableAbsensi(
-    DATA_URL_ABSENSI,
-    {
-      filter: ["id"],
-      filterValue: [id],
     }
-  );
+
+    fetchCourses()
+  }, [data.nip])
+
+  const DATA_URL_ABSENSI = `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/pembelajaran`
+  const id = router.query.id
+  const { dataAbsensi, loadingAbsensi } = useDatatableAbsensi(DATA_URL_ABSENSI, {
+    filter: ['id'],
+    filterValue: [id],
+  })
 
   const [formData, setFormData] = useState({
     id_matkul: dataAbsensi?.[0]?.id_matkul,
     kelas: dataAbsensi?.[0]?.kelas,
     status_kelas: dataAbsensi?.[0]?.status_kelas,
-  });
+  })
 
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const inputHandler = e => {
+    const { name, value } = e.target
+    setFormData(prevData => ({
       ...prevData,
-      [name]: name === "status_kelas" ? parseInt(value) : value,
-    }));
-  };
+      [name]: name === 'status_kelas' ? parseInt(value) : value,
+    }))
+  }
 
   async function submitEditHandler(event) {
-    event.preventDefault();
-    const EDIT_URL = `${process.env.API_ENDPOINT_ABSEN}/pembelajaran/update/${id}`;
+    event.preventDefault()
+    const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/pembelajaran/update/${id}`
 
     try {
-      const response = await axios.post(EDIT_URL, formData);
+      const response = await axios.post(EDIT_URL, formData)
 
-      toastAlert("success", "Updated Successfuly");
-      router.push(prefix + menu.url);
+      toastAlert('success', 'Updated Successfuly')
+      router.push(prefix + menu.url)
     } catch (error) {
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
   useEffect(() => {
     if (dataAbsensi?.length > 0) {
       setFormData({
-        id_matkul: dataAbsensi[0].id_matkul || "",
-        kelas: dataAbsensi[0].kelas || "",
+        id_matkul: dataAbsensi[0].id_matkul || '',
+        kelas: dataAbsensi[0].kelas || '',
         status_kelas: parseInt(dataAbsensi[0].status_kelas) || 0,
-      });
+      })
     }
-  }, [dataAbsensi]);
+  }, [dataAbsensi])
 
-  if ([user, menu, loadingAbsensi].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, loadingAbsensi].some(item => item == null)) return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title="Edit Pembelajaran"
-        icon={menu.icon}
-        handler={setActive}
-      />
+      <PageHeader title="Edit Pembelajaran" icon={menu.icon} handler={setActive} />
       <Form onSubmit={submitEditHandler}>
         <Card className="mt-4">
           <Card.Header className="text-center">Edit Pembelajaran</Card.Header>
@@ -178,12 +170,7 @@ export default function EditPembelajran() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -192,5 +179,5 @@ export default function EditPembelajran() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

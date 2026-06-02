@@ -1,16 +1,16 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../../hooks/useDatatable";
-import useCRUD from "../../../../hooks/useCRUD";
-import date from "../../../../utils/date";
-import SortIcon from "../../../../components/SortIcon";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import axios from "axios";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Pagination from '../../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../../hooks/useDatatable'
+import useCRUD from '../../../../hooks/useCRUD'
+import date from '../../../../utils/date'
+import SortIcon from '../../../../components/SortIcon'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import axios from 'axios'
 
 export default function BahanAjarModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/admin/bahan-ajar-pending`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/admin/bahan-ajar-pending`
 
   const {
     data,
@@ -25,64 +25,62 @@ export default function BahanAjarModule({ baseURL }) {
     refresh,
     sortBy,
     getSortBy,
-  } = useDatatable(DATA_URL);
+  } = useDatatable(DATA_URL)
 
-  const approveData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/pendidikan/bahan-ajar/approve/${id}`;
+  const approveData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/pendidikan/bahan-ajar/approve/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
-      MySwal.close();
+        method: 'PATCH',
+      })
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
-
+      toastAlert('error', error.message)
     }
-  };
+  }
 
-  const rejectData = async (id) => {
-    const UPDATE_URL = `${process.env.API_ENDPOINT}/pendidikan/bahan-ajar/reject/${id}`;
+  const rejectData = async id => {
+    const UPDATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/pendidikan/bahan-ajar/reject/${id}`
 
     try {
-      loadingAlert();
+      loadingAlert()
 
       const request = await axios({
         url: UPDATE_URL,
-        method: "PATCH",
-      });
+        method: 'PATCH',
+      })
 
-      MySwal.close();
+      MySwal.close()
 
-      const response = await request;
+      const response = await request
 
-      toastAlert("info", response.data.message);
+      toastAlert('info', response.data.message)
     } catch (error) {
-      if (error.name === "AxiosError") {
-        const { status_code, message, data } = error.response.data;
-        toastAlert("error", message);
+      if (error.name === 'AxiosError') {
+        const { status_code, message, data } = error.response.data
+        toastAlert('error', message)
 
-        return;
+        return
       }
 
-      toastAlert("error", error.message);
-
+      toastAlert('error', error.message)
     }
-  };
+  }
 
   return (
     <>
@@ -107,16 +105,14 @@ export default function BahanAjarModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("bahan_ajar_id")}
+                onClick={() => sortBy('bahan_ajar_id')}
               >
                 No
-                <SortIcon sort={getSortBy("bahan_ajar_id")} />
+                <SortIcon sort={getSortBy('bahan_ajar_id')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Status
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Status</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
@@ -127,37 +123,37 @@ export default function BahanAjarModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("judul_bahan_ajar")}
+                onClick={() => sortBy('judul_bahan_ajar')}
               >
                 Judul Bahan Ajar
-                <SortIcon sort={getSortBy("judul_bahan_ajar")} />
+                <SortIcon sort={getSortBy('judul_bahan_ajar')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("jenis_bahan_ajar")}
+                onClick={() => sortBy('jenis_bahan_ajar')}
               >
                 Jenis
-                <SortIcon sort={getSortBy("jenis_bahan_ajar")} />
+                <SortIcon sort={getSortBy('jenis_bahan_ajar')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("tgl_terbit")}
+                onClick={() => sortBy('tgl_terbit')}
               >
                 Tanggal Terbit
-                <SortIcon sort={getSortBy("tgl_terbit")} />
+                <SortIcon sort={getSortBy('tgl_terbit')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortBy("penerbit")}
+                onClick={() => sortBy('penerbit')}
               >
                 Penerbit
-                <SortIcon sort={getSortBy("penerbit")} />
+                <SortIcon sort={getSortBy('penerbit')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
@@ -166,20 +162,14 @@ export default function BahanAjarModule({ baseURL }) {
         <tbody>
           {loading && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loading && data && data.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -188,29 +178,19 @@ export default function BahanAjarModule({ baseURL }) {
             data &&
             data.map((row, index) => (
               <tr key={`row-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {index + 1}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.status == 0 && (
-                    <span className="text-base font-bold text-yellow-400">
-                      Proses
-                    </span>
+                    <span className="text-base font-bold text-yellow-400">Proses</span>
                   )}
                   {row.status == 1 && (
-                    <span className="text-base font-bold text-green-400">
-                      Diterima
-                    </span>
+                    <span className="text-base font-bold text-green-400">Diterima</span>
                   )}
                   {row.status == 2 && (
-                    <span className="text-base font-bold text-red-400">
-                      Ditolak
-                    </span>
+                    <span className="text-base font-bold text-red-400">Ditolak</span>
                   )}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50 ">
-                  {row.nama_lengkap}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50 ">{row.nama_lengkap}</td>
                 <td className="text-sm border-2 border-white bg-gray-50 ">
                   {row.npm ? row.npm : row.nidn}
                   <span className="block font-bold">{row.role}</span>
@@ -218,45 +198,31 @@ export default function BahanAjarModule({ baseURL }) {
                 <td className="text-sm border-2 border-white bg-gray-50 max-w-[12rem] truncate">
                   {row.judul_bahan_ajar}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.jenis_bahan_ajar}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.jenis_bahan_ajar}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   {date.formatToID(new Date(row.tgl_terbit))}
                 </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {row.penerbit}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{row.penerbit}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
                       as="a"
                       href={`${baseURL}/detail-bahan-ajar/${row.bahan_ajar_id}`}
                       variant="info"
-                      icon={
-                        <Icon
-                          icon="fluent:info-24-filled"
-                          width={20}
-                          height={20}
-                        />
-                      }
+                      icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                     />
                     <Button.Icon
                       variant="success"
                       type="button"
                       icon={<Icon icon="oi:check" width={20} height={20} />}
-                      onClick={() =>
-                        approveData(row.bahan_ajar_id).then(() => refresh())
-                      }
+                      onClick={() => approveData(row.bahan_ajar_id).then(() => refresh())}
                     />
 
                     <Button.Icon
                       variant="danger"
                       type="button"
                       icon={<Icon icon="oi:x" width={20} height={20} />}
-                      onClick={() =>
-                        rejectData(row.bahan_ajar_id).then(() => refresh())
-                      }
+                      onClick={() => rejectData(row.bahan_ajar_id).then(() => refresh())}
                     />
                   </div>
                 </td>
@@ -273,5 +239,5 @@ export default function BahanAjarModule({ baseURL }) {
         className="mt-8"
       />
     </>
-  );
+  )
 }

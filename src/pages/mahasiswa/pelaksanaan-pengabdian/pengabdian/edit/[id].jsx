@@ -1,154 +1,135 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import KolabolatorEksternal from "../../../../../modules/pelaksanaan-pengabdian/pengabdian/kolaborator-eksternal";
-import UploadDokumen from "../../../../../modules/pelaksanaan-pengabdian/pengabdian/upload-dokumen";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import _ from "underscore";
-import useDosen from "../../../../../repo/dosen";
-import useMahasiswa from "../../../../../repo/mahasiswa";
-import { useEffect } from "react";
-import date from "../../../../../utils/date";
-import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from "../../../../../config/role";
-import Accordion from "../../../../../components/Accordion";
-import useKategoriPublikasi from "../../../../../repo/kategori-publikasi";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import KolabolatorEksternal from '../../../../../modules/pelaksanaan-pengabdian/pengabdian/kolaborator-eksternal'
+import UploadDokumen from '../../../../../modules/pelaksanaan-pengabdian/pengabdian/upload-dokumen'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import _ from 'underscore'
+import useDosen from '../../../../../repo/dosen'
+import useMahasiswa from '../../../../../repo/mahasiswa'
+import { useEffect } from 'react'
+import date from '../../../../../utils/date'
+import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../../config/role'
+import Accordion from '../../../../../components/Accordion'
+import useKategoriPublikasi from '../../../../../repo/kategori-publikasi'
+import { Loading } from '../../../../../components/Loading'
 
 export default function PengabdianEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/pengabdian/detailPengabdian`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-pengabdian`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/detailPengabdian`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-pengabdian`
 
   const INITIAL_ANGGOTA = {
-    user_id: "",
-    peran: "",
-    status: "",
-    role: "",
-  };
+    user_id: '',
+    peran: '',
+    status: '',
+    role: '',
+  }
 
   const INITIAL_FORM = {
-    pengabdian_id: "",
-    kategori_id: "",
-    judul_kegiatan: "",
-    kelompok_bidang: "",
-    lokasi_kegiatan: "",
-    lama_kegiatan: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    nama_dok: "",
-    keterangan: "",
-    tautan_dok: "",
+    pengabdian_id: '',
+    kategori_id: '',
+    judul_kegiatan: '',
+    kelompok_bidang: '',
+    lokasi_kegiatan: '',
+    lama_kegiatan: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    nama_dok: '',
+    keterangan: '',
+    tautan_dok: '',
     anggota_pengabdian_dosen: [],
     anggota_pengabdian_mahasiswa: [],
     docs: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "judul_kegiatan", label: "Judul Kegiatan" },
-      { field: "kategori_id", label: "kategori publikasi" },
-      { field: "kelompok_bidang", label: "Kelompok Bidang" },
-      { field: "lokasi_kegiatan", label: "Lokasi Kegiatan" },
-      { field: "lama_kegiatan", label: "Lama Kegiatan" },
-      { field: "no_sk_penugasan", label: "No. SK Penugasan" },
-      { field: "tgl_sk_penugasan", label: "Tanggal SK Penugasan" },
-      { field: "nama_dok", label: "Nama Dokumen" },
-      { field: "keterangan", label: "Keterangan Dokumen" },
-      { field: "tautan_dok", label: "Tautan Dokumen" },
+      { field: 'judul_kegiatan', label: 'Judul Kegiatan' },
+      { field: 'kategori_id', label: 'kategori publikasi' },
+      { field: 'kelompok_bidang', label: 'Kelompok Bidang' },
+      { field: 'lokasi_kegiatan', label: 'Lokasi Kegiatan' },
+      { field: 'lama_kegiatan', label: 'Lama Kegiatan' },
+      { field: 'no_sk_penugasan', label: 'No. SK Penugasan' },
+      { field: 'tgl_sk_penugasan', label: 'Tanggal SK Penugasan' },
+      { field: 'nama_dok', label: 'Nama Dokumen' },
+      { field: 'keterangan', label: 'Keterangan Dokumen' },
+      { field: 'tautan_dok', label: 'Tautan Dokumen' },
     ],
-    transformData: (data) =>
+    transformData: data =>
       _.omit(
         {
           ...data,
           anggota_pengabdian: JSON.stringify([
-            ...data.anggota_pengabdian_dosen.map((item) =>
-              _.omit(item, ["role"])
-            ),
-            ...data.anggota_pengabdian_mahasiswa.map((item) =>
-              _.omit(item, ["role"])
-            ),
+            ...data.anggota_pengabdian_dosen.map(item => _.omit(item, ['role'])),
+            ...data.anggota_pengabdian_mahasiswa.map(item => _.omit(item, ['role'])),
           ]),
         },
-        ["anggota_pengabdian_dosen", "anggota_pengabdian_mahasiswa"]
+        ['anggota_pengabdian_dosen', 'anggota_pengabdian_mahasiswa'],
       ),
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler, setForm } = formdata;
+  const { form, inputHandler, setForm } = formdata
 
-  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } =
-    useKategoriPublikasi([user]);
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
+  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } = useKategoriPublikasi([
     user,
-  ]);
+  ])
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/pengabdian/editPengabdian`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/editPengabdian`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.pengabdian_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
-  const findInUser = (lists, id) =>
-    lists.find((item) => item.user_id == id) ?? null;
+  const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
   const removeFromUser = (key, index, role) =>
-    setForm((state) => ({
+    setForm(state => ({
       ...state,
-      [key]: state[key].filter(
-        (item, idx) => item.role == role && idx != index
-      ),
-    }));
+      [key]: state[key].filter((item, idx) => item.role == role && idx != index),
+    }))
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...INITIAL_FORM,
         ...data.dataPengabdian[0],
-        tgl_sk_penugasan: date.formatToInput(
-          data.dataPengabdian[0].tgl_sk_penugasan
-        ),
-        anggota_pengabdian_dosen: data.anggotaPengabdian.filter(
-          (item) => item.role == ROLE_ID_DOSEN
-        ),
+        tgl_sk_penugasan: date.formatToInput(data.dataPengabdian[0].tgl_sk_penugasan),
+        anggota_pengabdian_dosen: data.anggotaPengabdian.filter(item => item.role == ROLE_ID_DOSEN),
         anggota_pengabdian_mahasiswa: data.anggotaPengabdian.filter(
-          (item) => item.role == ROLE_ID_MAHASISWA
+          item => item.role == ROLE_ID_MAHASISWA,
         ),
         docs: data.dataDokumen,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const DELETE_FILE_URL = `${process.env.API_ENDPOINT}/pengabdian/deleteDokumen`;
+  const DELETE_FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/deleteDokumen`
 
-  const { destroy } = useCRUD(DELETE_FILE_URL);
+  const { destroy } = useCRUD(DELETE_FILE_URL)
 
   if (
-    [
-      user,
-      menu,
-      isDosenLoading,
-      isMahasiswaLoading,
-      isLoadingKategoriPublikasi,
-    ].some((item) => item == null)
+    [user, menu, isDosenLoading, isMahasiswaLoading, isLoadingKategoriPublikasi].some(
+      item => item == null,
+    )
   )
-    return <Loading />;
+    return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Pengabdian</Card.Header>
           <Card.Body className="space-y-4">
@@ -164,7 +145,7 @@ export default function PengabdianEdit() {
                 onChange={inputHandler}
                 options={
                   kategoriPublikasi &&
-                  kategoriPublikasi.map((item) => ({
+                  kategoriPublikasi.map(item => ({
                     label: `${item.nama_kategori} - ${item.tingkatan}`,
                     value: item.id,
                   }))
@@ -196,26 +177,26 @@ export default function PengabdianEdit() {
                 onChange={inputHandler}
                 value={form.kelompok_bidang}
                 options={[
-                  { label: "Pendidikan", value: "Pendidikan" },
-                  { label: "Kesehatan", value: "Kesehatan" },
-                  { label: "Lingkungan", value: "Lingkungan" },
-                  { label: "Sosial", value: "Sosial" },
+                  { label: 'Pendidikan', value: 'Pendidikan' },
+                  { label: 'Kesehatan', value: 'Kesehatan' },
+                  { label: 'Lingkungan', value: 'Lingkungan' },
+                  { label: 'Sosial', value: 'Sosial' },
                   {
-                    label: "Teknologi dan Inovasi",
-                    value: "Teknologi dan Inovasi",
+                    label: 'Teknologi dan Inovasi',
+                    value: 'Teknologi dan Inovasi',
                   },
-                  { label: "Seni dan Budaya", value: "Seni dan Budaya" },
+                  { label: 'Seni dan Budaya', value: 'Seni dan Budaya' },
                   {
-                    label: "Keagamaan dan Etika",
-                    value: "Keagamaan dan Etika",
-                  },
-                  {
-                    label: "Pertanian dan Ketahanan Pangan",
-                    value: "Pertanian dan Ketahanan Pangan",
+                    label: 'Keagamaan dan Etika',
+                    value: 'Keagamaan dan Etika',
                   },
                   {
-                    label: "Pengembangan Wilayah",
-                    value: "Pengembangan Wilayah",
+                    label: 'Pertanian dan Ketahanan Pangan',
+                    value: 'Pertanian dan Ketahanan Pangan',
+                  },
+                  {
+                    label: 'Pengembangan Wilayah',
+                    value: 'Pengembangan Wilayah',
                   },
                 ]}
               />
@@ -311,48 +292,29 @@ export default function PengabdianEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Dokumen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama Dokumen
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Keteranagan
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Tautan Dokumen
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Dokumen</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Keteranagan</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Tautan Dokumen</th>
 
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Action
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Action</th>
             </tr>
           </thead>
           <tbody>
             {form.docs.map((doc, index) => (
               <tr key={`anggota-dosen-${index}`}>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.nama_dok}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.keterangan}
-                </td>
-                <td className="text-sm border-2 border-white bg-gray-50">
-                  {doc.tautan_dok}
-                </td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.nama_dok}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.keterangan}</td>
+                <td className="text-sm border-2 border-white bg-gray-50">{doc.tautan_dok}</td>
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <div className="flex items-stretch gap-1">
                     <Button.Icon
                       as="a"
-                      href={`${prefix + menu.url}/pengabdian/dokumenEdit/${
-                        doc.dokumen_id
-                      }`}
+                      href={`${prefix + menu.url}/pengabdian/dokumenEdit/${doc.dokumen_id}`}
                       variant="secondary"
                       icon={<Icon icon="bx:edit" width={20} height={20} />}
                     />
@@ -367,10 +329,8 @@ export default function PengabdianEdit() {
                           onClick={() =>
                             destroy(doc.dokumen_id).then(() =>
                               router.push(
-                                `${prefix + menu.url}/pengabdian/edit/${
-                                  form.pengabdian_id
-                                }`
-                              )
+                                `${prefix + menu.url}/pengabdian/edit/${form.pengabdian_id}`,
+                              ),
                             )
                           }
                         />
@@ -388,23 +348,14 @@ export default function PengabdianEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Dosen
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -420,7 +371,7 @@ export default function PengabdianEdit() {
                       <Form.Combobox
                         index={index}
                         name="anggota_pengabdian_dosen.user_id"
-                        onChange={(selected) =>
+                        onChange={selected =>
                           inputHandler({
                             target: {
                               attributes: {
@@ -428,7 +379,7 @@ export default function PengabdianEdit() {
                                   value: index,
                                 },
                               },
-                              name: "anggota_pengabdian_dosen.user_id",
+                              name: 'anggota_pengabdian_dosen.user_id',
                               value: selected?.value,
                             },
                           })
@@ -437,7 +388,7 @@ export default function PengabdianEdit() {
                         options={
                           listDosen &&
                           Array.isArray(listDosen) &&
-                          listDosen.map((dosen) => ({
+                          listDosen.map(dosen => ({
                             label: dosen.nama_lengkap,
                             value: dosen.user_id,
                           }))
@@ -454,8 +405,8 @@ export default function PengabdianEdit() {
                       onChange={inputHandler}
                       value={form.anggota_pengabdian_dosen[index].peran}
                       options={[
-                        { label: "Ketua", value: "ketua" },
-                        { label: "Anggota", value: "anggota" },
+                        { label: 'Ketua', value: 'ketua' },
+                        { label: 'Anggota', value: 'anggota' },
                       ]}
                     />
                   </td>
@@ -466,7 +417,7 @@ export default function PengabdianEdit() {
                         name="anggota_pengabdian_dosen.status"
                         onChange={inputHandler}
                         checked={form.anggota_pengabdian_dosen[index].status}
-                      />{" "}
+                      />{' '}
                       Aktif
                     </Form.Label>
                   </td>
@@ -477,43 +428,30 @@ export default function PengabdianEdit() {
                           type="button"
                           variant="danger"
                           icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
+                            <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                           }
-                          onClick={() =>
-                            removeFromUser(
-                              "anggota_pengabdian_dosen",
-                              index,
-                              "Dosen"
-                            )
-                          }
+                          onClick={() => removeFromUser('anggota_pengabdian_dosen', index, 'Dosen')}
                         />
                       )}
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       anggota_pengabdian_dosen: [
                         ...state.anggota_pengabdian_dosen,
-                        { ...INITIAL_ANGGOTA, role: "Dosen" },
+                        { ...INITIAL_ANGGOTA, role: 'Dosen' },
                       ],
                     }))
                   }
@@ -530,23 +468,14 @@ export default function PengabdianEdit() {
         >
           <thead>
             <tr>
-              <th
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 Anggota Mahasiswa
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Nama
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Peran
-              </th>
-              <th className="text-sm border-2 border-white bg-gray-200">
-                Status
-              </th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
               <th className="text-sm border-2 border-white bg-gray-200"></th>
             </tr>
           </thead>
@@ -561,7 +490,7 @@ export default function PengabdianEdit() {
                     <Form.Combobox
                       index={index}
                       name="anggota_pengabdian_mahasiswa.user_id"
-                      onChange={(selected) =>
+                      onChange={selected =>
                         inputHandler({
                           target: {
                             attributes: {
@@ -569,18 +498,16 @@ export default function PengabdianEdit() {
                                 value: index,
                               },
                             },
-                            name: "anggota_pengabdian_mahasiswa.user_id",
+                            name: 'anggota_pengabdian_mahasiswa.user_id',
                             value: selected?.value,
                           },
                         })
                       }
-                      value={
-                        form.anggota_pengabdian_mahasiswa[index].user_id || ""
-                      }
+                      value={form.anggota_pengabdian_mahasiswa[index].user_id || ''}
                       options={
                         listMahasiswa &&
                         Array.isArray(listMahasiswa) &&
-                        listMahasiswa.map((mhs) => ({
+                        listMahasiswa.map(mhs => ({
                           label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                           value: mhs.user_id,
                         }))
@@ -596,8 +523,8 @@ export default function PengabdianEdit() {
                     onChange={inputHandler}
                     value={form.anggota_pengabdian_mahasiswa[index].peran}
                     options={[
-                      { label: "Ketua", value: "ketua" },
-                      { label: "Anggota", value: "anggota" },
+                      { label: 'Ketua', value: 'ketua' },
+                      { label: 'Anggota', value: 'anggota' },
                     ]}
                   />
                 </td>
@@ -608,7 +535,7 @@ export default function PengabdianEdit() {
                       name="anggota_pengabdian_mahasiswa.status"
                       onChange={inputHandler}
                       checked={form.anggota_pengabdian_mahasiswa[index].status}
-                    />{" "}
+                    />{' '}
                     Aktif
                   </Form.Label>
                 </td>
@@ -618,19 +545,9 @@ export default function PengabdianEdit() {
                       <Button.Icon
                         type="button"
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
                         onClick={() =>
-                          removeFromUser(
-                            "anggota_pengabdian_mahasiswa",
-                            index,
-                            "Mahasiswa"
-                          )
+                          removeFromUser('anggota_pengabdian_mahasiswa', index, 'Mahasiswa')
                         }
                       />
                     )}
@@ -641,20 +558,17 @@ export default function PengabdianEdit() {
           </tbody>
           <tfoot>
             <tr>
-              <td
-                colSpan={4}
-                className="text-sm border-2 border-white bg-gray-50"
-              >
+              <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                 <Button
                   type="button"
                   variant="primary"
                   className="mx-auto"
                   onClick={() =>
-                    setForm((state) => ({
+                    setForm(state => ({
                       ...state,
                       anggota_pengabdian_mahasiswa: [
                         ...state.anggota_pengabdian_mahasiswa,
-                        { ...INITIAL_ANGGOTA, role: "Mahasiswa" },
+                        { ...INITIAL_ANGGOTA, role: 'Mahasiswa' },
                       ],
                     }))
                   }
@@ -666,12 +580,7 @@ export default function PengabdianEdit() {
           </tfoot>
         </table>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -680,5 +589,5 @@ export default function PengabdianEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

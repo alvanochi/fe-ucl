@@ -1,177 +1,176 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import useDosen from "../../../../../repo/dosen";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { Loading } from "../../../../../components/Loading";
-import date from "../../../../../utils/date";
-import axios from "axios";
-import { MySwal, toastAlert } from "../../../../../lib/sweetalert";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import useDosen from '../../../../../repo/dosen'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { Loading } from '../../../../../components/Loading'
+import date from '../../../../../utils/date'
+import axios from 'axios'
+import { MySwal, toastAlert } from '../../../../../lib/sweetalert'
 
 export default function PengajuanKolo() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
 
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-pengajuan-kolo`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/tugas-akhir/makalah-kolokium`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-pengajuan-kolo`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/makalah-kolokium`
 
   const INITIAL_FORM = {
-    pengajuan_sk_id: "",
-    kolo_id: "",
-    nama_lengkap: "",
-    semester: "",
-    email: "",
-    no_hp: "",
-    npm: "",
-    judul_skripsi: "",
-    link_dok_mhs_aktif: "",
-    link_dok_pembayaran: "",
-    kolo_pembimbing_1: "",
-    kolo_pembimbing_2: "",
+    pengajuan_sk_id: '',
+    kolo_id: '',
+    nama_lengkap: '',
+    semester: '',
+    email: '',
+    no_hp: '',
+    npm: '',
+    judul_skripsi: '',
+    link_dok_mhs_aktif: '',
+    link_dok_pembayaran: '',
+    kolo_pembimbing_1: '',
+    kolo_pembimbing_2: '',
     kolo_pembimbing_3: null,
-    kolo_kepala_lab: "",
-    kolo_status_pem_1: "",
-    kolo_status_pem_2: "",
-    kolo_status_pem_3: "",
-    kolo_status_kepala_lab: "",
-    evaluator_1: "",
-    evaluator_2: "",
-    jadwal_pelaksanaan: "",
-    file_makalah: "",
-    status_kp: "",
-    status_sks_ipk: "",
-    jumlah_sks: "",
-    ipk: "",
-    link_dok_makalah: "",
-    judul: "",
-    status: "",
-  };
+    kolo_kepala_lab: '',
+    kolo_status_pem_1: '',
+    kolo_status_pem_2: '',
+    kolo_status_pem_3: '',
+    kolo_status_kepala_lab: '',
+    evaluator_1: '',
+    evaluator_2: '',
+    jadwal_pelaksanaan: '',
+    file_makalah: '',
+    status_kp: '',
+    status_sks_ipk: '',
+    jumlah_sks: '',
+    ipk: '',
+    link_dok_makalah: '',
+    judul: '',
+    status: '',
+  }
 
   const { formdata, submitHandler, show } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "link_dok_mhs_aktif", label: "Link Dokumen Mahasiswa Aktif" },
-      { field: "link_dok_pembayaran", label: "Link Dokumen Pembayaran" },
-      { field: "file_makalah", label: "file_makalah" },
+      { field: 'link_dok_mhs_aktif', label: 'Link Dokumen Mahasiswa Aktif' },
+      { field: 'link_dok_pembayaran', label: 'Link Dokumen Pembayaran' },
+      { field: 'file_makalah', label: 'file_makalah' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/update-pengajuan-kolokium`;
-  const EDIT_OPTION = { url: `${EDIT_URL}/${form.kolo_id}`, method: "PATCH" };
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/update-pengajuan-kolokium`
+  const EDIT_OPTION = { url: `${EDIT_URL}/${form.kolo_id}`, method: 'PATCH' }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
         jadwal_pelaksanaan: data.jadwal_pelaksanaan
           ? date.formatToInput(data.jadwal_pelaksanaan)
-          : "",
+          : '',
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const handleEvaluator1 = (selected) => {
+  const handleEvaluator1 = selected => {
     inputHandler({
-      target: { name: "evaluator_1", value: selected?.value },
-    });
-  };
+      target: { name: 'evaluator_1', value: selected?.value },
+    })
+  }
 
-  const handleEvaluator2 = (selected) => {
+  const handleEvaluator2 = selected => {
     inputHandler({
-      target: { name: "evaluator_2", value: selected?.value },
-    });
-  };
+      target: { name: 'evaluator_2', value: selected?.value },
+    })
+  }
 
-  const [isChecked1, setIsChecked1] = useState(false);
-  const [isChecked2, setIsChecked2] = useState(false);
-  const [isChecked3, setIsChecked3] = useState(false);
-  const [isCheckedLab, setIsCheckedLab] = useState(false);
+  const [isChecked1, setIsChecked1] = useState(false)
+  const [isChecked2, setIsChecked2] = useState(false)
+  const [isChecked3, setIsChecked3] = useState(false)
+  const [isCheckedLab, setIsCheckedLab] = useState(false)
 
   const handleCheckboxChange = async (event, id) => {
-    const { name, checked } = event.target;
-    if (name === "kolo_status_pem_1") {
-      setIsChecked1(checked);
-    } else if (name === "kolo_status_pem_2") {
-      setIsChecked2(checked);
-    } else if (name === "kolo_status_pem_3") {
-      setIsChecked3(checked);
-    } else if (name == "kolo_status_kepala_lab") {
-      setIsCheckedLab(checked);
+    const { name, checked } = event.target
+    if (name === 'kolo_status_pem_1') {
+      setIsChecked1(checked)
+    } else if (name === 'kolo_status_pem_2') {
+      setIsChecked2(checked)
+    } else if (name === 'kolo_status_pem_3') {
+      setIsChecked3(checked)
+    } else if (name == 'kolo_status_kepala_lab') {
+      setIsCheckedLab(checked)
     }
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/approve/${id}`,
         {
           [name]: true,
-          db: "ta_pendaftaran_kolokium",
+          db: 'ta_pendaftaran_kolokium',
         },
         {
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-        }
-      );
-      toastAlert("success", "Successfully approved");
+        },
+      )
+      toastAlert('success', 'Successfully approved')
     } catch (error) {
-      console.error("There was a problem with the fetch operation:", error);
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
-        return;
+      console.error('There was a problem with the fetch operation:', error)
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
+        return
       }
-      loadingAlert();
-      MySwal.close();
-      toastAlert("error", error.message);
+      loadingAlert()
+      MySwal.close()
+      toastAlert('error', error.message)
     }
-  };
+  }
 
   useEffect(() => {
     if (form) {
       if (form?.kolo_status_pem_1 == true) {
-        setIsChecked1(true);
+        setIsChecked1(true)
       }
       if (form?.kolo_status_pem_2 == true) {
-        setIsChecked2(true);
+        setIsChecked2(true)
       }
       if (form?.kolo_status_pem_3 == true) {
-        setIsChecked3(true);
+        setIsChecked3(true)
       }
       if (form?.kolo_status_kepala_lab == true) {
-        setIsCheckedLab(true);
+        setIsCheckedLab(true)
       }
     }
-  }, [form]);
+  }, [form])
 
   const handleDownload = () => {
-    const downloadLink = document.createElement("a");
-    downloadLink.href = `${FILE_URL}/${form.file_makalah}`;
-    downloadLink.target = "_blank";
-    document.body.appendChild(downloadLink);
-    downloadLink.click();
-    document.body.removeChild(downloadLink);
-  };
+    const downloadLink = document.createElement('a')
+    downloadLink.href = `${FILE_URL}/${form.file_makalah}`
+    downloadLink.target = '_blank'
+    document.body.appendChild(downloadLink)
+    downloadLink.click()
+    document.body.removeChild(downloadLink)
+  }
 
-  const [activeTab, setActiveTab] = useState("form");
+  const [activeTab, setActiveTab] = useState('form')
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  const handleTabClick = tab => {
+    setActiveTab(tab)
+  }
 
-  if ([user, menu, isDosenLoading].some((item) => item == null))
-    return <Loading />;
+  if ([user, menu, isDosenLoading].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -180,7 +179,7 @@ export default function PengajuanKolo() {
         <select
           id="tabs"
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 mt-8"
-          onChange={(e) => handleTabClick(e.target.value)}
+          onChange={e => handleTabClick(e.target.value)}
         >
           <option value="form">Form Pengajuan Kolokium</option>
           <option value="link">Link Dokumen</option>
@@ -189,11 +188,9 @@ export default function PengajuanKolo() {
       <ul className="hidden text-sm font-medium text-center text-gray-500 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 mt-8">
         <li className="w-full focus-within:z-10">
           <span
-            onClick={() => handleTabClick("form")}
+            onClick={() => handleTabClick('form')}
             className={`inline-block w-full p-4 border-r border-gray-200 hover:text-gray-700 hover:bg-gray-50 focus:ring-4  focus:outline-none cursor-pointer ${
-              activeTab === "form"
-                ? "bg-white text-gray-700 font-bold"
-                : "bg-gray-150"
+              activeTab === 'form' ? 'bg-white text-gray-700 font-bold' : 'bg-gray-150'
             }`}
           >
             Form Pengajuan Kolokium
@@ -201,11 +198,9 @@ export default function PengajuanKolo() {
         </li>
         <li className="w-full focus-within:z-10">
           <span
-            onClick={() => handleTabClick("link")}
+            onClick={() => handleTabClick('link')}
             className={`inline-block w-full p-4 border-r border-gray-200 hover:text-gray-700 hover:bg-gray-50 focus:ring-4  focus:outline-none cursor-pointer ${
-              activeTab === "link"
-                ? "bg-white text-gray-700 font-bold"
-                : "bg-gray-50"
+              activeTab === 'link' ? 'bg-white text-gray-700 font-bold' : 'bg-gray-50'
             }`}
           >
             Link Dokumen
@@ -213,11 +208,8 @@ export default function PengajuanKolo() {
         </li>
       </ul>
 
-      {activeTab === "form" && (
-        <Form
-          onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-          type="formdata"
-        >
+      {activeTab === 'form' && (
+        <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
           <Card className="mt-4">
             <Card.Header className="text-center">
               <div>Form Pengajuan Kolokium</div>
@@ -237,8 +229,8 @@ export default function PengajuanKolo() {
               </svg>
               <span className="sr-only">Info</span>
               <div>
-                <span className="font-medium">Catatan!</span> Silahkan isi form
-                yang dibintangi saja (<span className="text-danger-600">*</span>
+                <span className="font-medium">Catatan!</span> Silahkan isi form yang dibintangi saja
+                (<span className="text-danger-600">*</span>
                 ), jika status approved dosen pembimbing sudah ACC/terceklis.
               </div>
             </div>
@@ -319,7 +311,7 @@ export default function PengajuanKolo() {
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
                 <Form.Label className="min-w-[20rem]">
-                  Telah Melakukan Pembayaran Kolokium{" "}
+                  Telah Melakukan Pembayaran Kolokium{' '}
                 </Form.Label>
                 <span>:</span>
                 <Form.Input
@@ -356,9 +348,7 @@ export default function PengajuanKolo() {
             </Form.Group> */}
 
               <Form.Group className="flex items-baseline gap-3">
-                <Form.Label className="min-w-[20rem]">
-                  Link Dokumen Makalah
-                </Form.Label>
+                <Form.Label className="min-w-[20rem]">Link Dokumen Makalah</Form.Label>
                 <span>:</span>
                 <Form.Input
                   type="url"
@@ -371,7 +361,7 @@ export default function PengajuanKolo() {
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
                 <Form.Label className="min-w-[20rem]">
-                  Telah Menyelesaikan MK Kerja Praktik{" "}
+                  Telah Menyelesaikan MK Kerja Praktik{' '}
                 </Form.Label>
                 <span>:</span>
                 <Form.Checkbox
@@ -419,7 +409,7 @@ export default function PengajuanKolo() {
                   name="evaluator_1"
                   onChange={handleEvaluator1}
                   value={form.evaluator_1}
-                  options={listDosen?.map((dosen) => ({
+                  options={listDosen?.map(dosen => ({
                     label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                     value: dosen.user_id,
                   }))}
@@ -436,7 +426,7 @@ export default function PengajuanKolo() {
                   name="evaluator_2"
                   onChange={handleEvaluator2}
                   value={form.evaluator_2}
-                  options={listDosen?.map((dosen) => ({
+                  options={listDosen?.map(dosen => ({
                     label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                     value: dosen.user_id,
                   }))}
@@ -453,14 +443,14 @@ export default function PengajuanKolo() {
                   onChange={inputHandler}
                   value={form.status}
                   options={[
-                    { label: "pengajuan-sk", value: "pengajuan-sk" },
-                    { label: "menuju-kolokium", value: "menuju-kolokium" },
-                    { label: "menuju-sidang", value: "menuju-sidang" },
+                    { label: 'pengajuan-sk', value: 'pengajuan-sk' },
+                    { label: 'menuju-kolokium', value: 'menuju-kolokium' },
+                    { label: 'menuju-sidang', value: 'menuju-sidang' },
                     {
-                      label: "menyelesaikan-revisi",
-                      value: "menyelesaikan-revisi",
+                      label: 'menyelesaikan-revisi',
+                      value: 'menyelesaikan-revisi',
                     },
-                    { label: "selesai", value: "selesai" },
+                    { label: 'selesai', value: 'selesai' },
                   ]}
                 />
               </Form.Group>
@@ -473,29 +463,20 @@ export default function PengajuanKolo() {
           >
             <thead>
               <tr>
-                <th
-                  colSpan={3}
-                  className="text-sm border-2 border-white bg-gray-50"
-                >
+                <th colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                   <div>Mengetahui</div>
                 </th>
               </tr>
               <tr>
-                <th className="text-sm border-2 border-white bg-gray-200">
-                  Peran
-                </th>
-                <th className="text-sm border-2 border-white bg-gray-200">
-                  Dosen
-                </th>
-                <th className="text-sm border-2 border-white bg-gray-200">
-                  status
-                </th>
+                <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+                <th className="text-sm border-2 border-white bg-gray-200">Dosen</th>
+                <th className="text-sm border-2 border-white bg-gray-200">status</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td className="text-sm border-2 border-white text-center font-bold">
-                  <span>Pembimbing 1</span>{" "}
+                  <span>Pembimbing 1</span>{' '}
                 </td>
                 <td className="text-sm border-2 border-white">
                   <Form.Group className="flex items-baseline gap-3">
@@ -505,7 +486,7 @@ export default function PengajuanKolo() {
                       value={form.kolo_pembimbing_1}
                       options={
                         listDosen &&
-                        listDosen.map((dosen) => ({
+                        listDosen.map(dosen => ({
                           label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                           value: dosen.user_id,
                         }))
@@ -521,9 +502,7 @@ export default function PengajuanKolo() {
                       type="checkbox"
                       checked={isChecked1}
                       name="kolo_status_pem_1"
-                      onChange={(event) =>
-                        handleCheckboxChange(event, form.kolo_id)
-                      }
+                      onChange={event => handleCheckboxChange(event, form.kolo_id)}
                     />
                   </Form.Group>
                 </td>
@@ -540,7 +519,7 @@ export default function PengajuanKolo() {
                       value={form.kolo_pembimbing_2}
                       options={
                         listDosen &&
-                        listDosen.map((dosen) => ({
+                        listDosen.map(dosen => ({
                           label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                           value: dosen.user_id,
                         }))
@@ -556,9 +535,7 @@ export default function PengajuanKolo() {
                       type="checkbox"
                       checked={isChecked2}
                       name="kolo_status_pem_2"
-                      onChange={(event) =>
-                        handleCheckboxChange(event, form.kolo_id)
-                      }
+                      onChange={event => handleCheckboxChange(event, form.kolo_id)}
                     />
                   </Form.Group>
                 </td>
@@ -576,14 +553,12 @@ export default function PengajuanKolo() {
                         value={form.kolo_pembimbing_3}
                         options={
                           listDosen &&
-                          listDosen.map((dosen) => ({
+                          listDosen.map(dosen => ({
                             label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                             value: dosen.user_id,
                           }))
                         }
-                        onChange={(event) =>
-                          handleCheckboxChange(event, form.kolo_id)
-                        }
+                        onChange={event => handleCheckboxChange(event, form.kolo_id)}
                       />
                     </Form.Group>
                   </td>
@@ -594,9 +569,7 @@ export default function PengajuanKolo() {
                         type="checkbox"
                         checked={isChecked3}
                         name="kolo_status_pem_3"
-                        onChange={(event) =>
-                          handleCheckboxChange(event, form.kolo_id)
-                        }
+                        onChange={event => handleCheckboxChange(event, form.kolo_id)}
                       />
                     </Form.Group>
                   </td>
@@ -613,7 +586,7 @@ export default function PengajuanKolo() {
                       value={form.kolo_kepala_lab}
                       options={
                         listDosen &&
-                        listDosen.map((dosen) => ({
+                        listDosen.map(dosen => ({
                           label: `${dosen.nama_lengkap} - ${dosen.nip}`,
                           value: dosen.user_id,
                         }))
@@ -629,9 +602,7 @@ export default function PengajuanKolo() {
                       type="checkbox"
                       checked={isCheckedLab}
                       name="kolo_status_kepala_lab"
-                      onChange={(event) =>
-                        handleCheckboxChange(event, form.kolo_id)
-                      }
+                      onChange={event => handleCheckboxChange(event, form.kolo_id)}
                     />
                   </Form.Group>
                 </td>
@@ -639,21 +610,13 @@ export default function PengajuanKolo() {
             </tbody>
             <tfoot>
               <tr>
-                <td
-                  colSpan={3}
-                  className="text-sm border-2 border-white bg-gray-50"
-                ></td>
+                <td colSpan={3} className="text-sm border-2 border-white bg-gray-50"></td>
               </tr>
             </tfoot>
           </table>
 
           <div className="flex gap-4 mt-4">
-            <Button
-              as="a"
-              href={prefix + menu.url}
-              variant="secondary"
-              className="w-full h-12"
-            >
+            <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
               Batal
             </Button>
             <Button type="submit" variant="primary" className="w-full h-12">
@@ -663,7 +626,7 @@ export default function PengajuanKolo() {
         </Form>
       )}
 
-      {activeTab === "link" && (
+      {activeTab === 'link' && (
         <Card className="mt-4">
           <Card.Header className="text-center">
             <div>Link Dokumen</div>
@@ -676,9 +639,7 @@ export default function PengajuanKolo() {
               </Form.Label>
               <span>:</span>
               <Button
-                onClick={() =>
-                  window.open(`${form.link_dok_mhs_aktif}`, "_blank")
-                }
+                onClick={() => window.open(`${form.link_dok_mhs_aktif}`, '_blank')}
                 variant="primary"
                 icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
                 pill
@@ -688,13 +649,11 @@ export default function PengajuanKolo() {
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[20rem]">
-                Telah Melakukan Pembayaran Kolokium{" "}
+                Telah Melakukan Pembayaran Kolokium{' '}
               </Form.Label>
               <span>:</span>
               <Button
-                onClick={() =>
-                  window.open(`${form.link_dok_pembayaran}`, "_blank")
-                }
+                onClick={() => window.open(`${form.link_dok_pembayaran}`, '_blank')}
                 variant="primary"
                 icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
                 pill
@@ -704,14 +663,10 @@ export default function PengajuanKolo() {
             </Form.Group>
 
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[20rem]">
-                Link Dokumen Makalah
-              </Form.Label>
+              <Form.Label className="min-w-[20rem]">Link Dokumen Makalah</Form.Label>
               <span>:</span>
               <Button
-                onClick={() =>
-                  window.open(`${form.link_dok_makalah}`, "_blank")
-                }
+                onClick={() => window.open(`${form.link_dok_makalah}`, '_blank')}
                 variant="primary"
                 icon={<Icon icon="ic:baseline-link" width={20} height={20} />}
                 pill
@@ -723,5 +678,5 @@ export default function PengajuanKolo() {
         </Card>
       )}
     </Layout>
-  );
+  )
 }

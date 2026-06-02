@@ -1,19 +1,19 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../components/Button";
-import Pagination from "../../../../components/Pagination";
-import Filter from "./filter";
-import useDatatable from "../../../../hooks/useDatatable";
-import SortIcon from "../../../../components/SortIcon";
-import Form from "../../../../components/Form";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { MySwal, toastAlert, warningAlert } from "../../../../lib/sweetalert";
-import useNewDataTableNew from "../../../../hooks/useNewDataTableNew";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Pagination from '../../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../../hooks/useDatatable'
+import SortIcon from '../../../../components/SortIcon'
+import Form from '../../../../components/Form'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { MySwal, toastAlert, warningAlert } from '../../../../lib/sweetalert'
+import useNewDataTableNew from '../../../../hooks/useNewDataTableNew'
 
 export default function DosenExtModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/users/list-users`;
-  const verifyUrl = `${process.env.API_ENDPOINT}/auth/verify-dosen-ext`;
-  const [searchValue, setSearchValue] = useState("");
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/users/list-users`
+  const verifyUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-dosen-ext`
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -28,36 +28,34 @@ export default function DosenExtModule({ baseURL }) {
   } = useNewDataTableNew(
     DATA_URL,
     {
-      filter: ["role"],
-      filterValue: ["Dosen_Ext"],
+      filter: ['role'],
+      filterValue: ['Dosen_Ext'],
     },
     searchValue,
-    "user_id"
-  );
+    'user_id',
+  )
 
   const verify = async (userId, isverified) => {
-    let text = isverified
-      ? "Akun akan di non aktifkan!"
-      : "Akun akan di verifikasi!";
+    let text = isverified ? 'Akun akan di non aktifkan!' : 'Akun akan di verifikasi!'
     return warningAlert(async () => {
       try {
         const request = await axios({
-          method: "PATCH",
+          method: 'PATCH',
           url: `${verifyUrl}/${userId}`,
-        });
+        })
 
-        const response = await request.data;
+        const response = await request.data
 
-        MySwal.close();
-        refresh();
-        return toastAlert("success", response.message, 2000);
+        MySwal.close()
+        refresh()
+        return toastAlert('success', response.message, 2000)
       } catch (error) {
-        if (error.name == "AxiosError" && error?.response)
-          toastAlert("error", error.response.data.message);
-        else toastAlert("error", "Internal Server Error!");
+        if (error.name == 'AxiosError' && error?.response)
+          toastAlert('error', error.response.data.message)
+        else toastAlert('error', 'Internal Server Error!')
       }
-    }, text);
-  };
+    }, text)
+  }
 
   return (
     <>
@@ -72,9 +70,9 @@ export default function DosenExtModule({ baseURL }) {
             type="text"
             name="search"
             placeholder="Search"
-            style={{ width: "400px" }}
+            style={{ width: '400px' }}
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={e => setSearchValue(e.target.value)}
           />
         </div>
       </div>
@@ -87,29 +85,23 @@ export default function DosenExtModule({ baseURL }) {
             <th className="text-sm border-2 border-white bg-gray-200">
               <div
                 className="flex items-center gap-2 cursor-pointer"
-                onClick={() => sortByNew("created_at")}
+                onClick={() => sortByNew('created_at')}
               >
                 No
-                <SortIcon sort={getSortByNew("created_at")} />
+                <SortIcon sort={getSortByNew('created_at')} />
               </div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                NIP/NIK
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">NIP/NIK</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
               <div className="flex items-center gap-2 cursor-pointer">Nama</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Instansi
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Instansi</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200">
-              <div className="flex items-center gap-2 cursor-pointer">
-                Verified
-              </div>
+              <div className="flex items-center gap-2 cursor-pointer">Verified</div>
             </th>
             <th className="text-sm border-2 border-white bg-gray-200"></th>
           </tr>
@@ -117,20 +109,14 @@ export default function DosenExtModule({ baseURL }) {
         <tbody>
           {loadingNew && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Loading...
               </td>
             </tr>
           )}
           {!loadingNew && dataNew && dataNew.length < 1 && (
             <tr>
-              <td
-                colSpan="6"
-                className="text-sm border-2 border-white bg-gray-50 text-center"
-              >
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                 Tidak ada data
               </td>
             </tr>
@@ -140,9 +126,7 @@ export default function DosenExtModule({ baseURL }) {
             dataNew.map((row, index) => {
               return (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     {row.personal_data?.nip}
                   </td>
@@ -174,26 +158,14 @@ export default function DosenExtModule({ baseURL }) {
                     <div className="flex items-stretch gap-1">
                       <Button.Icon
                         onClick={() =>
-                          window.open(
-                            `${baseURL}/detail-dosen/${row.user_id}`,
-                            "_blank"
-                          )
+                          window.open(`${baseURL}/detail-dosen/${row.user_id}`, '_blank')
                         }
                         variant="info"
-                        icon={
-                          <Icon
-                            icon="fluent:info-24-filled"
-                            width={20}
-                            height={20}
-                          />
-                        }
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
                       />
                       <Button.Icon
                         onClick={() =>
-                          window.open(
-                            `${baseURL}/change-password/${row.user_id}`,
-                            "_blank"
-                          )
+                          window.open(`${baseURL}/change-password/${row.user_id}`, '_blank')
                         }
                         variant="secondary"
                         icon={<Icon icon="bx:edit" width={20} height={20} />}
@@ -215,19 +187,13 @@ export default function DosenExtModule({ baseURL }) {
                         <Button.Icon
                           onClick={() => verify(row.user_id, row.isverified)}
                           variant="danger"
-                          icon={
-                            <Icon
-                              icon="flowbite:close-circle-solid"
-                              width={20}
-                              height={20}
-                            />
-                          }
+                          icon={<Icon icon="flowbite:close-circle-solid" width={20} height={20} />}
                         />
                       )}
                     </div>
                   </td>
                 </tr>
-              );
+              )
             })}
         </tbody>
       </table>
@@ -236,13 +202,7 @@ export default function DosenExtModule({ baseURL }) {
           <Button.Icon
             type="button"
             variant="outline-primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             onClick={() => setPageNew(pageNew - 1)}
             disabled={pageNew <= 1}
             pill
@@ -250,13 +210,7 @@ export default function DosenExtModule({ baseURL }) {
           <Button
             type="button"
             variant="primary"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-right"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
             iconPosition="right"
             onClick={() => setPageNew(pageNew + 1)}
             disabled={pageNew >= pageCountNew}
@@ -273,18 +227,13 @@ export default function DosenExtModule({ baseURL }) {
             max={pageCountNew || 1}
             className="w-20"
             value={pageNew}
-            onChange={(event) =>
-              setPageNew(
-                Math.max(
-                  1,
-                  Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                )
-              )
+            onChange={event =>
+              setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
             }
           />
           of {pageCountNew || 1}
         </div>
       </div>
     </>
-  );
+  )
 }

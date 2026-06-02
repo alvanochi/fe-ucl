@@ -1,31 +1,31 @@
-import Card from "../../../../components/Card";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import useMenu from "../../../../hooks/useMenu";
-import useUser from "../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { Loading } from "../../../../components/Loading";
-import useCRUD from "../../../../hooks/useCRUD";
-import BackButton from "../../../../components/BackButton";
-import useNewDataTableForMainApi from "../../../../hooks/useNewDataTableForMainApi";
-import Form from "../../../../components/Form";
-import SortIcon from "../../../../components/SortIcon";
-import Button from "../../../../components/Button";
-import { Icon } from "@iconify-icon/react/dist/iconify.js";
-import Link from "next/link";
-import moment from "moment";
+import Card from '../../../../components/Card'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
+import { Loading } from '../../../../components/Loading'
+import useCRUD from '../../../../hooks/useCRUD'
+import BackButton from '../../../../components/BackButton'
+import useNewDataTableForMainApi from '../../../../hooks/useNewDataTableForMainApi'
+import Form from '../../../../components/Form'
+import SortIcon from '../../../../components/SortIcon'
+import Button from '../../../../components/Button'
+import { Icon } from '@iconify-icon/react/dist/iconify.js'
+import Link from 'next/link'
+import moment from 'moment'
 
 export default function BimbiganTaPerdosen() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
   const dataUrl = router.query.id
-    ? `${process.env.API_ENDPOINT}/progres-tugas-akhir/list-progres-dosen/${router.query.id}`
-    : null;
+    ? `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/list-progres-dosen/${router.query.id}`
+    : null
 
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('')
 
   const {
     dataNew,
@@ -37,13 +37,13 @@ export default function BimbiganTaPerdosen() {
     getSortByNew,
     filterNew,
     setFilterNew,
-  } = useNewDataTableForMainApi(dataUrl, {}, searchValue);
+  } = useNewDataTableForMainApi(dataUrl, {}, searchValue)
 
   useEffect(() => {
-    if (!router.isReady || !user || !router.query.id) return;
-  }, [router.isReady, user, router.query.id]);
+    if (!router.isReady || !user || !router.query.id) return
+  }, [router.isReady, user, router.query.id])
 
-  if ([user, menu, dataUrl].some((item) => item == null)) return <Loading />;
+  if ([user, menu, dataUrl].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader
@@ -64,9 +64,9 @@ export default function BimbiganTaPerdosen() {
               type="text"
               name="search"
               placeholder="Search"
-              style={{ width: "400px" }}
+              style={{ width: '400px' }}
               value={searchValue}
-              onChange={(e) => setSearchValue(e.target.value)}
+              onChange={e => setSearchValue(e.target.value)}
             />
           </div>
         </div>
@@ -79,46 +79,42 @@ export default function BimbiganTaPerdosen() {
               <th className="text-xs border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("id")}
+                  onClick={() => sortByNew('id')}
                 >
-                  No <SortIcon sort={getSortByNew("id")} />
+                  No <SortIcon sort={getSortByNew('id')} />
                 </div>
               </th>
               <th className="text-xs border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Nama
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Nama</div>
               </th>
               <th className="text-xs border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Peran
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Peran</div>
               </th>
               <th className="text-xs border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("count")}
+                  onClick={() => sortByNew('count')}
                 >
                   Jumlah Bimbingan
-                  <SortIcon sort={getSortByNew("count")} />
+                  <SortIcon sort={getSortByNew('count')} />
                 </div>
               </th>
               <th className="text-xs border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("last_tgl")}
+                  onClick={() => sortByNew('last_tgl')}
                 >
                   Terakhir Bimbingan
-                  <SortIcon sort={getSortByNew("last_tgl")} />
+                  <SortIcon sort={getSortByNew('last_tgl')} />
                 </div>
               </th>
               <th className="text-xs border-2 border-white bg-gray-200">
                 <div
                   className="flex items-center gap-2 cursor-pointer"
-                  onClick={() => sortByNew("status_kelulusan")}
+                  onClick={() => sortByNew('status_kelulusan')}
                 >
                   Status Kelulusan
-                  <SortIcon sort={getSortByNew("status_kelulusan")} />
+                  <SortIcon sort={getSortByNew('status_kelulusan')} />
                 </div>
               </th>
             </tr>
@@ -126,20 +122,14 @@ export default function BimbiganTaPerdosen() {
           <tbody>
             {loadingNew && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-xs border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-xs border-2 border-white bg-gray-50 text-center">
                   Loading...
                 </td>
               </tr>
             )}
             {!loadingNew && dataNew && dataNew.length < 1 && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Tidak ada data
                 </td>
               </tr>
@@ -148,9 +138,7 @@ export default function BimbiganTaPerdosen() {
               dataNew &&
               dataNew.map((row, index) => (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 ">
                     <Link
                       href={`${prefix + menu.url}/bimbingan-ta/detail-progres/${
@@ -162,32 +150,26 @@ export default function BimbiganTaPerdosen() {
                       <span className="block font-bold">{row.npm}</span>
                     </Link>
                   </td>
-                  <td className="text-sm border-2 border-white bg-gray-50 ">
-                    {row.peran}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">{row.peran}</td>
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
                     {row.count ? row.count : 0}
                   </td>
                   <td
                     className={`text-sm border-2 border-white text-center text-white ${
-                      row.late_progres === "hijau"
-                        ? "bg-green-500"
-                        : row.late_progres === "kuning"
-                        ? "bg-yellow-500"
-                        : row.late_progres === "merah"
-                        ? "bg-red-500"
-                        : "bg-gray-500"
+                      row.late_progres === 'hijau'
+                        ? 'bg-green-500'
+                        : row.late_progres === 'kuning'
+                          ? 'bg-yellow-500'
+                          : row.late_progres === 'merah'
+                            ? 'bg-red-500'
+                            : 'bg-gray-500'
                     }`}
                   >
-                    {row.last_tgl
-                      ? moment(row.last_tgl).local().format("DD-MM-YYYY")
-                      : "-"}
+                    {row.last_tgl ? moment(row.last_tgl).local().format('DD-MM-YYYY') : '-'}
                   </td>
 
                   <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                    {row.status_kelulusan == 0 || !row.status_kelulusan
-                      ? "BELUM"
-                      : "LULUS"}
+                    {row.status_kelulusan == 0 || !row.status_kelulusan ? 'BELUM' : 'LULUS'}
                   </td>
                 </tr>
               ))}
@@ -198,13 +180,7 @@ export default function BimbiganTaPerdosen() {
             <Button.Icon
               type="button"
               variant="outline-primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-left"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
               onClick={() => setPageNew(pageNew - 1)}
               disabled={pageNew <= 1}
               pill
@@ -212,13 +188,7 @@ export default function BimbiganTaPerdosen() {
             <Button
               type="button"
               variant="primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-right"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
               iconPosition="right"
               onClick={() => setPageNew(pageNew + 1)}
               disabled={pageNew >= pageCountNew}
@@ -235,13 +205,8 @@ export default function BimbiganTaPerdosen() {
               max={pageCountNew || 1}
               className="w-20"
               value={pageNew}
-              onChange={(event) =>
-                setPageNew(
-                  Math.max(
-                    1,
-                    Math.min(event.target.valueAsNumber, pageCountNew || 1)
-                  )
-                )
+              onChange={event =>
+                setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
               }
             />
             of {pageCountNew || 1}
@@ -250,5 +215,5 @@ export default function BimbiganTaPerdosen() {
         <Card.Body className="space-y-4"></Card.Body>
       </Card>
     </Layout>
-  );
+  )
 }

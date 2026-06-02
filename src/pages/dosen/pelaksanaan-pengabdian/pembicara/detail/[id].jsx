@@ -1,88 +1,84 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import BackButton from "../../../../../components/BackButton";
-import dummyFile from "../../../../../config/file";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import date from "../../../../../utils/date";
-import Accordion from "../../../../../components/Accordion";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import BackButton from '../../../../../components/BackButton'
+import dummyFile from '../../../../../config/file'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import date from '../../../../../utils/date'
+import Accordion from '../../../../../components/Accordion'
+import { Loading } from '../../../../../components/Loading'
 
 export default function AnggotaProfesiEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/detailPembicara`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/dokumen-pembicara`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/pembicara/detailPembicara`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/dokumen-pembicara`
 
   const INITIAL_FORM = {
-    pembicara_id: "",
-    kategori_pembicara: "",
-    judul_makalah: "",
-    nama_pertemuan: "",
-    penyelenggara: "",
-    tingkat_pertemuan: "",
-    tgl_pelaksanaan: "",
-    bahasa: "",
-    no_sk_penugasan: "",
-    tgl_sk_penugasan: "",
-    nama_dok: "",
-    keterangan: "",
-    tautan_dok: "",
+    pembicara_id: '',
+    kategori_pembicara: '',
+    judul_makalah: '',
+    nama_pertemuan: '',
+    penyelenggara: '',
+    tingkat_pertemuan: '',
+    tgl_pelaksanaan: '',
+    bahasa: '',
+    no_sk_penugasan: '',
+    tgl_sk_penugasan: '',
+    nama_dok: '',
+    keterangan: '',
+    tautan_dok: '',
     docs: [],
-  };
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "kategori_pembicara", label: "Kategori Pembicara" },
-      { field: "judul_makalah", label: "Judul Makalah" },
-      { field: "nama_pertemuan", label: "Nama Pertemuan" },
-      { field: "penyelenggara", label: "Penyelenggara" },
-      { field: "tingkat_pertemuan", label: "Tingkat Pertemuan" },
-      { field: "tgl_pelaksanaan", label: "Tanggal Pelaksanaan" },
-      { field: "bahasa", label: "Bahasa" },
-      { field: "no_sk_penugasan", label: "No. SK Penugasan" },
-      { field: "tgl_sk_penugasan", label: "Tanggal SK Penugasan" },
-      { field: "nama_dok", label: "Nama Dokumen" },
-      { field: "keterangan", label: "Keterangan Dokumen" },
-      { field: "tautan_dok", label: "Tautan Dokumen" },
+      { field: 'kategori_pembicara', label: 'Kategori Pembicara' },
+      { field: 'judul_makalah', label: 'Judul Makalah' },
+      { field: 'nama_pertemuan', label: 'Nama Pertemuan' },
+      { field: 'penyelenggara', label: 'Penyelenggara' },
+      { field: 'tingkat_pertemuan', label: 'Tingkat Pertemuan' },
+      { field: 'tgl_pelaksanaan', label: 'Tanggal Pelaksanaan' },
+      { field: 'bahasa', label: 'Bahasa' },
+      { field: 'no_sk_penugasan', label: 'No. SK Penugasan' },
+      { field: 'tgl_sk_penugasan', label: 'Tanggal SK Penugasan' },
+      { field: 'nama_dok', label: 'Nama Dokumen' },
+      { field: 'keterangan', label: 'Keterangan Dokumen' },
+      { field: 'tautan_dok', label: 'Tautan Dokumen' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/pengabdian/pembicara/editPembicara`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/pengabdian/pembicara/editPembicara`
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.pembicara_id}`,
-    method: "PATCH",
-  };
+    method: 'PATCH',
+  }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data.dataPembicara[0],
-        tgl_sk_penugasan: date.formatToInput(
-          data.dataPembicara[0].tgl_sk_penugasan
-        ),
-        tgl_pelaksanaan: date.formatToInput(
-          data.dataPembicara[0].tgl_pelaksanaan
-        ),
+        tgl_sk_penugasan: date.formatToInput(data.dataPembicara[0].tgl_sk_penugasan),
+        tgl_pelaksanaan: date.formatToInput(data.dataPembicara[0].tgl_pelaksanaan),
         docs: data.dataDokumen,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader
@@ -93,7 +89,9 @@ export default function AnggotaProfesiEdit() {
       />
       <div className="flex justify-center mt-4">
         <Button
-          onClick={() => window.open(`${`${prefix + menu.url}/pembicara/edit/${form.pembicara_id}`}`,'_blank')}
+          onClick={() =>
+            window.open(`${`${prefix + menu.url}/pembicara/edit/${form.pembicara_id}`}`, '_blank')
+          }
           variant="secondary"
           icon={<Icon icon="bx:edit" width={20} height={20} />}
           pill
@@ -117,15 +115,13 @@ export default function AnggotaProfesiEdit() {
                 value={form.kategori_pembicara}
                 options={[
                   {
-                    label: "Pembicara pada pertemuan ilmiah",
-                    value: "Pembicara pada pertemuan ilmiah",
+                    label: 'Pembicara pada pertemuan ilmiah',
+                    value: 'Pembicara pada pertemuan ilmiah',
                   },
-                  { label: "Pembicara kunci", value: "Pembicara kunci" },
+                  { label: 'Pembicara kunci', value: 'Pembicara kunci' },
                   {
-                    label:
-                      "Pembicara/narasumber pada pelatihan/penyuluhan/ceramah",
-                    value:
-                      "Pembicara/narasumber pada pelatihan/penyuluhan/ceramah",
+                    label: 'Pembicara/narasumber pada pelatihan/penyuluhan/ceramah',
+                    value: 'Pembicara/narasumber pada pelatihan/penyuluhan/ceramah',
                   },
                 ]}
                 disabled
@@ -250,10 +246,7 @@ export default function AnggotaProfesiEdit() {
               <span>:</span>
               <div className="space-y-2 flex-1">
                 {form.docs.map((doc, index) => (
-                  <Accordion
-                    key={`doc-${index}`}
-                    title={`Dokumen ${index + 1}`}
-                  >
+                  <Accordion key={`doc-${index}`} title={`Dokumen ${index + 1}`}>
                     <Form.Group className="mb-4">
                       <Form.Label>Nama Dokumen</Form.Label>
                       <Form.Input
@@ -282,10 +275,7 @@ export default function AnggotaProfesiEdit() {
                       />
                     </Form.Group>
                     <Form.Group className="mb-4">
-                      <embed
-                        src={`${FILE_URL}/${doc.file}`}
-                        className="w-full h-[256px]"
-                      />
+                      <embed src={`${FILE_URL}/${doc.file}`} className="w-full h-[256px]" />
                     </Form.Group>
                   </Accordion>
                 ))}
@@ -294,16 +284,11 @@ export default function AnggotaProfesiEdit() {
           </Card.Body>
         </Card>
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Kembali
           </Button>
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

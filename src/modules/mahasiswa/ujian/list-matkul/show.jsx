@@ -1,32 +1,32 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
-import Button from "../../../../components/Button";
-import Modal from "../../../../components/Modal";
-import useModal from "../../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Button from '../../../../components/Button'
+import Modal from '../../../../components/Modal'
+import useModal from '../../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
 
 const ShowUjian = ({ course_code, curr_code }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
-  const [data, setData] = useState({});
+  const [data, setData] = useState({})
 
   const getData = async (course_code, curr_code) => {
     try {
-      const response = await axios.get(`${process.env.API_ENDPOINT}/ujian`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/ujian`)
 
-      const dataResponse = response.data.data;
+      const dataResponse = response.data.data
 
-      setData(dataResponse);
+      setData(dataResponse)
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error)
     }
-  };
+  }
 
   useEffect(() => {
     if (show && id) {
-      getData(id);
+      getData(id)
     }
-  }, [show, course_code, curr_code]);
+  }, [show, course_code, curr_code])
 
   return (
     <>
@@ -34,9 +34,7 @@ const ShowUjian = ({ course_code, curr_code }) => {
         as="button "
         onClick={toggle}
         variant="info"
-        icon={
-          <Icon icon="material-symbols:chevron-right" width={10} height={10} />
-        }
+        icon={<Icon icon="material-symbols:chevron-right" width={10} height={10} />}
         iconPosition="right"
         pill
       >
@@ -47,7 +45,7 @@ const ShowUjian = ({ course_code, curr_code }) => {
         <h1>Show Ujian</h1>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default ShowUjian;
+export default ShowUjian

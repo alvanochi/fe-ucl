@@ -1,166 +1,155 @@
-import useMenu from "../../../../hooks/useMenu";
-import Layout from "../../../../components/Layout";
-import PageHeader from "../../../../components/PageHeader";
-import Form from "../../../../components/Form";
-import Button from "../../../../components/Button";
-import useUser from "../../../../hooks/useUser";
-import _ from "underscore";
-import { Icon } from "@iconify-icon/react";
-import { useRouter } from "next/router";
-import useDatatableAbsensi from "../../../../hooks/useDataTableAbsensi";
-import useCRUD from "../../../../hooks/useCRUD";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import AddAbsensiRapat from "./absensi";
-import EditAbsensi from "./editAbsensi";
-import Card from "../../../../components/Card";
-import { data } from "autoprefixer";
-import { MySwal, loadingAlert, toastAlert } from "../../../../lib/sweetalert";
-import { Loading } from "../../../../components/Loading";
-import useKategoriKegiatan from "../../../../repo/kategori-kegiatan";
-import useGroup from "../../../../repo/group";
-import useDosen from "../../../../repo/dosen";
-import useMahasiswa from "../../../../repo/mahasiswa";
-import useRuangan from "../../../../repo/ruangan";
-import useUsers from "../../../../repo/users";
-import ShowNotulen from "./showNotulen";
+import useMenu from '../../../../hooks/useMenu'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import Form from '../../../../components/Form'
+import Button from '../../../../components/Button'
+import useUser from '../../../../hooks/useUser'
+import _ from 'underscore'
+import { Icon } from '@iconify-icon/react'
+import { useRouter } from 'next/router'
+import useDatatableAbsensi from '../../../../hooks/useDataTableAbsensi'
+import useCRUD from '../../../../hooks/useCRUD'
+import { useEffect, useState } from 'react'
+import axios from 'axios'
+import AddAbsensiRapat from './absensi'
+import EditAbsensi from './editAbsensi'
+import Card from '../../../../components/Card'
+import { data } from 'autoprefixer'
+import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import { Loading } from '../../../../components/Loading'
+import useKategoriKegiatan from '../../../../repo/kategori-kegiatan'
+import useGroup from '../../../../repo/group'
+import useDosen from '../../../../repo/dosen'
+import useMahasiswa from '../../../../repo/mahasiswa'
+import useRuangan from '../../../../repo/ruangan'
+import useUsers from '../../../../repo/users'
+import ShowNotulen from './showNotulen'
 
 export default function DetailList() {
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const { data: listKegiatan, isLoading: isKegiatanLoading } =
-    useKategoriKegiatan([user]);
-  const { data: listGroup, isLoading: isGroupLoading } = useGroup([user]);
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
-  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([
-    user,
-  ]);
-  const { data: listRuangan, isLoading: isRuanganLoading } = useRuangan([user]);
-  const { data: listUsers, isLoading: isUsersLoading } = useUsers([user]);
+  const { data: listKegiatan, isLoading: isKegiatanLoading } = useKategoriKegiatan([user])
+  const { data: listGroup, isLoading: isGroupLoading } = useGroup([user])
+  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
+  const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
+  const { data: listRuangan, isLoading: isRuanganLoading } = useRuangan([user])
+  const { data: listUsers, isLoading: isUsersLoading } = useUsers([user])
 
-  const router = useRouter();
+  const router = useRouter()
 
-  const DATA_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi-meeting`;
-  const DELETE_URL = `${process.env.API_ENDPOINT_ABSEN}/absensi-meeting/delete`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi-meeting`
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/absensi-meeting/delete`
 
-  const id = router.query.id;
+  const id = router.query.id
 
   const [dataMeet, setDataMeet] = useState({
-    nm_pengundang: "",
-    nm_kegiatan: "",
-    ruangan: "",
-    pertemuan: "",
-    tanggal: "",
-    waktu: "",
-    notulen: "",
-    bukti_foto: "",
-    status_ruangan: "",
-    waktu: "",
-    waktu_end: "",
-    narsum: "",
-    ket_narsum: "",
-    link_online: "",
-    tipe_kegiatan: "",
-  });
+    nm_pengundang: '',
+    nm_kegiatan: '',
+    ruangan: '',
+    pertemuan: '',
+    tanggal: '',
+    waktu: '',
+    notulen: '',
+    bukti_foto: '',
+    status_ruangan: '',
+    waktu: '',
+    waktu_end: '',
+    narsum: '',
+    ket_narsum: '',
+    link_online: '',
+    tipe_kegiatan: '',
+  })
 
   useEffect(() => {
     const fetchDetailMeet = async () => {
       try {
         if (id) {
-          const response = await axios.get(
-            `${process.env.API_ENDPOINT_ABSEN}/meeting`,
-            {
-              params: {
-                filter: ["id"],
-                filterValue: [id],
-              },
-            }
-          );
+          const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL_ABSEN}/meeting`, {
+            params: {
+              filter: ['id'],
+              filterValue: [id],
+            },
+          })
 
-          const dataMeet = response.data.data;
-          setDataMeet(dataMeet[0]);
+          const dataMeet = response.data.data
+          setDataMeet(dataMeet[0])
         }
       } catch (error) {
-        console.error("Error fetching pertemuan:", error);
+        console.error('Error fetching pertemuan:', error)
       }
-    };
+    }
 
-    fetchDetailMeet();
-  }, [id]);
-  const inputHandler = (e) => {
-    const { name, value } = e.target;
-    setDataMeet((prevData) => ({
+    fetchDetailMeet()
+  }, [id])
+  const inputHandler = e => {
+    const { name, value } = e.target
+    setDataMeet(prevData => ({
       ...prevData,
-      [name]:
-        name === "status_ruangan"
-          ? value !== ""
-            ? parseInt(value)
-            : 0
-          : value,
-    }));
-  };
+      [name]: name === 'status_ruangan' ? (value !== '' ? parseInt(value) : 0) : value,
+    }))
+  }
 
-  const fileInputHandler = (e) => {
-    const file = e.target.files[0];
-    setDataMeet((prevData) => ({
+  const fileInputHandler = e => {
+    const file = e.target.files[0]
+    setDataMeet(prevData => ({
       ...prevData,
       bukti_foto: file,
-    }));
-  };
+    }))
+  }
 
-  const [previewImageUrl, setPreviewImageUrl] = useState(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState(null)
 
-  const submitHandler = async (event) => {
-    event.preventDefault();
+  const submitHandler = async event => {
+    event.preventDefault()
 
     try {
-      const formData = new FormData();
-      formData.append("nm_pengundang", dataMeet.nm_pengundang);
-      formData.append("nm_kegiatan", dataMeet.nm_kegiatan);
-      formData.append("ruangan", dataMeet.ruangan);
-      formData.append("pertemuan", dataMeet.pertemuan);
-      formData.append("tanggal", dataMeet.tanggal);
-      formData.append("waktu", dataMeet.waktu);
-      formData.append("status_ruangan", dataMeet.status_ruangan);
-      formData.append("notulen", dataMeet.notulen);
-      formData.append("waktu_end", dataMeet.waktu_end);
-      formData.append("tipe_kegiatan", dataMeet.tipe_kegiatan);
-      formData.append("sub_tema", dataMeet.sub_tema);
-      formData.append("narsum", dataMeet.narsum);
-      formData.append("ket_narsum", dataMeet.ket_narsum);
-      formData.append("contact", dataMeet.contact);
-      formData.append("link_online", dataMeet.link_online);
-      formData.append("bukti_foto", dataMeet.bukti_foto);
+      const formData = new FormData()
+      formData.append('nm_pengundang', dataMeet.nm_pengundang)
+      formData.append('nm_kegiatan', dataMeet.nm_kegiatan)
+      formData.append('ruangan', dataMeet.ruangan)
+      formData.append('pertemuan', dataMeet.pertemuan)
+      formData.append('tanggal', dataMeet.tanggal)
+      formData.append('waktu', dataMeet.waktu)
+      formData.append('status_ruangan', dataMeet.status_ruangan)
+      formData.append('notulen', dataMeet.notulen)
+      formData.append('waktu_end', dataMeet.waktu_end)
+      formData.append('tipe_kegiatan', dataMeet.tipe_kegiatan)
+      formData.append('sub_tema', dataMeet.sub_tema)
+      formData.append('narsum', dataMeet.narsum)
+      formData.append('ket_narsum', dataMeet.ket_narsum)
+      formData.append('contact', dataMeet.contact)
+      formData.append('link_online', dataMeet.link_online)
+      formData.append('bukti_foto', dataMeet.bukti_foto)
 
       const response = await axios.post(
-        `${process.env.API_ENDPOINT_ABSEN}/meeting/update/${id || ""}`,
+        `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/meeting/update/${id || ''}`,
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
-        }
-      );
+        },
+      )
 
-      const responseData = response.data;
+      const responseData = response.data
 
       if (responseData) {
-        toastAlert("success", "Updated Successfully");
-        router.push(prefix + menu.url);
+        toastAlert('success', 'Updated Successfully')
+        router.push(prefix + menu.url)
       }
     } catch (error) {
-      console.error("Error updating data:", error);
+      console.error('Error updating data:', error)
 
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.message)
       } else {
-        loadingAlert();
-        MySwal.close();
-        toastAlert("error", "Update failed. Please try again.");
+        loadingAlert()
+        MySwal.close()
+        toastAlert('error', 'Update failed. Please try again.')
       }
     }
-  };
+  }
 
   const {
     dataAbsensi,
@@ -171,17 +160,17 @@ export default function DetailList() {
     setPageAbsensi,
     refreshAbsensi,
   } = useDatatableAbsensi(DATA_URL, {
-    filter: ["id_meeting"],
+    filter: ['id_meeting'],
     filterValue: [id],
-  });
+  })
 
-  const { destroy } = useCRUD(DELETE_URL);
+  const { destroy } = useCRUD(DELETE_URL)
 
   const handleAbsensi = () => {
-    refreshAbsensi();
-  };
+    refreshAbsensi()
+  }
 
-  const FILE_URL = `https://absen.ft.uika-bogor.ac.id/storage/meeting/photo/${dataMeet.bukti_foto}`;
+  const FILE_URL = `https://absen.ft.uika-bogor.ac.id/storage/meeting/photo/${dataMeet.bukti_foto}`
 
   if (
     [
@@ -194,9 +183,9 @@ export default function DetailList() {
       isKegiatanLoading,
       isRuanganLoading,
       isUsersLoading,
-    ].some((item) => item == null)
+    ].some(item => item == null)
   )
-    return <Loading />;
+    return <Loading />
   return (
     <Layout>
       <PageHeader
@@ -269,7 +258,7 @@ export default function DetailList() {
                 <Form.Combobox
                   className="border-blue-900"
                   name="narsum"
-                  onChange={(selected) =>
+                  onChange={selected =>
                     inputHandler({
                       target: {
                         attributes: {
@@ -277,7 +266,7 @@ export default function DetailList() {
                             value: selected?.value,
                           },
                         },
-                        name: "narsum",
+                        name: 'narsum',
                         value: selected?.value,
                       },
                     })
@@ -286,7 +275,7 @@ export default function DetailList() {
                   options={
                     listUsers &&
                     Array.isArray(listUsers) &&
-                    listUsers.map((user) => ({
+                    listUsers.map(user => ({
                       label: `${user.personal_data?.nama_lengkap} - ${
                         user.npm ? user.npm : user.personal_data?.nip
                       }`,
@@ -298,8 +287,7 @@ export default function DetailList() {
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
                 <Form.Label className="min-w-[16rem]">
-                  Keterangan Narasumber{" "}
-                  <span className="text-danger-600">*</span>
+                  Keterangan Narasumber <span className="text-danger-600">*</span>
                 </Form.Label>
                 <span>:</span>
                 <Form.Input
@@ -318,7 +306,7 @@ export default function DetailList() {
                 <Form.Combobox
                   className="border-blue-900"
                   name="ruangan"
-                  onChange={(selected) =>
+                  onChange={selected =>
                     inputHandler({
                       target: {
                         attributes: {
@@ -326,7 +314,7 @@ export default function DetailList() {
                             value: selected?.value,
                           },
                         },
-                        name: "ruangan",
+                        name: 'ruangan',
                         value: selected?.value,
                       },
                     })
@@ -335,7 +323,7 @@ export default function DetailList() {
                   options={
                     listRuangan &&
                     Array.isArray(listRuangan) &&
-                    listRuangan.map((ruang) => ({
+                    listRuangan.map(ruang => ({
                       label: ruang.nama_ruangan,
                       value: ruang.id,
                     }))
@@ -351,9 +339,7 @@ export default function DetailList() {
                   className="flex-1"
                   name="link_online"
                   onChange={inputHandler}
-                  value={
-                    dataMeet.link_online == "null" ? "" : dataMeet.link_online
-                  }
+                  value={dataMeet.link_online == 'null' ? '' : dataMeet.link_online}
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
@@ -450,18 +436,14 @@ export default function DetailList() {
                   className="flex-1"
                   rows="5"
                   name="notulen"
-                  value={dataMeet?.notulen == "null" ? "" : dataMeet.notulen}
+                  value={dataMeet?.notulen == 'null' ? '' : dataMeet.notulen}
                   onChange={inputHandler}
                 />
               </Form.Group>
               <Form.Group className="flex items-baseline gap-3">
                 <Form.Label className="min-w-[16rem]"></Form.Label>
                 <div className="ml-4">
-                  <ShowNotulen
-                    notulen={
-                      dataMeet?.notulen == "null" ? "" : dataMeet.notulen
-                    }
-                  />
+                  <ShowNotulen notulen={dataMeet?.notulen == 'null' ? '' : dataMeet.notulen} />
                 </div>
               </Form.Group>
 
@@ -476,22 +458,13 @@ export default function DetailList() {
                     onChange={fileInputHandler}
                   />
                   {dataMeet.bukti_foto && (
-                    <img
-                      src={FILE_URL}
-                      className="w-full h-full"
-                      alt="dokumentasi"
-                    />
+                    <img src={FILE_URL} className="w-full h-full" alt="dokumentasi" />
                   )}
                 </div>
               </Form.Group>
             </Card.Body>
             <div className="flex justify-center gap-4 mt-4 mb-4">
-              <Button
-                as="a"
-                href={prefix + menu.url}
-                variant="secondary"
-                className="w-2/6 h-12"
-              >
+              <Button as="a" href={prefix + menu.url} variant="secondary" className="w-2/6 h-12">
                 Batal
               </Button>
               <Button type="submit" variant="primary" className="w-2/6 h-12">
@@ -514,44 +487,30 @@ export default function DetailList() {
                 <div className="flex items-center gap-2 cursor-pointer">No</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Nama
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Nama</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  NIP/NPM
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">NIP/NPM</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Status
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Status</div>
               </th>
               <th className="text-sm border-2 border-white bg-gray-200">
-                <div className="flex items-center gap-2 cursor-pointer">
-                  Action
-                </div>
+                <div className="flex items-center gap-2 cursor-pointer">Action</div>
               </th>
             </tr>
           </thead>
           <tbody>
             {loadingAbsensi && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Loading...
                 </td>
               </tr>
             )}
             {!loadingAbsensi && dataAbsensi && dataAbsensi.length < 1 && (
               <tr>
-                <td
-                  colSpan="6"
-                  className="text-sm border-2 border-white bg-gray-50 text-center"
-                >
+                <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
                   Tidak ada data
                 </td>
               </tr>
@@ -560,42 +519,25 @@ export default function DetailList() {
               dataAbsensi &&
               dataAbsensi.map((row, index) => (
                 <tr key={`row-${index}`}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {index + 1}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.name_absen}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.code}
-                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.name_absen}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50">{row.code}</td>
                   <td className="text-sm border-2 border-white bg-gray-50">
                     {row.status_absen === 1
-                      ? "MASUK"
+                      ? 'MASUK'
                       : row.status_absen === 2
-                      ? "SAKIT/IZIN"
-                      : row.status_absen === 0
-                      ? "ALFA"
-                      : ""}
+                        ? 'SAKIT/IZIN'
+                        : row.status_absen === 0
+                          ? 'ALFA'
+                          : ''}
                   </td>
                   <td className="text-sm border-2 border-white bg-gray-50 max-w-[8rem] truncate mx-auto">
                     <div className="flex items-stretch gap-1">
-                      <EditAbsensi
-                        data={{ id: row.id }}
-                        onAddAbsensi={handleAbsensi}
-                      />
+                      <EditAbsensi data={{ id: row.id }} onAddAbsensi={handleAbsensi} />
                       <Button.Icon
                         variant="danger"
-                        icon={
-                          <Icon
-                            icon="solar:trash-bin-2-bold-duotone"
-                            width={20}
-                            height={20}
-                          />
-                        }
-                        onClick={() =>
-                          destroy(row.id).then(() => refreshAbsensi())
-                        }
+                        icon={<Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />}
+                        onClick={() => destroy(row.id).then(() => refreshAbsensi())}
                       />
                     </div>
                   </td>
@@ -609,13 +551,7 @@ export default function DetailList() {
             as="a"
             href={`${prefix + menu.url}`}
             variant="danger"
-            icon={
-              <Icon
-                icon="material-symbols:chevron-left"
-                width={20}
-                height={20}
-              />
-            }
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
             iconPosition="left"
             pill
           >
@@ -625,13 +561,7 @@ export default function DetailList() {
             <Button.Icon
               type="button"
               variant="outline-primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-left"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
               onClick={() => setPageAbsensi(pageAbsensi - 1)}
               disabled={pageAbsensi <= 1}
               pill
@@ -639,13 +569,7 @@ export default function DetailList() {
             <Button
               type="button"
               variant="primary"
-              icon={
-                <Icon
-                  icon="material-symbols:chevron-right"
-                  width={20}
-                  height={20}
-                />
-              }
+              icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
               iconPosition="right"
               onClick={() => setPageAbsensi(pageAbsensi + 1)}
               disabled={pageAbsensi >= pageCountAbsensi}
@@ -662,12 +586,9 @@ export default function DetailList() {
               max={pageCountAbsensi || 1}
               className="w-20"
               value={pageAbsensi}
-              onChange={(event) =>
+              onChange={event =>
                 setPageAbsensi(
-                  Math.max(
-                    1,
-                    Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)
-                  )
+                  Math.max(1, Math.min(event.target.valueAsNumber, pageCountAbsensi || 1)),
                 )
               }
             />
@@ -676,5 +597,5 @@ export default function DetailList() {
         </div>
       </div>
     </Layout>
-  );
+  )
 }

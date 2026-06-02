@@ -1,64 +1,64 @@
-import { useRouter } from "next/router";
-import Button from "../../../components/Button";
-import Card from "../../../components/Card";
-import Form from "../../../components/Form";
-import Layout from "../../../components/Layout";
-import PageHeader from "../../../components/PageHeader";
-import useMenu from "../../../hooks/useMenu";
-import useUser from "../../../hooks/useUser";
-import useCRUD from "../../../hooks/useCRUD";
-import { Icon } from "@iconify-icon/react";
-import _ from "underscore";
-import { useState } from "react";
-import { Loading } from "../../../components/Loading";
-import useGroup from "../../../repo/group";
+import { useRouter } from 'next/router'
+import Button from '../../../components/Button'
+import Card from '../../../components/Card'
+import Form from '../../../components/Form'
+import Layout from '../../../components/Layout'
+import PageHeader from '../../../components/PageHeader'
+import useMenu from '../../../hooks/useMenu'
+import useUser from '../../../hooks/useUser'
+import useCRUD from '../../../hooks/useCRUD'
+import { Icon } from '@iconify-icon/react'
+import _ from 'underscore'
+import { useState } from 'react'
+import { Loading } from '../../../components/Loading'
+import useGroup from '../../../repo/group'
 
 export default function CreateQuestion() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/voting/question`;
-  const { data: listGroup, isLoading: isGroupLoading } = useGroup([user]);
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/voting/question`
+  const { data: listGroup, isLoading: isGroupLoading } = useGroup([user])
 
-  const [jawaban, setJawaban] = useState([{ jawaban: "" }]);
-  const [groups, setGroups] = useState([]);
+  const [jawaban, setJawaban] = useState([{ jawaban: '' }])
+  const [groups, setGroups] = useState([])
 
   const tambahGroup = () => {
-    setGroups([...groups, { group: null }]);
-  };
+    setGroups([...groups, { group: null }])
+  }
 
-  const hapusGroup = (index) => {
-    setGroups(groups.filter((_, idx) => idx !== index));
-  };
+  const hapusGroup = index => {
+    setGroups(groups.filter((_, idx) => idx !== index))
+  }
 
   const tambahJawaban = () => {
-    setJawaban([...jawaban, { jawaban: "" }]);
-  };
+    setJawaban([...jawaban, { jawaban: '' }])
+  }
 
-  const hapusJawaban = (index) => {
-    setJawaban(jawaban.filter((_, idx) => idx !== index));
-  };
+  const hapusJawaban = index => {
+    setJawaban(jawaban.filter((_, idx) => idx !== index))
+  }
 
   const INITIAL_FORM = {
-    deskripsi: "",
-  };
+    deskripsi: '',
+  }
 
   const { formdata, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     success: () => router.push(prefix + menu.url),
-    transformData: (data) => {
+    transformData: data => {
       const transformedData = {
         ...data,
-        jawaban: jawaban.map((item) => item.jawaban),
-        groups: groups.map((item) => item.group),
-      };
-      return transformedData;
+        jawaban: jawaban.map(item => item.jawaban),
+        groups: groups.map(item => item.group),
+      }
+      return transformedData
     },
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -89,25 +89,18 @@ export default function CreateQuestion() {
               cellPadding={10}
             >
               <colgroup>
-                <col style={{ width: "80%" }} />
-                <col style={{ width: "20%" }} />
+                <col style={{ width: '80%' }} />
+                <col style={{ width: '20%' }} />
               </colgroup>
               <thead>
                 <tr>
-                  <th
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     Option
                   </th>
                 </tr>
                 <tr>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    value
-                  </th>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Action
-                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">value</th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -118,15 +111,13 @@ export default function CreateQuestion() {
                         type="text"
                         className="flex-1"
                         name={`jawaban-${index}`}
-                        onChange={(e) => {
-                          const newValue = e.target.value;
-                          setJawaban((prevJawaban) =>
+                        onChange={e => {
+                          const newValue = e.target.value
+                          setJawaban(prevJawaban =>
                             prevJawaban.map((jawabanItem, idx) =>
-                              idx === index
-                                ? { ...jawabanItem, jawaban: newValue }
-                                : jawabanItem
-                            )
-                          );
+                              idx === index ? { ...jawabanItem, jawaban: newValue } : jawabanItem,
+                            ),
+                          )
                         }}
                         value={item.jawaban}
                         required
@@ -138,11 +129,7 @@ export default function CreateQuestion() {
                           type="button"
                           variant="danger"
                           icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
+                            <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                           }
                           onClick={() => hapusJawaban(index)}
                         />
@@ -172,25 +159,18 @@ export default function CreateQuestion() {
               cellPadding={10}
             >
               <colgroup>
-                <col style={{ width: "80%" }} />
-                <col style={{ width: "20%" }} />
+                <col style={{ width: '80%' }} />
+                <col style={{ width: '20%' }} />
               </colgroup>
               <thead>
                 <tr>
-                  <th
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <th colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     Group E-Voting
                   </th>
                 </tr>
                 <tr>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Nama Group
-                  </th>
-                  <th className="text-sm border-2 border-white bg-gray-200">
-                    Action
-                  </th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Nama Group</th>
+                  <th className="text-sm border-2 border-white bg-gray-200">Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -200,21 +180,19 @@ export default function CreateQuestion() {
                       <Form.Combobox
                         index={index}
                         name={`groups[${index}].id`}
-                        onChange={(e) => {
-                          const newValue = e.value;
-                          setGroups((prevGroups) =>
+                        onChange={e => {
+                          const newValue = e.value
+                          setGroups(prevGroups =>
                             prevGroups.map((groupItem, idx) =>
-                              idx === index
-                                ? { ...groupItem, group: newValue }
-                                : groupItem
-                            )
-                          );
+                              idx === index ? { ...groupItem, group: newValue } : groupItem,
+                            ),
+                          )
                         }}
                         value={item.group}
                         options={
                           listGroup &&
                           Array.isArray(listGroup) &&
-                          listGroup.map((group) => ({
+                          listGroup.map(group => ({
                             label: group.nama_group,
                             value: group.id,
                           }))
@@ -228,11 +206,7 @@ export default function CreateQuestion() {
                           type="button"
                           variant="danger"
                           icon={
-                            <Icon
-                              icon="solar:trash-bin-2-bold-duotone"
-                              width={20}
-                              height={20}
-                            />
+                            <Icon icon="solar:trash-bin-2-bold-duotone" width={20} height={20} />
                           }
                           onClick={() => hapusGroup(index)}
                         />
@@ -243,10 +217,7 @@ export default function CreateQuestion() {
               </tbody>
               <tfoot>
                 <tr>
-                  <td
-                    colSpan={4}
-                    className="text-sm border-2 border-white bg-gray-50"
-                  >
+                  <td colSpan={4} className="text-sm border-2 border-white bg-gray-50">
                     <Button
                       type="button"
                       variant="primary"
@@ -263,12 +234,7 @@ export default function CreateQuestion() {
         </div>
 
         <div className="flex gap-4 mt-8 mb-8">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -277,5 +243,5 @@ export default function CreateQuestion() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }

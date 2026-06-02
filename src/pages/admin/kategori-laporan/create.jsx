@@ -1,59 +1,59 @@
-import { useState } from "react";
-import axios from "axios";
-import Button from "../../../components/Button";
-import Modal from "../../../components/Modal";
-import useModal from "../../../hooks/useModal";
-import { Icon } from "@iconify-icon/react";
-import useForm from "../../../hooks/useForm";
-import { MySwal, loadingAlert, toastAlert } from "../../../lib/sweetalert";
-import Form from "../../../components/Form";
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import useModal from '../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../hooks/useForm'
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
+import Form from '../../../components/Form'
 
 const CreateKategoriLaporan = ({ onAction }) => {
-  const { show, toggle, close } = useModal();
+  const { show, toggle, close } = useModal()
 
   const INITIAL_FORM = {
-    nama_kategori: "",
-  };
+    nama_kategori: '',
+  }
 
   const { form, inputHandler } = useForm(INITIAL_FORM, {
-    rules: [{ field: "nama_kategori", label: "nama_kategori" }],
-  });
+    rules: [{ field: 'nama_kategori', label: 'nama_kategori' }],
+  })
 
   async function submitHandler(event) {
-    event.preventDefault();
+    event.preventDefault()
     try {
       const requestData = {
         ...form,
-      };
+      }
 
       if (!requestData.nama_kategori) {
-        toastAlert("error", "Pleas fill in all the required fields.");
+        toastAlert('error', 'Pleas fill in all the required fields.')
 
-        return;
+        return
       }
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/kategori/laporan`,
-        method: "POST",
+        url: `${process.env.NEXT_PUBLIC_API_URL}/kategori/laporan`,
+        method: 'POST',
         data: requestData,
-      });
-      const response = await request.data;
+      })
+      const response = await request.data
 
-      form.nama_kategori = "";
+      form.nama_kategori = ''
 
-      toastAlert("success", "Successfully");
-      close();
-      onAction();
+      toastAlert('success', 'Successfully')
+      close()
+      onAction()
     } catch (error) {
-      if (error.name === "AxiosError") {
-        toastAlert("error", error.response.data.message);
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.response.data.message)
 
-        return;
+        return
       }
-      loadingAlert();
-      MySwal.close();
+      loadingAlert()
+      MySwal.close()
 
-      toastAlert("error", error.message);
+      toastAlert('error', error.message)
     }
   }
 
@@ -94,7 +94,7 @@ const CreateKategoriLaporan = ({ onAction }) => {
         </Form>
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default CreateKategoriLaporan;
+export default CreateKategoriLaporan

@@ -1,88 +1,77 @@
-import { Icon } from "@iconify-icon/react";
-import Button from "../../../../../components/Button";
-import Card from "../../../../../components/Card";
-import Form from "../../../../../components/Form";
-import Layout from "../../../../../components/Layout";
-import PageHeader from "../../../../../components/PageHeader";
-import useMenu from "../../../../../hooks/useMenu";
-import useUser from "../../../../../hooks/useUser";
-import { useRouter } from "next/router";
-import useCRUD from "../../../../../hooks/useCRUD";
-import { useEffect } from "react";
-import useKategoriProfesi from "../../../../../repo/kategori-profesi";
-import {
-  getMonthOptions,
-  getYearOptions,
-} from "../../../../../repo/bulan-tahun";
-import { Loading } from "../../../../../components/Loading";
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../../components/Button'
+import Card from '../../../../../components/Card'
+import Form from '../../../../../components/Form'
+import Layout from '../../../../../components/Layout'
+import PageHeader from '../../../../../components/PageHeader'
+import useMenu from '../../../../../hooks/useMenu'
+import useUser from '../../../../../hooks/useUser'
+import { useRouter } from 'next/router'
+import useCRUD from '../../../../../hooks/useCRUD'
+import { useEffect } from 'react'
+import useKategoriProfesi from '../../../../../repo/kategori-profesi'
+import { getMonthOptions, getYearOptions } from '../../../../../repo/bulan-tahun'
+import { Loading } from '../../../../../components/Loading'
 
 export default function AnggotaProfesiEdit() {
-  const router = useRouter();
-  const { user } = useUser({ redirectTo: "/login" });
-  const { prefix, menu, setActive } = useMenu();
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
 
-  const API_URL = `${process.env.API_ENDPOINT}/penunjang/detailProfesi`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/file-profesi`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/penunjang/detailProfesi`
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/file-profesi`
 
   const INITIAL_FORM = {
-    prof_id: "",
-    kategori_id: "",
-    nama_organisasi: "",
-    peran: "",
-    mulai_tahun: "",
-    mulai_bulan: "",
-    selesai_tahun: "",
-    selesai_bulan: "",
-    instansi_prof: "",
-    file: "",
-  };
+    prof_id: '',
+    kategori_id: '',
+    nama_organisasi: '',
+    peran: '',
+    mulai_tahun: '',
+    mulai_bulan: '',
+    selesai_tahun: '',
+    selesai_bulan: '',
+    instansi_prof: '',
+    file: '',
+  }
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [
-      { field: "nama_organisasi", label: "Nama Organisasi" },
-      { field: "kategori_id", label: "Kategori" },
-      { field: "peran", label: "Peran" },
-      { field: "mulai_tahun", label: "Mulai Keanggotaan" },
-      { field: "mulai_bulan", label: "Mulai Keanggotaan" },
-      { field: "selesai_tahun", label: "Selesai Keanggotaan" },
-      { field: "selesai_bulan", label: "Selesai Keanggotaan" },
-      { field: "instansi_prof", label: "Instansi Profesi" },
+      { field: 'nama_organisasi', label: 'Nama Organisasi' },
+      { field: 'kategori_id', label: 'Kategori' },
+      { field: 'peran', label: 'Peran' },
+      { field: 'mulai_tahun', label: 'Mulai Keanggotaan' },
+      { field: 'mulai_bulan', label: 'Mulai Keanggotaan' },
+      { field: 'selesai_tahun', label: 'Selesai Keanggotaan' },
+      { field: 'selesai_bulan', label: 'Selesai Keanggotaan' },
+      { field: 'instansi_prof', label: 'Instansi Profesi' },
     ],
     success: () => router.push(prefix + menu.url),
-  });
+  })
 
-  const { form, inputHandler } = formdata;
+  const { form, inputHandler } = formdata
 
-  const { data: kategoriProfesi, isLoading: isLoadingKategoriProfesi } =
-    useKategoriProfesi([user]);
+  const { data: kategoriProfesi, isLoading: isLoadingKategoriProfesi } = useKategoriProfesi([user])
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/penunjang/editProfesi`;
-  const EDIT_OPTION = { url: `${EDIT_URL}/${form.prof_id}`, method: "PATCH" };
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/penunjang/editProfesi`
+  const EDIT_OPTION = { url: `${EDIT_URL}/${form.prof_id}`, method: 'PATCH' }
 
   useEffect(() => {
-    if (router.isReady === false || !user) return;
+    if (router.isReady === false || !user) return
     show(router.query.id, {
-      transformData: (data) => ({
+      transformData: data => ({
         ...data,
       }),
-    });
-  }, [router, user]);
+    })
+  }, [router, user])
 
-  const bulanOptions = getMonthOptions();
-  const tahunOptions = getYearOptions();
+  const bulanOptions = getMonthOptions()
+  const tahunOptions = getYearOptions()
 
-  if ([user, menu].some((item) => item == null)) return <Loading />;
+  if ([user, menu].some(item => item == null)) return <Loading />
   return (
     <Layout>
-      <PageHeader
-        title={`Edit ${menu.label}`}
-        icon={menu.icon}
-        handler={setActive}
-      />
-      <Form
-        onSubmit={(event) => submitHandler(event, EDIT_OPTION)}
-        type="formdata"
-      >
+      <PageHeader title={`Edit ${menu.label}`} icon={menu.icon} handler={setActive} />
+      <Form onSubmit={event => submitHandler(event, EDIT_OPTION)} type="formdata">
         <Card className="mt-4">
           <Card.Header className="text-center">Anggota Profesi</Card.Header>
           <Card.Body className="space-y-4">
@@ -98,7 +87,7 @@ export default function AnggotaProfesiEdit() {
                 onChange={inputHandler}
                 options={
                   kategoriProfesi &&
-                  kategoriProfesi.map((item) => ({
+                  kategoriProfesi.map(item => ({
                     label: `${item.nama_kategori}`,
                     value: item.id,
                   }))
@@ -204,11 +193,7 @@ export default function AnggotaProfesiEdit() {
                   onChange={inputHandler}
                 />
                 <embed
-                  src={
-                    form.file.startsWith("https")
-                      ? `${form.file}`
-                      : `${FILE_URL}/${form.file}`
-                  }
+                  src={form.file.startsWith('https') ? `${form.file}` : `${FILE_URL}/${form.file}`}
                   className="w-full h-[256px]"
                 />
               </div>
@@ -217,12 +202,7 @@ export default function AnggotaProfesiEdit() {
         </Card>
 
         <div className="flex gap-4 mt-4">
-          <Button
-            as="a"
-            href={prefix + menu.url}
-            variant="secondary"
-            className="w-full h-12"
-          >
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
@@ -231,5 +211,5 @@ export default function AnggotaProfesiEdit() {
         </div>
       </Form>
     </Layout>
-  );
+  )
 }
