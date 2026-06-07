@@ -315,6 +315,24 @@ export const APP_MENU = [
       },
     ],
   },
+
+  // Persuratan
+  {
+    type: "menu",
+    label: "Persuratan",
+    url: "/persuratan",
+    icon: "mdi:email-multiple-outline",
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA, ROLE_ID_PEGAWAI],
+    submenus: [
+      {
+        label: "Daftar Surat",
+        url: "#index",
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA, ROLE_ID_PEGAWAI],
+      },
+    ],
+  },
+
+
   // Kegiatan
   {
     type: "menu-group",
