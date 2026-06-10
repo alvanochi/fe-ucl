@@ -600,12 +600,12 @@ export const APP_MENU = [
     label: "Pembelajaran",
     url: "/pembelajaran",
     icon: "fluent-mdl2:learning-tools",
-    allowedRoles: [ROLE_ID_ADMIN],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
     submenus: [
       {
         label: "Matakuliah",
         url: "#matakuliah",
-        allowedRoles: [ROLE_ID_ADMIN],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
       },
       {
         label: "Kurikulum",

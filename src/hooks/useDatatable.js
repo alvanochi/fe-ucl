@@ -72,11 +72,11 @@ export const useDatatable = (url, options = {}) => {
         typeof options.onLoad == "function" &&
         options.onLoad(finalData);
     } catch (error) {
-      if (error) {
+      if (error?.response?.status === 401) {
         toastAlert("error", "session expired");
         logout();
       } else {
-        toastAlert("error", "Internal Server Error!");
+        toastAlert("error", error?.response?.data?.message || "Internal Server Error!");
       }
 
       setLoading(false);

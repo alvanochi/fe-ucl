@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "@headlessui/react": "^1.7.15",
+    "@tailwindcss/typography": "^0.5.20",
     "aos": "^2.3.4",
     "axios": "^1.4.0",
     "chart.js": "^4.3.0",
     "classnames": "^2.3.2",
+    "dompurify": "^3.4.8",
     "html2pdf.js": "^0.10.1",
     "iron-session": "^6.3.1",
     "leaflet": "^1.9.4",

@@ -87,5 +87,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("@tailwindcss/forms"), rotateY],
+  plugins: [require("@tailwindcss/forms"), require("@tailwindcss/typography"), rotateY],
 };
