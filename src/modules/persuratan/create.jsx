@@ -236,7 +236,7 @@ export default function PersuratanCreate({ onBack }) {
                           options={penerimaOptions}
                           placeholder="Ketik nama untuk mencari..."
                           isLoading={isSearchingPenerima}
-                          isDisabled={isSearchingPenerima}
+                          isDisabled={isSubmit}
                           required
                         />
                       </Form.Group>

@@ -74,6 +74,7 @@ const Combobox = ({
   options,
   menuTarget,
   styles = {},
+  onSearch,
   ...props
 } = {}) => {
   const config = resolveConfig(twConfig);
@@ -111,6 +112,11 @@ const Combobox = ({
         value={selected}
         options={options || []}
         onChange={handleChange}
+        onInputChange={(newValue, actionMeta) => {
+          if (onSearch && actionMeta.action === "input-change") {
+            onSearch(newValue);
+          }
+        }}
         menuPortalTarget={menuTarget || ""}
         {...props}
       />
