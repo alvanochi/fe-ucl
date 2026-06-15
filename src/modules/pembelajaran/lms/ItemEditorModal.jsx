@@ -14,6 +14,7 @@ const ACCEPT = { pdf: "application/pdf,.pdf", ppt: ".ppt,.pptx" };
 
 const emptyForm = {
   title: "",
+  description: "",
   is_published: false,
   html: "",
   url: "",
@@ -43,6 +44,7 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
       setType(item.type);
       setForm({
         title: item.title || "",
+        description: item.description || "",
         is_published: !!item.is_published,
         html: p.html || "",
         url: p.url || "",
@@ -96,20 +98,27 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
         fd.append("file", file);
         fd.append("type", type);
         fd.append("title", form.title.trim());
+        fd.append("description", form.description.trim());
         fd.append("is_published", String(form.is_published));
         res = await uploadItem(sectionId, fd);
       } else if (!isEdit) {
         res = await createItem(sectionId, {
           type,
           title: form.title.trim(),
+          description: form.description.trim() || null,
           is_published: form.is_published,
           payload: buildPayload(),
         });
       } else if (FILE_TYPES.includes(type)) {
-        res = await updateItem(item.id, { title: form.title.trim(), is_published: form.is_published });
+        res = await updateItem(item.id, {
+          title: form.title.trim(),
+          description: form.description.trim() || null,
+          is_published: form.is_published,
+        });
       } else {
         res = await updateItem(item.id, {
           title: form.title.trim(),
+          description: form.description.trim() || null,
           is_published: form.is_published,
           payload: buildPayload(),
         });
@@ -176,6 +185,17 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
           <Form.Group>
             <Form.Label>Judul</Form.Label>
             <Form.Input type="text" value={form.title} onChange={(e) => set("title", e.target.value)} className="mt-1 w-full" />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>Deskripsi (opsional)</Form.Label>
+            <Form.Textarea
+              rows={2}
+              value={form.description}
+              onChange={(e) => set("description", e.target.value)}
+              className="mt-1 w-full"
+              placeholder="Penjelasan singkat aktivitas ini untuk mahasiswa…"
+            />
           </Form.Group>
 
           {/* Field per tipe */}

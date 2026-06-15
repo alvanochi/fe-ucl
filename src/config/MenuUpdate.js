@@ -618,12 +618,27 @@ export const APP_MENU = [
     label: "Pembelajaran",
     url: "/pembelajaran",
     icon: "fluent-mdl2:learning-tools",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+    allowedRoles: [
+      ROLE_ID_ADMIN,
+      ROLE_ID_MAHASISWA,
+      ROLE_ID_DOSEN,
+      ROLE_ID_DOSEN_EXT,
+    ],
     submenus: [
+      {
+        label: "Kelas LMS",
+        url: "#kelas-lms",
+        allowedRoles: [
+          ROLE_ID_ADMIN,
+          ROLE_ID_MAHASISWA,
+          ROLE_ID_DOSEN,
+          ROLE_ID_DOSEN_EXT,
+        ],
+      },
       {
         label: "Matakuliah",
         url: "#matakuliah",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_MAHASISWA],
+        allowedRoles: [ROLE_ID_ADMIN],
       },
       {
         label: "Kurikulum",

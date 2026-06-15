@@ -8,8 +8,12 @@ import PdfRenderer from "./renderers/PdfRenderer";
 import PptRenderer from "./renderers/PptRenderer";
 
 /**
- * Dispatcher penampil item berdasar tipe (dipakai di dalam Modal). Langkah 2:
- * page/url/video/pdf/ppt aktif. forum (langkah 4), assignment & exam (kemudian) → placeholder.
+ * Dispatcher penampil item berdasar tipe. page/url/video/pdf/ppt aktif;
+ * forum/assignment/exam → placeholder "menyusul".
+ *
+ * `inline`: bila true, chip tipe (header) tidak dirender karena pemanggil (ContentItemRow)
+ * sudah menampilkan judul + tipe + deskripsi di atas konten. Dipakai untuk tampilan
+ * langsung-terbuka (tanpa modal).
  */
 const RENDERERS = {
   url: UrlRenderer,
@@ -25,7 +29,7 @@ const SOON = {
   exam: "Ujian (CBT) ditangani modul terpisah, menyusul.",
 };
 
-export default function ContentItemViewer({ item, demo = false }) {
+export default function ContentItemViewer({ item, demo = false, inline = false }) {
   if (!item) return null;
 
   const Renderer = RENDERERS[item.type];
@@ -33,13 +37,15 @@ export default function ContentItemViewer({ item, demo = false }) {
 
   return (
     <div className="text-left">
-      {/* Chip tipe (judul sudah di header modal) */}
-      <div className="mb-4 flex justify-center">
-        <span className={classNames("inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ring-black/5", meta.bg, meta.color)}>
-          <Icon icon={meta.icon} width={16} height={16} />
-          {meta.label}
-        </span>
-      </div>
+      {/* Chip tipe (disembunyikan saat inline — header sudah menampilkannya) */}
+      {!inline && (
+        <div className="mb-4 flex justify-center">
+          <span className={classNames("inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold ring-1 ring-inset ring-black/5", meta.bg, meta.color)}>
+            <Icon icon={meta.icon} width={16} height={16} />
+            {meta.label}
+          </span>
+        </div>
+      )}
 
       {Renderer ? (
         <Renderer item={item} demo={demo} />

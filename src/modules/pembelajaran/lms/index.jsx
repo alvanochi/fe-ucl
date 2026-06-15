@@ -1,10 +1,8 @@
 import { useState } from "react";
 import { Icon } from "@iconify-icon/react";
 import classNames from "classnames";
-import Modal from "../../../components/Modal";
 import TopicCard from "./TopicCard";
 import TopicSkeleton from "./Skeleton";
-import ContentItemViewer from "./ContentItemViewer";
 import TopicEditorModal from "./TopicEditorModal";
 import ItemEditorModal from "./ItemEditorModal";
 import { SAMPLE_SECTIONS } from "./sampleData";
@@ -32,7 +30,6 @@ import { toastAlert, warningAlert } from "../../../lib/sweetalert";
  */
 export default function KelasLmsModule({ kelasKuliahId, canManage = false, demo = false }) {
   const [previewAsStudent, setPreviewAsStudent] = useState(false);
-  const [openedItem, setOpenedItem] = useState(null);
   const [topicEditor, setTopicEditor] = useState({ open: false, section: null });
   const [itemEditor, setItemEditor] = useState({ open: false, sectionId: null, item: null });
   const [collapsedIds, setCollapsedIds] = useState(() => new Set()); // kosong = semua terbuka
@@ -40,10 +37,22 @@ export default function KelasLmsModule({ kelasKuliahId, canManage = false, demo 
 
   const sections = demo ? SAMPLE_SECTIONS : liveSections;
   const manage = canManage && !previewAsStudent;
-  const totalItems = sections.reduce((a, s) => a + (s.content_items?.length || 0), 0);
-  const anyOpen = sections.some((s) => !collapsedIds.has(s.id));
 
-  const openItem = (item) => setOpenedItem(item);
+  // Mode baca (mahasiswa / pratinjau mahasiswa): hanya topik & aktivitas yang TERBIT.
+  // Catatan: backend `GET /lms/sections` belum memfilter is_published per role, jadi
+  // penyaringan tampilan dilakukan di sini. (Hardening backend = pekerjaan lanjutan.)
+  const visibleSections = manage
+    ? sections
+    : sections
+        .filter((s) => s.is_published)
+        .map((s) => ({
+          ...s,
+          content_items: (s.content_items || []).filter((i) => i.is_published),
+        }));
+
+  const totalItems = visibleSections.reduce((a, s) => a + (s.content_items?.length || 0), 0);
+  const anyOpen = visibleSections.some((s) => !collapsedIds.has(s.id));
+
   const refresh = () => mutate && mutate();
 
   const toggleTopic = (id) =>
@@ -52,7 +61,7 @@ export default function KelasLmsModule({ kelasKuliahId, canManage = false, demo 
       next.has(id) ? next.delete(id) : next.add(id);
       return next;
     });
-  const toggleAll = () => setCollapsedIds(anyOpen ? new Set(sections.map((s) => s.id)) : new Set());
+  const toggleAll = () => setCollapsedIds(anyOpen ? new Set(visibleSections.map((s) => s.id)) : new Set());
 
   // Buka editor boleh di mode contoh (untuk pratinjau form); penyimpanan diblokir di editor.
   const addTopic = () => setTopicEditor({ open: true, section: null });
@@ -137,7 +146,7 @@ export default function KelasLmsModule({ kelasKuliahId, canManage = false, demo 
         </div>
 
         <div className="flex items-center gap-2">
-          {sections.length > 0 && (
+          {visibleSections.length > 0 && (
             <button
               type="button"
               onClick={toggleAll}
@@ -180,41 +189,31 @@ export default function KelasLmsModule({ kelasKuliahId, canManage = false, demo 
       {/* Konten */}
       {isLoading && !demo ? (
         <TopicSkeleton count={3} />
-      ) : sections.length === 0 ? (
+      ) : visibleSections.length === 0 ? (
         <EmptyState canManage={manage} onAdd={addTopic} />
       ) : (
         <div className="space-y-4">
-          {sections.map((section, idx) => (
+          {visibleSections.map((section, idx) => (
             <TopicCard
               key={section.id}
               section={section}
               manage={manage}
+              demo={demo}
               open={!collapsedIds.has(section.id)}
               onToggle={() => toggleTopic(section.id)}
               onAddItem={addItem}
               onEditTopic={editTopic}
               onDeleteTopic={removeTopic}
               onMoveTopic={(dir) => moveTopic(section, dir)}
-              onOpenItem={openItem}
               onEditItem={editItem}
               onDeleteItem={removeItem}
               onReorderItems={reorderItemsH}
               isFirst={idx === 0}
-              isLast={idx === sections.length - 1}
+              isLast={idx === visibleSections.length - 1}
             />
           ))}
         </div>
       )}
-
-      {/* Penampil item per tipe (langkah 2) */}
-      <Modal
-        show={!!openedItem}
-        handler={() => setOpenedItem(null)}
-        title={openedItem?.title || ""}
-        size={openedItem?.type === "pdf" ? "xl" : "lg"}
-      >
-        <ContentItemViewer item={openedItem} demo={demo} />
-      </Modal>
 
       {/* Editor topik & item (langkah 3) */}
       <TopicEditorModal

@@ -13,6 +13,39 @@ import axios from "axios";
 const LMS_BASE = () => `${process.env.NEXT_PUBLIC_API_URL}/lms`;
 
 /**
+ * Daftar kelas LMS (pintu masuk) — `GET /lms/classes`. Backend yang memfilter sesuai
+ * role/scope user (dosen pengampu, mahasiswa terdaftar, admin scope). FE hanya UX.
+ *
+ * Respons backend: { limit, page, total, total_page, rows: [...] }.
+ *
+ * @param {object} params { semester, search, page, limit, enabled }
+ *  - enabled=false → SWR tidak fetch (dipakai mode contoh/?demo=1 yang memakai data lokal).
+ */
+export function useLmsClasses({ semester, search, page = 1, limit = 12, enabled = true } = {}) {
+  const qs = new URLSearchParams();
+  if (semester) qs.set("semester", semester);
+  if (search) qs.set("search", search);
+  qs.set("page", page);
+  qs.set("limit", limit);
+
+  const url = enabled ? `${LMS_BASE()}/classes?${qs.toString()}` : null;
+  const { data, error, isLoading, mutate } = useSWR(url);
+
+  // Fetcher global mengembalikan `response.data` (objek paginasi) atau objek error → jaga aman.
+  const payload = data && Array.isArray(data.rows) ? data : null;
+
+  return {
+    classes: payload?.rows || [],
+    total: payload?.total || 0,
+    page: payload?.page || page,
+    totalPage: payload?.total_page || 0,
+    error,
+    isLoading,
+    mutate,
+  };
+}
+
+/**
  * Daftar topik (section) beserta item-nya untuk satu kelas.
  * `kelasKuliahId` null/kosong → SWR tidak fetch (mencegah panggilan tanpa konteks kelas).
  */

@@ -7,10 +7,14 @@ import AkunModule from "../../../modules/setting/akun";
 import { Loading } from "../../../components/Loading";
 import MatakuliahModule from "../../../modules/admin/pembelajaran/matakuliah";
 import KurikulumModule from "../../../modules/admin/pembelajaran/kurikulum";
+import ClassList from "../../../modules/pembelajaran/lms/ClassList";
+import { useRouter } from "next/router";
 
 export default function Pembelajaran() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, active, setActive } = useMenu();
+  const router = useRouter();
+  const demo = router.query.demo === "1";
 
   if ([user, menu].some((item) => item == null)) return <Loading />;
   return (
@@ -23,6 +27,9 @@ export default function Pembelajaran() {
         handler={setActive}
       />
       <div className="my-8">
+        {active.url === "#kelas-lms" && (
+          <ClassList basePath="/admin/pembelajaran" demo={demo} />
+        )}
         {active.url === "#matakuliah" && (
           <MatakuliahModule baseURL={prefix + menu.url} />
         )}

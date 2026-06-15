@@ -8,21 +8,23 @@ import { typeMeta } from "./typeMeta";
  * Header bisa diklik untuk buka/tutup; saat tertutup tampil ringkasan (jumlah & ikon tipe).
  *
  * props:
- *  - section, manage, open (controlled), onToggle
+ *  - section, manage, demo, open (controlled), onToggle
  *  - onAddItem, onEditTopic, onDeleteTopic, onMoveTopic(dir)
- *  - onOpenItem, onEditItem, onDeleteItem, onReorderItems(sectionId, payload)
+ *  - onEditItem, onDeleteItem, onReorderItems(sectionId, payload)
  *  - isFirst, isLast (batas reorder topik)
+ *
+ * Aktivitas di dalam topik tampil LANGSUNG (inline) — tidak ada pop-up/modal lagi.
  */
 export default function TopicCard({
   section,
   manage = false,
+  demo = false,
   open = true,
   onToggle,
   onAddItem,
   onEditTopic,
   onDeleteTopic,
   onMoveTopic,
-  onOpenItem,
   onEditItem,
   onDeleteItem,
   onReorderItems,
@@ -122,7 +124,7 @@ export default function TopicCard({
                 key={item.id}
                 item={item}
                 manage={manage}
-                onOpen={onOpenItem}
+                demo={demo}
                 onEdit={onEditItem}
                 onDelete={onDeleteItem}
                 onMove={(dir) => moveItem(idx, dir)}
