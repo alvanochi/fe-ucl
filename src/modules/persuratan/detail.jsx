@@ -101,8 +101,7 @@ export default function PersuratanDetail({ onBack, surat }) {
   const fetchTracking = useCallback(async (suratId) => {
     if (!suratId) return;
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/tracking/${suratId}`, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/tracking/${suratId}`);
       if (res.data.isSuccess) setTrackingList(res.data.data);
     } catch (err) {
       console.error("Gagal load tracking:", err);
@@ -127,8 +126,7 @@ export default function PersuratanDetail({ onBack, surat }) {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/list-users?limit=1000`, { headers: { Authorization: `Bearer ${token}` } });
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/list-users?limit=1000`);
         const rows = res.data?.data?.rows || res.data?.rows || res.data?.data;
         if (rows && Array.isArray(rows)) {
           const formatted = rows.filter((u) => u.user_id !== user?.user_id).map((u) => ({ label: `${u.personal_data?.nama_lengkap || u.username} - ${u.role ? u.role.toUpperCase() : ""}`, value: u.user_id }));
@@ -144,8 +142,7 @@ export default function PersuratanDetail({ onBack, surat }) {
   const refreshDetailData = useCallback(async () => {
     if (!localSurat?.id) return;
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${localSurat.id}`, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${localSurat.id}`);
       const fetchedData = res.data?.data || res.data;
       if (fetchedData) {
         setLocalSurat(fetchedData);
@@ -172,7 +169,6 @@ export default function PersuratanDetail({ onBack, surat }) {
   const handleSendReply = async (text, files, onSuccess) => {
     try {
       setIsSending(true);
-      const token = localStorage.getItem("token");
       const fd = new FormData();
       const targetPenerima = user?.user_id === localSurat.user_id ? localSurat.penerima_id : localSurat.user_id;
 
@@ -183,7 +179,7 @@ export default function PersuratanDetail({ onBack, surat }) {
       fd.append("nama_aktor", getMyIdentity());
       files.forEach((file) => fd.append("lampiran", file));
 
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat`, fd, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } });
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat`, fd, { headers: { "Content-Type": "multipart/form-data" } });
       if (res.data.isSuccess) {
         onSuccess();
         toastAlert("success", "Balasan berhasil dikirim!");
@@ -199,14 +195,13 @@ export default function PersuratanDetail({ onBack, surat }) {
   const handleDisposisiSubmit = async (target, catatan, file, onSuccess) => {
     try {
       loadingAlert("Memproses Disposisi...", "Mohon tunggu sebentar");
-      const token = localStorage.getItem("token");
       const fd = new FormData();
       fd.append("target_penerima_id", target);
       fd.append("catatan_disposisi", catatan);
       fd.append("nama_aktor", getMyIdentity());
       if (file) fd.append("lampiran", file);
 
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat/disposisi/${localSurat.id}`, fd, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } });
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat/disposisi/${localSurat.id}`, fd, { headers: { "Content-Type": "multipart/form-data" } });
       if (res.data.isSuccess) {
         onSuccess();
         setShowDisposisi(false);
@@ -223,9 +218,8 @@ export default function PersuratanDetail({ onBack, surat }) {
       async () => {
         try {
           loadingAlert("Harap Tunggu", "Sedang menyelesaikan pengajuan...");
-          const token = localStorage.getItem("token");
           const catatanLog = `Pengajuan telah diselesaikan dan ditutup secara permanen. Dilakukan oleh: ${getMyIdentity()}`;
-          const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/surat/status/${localSurat.id}`, { status: "Selesai", catatan: catatanLog }, { headers: { Authorization: `Bearer ${token}` } });
+          const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/surat/status/${localSurat.id}`, { status: "Selesai", catatan: catatanLog });
           if (res.data.isSuccess) {
             toastAlert("success", "Pengajuan Selesai!");
             await refreshDetailData();

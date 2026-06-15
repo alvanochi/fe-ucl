@@ -105,10 +105,7 @@ export default function PersuratanModule({ isPreview = false }) {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat?mode=all`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat?mode=all`);
 
         const rows = res.data?.data?.rows || res.data?.rows || res.data?.data;
         if (rows) {
@@ -186,10 +183,7 @@ export default function PersuratanModule({ isPreview = false }) {
     if (loadingId) return;
     try {
       setLoadingId(s.id);
-      const token = localStorage.getItem("token");
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${s.id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${s.id}`);
 
       const fetchedData = res.data?.data || res.data;
       if (fetchedData) {

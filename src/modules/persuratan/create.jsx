@@ -54,9 +54,7 @@ export default function PersuratanCreate({ onBack }) {
 
     setIsSearchingPenerima(true);
     try {
-      const token = localStorage.getItem("token");
       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/list-users`, {
-        headers: { Authorization: `Bearer ${token}` },
         params: { search: keyword, limit: 10, page: 1 },
       });
 
