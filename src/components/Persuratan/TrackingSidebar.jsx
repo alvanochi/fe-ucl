@@ -9,15 +9,35 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
     if (parts.length > 1) {
       return (
         <div className="flex flex-col gap-2 mt-1">
-          <span className="leading-relaxed text-gray-700">{parts[0].trim()}</span>
-          <div className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-gray-100 rounded-lg border border-gray-200 shadow-sm">
+          <span className="leading-relaxed text-gray-700 text-sm">{parts[0].trim()}</span>
+          <div className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white rounded-lg border border-gray-200 shadow-sm">
             <Icon icon="mdi:account-circle" className="text-gray-500 shrink-0" width={16} />
-            <span className="text-xs font-bold text-gray-700">{parts[1].trim()}</span>
+            <span className="text-[11px] font-bold text-gray-700">{parts[1].trim()}</span>
           </div>
         </div>
       );
     }
-    return <span className="leading-relaxed text-gray-700">{text}</span>;
+    return <span className="leading-relaxed text-gray-700 text-sm">{text}</span>;
+  };
+
+  const getTimelineVisual = (status, text) => {
+    const isDisposisi = text?.toLowerCase().includes("disposisi");
+    if (isDisposisi) return { icon: "mdi:share-all", color: "bg-indigo-500", border: "border-indigo-100", bgCard: "bg-indigo-50/50" };
+
+    switch (status) {
+      case "Sent":
+        return { icon: "mdi:send-circle", color: "bg-blue-500", border: "border-blue-100", bgCard: "bg-blue-50/50" };
+      case "Read":
+        return { icon: "mdi:eye-check", color: "bg-yellow-500", border: "border-yellow-100", bgCard: "bg-yellow-50/50" };
+      case "Replied":
+        return { icon: "mdi:comment-processing", color: "bg-purple-500", border: "border-purple-100", bgCard: "bg-purple-50/50" };
+      case "Selesai":
+        return { icon: "mdi:check-decagram", color: "bg-green-500", border: "border-green-100", bgCard: "bg-green-50/50" };
+      case "Ditolak":
+        return { icon: "mdi:close-octagon", color: "bg-red-500", border: "border-red-100", bgCard: "bg-red-50/50" };
+      default:
+        return { icon: "mdi:record-circle", color: "bg-gray-500", border: "border-gray-100", bgCard: "bg-gray-50/50" };
+    }
   };
 
   return (
@@ -25,7 +45,7 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
       <Card className="border-2 border-gray-200 shadow-sm overflow-hidden bg-white rounded-3xl">
         <div className="bg-primary-50 border-b-2 border-primary-100 text-primary-700 px-5 sm:px-6 py-4 flex justify-between items-center">
           <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 font-mono">
-            <Icon icon="mdi:folder-open" width={20} /> Lampiran Utama
+            <Icon icon="mdi:folder-open" width={20} /> Lampiran
           </span>
           <span className="bg-primary-100 px-3 py-1 rounded-lg text-[10px] font-bold">{lampirans?.length || 0} File</span>
         </div>
@@ -67,47 +87,58 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
         <Card className="border-2 border-gray-200 shadow-sm overflow-hidden bg-white rounded-3xl">
           <div className="bg-gray-800 border-b-2 border-gray-900 text-white px-5 sm:px-6 py-4 flex justify-between items-center">
             <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 font-mono">
-              <Icon icon="mdi:history" width={20} /> Riwayat Aktivitas
+              <Icon icon="mdi:timeline-check" width={20} /> Timeline Pengajuan
             </span>
           </div>
-          <div className="p-5 sm:p-6 bg-white max-h-[300px] overflow-y-auto">
+          <div className="p-5 sm:p-6 bg-white max-h-[500px] overflow-y-auto">
             {trackingList?.length === 0 ? (
-              <p className="text-xs text-center text-gray-400 font-medium py-4">Memuat riwayat...</p>
+              <p className="text-xs text-center text-gray-400 font-medium py-4">Memuat timeline...</p>
             ) : (
-              <div className="relative border-l-2 border-gray-100 ml-3 space-y-6">
-                {trackingList?.map((track, i) => (
-                  <div key={track.id || i} className="relative pl-6 animate-in fade-in slide-in-from-right-2">
-                    <div
-                      className={classNames("absolute -left-[9px] top-0.5 w-4 h-4 rounded-full border-4 border-white shadow-sm", track.status === "Selesai" ? "bg-green-500" : track.status === "Ditolak" ? "bg-red-500" : "bg-primary-500")}
-                    />
-                    <p className="text-[11px] font-black text-gray-800 uppercase tracking-wide">{track.status}</p>
-                    <div className="mt-1">{renderCatatanTracking(track.catatan)}</div>
-                    <p className="text-[9px] text-gray-400 font-mono mt-2 font-bold">{new Date(track.created_at).toLocaleString("id-ID", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })} WIB</p>
-                  </div>
-                ))}
+              <div className="relative border-l-[3px] border-gray-200 ml-4 space-y-6 pb-2">
+                {trackingList?.map((track, i) => {
+                  const visual = getTimelineVisual(track.status, track.catatan);
+                  return (
+                    <div key={track.id || i} className="relative pl-8 animate-in fade-in slide-in-from-right-2">
+                      {/* Icon Node */}
+                      <div className={classNames("absolute -left-[18px] top-0 w-8 h-8 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md z-10", visual.color)}>
+                        <Icon icon={visual.icon} width={16} />
+                      </div>
+
+                      {/* Content Card */}
+                      <div className={classNames("p-4 rounded-xl border border-gray-200 shadow-sm", visual.bgCard)}>
+                        <div className="flex justify-between items-start gap-4 mb-2">
+                          <p className={classNames("text-[11px] font-black uppercase tracking-widest", visual.color.replace("bg-", "text-"))}>{track.status}</p>
+                          <p className="text-[10px] text-gray-500 font-mono font-bold whitespace-nowrap">{new Date(track.created_at).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}</p>
+                        </div>
+                        <div className="text-gray-800">{renderCatatanTracking(track.catatan)}</div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </div>
         </Card>
 
+        {/* History Disposisi */}
         {historyDisposisi && historyDisposisi.length > 0 && (
           <Card className="border-2 border-gray-200 shadow-sm overflow-hidden bg-white rounded-3xl animate-in fade-in slide-in-from-bottom-2">
-            <div className="bg-gray-800 border-b-2 border-gray-900 text-white px-5 sm:px-6 py-4 flex justify-between items-center">
+            <div className="bg-indigo-600 border-b-2 border-indigo-700 text-white px-5 sm:px-6 py-4 flex justify-between items-center">
               <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 font-mono">
-                <Icon icon="mdi:source-branch" width={20} /> Jalur Disposisi
+                <Icon icon="mdi:source-branch" width={20} /> Rute Disposisi
               </span>
-              <span className="bg-gray-700 text-gray-300 border border-gray-600 px-2 py-0.5 rounded-md text-[9px] font-bold">{historyDisposisi.length} Rute</span>
+              <span className="bg-indigo-700 text-white border border-indigo-500 px-2 py-0.5 rounded-md text-[9px] font-bold">{historyDisposisi.length} Rute</span>
             </div>
             <div className="p-5 sm:p-6 bg-white max-h-[300px] overflow-y-auto">
               <div className="relative border-l-2 border-gray-100 ml-3 space-y-6">
                 {historyDisposisi.map((disp, idx) => (
                   <div key={idx} className="relative pl-6 animate-in fade-in slide-in-from-right-2">
-                    <div className="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full border-4 border-white shadow-sm bg-primary-500" />
+                    <div className="absolute -left-[9px] top-0.5 w-4 h-4 rounded-full border-4 border-white shadow-sm bg-indigo-500" />
                     <p className="text-[11px] font-black text-gray-800 tracking-wide mb-1 leading-snug">
-                      {disp.aktor} <span className="text-gray-400 font-black mx-1">&rarr;</span> <span className="text-primary-600">{disp.target_penerima}</span>
+                      {disp.aktor} <span className="text-gray-400 font-black mx-1">&rarr;</span> <span className="text-indigo-600">{disp.target_penerima}</span>
                     </p>
                     <div className="mt-1 flex flex-col gap-2">
-                      <span className="leading-relaxed text-gray-700 font-medium">&quot;{disp.catatan}&quot;</span>
+                      <span className="leading-relaxed text-gray-700 font-medium text-sm">&quot;{disp.catatan}&quot;</span>
                       {disp.lampiran && (
                         <a
                           href={`${process.env.NEXT_PUBLIC_API_URL}/lampiran-surat/${disp.lampiran.file_url}`}

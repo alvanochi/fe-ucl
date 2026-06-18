@@ -1,64 +1,16 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Head from "next/head";
 import axios from "axios";
 import { Icon } from "@iconify-icon/react";
 import classNames from "classnames";
 import Layout from "../../components/Layout";
-import Button from "../../components/Button";
 import Card from "../../components/Card";
-import PageHeader from "../../components/PageHeader";
-import SortIcon from "../../components/SortIcon";
-import Form from "../../components/Form";
-import Modal from "../../components/Modal";
-import Pagination from "../../components/Pagination";
-import useModal from "../../hooks/useModal";
-import useForm from "../../hooks/useForm";
 import useUser from "../../hooks/useUser";
 import { toastAlert, warningAlert, loadingAlert } from "../../lib/sweetalert";
 
-import PersuratanCreate from "./create";
 import DisposisiModal from "../../components/persuratan/DisposisiModal";
 import ChatRoom from "../../components/persuratan/ChatRoom";
 import TrackingSidebar from "../../components/persuratan/TrackingSidebar";
-
-const TrackingTimeline = ({ currentStatus }) => {
-  const steps = [
-    { status: "Sent", label: "Diajukan", icon: "mdi:send-circle" },
-    { status: "Read", label: "Dilihat", icon: "mdi:eye-check" },
-    { status: "Replied", label: "Diproses", icon: "mdi:comment-processing" },
-    { status: "Selesai", label: "Selesai", icon: "mdi:check-decagram" },
-  ];
-  const currentIndex = steps.findIndex((s) => s.status === currentStatus);
-
-  return (
-    <div className="w-full bg-white py-5 px-4 sm:px-6 rounded-2xl border-2 border-gray-200 shadow-sm mb-6 overflow-x-auto">
-      <div className="flex justify-between items-center relative z-0 min-w-[300px]">
-        {steps.map((step, index) => {
-          const isCompleted = index <= currentIndex;
-          const isLast = index === steps.length - 1;
-          return (
-            <div key={step.status} className="flex-1 flex flex-col items-center relative">
-              {!isLast && (
-                <div className="absolute top-4 left-1/2 w-full h-[3px] bg-gray-100 -z-10">
-                  <div className={classNames("h-full transition-all duration-700 ease-in-out", isCompleted ? "bg-primary-600" : "bg-transparent")} style={{ width: isCompleted ? "100%" : "0%" }} />
-                </div>
-              )}
-              <div
-                className={classNames(
-                  "w-8 h-8 rounded-full flex items-center justify-center border-2 transition-all duration-300 z-10",
-                  isCompleted ? "bg-primary-600 border-primary-600 text-white shadow-md" : "bg-white border-gray-300 text-gray-400",
-                )}
-              >
-                <Icon icon={step.icon} width={16} />
-              </div>
-              <p className={classNames("mt-2 text-[10px] sm:text-xs font-bold uppercase tracking-widest text-center", isCompleted ? "text-primary-700" : "text-gray-400")}>{step.label}</p>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-};
 
 const InfoBlock = ({ label, value, highlight }) => (
   <div className="flex flex-col gap-1.5 font-bold">
@@ -101,7 +53,8 @@ export default function PersuratanDetail({ onBack, surat }) {
   const fetchTracking = useCallback(async (suratId) => {
     if (!suratId) return;
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/tracking/${suratId}`);
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/tracking/${suratId}`, { headers: { Authorization: `Bearer ${token}` } });
       if (res.data.isSuccess) setTrackingList(res.data.data);
     } catch (err) {
       console.error("Gagal load tracking:", err);
@@ -126,7 +79,8 @@ export default function PersuratanDetail({ onBack, surat }) {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/list-users?limit=1000`);
+        const token = localStorage.getItem("token");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/list-users?limit=1000`, { headers: { Authorization: `Bearer ${token}` } });
         const rows = res.data?.data?.rows || res.data?.rows || res.data?.data;
         if (rows && Array.isArray(rows)) {
           const formatted = rows.filter((u) => u.user_id !== user?.user_id).map((u) => ({ label: `${u.personal_data?.nama_lengkap || u.username} - ${u.role ? u.role.toUpperCase() : ""}`, value: u.user_id }));
@@ -142,7 +96,8 @@ export default function PersuratanDetail({ onBack, surat }) {
   const refreshDetailData = useCallback(async () => {
     if (!localSurat?.id) return;
     try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${localSurat.id}`);
+      const token = localStorage.getItem("token");
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${localSurat.id}`, { headers: { Authorization: `Bearer ${token}` } });
       const fetchedData = res.data?.data || res.data;
       if (fetchedData) {
         setLocalSurat(fetchedData);
@@ -169,24 +124,26 @@ export default function PersuratanDetail({ onBack, surat }) {
   const handleSendReply = async (text, files, onSuccess) => {
     try {
       setIsSending(true);
+      const token = localStorage.getItem("token");
       const fd = new FormData();
+
       const targetPenerima = user?.user_id === localSurat.user_id ? localSurat.penerima_id : localSurat.user_id;
 
-      fd.append("penerima_id", targetPenerima);
+      fd.append("penerima_id", targetPenerima || localSurat.penerima_id);
       fd.append("jenis_surat", localSurat.jenis_surat);
       fd.append("parent_id", localSurat.id);
       fd.append("form_data", JSON.stringify({ pesan: text }));
       fd.append("nama_aktor", getMyIdentity());
       files.forEach((file) => fd.append("lampiran", file));
 
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat`, fd, { headers: { "Content-Type": "multipart/form-data" } });
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat`, fd, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } });
       if (res.data.isSuccess) {
         onSuccess();
         toastAlert("success", "Balasan berhasil dikirim!");
         await refreshDetailData();
       }
     } catch (err) {
-      toastAlert("error", err?.response?.data?.message || "Gagal mengirim balasan!");
+      toastAlert("error", err?.response?.data?.responseMessage || err?.response?.data?.message || "Gagal mengirim balasan!");
     } finally {
       setIsSending(false);
     }
@@ -195,13 +152,14 @@ export default function PersuratanDetail({ onBack, surat }) {
   const handleDisposisiSubmit = async (target, catatan, file, onSuccess) => {
     try {
       loadingAlert("Memproses Disposisi...", "Mohon tunggu sebentar");
+      const token = localStorage.getItem("token");
       const fd = new FormData();
       fd.append("target_penerima_id", target);
       fd.append("catatan_disposisi", catatan);
       fd.append("nama_aktor", getMyIdentity());
       if (file) fd.append("lampiran", file);
 
-      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat/disposisi/${localSurat.id}`, fd, { headers: { "Content-Type": "multipart/form-data" } });
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat/disposisi/${localSurat.id}`, fd, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } });
       if (res.data.isSuccess) {
         onSuccess();
         setShowDisposisi(false);
@@ -217,18 +175,19 @@ export default function PersuratanDetail({ onBack, surat }) {
     warningAlert(
       async () => {
         try {
-          loadingAlert("Harap Tunggu", "Sedang menyelesaikan pengajuan...");
+          loadingAlert("Harap Tunggu", "Sedang menerbitkan dokumen...");
+          const token = localStorage.getItem("token");
           const catatanLog = `Pengajuan telah diselesaikan dan ditutup secara permanen. Dilakukan oleh: ${getMyIdentity()}`;
-          const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/surat/status/${localSurat.id}`, { status: "Selesai", catatan: catatanLog });
+          const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/surat/status/${localSurat.id}`, { status: "Selesai", catatan: catatanLog }, { headers: { Authorization: `Bearer ${token}` } });
           if (res.data.isSuccess) {
-            toastAlert("success", "Pengajuan Selesai!");
+            toastAlert("success", "Dokumen Berhasil Diterbitkan!");
             await refreshDetailData();
           }
         } catch (err) {
           toastAlert("error", "Gagal memperbarui status");
         }
       },
-      "Status akan diubah menjadi Selesai. Ruang percakapan akan ditutup secara permanen.",
+      "Status akan diubah menjadi Selesai. Ruang percakapan akan ditutup dan sistem akan otomatis men-generate dokumen resmi (.PDF).",
       "Selesaikan Pengajuan?",
     );
   };
@@ -238,8 +197,12 @@ export default function PersuratanDetail({ onBack, surat }) {
   const isTerminalState = ["Selesai", "Ditolak", "Archived"].includes(localSurat.status);
   const isSender = user?.user_id === localSurat.user_id;
   const isReceiver = user?.user_id === localSurat.penerima_id;
-  const canComplete = !isTerminalState && (isSender || isReceiver);
-  const canDisposisi = !isTerminalState && isReceiver;
+  const anonymityRole = user?.role?.toLowerCase();
+
+  const canComplete = !isTerminalState && (isSender || isReceiver) && anonymityRole !== "mahasiswa";
+  const canDisposisi = !isTerminalState && isReceiver && anonymityRole !== "mahasiswa";
+
+  const hasGeneratedPDF = localSurat.status === "Selesai" && localSurat.form_data?.pdf_url;
   const tglSuratLengkap = new Date(localSurat.created_at).toLocaleString("id-ID", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }) + " WIB";
 
   return (
@@ -295,34 +258,76 @@ export default function PersuratanDetail({ onBack, surat }) {
             </div>
           </div>
 
-          {localSurat.status !== "Ditolak" && <TrackingTimeline currentStatus={localSurat.status} />}
-
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
             <div className="lg:col-span-8 space-y-6 lg:space-y-8">
-              <Card className="border-2 border-gray-200 shadow-sm bg-white rounded-3xl overflow-hidden">
-                <div className="p-6 sm:p-8">
-                  <div className="mb-6 sm:mb-8 pb-6 border-b-2 border-gray-100">
-                    <p className="text-[10px] font-bold text-primary-600 uppercase tracking-widest mb-1">Perihal Pengajuan</p>
-                    <h2 className="text-xl sm:text-2xl font-black text-gray-900 leading-tight">{localSurat.form_data?.perihal || "TANPA PERIHAL"}</h2>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-y-6 sm:gap-y-10 gap-x-6 mb-8">
-                    <InfoBlock label="Tipe Surat" value={localSurat.jenis_surat} highlight />
-                    <InfoBlock label="Tanggal & Waktu" value={tglSuratLengkap} />
-                    {Object.entries(localSurat.form_data || {}).map(([key, val]) => {
-                      if (["perihal", "pesan", "catatan_surat", "catatan_disposisi", "history_disposisi"].includes(key)) return null;
-                      return <InfoBlock key={key} label={key.replace(/_/g, " ")} value={val} />;
-                    })}
-                  </div>
-                  {localSurat.form_data?.catatan_surat && (
-                    <div className="mb-2 pt-6 border-t-2 border-gray-100">
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 font-mono">Catatan Pengaju</p>
-                      <div className="bg-amber-50/50 border border-amber-100 p-4 rounded-xl">
-                        <ReadMoreText text={localSurat.form_data.catatan_surat} maxLength={150} />
+              {hasGeneratedPDF ? (
+                <Card className="border border-gray-200 shadow-sm bg-white rounded-2xl overflow-hidden flex flex-col h-[650px] animate-in fade-in zoom-in-95 duration-500">
+                  <div className="p-4 sm:px-6 sm:py-4 border-b border-gray-100 bg-gray-50/50 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
+                    <div className="flex items-center gap-3.5">
+                      <div className="flex items-center justify-center w-10 h-10 bg-primary-50 text-primary-600 rounded-lg border border-primary-100 shadow-sm">
+                        <Icon icon="mdi:file-document-check" width={22} />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-gray-800 text-sm tracking-wide">Dokumen Resmi Tersedia</h3>
+                        <p className="text-xs text-gray-500 mt-0.5">Versi final telah diterbitkan oleh sistem</p>
                       </div>
                     </div>
-                  )}
-                </div>
-              </Card>
+                    <a
+                      href={`${process.env.NEXT_PUBLIC_API_URL}${localSurat.form_data.pdf_url}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      download={`Surat_${localSurat.jenis_surat.replace(/\s+/g, "_")}_${localSurat.id}.pdf`}
+                      className="w-full sm:w-auto bg-white hover:bg-gray-50 text-gray-700 border border-gray-300 shadow-sm px-4 py-2 rounded-lg font-bold text-xs transition-all active:scale-95 outline-none flex items-center justify-center gap-2"
+                    >
+                      <Icon icon="mdi:tray-arrow-down" width={16} className="text-gray-500" />
+                      Unduh Dokumen
+                    </a>
+                  </div>
+                  <div className="flex-1 w-full bg-[#E5E7EB]">
+                    <iframe src={`${process.env.NEXT_PUBLIC_API_URL}${localSurat.form_data.pdf_url}#view=FitH`} className="w-full h-full border-none shadow-inner" title="Dokumen Resmi PDF" />
+                  </div>
+                </Card>
+              ) : (
+                <Card className="border-2 border-gray-200 shadow-sm bg-white rounded-3xl overflow-hidden animate-in fade-in">
+                  <div className="p-6 sm:p-8">
+                    <div className="mb-6 sm:mb-8 pb-6 border-b-2 border-gray-100">
+                      <p className="text-[10px] font-bold text-primary-600 uppercase tracking-widest mb-1">Perihal Pengajuan</p>
+                      <h2 className="text-xl sm:text-2xl font-black text-gray-900 leading-tight">{localSurat.form_data?.perihal || "TANPA PERIHAL"}</h2>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-6 mb-2">
+                      <InfoBlock label="Tipe Surat" value={localSurat.jenis_surat} highlight />
+                      <InfoBlock label="Tanggal Pengajuan" value={tglSuratLengkap} />
+
+                      {localSurat.jenis_surat?.toLowerCase() === "surat pengunduran diri" && (
+                        <>
+                          <InfoBlock label="Semester" value={localSurat.form_data?.semester} />
+                          <InfoBlock label="Tanggal Pengarahan" value={localSurat.form_data?.tanggal_pengarahan} />
+                          <InfoBlock label="Nama Orang Tua / Wali" value={localSurat.form_data?.nama_ortu_wali} />
+                        </>
+                      )}
+
+                      {localSurat.jenis_surat?.toLowerCase() === "surat pengajuan cuti" && (
+                        <>
+                          <InfoBlock label="Mulai Cuti Semester" value={localSurat.form_data?.semester_cuti} />
+                          <InfoBlock label="Tahun Akademik Cuti" value={localSurat.form_data?.tahun_akademik_cuti} />
+                          <InfoBlock label="Rencana Aktif Semester" value={localSurat.form_data?.semester_aktif} />
+                          <InfoBlock label="Tahun Akademik Aktif" value={localSurat.form_data?.tahun_akademik_aktif} />
+                        </>
+                      )}
+                    </div>
+
+                    {localSurat.form_data?.catatan_surat && (
+                      <div className="mb-2 pt-6 border-t-2 border-gray-100">
+                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 font-mono">Catatan Tambahan Mahasiswa</p>
+                        <div className="bg-amber-50/50 border border-amber-100 p-4 rounded-xl">
+                          <ReadMoreText text={localSurat.form_data.catatan_surat} maxLength={150} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              )}
 
               <ChatRoom replies={localSurat.Replies} user={user} isTerminalState={isTerminalState} status={localSurat.status} isSending={isSending} onSendReply={handleSendReply} onPreview={handlePreview} />
             </div>
@@ -348,7 +353,7 @@ export default function PersuratanDetail({ onBack, surat }) {
             </div>
             <div className="flex-1 bg-gray-100/50 flex items-center justify-center overflow-hidden p-3 sm:p-6">
               {activePreview.type === "pdf" ? (
-                <iframe src={`${activePreview.url}#toolbar=0`} className="w-full h-full border-2 border-gray-200 rounded-2xl sm:rounded-3xl bg-white shadow-sm" title={activePreview.name} />
+                <iframe src={activePreview.url} className="w-full h-full border-2 border-gray-200 rounded-2xl sm:rounded-3xl bg-white shadow-sm" title={activePreview.name} />
               ) : (
                 <div className="w-full h-full flex items-center justify-center overflow-auto rounded-2xl sm:rounded-3xl border-2 border-gray-200 bg-white p-2">
                   <img src={activePreview.url} alt="Preview Dokumen" className="max-w-full max-h-full object-contain" />

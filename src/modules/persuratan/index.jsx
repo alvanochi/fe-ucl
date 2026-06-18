@@ -18,7 +18,7 @@ import { toastAlert } from "../../lib/sweetalert";
 import PersuratanCreate from "./create";
 import PersuratanDetail from "./detail";
 
-function PersuratanFilter({ filter, handler, className }) {
+function PersuratanFilter({ filter, handler, className, canSeeOutbox }) {
   const { form, inputHandler, setForm } = useForm(filter);
   const { show, toggle, close } = useModal({
     onClose: () => {
@@ -33,6 +33,14 @@ function PersuratanFilter({ filter, handler, className }) {
     toggle();
   };
 
+  const tipeOptions = useMemo(() => {
+    const base = [{ label: "Surat Masuk (Inbox)", value: "Masuk" }];
+    if (canSeeOutbox) {
+      base.push({ label: "Surat Keluar (Outbox)", value: "Keluar" });
+    }
+    return base;
+  }, [canSeeOutbox]);
+
   return (
     <>
       <Button variant="primary" icon={<Icon icon="clarity:filter-line" width={20} height={20} />} onClick={toggle} pill className={className}>
@@ -42,16 +50,7 @@ function PersuratanFilter({ filter, handler, className }) {
         <Form onSubmit={submitHandler} className="grid grid-cols-1 gap-4">
           <Form.Group>
             <Form.Label>Tipe Surat</Form.Label>
-            <Form.Select
-              name="tipe"
-              onChange={inputHandler}
-              value={form?.tipe ?? ""}
-              emptyStateLabel="Semua Tipe"
-              options={[
-                { label: "Surat Masuk (Inbox)", value: "Masuk" },
-                { label: "Surat Keluar (Outbox)", value: "Keluar" },
-              ]}
-            />
+            <Form.Select name="tipe" onChange={inputHandler} value={form?.tipe ?? ""} emptyStateLabel="Semua Tipe" options={tipeOptions} />
           </Form.Group>
           <Form.Group>
             <Form.Label>Kondisi Status</Form.Label>
@@ -99,6 +98,11 @@ export default function PersuratanModule({ isPreview = false }) {
   const isAdmin = user?.role?.toLowerCase() === "admin";
   const myUserId = user?.user_id || user?.id;
 
+  // Penentu hak akses pembuatan & pencatatan surat keluar
+  const hasOutboxPrivilege = useMemo(() => {
+    return ["mahasiswa", "admin"].includes(user?.role?.toLowerCase());
+  }, [user]);
+
   useEffect(() => {
     if (view !== "index" || !user) return;
 
@@ -135,7 +139,7 @@ export default function PersuratanModule({ isPreview = false }) {
       const searchLower = search.toLowerCase();
       const perihal = s.form_data?.perihal?.toLowerCase() || "";
       const jenis = s.jenis_surat?.toLowerCase() || "";
-      const namaMhs = s.Pengirim?.personal_data?.nama_lengkap?.toLowerCase() || "";
+      const namaMhs = (s.form_data?.nama_lengkap || s.Pengirim?.personal_data?.nama_lengkap || "").toLowerCase();
       const matchSearch = perihal.includes(searchLower) || namaMhs.includes(searchLower) || jenis.includes(searchLower);
 
       const isSuratMasuk = s.penerima_id === myUserId;
@@ -157,8 +161,8 @@ export default function PersuratanModule({ isPreview = false }) {
       let bValue = b[sortConfig.key];
 
       if (sortConfig.key === "nama_pengirim") {
-        aValue = a.Pengirim?.personal_data?.nama_lengkap || "";
-        bValue = b.Pengirim?.personal_data?.nama_lengkap || "";
+        aValue = a.form_data?.nama_lengkap || a.Pengirim?.personal_data?.nama_lengkap || "";
+        bValue = b.form_data?.nama_lengkap || b.Pengirim?.personal_data?.nama_lengkap || "";
       }
 
       if (aValue < bValue) return sortConfig.direction === "asc" ? -1 : 1;
@@ -182,8 +186,11 @@ export default function PersuratanModule({ isPreview = false }) {
   const handleGoDetail = async (s) => {
     if (loadingId) return;
     try {
+      const token = localStorage.getItem("token");
       setLoadingId(s.id);
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${s.id}`);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${s.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       const fetchedData = res.data?.data || res.data;
       if (fetchedData) {
@@ -212,9 +219,9 @@ export default function PersuratanModule({ isPreview = false }) {
         <Card className="mb-8 rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
           <Card.Header className="bg-primary-600 text-white text-center text-sm font-bold py-3 uppercase tracking-widest">Ringkasan Pengajuan Surat</Card.Header>
           <Card.Body className="p-6">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-              <SummaryCard label="Surat Keluar" count={suratList.filter((s) => s.penerima_id !== myUserId).length} icon="mdi:email-send-outline" />
-              <SummaryCard label="Belum Dibalas" count={suratList.filter((s) => ["Sent", "Read"].includes(s.status)).length} icon="mdi:email-alert-outline" />
+            <div className={classNames("grid gap-4", hasOutboxPrivilege ? "grid-cols-2 md:grid-cols-5" : "grid-cols-2 md:grid-cols-4")}>
+              {hasOutboxPrivilege && <SummaryCard label="Surat Keluar" count={suratList.filter((s) => s.penerima_id !== myUserId).length} icon="mdi:email-send-outline" />}
+              <SummaryCard label="Belum Dibalas" count={suratList.filter((s) => ["Sent", "Read"].includes(s.status) && s.penerima_id === myUserId).length} icon="mdi:email-alert-outline" />
               <SummaryCard label="Dibalas" count={suratList.filter((s) => s.status === "Replied").length} icon="mdi:email-check-outline" />
               <SummaryCard label="Open" count={suratList.filter((s) => !["Selesai"].includes(s.status)).length} icon="mdi:folder-open-outline" />
               <SummaryCard label="Closed" count={suratList.filter((s) => ["Selesai"].includes(s.status)).length} icon="mdi:folder-lock-outline" />
@@ -235,10 +242,13 @@ export default function PersuratanModule({ isPreview = false }) {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-2">
-            <PersuratanFilter filter={filter} handler={setFilter} className="w-full sm:w-auto justify-center" />
-            <Button onClick={() => setView("create")} variant="primary" className="w-full sm:w-auto justify-center" icon={<Icon icon="mdi:file-plus-outline" width={20} />} pill>
-              Ajukan Surat
-            </Button>
+            <PersuratanFilter filter={filter} handler={setFilter} className="w-full sm:w-auto justify-center" canSeeOutbox={hasOutboxPrivilege} />
+
+            {hasOutboxPrivilege && (
+              <Button onClick={() => setView("create")} variant="primary" className="w-full sm:w-auto justify-center" icon={<Icon icon="mdi:file-plus-outline" width={20} />} pill>
+                Ajukan Surat
+              </Button>
+            )}
           </div>
         </div>
 
@@ -308,8 +318,8 @@ export default function PersuratanModule({ isPreview = false }) {
                         <div className="mb-1">
                           <span className={classNames("text-[9px] font-bold uppercase px-2 py-0.5 rounded", isSuratMasuk ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700")}>{isSuratMasuk ? "Masuk" : "Keluar"}</span>
                         </div>
-                        <p className="font-bold text-gray-800 leading-tight">{s.Pengirim?.personal_data?.nama_lengkap || "N/A"}</p>
-                        <p className="text-[10px] text-gray-400">{s.Pengirim?.npm || s.Pengirim?.nidn || "-"}</p>
+                        <p className="font-bold text-gray-800 leading-tight">{s.form_data?.nama_lengkap || s.Pengirim?.personal_data?.nama_lengkap || "N/A"}</p>
+                        <p className="text-[10px] text-gray-400">{s.form_data?.npm || s.Pengirim?.npm || s.Pengirim?.nidn || "-"}</p>
                       </td>
                       <td className="text-sm border-2 border-white bg-gray-50">
                         {isDisposisi && (
@@ -342,7 +352,6 @@ export default function PersuratanModule({ isPreview = false }) {
                           disabled={loadingId === s.id}
                           className="w-8 h-8 inline-flex items-center justify-center bg-white border border-gray-200 text-primary-600 rounded-lg hover:bg-primary-50 shadow-sm transition-all outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {/* Logika merubah Icon eye jadi muter kalau lg loading */}
                           {loadingId === s.id ? <Icon icon="mdi:loading" className="animate-spin text-primary-600" width={18} /> : <Icon icon="mdi:eye" width={18} />}
                         </button>
                       </td>
