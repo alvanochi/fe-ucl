@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useRef, useCallback } from "react";
 import axios from "axios";
 import Modal from "../Modal";
 import Form from "../Form";
@@ -6,7 +6,7 @@ import Button from "../Button";
 import { toastAlert } from "../../lib/sweetalert";
 import useUser from "../../hooks/useUser";
 
-export default function DisposisiModal({ show, onClose, onSubmit }) {
+export default function DisposisiModal({ show, onClose, onSubmit, userList = [] }) {
   const { user } = useUser();
   const userRef = useRef(user);
 
@@ -15,25 +15,18 @@ export default function DisposisiModal({ show, onClose, onSubmit }) {
   const [fileDisposisi, setFileDisposisi] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [userOptions, setUserOptions] = useState([]);
+  const [userOptions, setUserOptions] = useState(userList);
+  const [selectedOption, setSelectedOption] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const debounceTimer = useRef(null);
-  const defaultUserCache = useRef([]);
 
-  useEffect(() => {
-    userRef.current = user;
-  }, [user]);
-
-  useEffect(() => {
-    if (show) fetchUsers("");
-  }, [show]);
+  const prevUserList = useRef(userList);
+  if (prevUserList.current !== userList) {
+    prevUserList.current = userList;
+    if (!selectedOption) setUserOptions(userList);
+  }
 
   const fetchUsers = useCallback(async (keyword) => {
-    if (keyword === "" && defaultUserCache.current.length > 0) {
-      setUserOptions(defaultUserCache.current);
-      return;
-    }
-
     setIsSearching(true);
     try {
       const token = localStorage.getItem("token");
@@ -51,10 +44,6 @@ export default function DisposisiModal({ show, onClose, onSubmit }) {
         }));
 
       setUserOptions(formatted);
-
-      if (keyword === "") {
-        defaultUserCache.current = formatted;
-      }
     } catch {
       toastAlert("error", "Gagal memuat daftar user.");
     } finally {
@@ -66,15 +55,29 @@ export default function DisposisiModal({ show, onClose, onSubmit }) {
     (keyword) => {
       clearTimeout(debounceTimer.current);
       if (keyword === "") {
-        fetchUsers(keyword);
-      } else if (keyword.length < 3) {
+        setUserOptions(userList);
         return;
-      } else {
-        debounceTimer.current = setTimeout(() => fetchUsers(keyword), 800);
       }
+      if (keyword.length < 3) return;
+      debounceTimer.current = setTimeout(() => fetchUsers(keyword), 800);
     },
-    [fetchUsers],
+    [fetchUsers, userList],
   );
+
+  const handleComboboxChange = (e) => {
+    // react-select kadang kirim object langsung, kadang kirim event
+    // e?.target?.value  -> dari wrapped event (string UUID)
+    // e?.value          -> dari react-select object langsung {label, value}
+    // e                 -> fallback
+    const val = e?.target?.value ?? e?.value ?? e;
+
+    setTargetDisposisi(val);
+
+    // Cari di semua options yang ada termasuk selectedOption sebelumnya
+    const allOptions = [...userOptions, ...(selectedOption ? [selectedOption] : [])];
+    const found = allOptions.find((o) => o.value === val);
+    if (found) setSelectedOption(found);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,7 +94,8 @@ export default function DisposisiModal({ show, onClose, onSubmit }) {
     setTargetDisposisi("");
     setCatatanDisposisi("");
     setFileDisposisi(null);
-    setUserOptions([]);
+    setSelectedOption(null);
+    setUserOptions(userList);
     onClose();
   };
 
@@ -104,6 +108,12 @@ export default function DisposisiModal({ show, onClose, onSubmit }) {
     setFileDisposisi(file);
   };
 
+  // Pastikan selectedOption selalu ada di list yang ditampilkan
+  const mergedOptions =
+    selectedOption && !userOptions.find((o) => o.value === selectedOption.value)
+      ? [selectedOption, ...userOptions]
+      : userOptions;
+
   if (!user) return null;
 
   return (
@@ -114,9 +124,9 @@ export default function DisposisiModal({ show, onClose, onSubmit }) {
           <Form.Combobox
             name="target_disposisi"
             value={targetDisposisi}
-            onChange={(e) => setTargetDisposisi(e.target.value)}
+            onChange={handleComboboxChange}
             onSearch={handleSearch}
-            options={userOptions}
+            options={mergedOptions}
             placeholder="Ketik nama untuk mencari penerima..."
             isLoading={isSearching}
             isDisabled={isSubmitting}
@@ -126,7 +136,13 @@ export default function DisposisiModal({ show, onClose, onSubmit }) {
 
         <Form.Group>
           <Form.Label>Catatan Disposisi (Opsional)</Form.Label>
-          <Form.Textarea value={catatanDisposisi} onChange={(e) => setCatatanDisposisi(e.target.value)} placeholder="Tambahkan instruksi atau catatan ke pihak selanjutnya..." rows={3} disabled={isSubmitting} />
+          <Form.Textarea
+            value={catatanDisposisi}
+            onChange={(e) => setCatatanDisposisi(e.target.value)}
+            placeholder="Tambahkan instruksi atau catatan ke pihak selanjutnya..."
+            rows={3}
+            disabled={isSubmitting}
+          />
         </Form.Group>
 
         <Form.Group>

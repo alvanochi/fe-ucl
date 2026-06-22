@@ -1,6 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import Head from "next/head";
-import axios from "axios";
 import { Icon } from "@iconify-icon/react";
 import Card from "../../components/Card";
 import Form from "../../components/Form";
@@ -11,13 +10,15 @@ import { toastAlert } from "../../lib/sweetalert";
 
 const FIELD_CONFIG = {
   "surat pengajuan cuti": [
-    { name: "lama_cuti", label: "Durasi Cuti", placeholder: "Contoh: 1 Semester" },
-    { name: "alasan", label: "Alasan Cuti", placeholder: "Contoh: Urusan Keluarga" },
+    { name: "semester_cuti", label: "Cuti Pada Semester (Ganjil/Genap)", placeholder: "Contoh: Ganjil" },
+    { name: "tahun_akademik_cuti", label: "Tahun Akademik Cuti", placeholder: "Contoh: 2025/2026" },
+    { name: "semester_aktif", label: "Aktif Kembali Pada Semester (Ganjil/Genap)", placeholder: "Contoh: Genap" },
+    { name: "tahun_akademik_aktif", label: "Tahun Akademik Aktif", placeholder: "Contoh: 2026/2027" },
   ],
-  "surat pengunduran diri": [{ name: "alasan_keluar", label: "Alasan", placeholder: "Masukkan alasan formal" }],
-  "surat pengajuan kegiatan": [
-    { name: "nama_kegiatan", label: "Nama Kegiatan", placeholder: "Contoh: Seminar IT" },
-    { name: "lokasi", label: "Lokasi", placeholder: "Contoh: Aula Kampus" },
+  "surat pengunduran diri": [
+    { name: "semester", label: "Semester Saat Ini", placeholder: "Contoh: Semester 1 (Ganjil)" },
+    { name: "tanggal_pengarahan", label: "Tanggal Pengarahan KIP Kuliah", placeholder: "Contoh: Senin, 12 Januari 2026" },
+    { name: "nama_ortu_wali", label: "Nama Orang Tua / Wali", placeholder: "Masukkan nama lengkap Orang Tua atau Wali" },
   ],
 };
 
@@ -29,113 +30,68 @@ export default function PersuratanCreate({ onBack }) {
   const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/surat`;
 
   const userRef = useRef(user);
-  const penerimaListRef = useRef([]);
   const selectedFilesRef = useRef([]);
-  const debounceTimerPenerima = useRef(null);
-  const defaultPenerimaCache = useRef([]);
-
   const [selectedFiles, setSelectedFiles] = useState([]);
-  const [penerimaOptions, setPenerimaOptions] = useState([]);
-  const [isSearchingPenerima, setIsSearchingPenerima] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     userRef.current = user;
   }, [user]);
+
   useEffect(() => {
     selectedFilesRef.current = selectedFiles;
   }, [selectedFiles]);
 
-  const fetchPenerima = useCallback(async (keyword) => {
-    if (keyword === "" && defaultPenerimaCache.current.length > 0) {
-      setPenerimaOptions(defaultPenerimaCache.current);
-      penerimaListRef.current = defaultPenerimaCache.current;
-      return;
-    }
-
-    setIsSearchingPenerima(true);
-    try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/list-users`, {
-        params: { search: keyword, limit: 10, page: 1 },
-      });
-
-      const rows = res.data?.data?.rows || [];
-      const formatted = rows
-        .filter((u) => u.user_id !== userRef.current?.user_id)
-        .map((u) => ({
-          label: `${u.personal_data?.nama_lengkap || u.username} — ${u.role?.toUpperCase() || "USER"}`,
-          value: u.user_id,
-        }));
-
-      setPenerimaOptions(formatted);
-      penerimaListRef.current = formatted;
-
-      if (keyword === "") {
-        defaultPenerimaCache.current = formatted;
-      }
-    } catch {
-      toastAlert("error", "Gagal memuat daftar penerima.");
-    } finally {
-      setIsSearchingPenerima(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (user) fetchPenerima("");
-  }, [user, fetchPenerima]);
-
-  const handleSearchPenerima = useCallback(
-    (keyword) => {
-      clearTimeout(debounceTimerPenerima.current);
-
-      if (keyword === "") {
-        fetchPenerima(keyword);
-      } else {
-        debounceTimerPenerima.current = setTimeout(() => fetchPenerima(keyword), 800);
-      }
-    },
-    [fetchPenerima],
-  );
-
   const { formdata, submitHandler, isSubmit } = useCRUD(
     API_URL,
-    { jenis_surat: "", penerima_id: "", perihal: "", catatan_surat: "" },
+    { jenis_surat: "", perihal: "", catatan_surat: "" },
     {
       rules: [
         { field: "jenis_surat", label: "Jenis Surat" },
-        { field: "penerima_id", label: "Penerima" },
         { field: "perihal", label: "Perihal" },
       ],
       transformData: (data) => {
         const currentUser = userRef.current;
         const currentFiles = selectedFilesRef.current;
-        const currentPenerimaList = penerimaListRef.current;
-
         const fd = new FormData();
+
         fd.append("jenis_surat", data.jenis_surat || "");
-        fd.append("penerima_id", data.penerima_id || "");
 
-        const actorName = currentUser?.personal_data?.nama_lengkap || currentUser?.username || "Sistem";
-        const actorRole = currentUser?.role ? currentUser.role.toUpperCase() : "USER";
-        fd.append("nama_aktor", `${actorName} (${actorRole})`);
+        const actorName = currentUser?.personalData?.nama_lengkap || currentUser?.nama_lengkap || "Mahasiswa";
+        fd.append("nama_aktor", `${actorName} (MAHASISWA)`);
 
-        const penerimaItem = currentPenerimaList.find((p) => String(p.value) === String(data.penerima_id));
-        if (penerimaItem) fd.append("nama_penerima", penerimaItem.label);
-
-        const { jenis_surat, penerima_id, perihal, catatan_surat, ...dynamicFields } = data;
-        const jsonPayload = { perihal, catatan_surat, ...dynamicFields };
+        const { jenis_surat, perihal, catatan_surat, ...dynamicFields } = data;
+        const jsonPayload = {
+          perihal: perihal || `Pengajuan ${jenis_surat}`,
+          catatan_surat,
+          ...dynamicFields,
+          nama_lengkap: currentUser?.personalData?.nama_lengkap || currentUser?.nama_lengkap,
+          npm: currentUser?.npm,
+          alamat: currentUser?.personalData?.alamat,
+          no_hp: currentUser?.personalData?.no_hp,
+        };
 
         try {
           fd.append("form_data", JSON.stringify(jsonPayload));
         } catch (e) {
-          console.error("Failed to stringify form_data", e);
+          console.error("Gagal stringify form_data", e);
         }
 
         currentFiles.forEach((file) => fd.append("lampiran", file));
         return fd;
       },
       success: () => {
-        toastAlert("success", "Pengajuan berhasil dikirim!");
+        toastAlert("success", "Pengajuan surat berhasil dikirim ke Admin TU!");
+        setErrorMessage(null);
         onBack();
+      },
+      error: (err) => {
+        // Tangkap pesan error dari backend (responseMessage atau message)
+        const msg =
+          err?.response?.data?.responseMessage ||
+          err?.response?.data?.message ||
+          "Terjadi kesalahan. Silakan coba lagi.";
+        setErrorMessage(msg);
       },
     },
   );
@@ -145,7 +101,6 @@ export default function PersuratanCreate({ onBack }) {
   const handleFileChange = (e) => {
     if (!e.target.files?.length) return;
     const newFiles = Array.from(e.target.files);
-
     if (selectedFiles.length + newFiles.length > MAX_FILES) {
       toastAlert("warning", `Maksimal mengunggah ${MAX_FILES} lampiran.`);
       e.target.value = null;
@@ -159,7 +114,6 @@ export default function PersuratanCreate({ onBack }) {
     }
     const existingNames = selectedFiles.map((f) => f.name);
     const uniqueNew = newFiles.filter((f) => !existingNames.includes(f.name));
-    if (uniqueNew.length < newFiles.length) toastAlert("info", "Beberapa file duplikat diabaikan.");
     setSelectedFiles((prev) => [...prev, ...uniqueNew]);
     e.target.value = null;
   };
@@ -169,7 +123,6 @@ export default function PersuratanCreate({ onBack }) {
   };
 
   if (!user) return null;
-
   const hasDynamicFields = FIELD_CONFIG[form.jenis_surat]?.length > 0;
 
   return (
@@ -186,7 +139,34 @@ export default function PersuratanCreate({ onBack }) {
           <h1 className="text-2xl lg:text-3xl font-black text-gray-800 tracking-tight">Pengajuan Baru</h1>
         </div>
 
-        <Form onSubmit={submitHandler} type="formdata">
+        {/* Alert Error dari Backend */}
+        {errorMessage && (
+          <div className="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-5 py-4 animate-in fade-in slide-in-from-top-2">
+            <Icon icon="mdi:alert-circle-outline" width={22} className="shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-bold text-sm">Pengajuan Gagal</p>
+              <p className="text-sm mt-0.5">{errorMessage}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setErrorMessage(null)}
+              className="shrink-0 text-red-400 hover:text-red-600 transition-colors outline-none"
+              aria-label="Tutup"
+            >
+              <Icon icon="mdi:close" width={18} />
+            </button>
+          </div>
+        )}
+
+        <Form
+          onSubmit={(e) =>
+            submitHandler(e, {
+              headers: {
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+            })
+          }
+        >
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div className="xl:col-span-1">
               <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden h-full">
@@ -202,7 +182,6 @@ export default function PersuratanCreate({ onBack }) {
                       options={[
                         { label: "Surat Pengajuan Cuti", value: "surat pengajuan cuti" },
                         { label: "Surat Pengunduran Diri", value: "surat pengunduran diri" },
-                        ...(user?.role?.toLowerCase() === "dosen" ? [{ label: "Surat Pengajuan Kegiatan", value: "surat pengajuan kegiatan" }] : []),
                       ]}
                       required
                     />
@@ -224,26 +203,16 @@ export default function PersuratanCreate({ onBack }) {
                   <Card.Body className="space-y-6 p-6 lg:p-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                       <Form.Group className="space-y-2">
-                        <Form.Label className="font-bold text-gray-700 flex justify-between">
-                          <span>Penerima Tujuan</span>
-                          {isSearchingPenerima && <Icon icon="mdi:loading" className="animate-spin text-primary-500" width={16} />}
-                        </Form.Label>
-                        <Form.Combobox
-                          name="penerima_id"
-                          value={form.penerima_id}
-                          onChange={inputHandler}
-                          onSearch={handleSearchPenerima}
-                          options={penerimaOptions}
-                          placeholder="Ketik nama untuk mencari..."
-                          isLoading={isSearchingPenerima}
-                          isDisabled={isSubmit}
-                          required
-                        />
+                        <Form.Label className="font-bold text-gray-700">Penerima Tujuan</Form.Label>
+                        <div className="w-full h-11 px-4 bg-gray-100 border border-gray-200 rounded-lg text-gray-500 font-medium flex items-center gap-2 cursor-not-allowed">
+                          <Icon icon="mdi:lock-outline" width={18} />
+                          Admin TU Prodi Teknik Informatika (Otomatis)
+                        </div>
                       </Form.Group>
 
                       <Form.Group className="space-y-2">
                         <Form.Label className="font-bold text-gray-700">Perihal / Topik Surat</Form.Label>
-                        <Form.Input name="perihal" value={form.perihal || ""} onChange={inputHandler} placeholder="Contoh: Permohonan Izin" required />
+                        <Form.Input name="perihal" value={form.perihal || ""} onChange={inputHandler} placeholder="Contoh: Permohonan Surat Pengunduran Diri" required />
                       </Form.Group>
                     </div>
 
@@ -259,8 +228,8 @@ export default function PersuratanCreate({ onBack }) {
                     )}
 
                     <Form.Group className="space-y-2">
-                      <Form.Label className="font-bold text-gray-700">Catatan Surat</Form.Label>
-                      <Form.Textarea name="catatan_surat" value={form.catatan_surat || ""} onChange={inputHandler} placeholder="Tambahkan catatan khusus terkait surat ini..." rows={3} />
+                      <Form.Label className="font-bold text-gray-700">Catatan Surat (Opsional)</Form.Label>
+                      <Form.Textarea name="catatan_surat" value={form.catatan_surat || ""} onChange={inputHandler} placeholder="Tambahkan catatan khusus terkait surat ini jika ada..." rows={3} />
                     </Form.Group>
 
                     <Form.Group className="space-y-4 border-t border-gray-100 pt-6">
@@ -293,7 +262,7 @@ export default function PersuratanCreate({ onBack }) {
                                     <p className="text-gray-400 font-mono mt-0.5">{(file.size / 1024).toFixed(1)} KB</p>
                                   </div>
                                 </div>
-                                <button type="button" onClick={() => removeFile(index)} className="text-gray-300 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors active:scale-95 outline-none">
+                                <button type="button" onClick={() => removeFile(index)} className="text-gray-300 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors">
                                   <Icon icon="mdi:close" width={18} />
                                 </button>
                               </div>
@@ -307,7 +276,7 @@ export default function PersuratanCreate({ onBack }) {
                       <button
                         type="submit"
                         disabled={isSubmit}
-                        className="w-full h-12 bg-primary-600 hover:bg-primary-700 disabled:opacity-70 disabled:cursor-not-allowed text-white rounded-xl font-bold uppercase text-xs tracking-widest shadow-md hover:shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2 outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                        className="w-full h-12 bg-primary-600 hover:bg-primary-700 disabled:opacity-70 disabled:cursor-not-allowed text-white rounded-xl font-bold uppercase text-xs tracking-widest shadow-md hover:shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"
                       >
                         {isSubmit ? (
                           <>

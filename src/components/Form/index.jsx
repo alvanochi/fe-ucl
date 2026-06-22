@@ -64,7 +64,6 @@ Form.Select = ({
   </select>
 );
 
-// Definisi Combobox di dalam Form
 Form.Combobox = ({ name, ...props }) => <Combobox name={name} {...props} />;
 
 const Combobox = ({
@@ -78,18 +77,28 @@ const Combobox = ({
   ...props
 } = {}) => {
   const config = resolveConfig(twConfig);
-
-  const {
-    theme: { colors },
-  } = config;
+  const { theme: { colors } } = config;
 
   const [selected, setSelected] = useState(null);
 
   useEffect(() => {
-    if (!options || !Array.isArray(options) || !value) return;
-    const find = options.find((item) => item.value === value) ?? null;
+    // value bisa berupa string UUID atau object {label, value} — handle keduanya
+    if (!value) {
+      setSelected(null);
+      return;
+    }
 
-    setSelected(find);
+    // Kalau value sudah berupa object react-select {label, value}, langsung pakai
+    if (typeof value === "object" && value.label && value.value) {
+      setSelected(value);
+      return;
+    }
+
+    // Kalau value berupa string UUID, cari di options
+    if (!options || !Array.isArray(options)) return;
+    const find = options.find((item) => item.value === value);
+    // Hanya update jika ketemu — jangan reset selected yang sudah tampil
+    if (find) setSelected(find);
   }, [options, value]);
 
   const handleChange = (selectedOption) => {
@@ -120,13 +129,25 @@ const Combobox = ({
         menuPortalTarget={menuTarget || ""}
         {...props}
       />
+      {/* Hidden input untuk browser required validation
+          invisible total agar tidak muncul ke layar */}
       {required && (
         <input
+          tabIndex={-1}
           autoComplete="off"
-          style={{ border: "none" }}
-          onChange={() => true}
+          onChange={() => {}}
           value={selected ? selected.value : ""}
           required
+          style={{
+            opacity: 0,
+            width: 0,
+            height: 0,
+            position: "absolute",
+            pointerEvents: "none",
+            border: "none",
+            padding: 0,
+            margin: 0,
+          }}
         />
       )}
     </div>
@@ -140,6 +161,7 @@ Form.Checkbox = ({ className, ...props }) => (
     {...props}
   />
 );
+
 Form.Radio = ({ className, ...props }) => (
   <input
     type="radio"
@@ -157,7 +179,7 @@ Form.Label.displayName = "FormLabel";
 Form.LabelFront.displayName = "FormLabelFront";
 Form.Input.displayName = "FormInput";
 Form.Select.displayName = "FormSelect";
-Form.Combobox.displayName = "FormCombobox"; // Tetap mengatur displayName ke "FormCombobox"
+Form.Combobox.displayName = "FormCombobox";
 Form.Checkbox.displayName = "FormCheckbox";
 Form.Radio.displayName = "FormRadio";
 Form.Textarea.displayName = "FormTextarea";
