@@ -32,6 +32,7 @@ export default function PersuratanCreate({ onBack }) {
   const userRef = useRef(user);
   const selectedFilesRef = useRef([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     userRef.current = user;
@@ -81,7 +82,16 @@ export default function PersuratanCreate({ onBack }) {
       },
       success: () => {
         toastAlert("success", "Pengajuan surat berhasil dikirim ke Admin TU!");
+        setErrorMessage(null);
         onBack();
+      },
+      error: (err) => {
+        // Tangkap pesan error dari backend (responseMessage atau message)
+        const msg =
+          err?.response?.data?.responseMessage ||
+          err?.response?.data?.message ||
+          "Terjadi kesalahan. Silakan coba lagi.";
+        setErrorMessage(msg);
       },
     },
   );
@@ -128,6 +138,25 @@ export default function PersuratanCreate({ onBack }) {
           </button>
           <h1 className="text-2xl lg:text-3xl font-black text-gray-800 tracking-tight">Pengajuan Baru</h1>
         </div>
+
+        {/* Alert Error dari Backend */}
+        {errorMessage && (
+          <div className="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-5 py-4 animate-in fade-in slide-in-from-top-2">
+            <Icon icon="mdi:alert-circle-outline" width={22} className="shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-bold text-sm">Pengajuan Gagal</p>
+              <p className="text-sm mt-0.5">{errorMessage}</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setErrorMessage(null)}
+              className="shrink-0 text-red-400 hover:text-red-600 transition-colors outline-none"
+              aria-label="Tutup"
+            >
+              <Icon icon="mdi:close" width={18} />
+            </button>
+          </div>
+        )}
 
         <Form
           onSubmit={(e) =>

@@ -8,9 +8,9 @@ import Card from "../../components/Card";
 import useUser from "../../hooks/useUser";
 import { toastAlert, warningAlert, loadingAlert } from "../../lib/sweetalert";
 
-import DisposisiModal from "../../components/persuratan/DisposisiModal";
-import ChatRoom from "../../components/persuratan/ChatRoom";
-import TrackingSidebar from "../../components/persuratan/TrackingSidebar";
+import DisposisiModal from "../../components/Persuratan/DisposisiModal";
+import ChatRoom from "../../components/Persuratan/ChatRoom";
+import TrackingSidebar from "../../components/Persuratan/TrackingSidebar";
 
 const InfoBlock = ({ label, value, highlight }) => (
   <div className="flex flex-col gap-1.5 font-bold">

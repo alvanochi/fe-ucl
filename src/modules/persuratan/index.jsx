@@ -17,6 +17,7 @@ import { toastAlert } from "../../lib/sweetalert";
 
 import PersuratanCreate from "./create";
 import PersuratanDetail from "./detail";
+import ShowQrSurat from "../../pages/persuratan/show-qr-surat";
 
 function PersuratanFilter({ filter, handler, className, canSeeOutbox }) {
   const { form, inputHandler, setForm } = useForm(filter);
@@ -90,6 +91,7 @@ export default function PersuratanModule({ isPreview = false }) {
   const [suratList, setSuratList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingId, setLoadingId] = useState(null);
+
 
   const [sortConfig, setSortConfig] = useState({ key: "created_at", direction: "desc" });
   const [page, setPage] = useState(1);
@@ -204,6 +206,8 @@ export default function PersuratanModule({ isPreview = false }) {
       setLoadingId(null);
     }
   };
+
+
 
   if (view === "create") return <PersuratanCreate onBack={() => setView("index")} />;
   if (view === "detail") return <PersuratanDetail onBack={() => setView("index")} surat={selectedSurat} isAdmin={isAdmin} />;
@@ -347,13 +351,22 @@ export default function PersuratanModule({ isPreview = false }) {
                         </span>
                       </td>
                       <td className="text-sm border-2 border-white bg-gray-50 text-center">
-                        <button
-                          onClick={() => handleGoDetail(s)}
-                          disabled={loadingId === s.id}
-                          className="w-8 h-8 inline-flex items-center justify-center bg-white border border-gray-200 text-primary-600 rounded-lg hover:bg-primary-50 shadow-sm transition-all outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                          {loadingId === s.id ? <Icon icon="mdi:loading" className="animate-spin text-primary-600" width={18} /> : <Icon icon="mdi:eye" width={18} />}
-                        </button>
+                        <div className="flex items-center justify-center gap-1.5">
+                          {/* Tombol Lihat Detail */}
+                          <button
+                            onClick={() => handleGoDetail(s)}
+                            disabled={loadingId === s.id}
+                            title="Lihat Detail Surat"
+                            className="w-8 h-8 inline-flex items-center justify-center bg-white border border-gray-200 text-primary-600 rounded-lg hover:bg-primary-50 shadow-sm transition-all outline-none focus:ring-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {loadingId === s.id
+                              ? <Icon icon="mdi:loading" className="animate-spin text-primary-600" width={18} />
+                              : <Icon icon="mdi:eye" width={18} />}
+                          </button>
+
+                          {/* Tombol QR Code — mengikuti pola ShowQr di esign */}
+                          <ShowQrSurat data={{ id: s.id }} />
+                        </div>
                       </td>
                     </tr>
                   );
