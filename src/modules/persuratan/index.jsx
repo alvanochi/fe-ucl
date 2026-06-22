@@ -61,10 +61,12 @@ function PersuratanFilter({ filter, handler, className, canSeeOutbox }) {
               value={form?.kondisi ?? ""}
               emptyStateLabel="Semua Kondisi"
               options={[
-                { label: "Belum Dibalas (Sent/Read)", value: "Belum Dibalas" },
-                { label: "Dibalas (Replied)", value: "Dibalas" },
-                { label: "Open (Sedang Diproses)", value: "Open" },
-                { label: "Closed (Selesai)", value: "Closed" },
+                { label: "Belum Dibaca (Sent)", value: "Sent" },
+                { label: "Sudah Dibaca (Read)", value: "Read" },
+                { label: "Dibalas (Replied)", value: "Replied" },
+                { label: "Sedang Disposisi", value: "Disposisi" },
+                { label: "Disetujui", value: "Disetujui" },
+                { label: "Ditolak", value: "Ditolak" },
               ]}
             />
           </Form.Group>
@@ -150,10 +152,7 @@ export default function PersuratanModule({ isPreview = false }) {
       if (filter.tipe === "Keluar") matchType = !isSuratMasuk;
 
       let matchKondisi = true;
-      if (filter.kondisi === "Belum Dibalas") matchKondisi = ["Sent", "Read"].includes(s.status);
-      if (filter.kondisi === "Dibalas") matchKondisi = s.status === "Replied";
-      if (filter.kondisi === "Open") matchKondisi = !["Selesai"].includes(s.status);
-      if (filter.kondisi === "Closed") matchKondisi = ["Selesai"].includes(s.status);
+      if (filter.kondisi) matchKondisi = s.status === filter.kondisi;
 
       return matchSearch && matchType && matchKondisi;
     });
@@ -225,10 +224,10 @@ export default function PersuratanModule({ isPreview = false }) {
           <Card.Body className="p-6">
             <div className={classNames("grid gap-4", hasOutboxPrivilege ? "grid-cols-2 md:grid-cols-5" : "grid-cols-2 md:grid-cols-4")}>
               {hasOutboxPrivilege && <SummaryCard label="Surat Keluar" count={suratList.filter((s) => s.penerima_id !== myUserId).length} icon="mdi:email-send-outline" />}
-              <SummaryCard label="Belum Dibalas" count={suratList.filter((s) => ["Sent", "Read"].includes(s.status) && s.penerima_id === myUserId).length} icon="mdi:email-alert-outline" />
-              <SummaryCard label="Dibalas" count={suratList.filter((s) => s.status === "Replied").length} icon="mdi:email-check-outline" />
-              <SummaryCard label="Open" count={suratList.filter((s) => !["Selesai"].includes(s.status)).length} icon="mdi:folder-open-outline" />
-              <SummaryCard label="Closed" count={suratList.filter((s) => ["Selesai"].includes(s.status)).length} icon="mdi:folder-lock-outline" />
+              <SummaryCard label="Belum Dibaca" count={suratList.filter((s) => s.status === "Sent" && s.penerima_id === myUserId).length} icon="mdi:email-alert-outline" />
+              <SummaryCard label="Disposisi" count={suratList.filter((s) => s.status === "Disposisi").length} icon="mdi:share-all" />
+              <SummaryCard label="Disetujui" count={suratList.filter((s) => s.status === "Disetujui").length} icon="mdi:check-decagram-outline" />
+              <SummaryCard label="Ditolak" count={suratList.filter((s) => s.status === "Ditolak").length} icon="mdi:close-octagon-outline" />
             </div>
           </Card.Body>
         </Card>
@@ -344,7 +343,10 @@ export default function PersuratanModule({ isPreview = false }) {
                             "bg-blue-100 text-blue-700": s.status === "Sent",
                             "bg-yellow-100 text-yellow-700": s.status === "Read",
                             "bg-purple-100 text-purple-700": s.status === "Replied",
-                            "bg-gray-200 text-gray-700": s.status === "Selesai",
+                            "bg-indigo-100 text-indigo-700": s.status === "Disposisi",
+                            "bg-green-100 text-green-700": s.status === "Disetujui",
+                            "bg-red-100 text-red-700": s.status === "Ditolak",
+                            "bg-gray-200 text-gray-700": s.status === "Archived",
                           })}
                         >
                           {s.status}

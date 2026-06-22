@@ -2,7 +2,7 @@ import { Icon } from "@iconify-icon/react";
 import classNames from "classnames";
 import Card from "../Card";
 
-export default function TrackingSidebar({ lampirans, trackingList, historyDisposisi, onPreview }) {
+export default function TrackingSidebar({ lampirans, trackingList, disposisiChain, historyDisposisi, onPreview }) {
   const renderCatatanTracking = (text) => {
     if (!text) return "-";
     const parts = text.split(/dilakukan oleh:\s*/i);
@@ -31,10 +31,14 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
         return { icon: "mdi:eye-check", color: "bg-yellow-500", border: "border-yellow-100", bgCard: "bg-yellow-50/50" };
       case "Replied":
         return { icon: "mdi:comment-processing", color: "bg-purple-500", border: "border-purple-100", bgCard: "bg-purple-50/50" };
-      case "Selesai":
+      case "Disposisi":
+        return { icon: "mdi:share-all", color: "bg-indigo-500", border: "border-indigo-100", bgCard: "bg-indigo-50/50" };
+      case "Disetujui":
         return { icon: "mdi:check-decagram", color: "bg-green-500", border: "border-green-100", bgCard: "bg-green-50/50" };
       case "Ditolak":
         return { icon: "mdi:close-octagon", color: "bg-red-500", border: "border-red-100", bgCard: "bg-red-50/50" };
+      case "Selesai":
+        return { icon: "mdi:check-decagram", color: "bg-green-500", border: "border-green-100", bgCard: "bg-green-50/50" };
       default:
         return { icon: "mdi:record-circle", color: "bg-gray-500", border: "border-gray-100", bgCard: "bg-gray-50/50" };
     }
@@ -120,75 +124,84 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
           </div>
         </Card>
 
-        {/* History Disposisi */}
-        {historyDisposisi && historyDisposisi.length > 0 && (
-          <Card className="border-2 border-gray-200 shadow-sm overflow-hidden bg-white rounded-3xl animate-in fade-in slide-in-from-bottom-2">
-            <div className="bg-indigo-600 border-b-2 border-indigo-700 text-white px-5 sm:px-6 py-4 flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 font-mono">
-                <Icon icon="mdi:source-branch" width={20} /> Rute Disposisi
-              </span>
-              <span className="bg-indigo-700 text-white border border-indigo-500 px-2 py-0.5 rounded-md text-[9px] font-bold">{historyDisposisi.length} Rute</span>
-            </div>
-            <div className="p-5 sm:p-6 bg-white max-h-[400px] overflow-y-auto">
-              <div className="relative border-l-[3px] border-gray-200 ml-4 space-y-6 pb-2">
-                {historyDisposisi.map((disp, idx) => (
-                  <div key={idx} className="relative pl-8 animate-in fade-in slide-in-from-right-2">
-                    {/* Icon Node — sama persis dengan timeline */}
-                    <div className="absolute -left-[18px] top-0 w-8 h-8 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md z-10 bg-indigo-500">
-                      <Icon icon="mdi:share-all" width={16} />
-                    </div>
+        {/* Rute Disposisi — pakai disposisiChain dari DB, fallback ke historyDisposisi */}
+        {(() => {
+          const chain = disposisiChain?.length > 0 ? disposisiChain : historyDisposisi;
+          if (!chain || chain.length === 0) return null;
 
-                    {/* Content Card */}
-                    <div className="p-4 rounded-xl border border-indigo-100 shadow-sm bg-indigo-50/50">
-                      {/* Header: label + timestamp */}
-                      <div className="flex justify-between items-start gap-4 mb-3">
-                        <p className="text-[11px] font-black uppercase tracking-widest text-indigo-500">Disposisi</p>
-                        <p className="text-[10px] text-gray-500 font-mono font-bold whitespace-nowrap">
-                          {new Date(disp.tanggal).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
-                        </p>
-                      </div>
+          // Tentukan apakah pakai format DB (disposisiChain) atau format lama (historyDisposisi)
+          const isDbChain = disposisiChain?.length > 0;
 
-                      {/* Catatan */}
-                      {disp.catatan && (
-                        <p className="leading-relaxed text-gray-700 text-sm mb-3">&quot;{disp.catatan}&quot;</p>
-                      )}
-
-                      {/* Aktor pill */}
-                      <div className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white rounded-lg border border-gray-200 shadow-sm mb-2">
-                        <Icon icon="mdi:account-circle" className="text-gray-500 shrink-0" width={16} />
-                        <span className="text-[11px] font-bold text-gray-700">{disp.aktor}</span>
-                      </div>
-
-                      {/* Panah → Target */}
-                      <div className="flex items-center gap-2 mt-1 mb-2">
-                        <Icon icon="mdi:arrow-right-bold" className="text-indigo-400 shrink-0" width={16} />
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-50 rounded-lg border border-indigo-200 shadow-sm">
-                          <Icon icon="mdi:account-arrow-right" className="text-indigo-500 shrink-0" width={16} />
-                          <span className="text-[11px] font-bold text-indigo-700">{disp.target_penerima}</span>
-                        </div>
-                      </div>
-
-                      {/* Lampiran */}
-                      {disp.lampiran && (
-                        <a
-                          href={`${process.env.NEXT_PUBLIC_API_URL}/lampiran-surat/${disp.lampiran.file_url}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          download
-                          className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm rounded-lg text-xs font-bold text-gray-700 transition-colors mt-1"
-                        >
-                          <Icon icon={disp.lampiran.file_url.endsWith(".pdf") ? "mdi:file-pdf-box" : "mdi:image-outline"} className={disp.lampiran.file_url.endsWith(".pdf") ? "text-red-500" : "text-primary-500"} width={16} />
-                          <span className="truncate max-w-[150px]">{disp.lampiran.nama_file}</span>
-                          <Icon icon="mdi:download" width={14} className="text-gray-400 shrink-0" />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                ))}
+          return (
+            <Card className="border-2 border-gray-200 shadow-sm overflow-hidden bg-white rounded-3xl animate-in fade-in slide-in-from-bottom-2">
+              <div className="bg-indigo-600 border-b-2 border-indigo-700 text-white px-5 sm:px-6 py-4 flex justify-between items-center">
+                <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 font-mono">
+                  <Icon icon="mdi:source-branch" width={20} /> Rute Disposisi
+                </span>
+                <span className="bg-indigo-700 text-white border border-indigo-500 px-2 py-0.5 rounded-md text-[9px] font-bold">{chain.length} Rute</span>
               </div>
-            </div>
-          </Card>
-        )}
+              <div className="p-5 sm:p-6 bg-white max-h-[400px] overflow-y-auto">
+                <div className="relative border-l-[3px] border-gray-200 ml-4 space-y-6 pb-2">
+                  {chain.map((disp, idx) => (
+                    <div key={idx} className="relative pl-8 animate-in fade-in slide-in-from-right-2">
+                      <div className="absolute -left-[18px] top-0 w-8 h-8 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md z-10 bg-indigo-500">
+                        <Icon icon="mdi:share-all" width={16} />
+                      </div>
+
+                      <div className="p-4 rounded-xl border border-indigo-100 shadow-sm bg-indigo-50/50">
+                        <div className="flex justify-between items-start gap-4 mb-3">
+                          <p className="text-[11px] font-black uppercase tracking-widest text-indigo-500">Disposisi</p>
+                          <p className="text-[10px] text-gray-500 font-mono font-bold whitespace-nowrap">
+                            {new Date(isDbChain ? disp.tanggal : disp.tanggal).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                          </p>
+                        </div>
+
+                        {/* Catatan */}
+                        {(isDbChain ? disp.catatan : disp.catatan) && (
+                          <p className="leading-relaxed text-gray-700 text-sm mb-3">&quot;{isDbChain ? disp.catatan : disp.catatan}&quot;</p>
+                        )}
+
+                        {/* Dari (Aktor) */}
+                        <div className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white rounded-lg border border-gray-200 shadow-sm mb-2">
+                          <Icon icon="mdi:account-circle" className="text-gray-500 shrink-0" width={16} />
+                          <span className="text-[11px] font-bold text-gray-700">
+                            {isDbChain ? `${disp.dari?.nama} (${disp.dari?.role})` : disp.aktor}
+                          </span>
+                        </div>
+
+                        {/* Panah → Target */}
+                        <div className="flex items-center gap-2 mt-1 mb-2">
+                          <Icon icon="mdi:arrow-right-bold" className="text-indigo-400 shrink-0" width={16} />
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-50 rounded-lg border border-indigo-200 shadow-sm">
+                            <Icon icon="mdi:account-arrow-right" className="text-indigo-500 shrink-0" width={16} />
+                            <span className="text-[11px] font-bold text-indigo-700">
+                              {isDbChain ? `${disp.ke?.nama} (${disp.ke?.role})` : disp.target_penerima}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Lampiran (hanya untuk format lama) */}
+                        {!isDbChain && disp.lampiran && (
+                          <a
+                            href={`${process.env.NEXT_PUBLIC_API_URL}/lampiran-surat/${disp.lampiran.file_url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download
+                            className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm rounded-lg text-xs font-bold text-gray-700 transition-colors mt-1"
+                          >
+                            <Icon icon={disp.lampiran.file_url.endsWith(".pdf") ? "mdi:file-pdf-box" : "mdi:image-outline"} className={disp.lampiran.file_url.endsWith(".pdf") ? "text-red-500" : "text-primary-500"} width={16} />
+                            <span className="truncate max-w-[150px]">{disp.lampiran.nama_file}</span>
+                            <Icon icon="mdi:download" width={14} className="text-gray-400 shrink-0" />
+                          </a>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Card>
+          );
+        })()}
       </div>
     </div>
   );

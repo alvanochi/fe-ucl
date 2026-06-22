@@ -177,32 +177,55 @@ export default function PersuratanDetail({ onBack, surat }) {
         try {
           loadingAlert("Harap Tunggu", "Sedang menerbitkan dokumen...");
           const token = localStorage.getItem("token");
-          const catatanLog = `Pengajuan telah diselesaikan dan ditutup secara permanen. Dilakukan oleh: ${getMyIdentity()}`;
-          const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/surat/status/${localSurat.id}`, { status: "Selesai", catatan: catatanLog }, { headers: { Authorization: `Bearer ${token}` } });
+          const catatanLog = `Pengajuan telah disetujui dan ditutup. Dokumen resmi akan diterbitkan. Dilakukan oleh: ${getMyIdentity()}`;
+          const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/surat/status/${localSurat.id}`, { status: "Disetujui", catatan: catatanLog }, { headers: { Authorization: `Bearer ${token}` } });
           if (res.data.isSuccess) {
-            toastAlert("success", "Dokumen Berhasil Diterbitkan!");
+            toastAlert("success", "Pengajuan Disetujui & Dokumen Berhasil Diterbitkan!");
             await refreshDetailData();
           }
         } catch (err) {
-          toastAlert("error", "Gagal memperbarui status");
+          toastAlert("error", err?.response?.data?.message || "Gagal memperbarui status");
         }
       },
-      "Status akan diubah menjadi Selesai. Ruang percakapan akan ditutup dan sistem akan otomatis men-generate dokumen resmi (.PDF).",
-      "Selesaikan Pengajuan?",
+      "Pengajuan akan ditandai sebagai Disetujui. Sistem akan otomatis men-generate dokumen resmi (.PDF) dan ruang percakapan akan ditutup.",
+      "Setujui Pengajuan?",
+    );
+  };
+
+  const handleReject = () => {
+    warningAlert(
+      async () => {
+        try {
+          loadingAlert("Harap Tunggu", "Memproses penolakan...");
+          const token = localStorage.getItem("token");
+          const catatanLog = `Pengajuan ditolak oleh: ${getMyIdentity()}`;
+          const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/surat/status/${localSurat.id}`, { status: "Ditolak", catatan: catatanLog }, { headers: { Authorization: `Bearer ${token}` } });
+          if (res.data.isSuccess) {
+            toastAlert("success", "Pengajuan berhasil ditolak.");
+            await refreshDetailData();
+          }
+        } catch (err) {
+          toastAlert("error", err?.response?.data?.message || "Gagal menolak pengajuan");
+        }
+      },
+      "Pengajuan akan ditandai sebagai Ditolak. Tindakan ini tidak dapat dibatalkan.",
+      "Tolak Pengajuan?",
     );
   };
 
   if (!localSurat) return null;
 
-  const isTerminalState = ["Selesai", "Ditolak", "Archived"].includes(localSurat.status);
+  const isTerminalState = ["Disetujui", "Ditolak", "Archived"].includes(localSurat.status);
   const isSender = user?.user_id === localSurat.user_id;
   const isReceiver = user?.user_id === localSurat.penerima_id;
   const anonymityRole = user?.role?.toLowerCase();
 
-  const canComplete = !isTerminalState && (isSender || isReceiver) && anonymityRole !== "mahasiswa";
+  const canComplete = !isTerminalState && isReceiver && anonymityRole !== "mahasiswa";
+  const canReject = !isTerminalState && isReceiver && anonymityRole !== "mahasiswa";
   const canDisposisi = !isTerminalState && isReceiver && anonymityRole !== "mahasiswa";
 
-  const hasGeneratedPDF = localSurat.status === "Selesai" && localSurat.form_data?.pdf_url;
+  // PDF tersedia jika ada pdf_url — tidak bergantung pada status
+  const hasGeneratedPDF = !!localSurat.form_data?.pdf_url;
   const tglSuratLengkap = new Date(localSurat.created_at).toLocaleString("id-ID", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }) + " WIB";
 
   return (
@@ -239,18 +262,32 @@ export default function PersuratanDetail({ onBack, surat }) {
                   <Icon icon="mdi:share-all" width={16} /> Disposisi Surat
                 </button>
               )}
+              {canReject && (
+                <button
+                  onClick={handleReject}
+                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
+                >
+                  <Icon icon="mdi:close-circle" width={16} /> Tolak Pengajuan
+                </button>
+              )}
               {canComplete && (
                 <button
                   onClick={handleComplete}
                   className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
                 >
-                  <Icon icon="mdi:check-all" width={16} /> Selesaikan Pengajuan
+                  <Icon icon="mdi:check-all" width={16} /> Setujui Pengajuan
                 </button>
               )}
               <div
                 className={classNames(
                   "px-5 py-2.5 rounded-xl border-2 text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-sm font-mono w-full sm:w-auto text-center",
-                  localSurat.status === "Selesai" ? "bg-gray-200 text-gray-700 border-gray-300" : localSurat.status === "Ditolak" ? "bg-red-50 text-red-700 border-red-200" : "bg-primary-50 text-primary-700 border-primary-200",
+                  {
+                    "bg-gray-200 text-gray-700 border-gray-300": localSurat.status === "Archived",
+                    "bg-green-50 text-green-700 border-green-200": localSurat.status === "Disetujui",
+                    "bg-red-50 text-red-700 border-red-200": localSurat.status === "Ditolak",
+                    "bg-indigo-50 text-indigo-700 border-indigo-200": localSurat.status === "Disposisi",
+                    "bg-primary-50 text-primary-700 border-primary-200": !["Archived", "Disetujui", "Ditolak", "Disposisi"].includes(localSurat.status),
+                  }
                 )}
               >
                 STATUS: {localSurat.status}
@@ -333,7 +370,7 @@ export default function PersuratanDetail({ onBack, surat }) {
             </div>
 
             <div className="lg:col-span-4">
-              <TrackingSidebar lampirans={localSurat.DokumenLampirans} trackingList={trackingList} historyDisposisi={localSurat.form_data?.history_disposisi} onPreview={handlePreview} />
+              <TrackingSidebar lampirans={localSurat.DokumenLampirans} trackingList={trackingList} disposisiChain={localSurat.disposisi_chain} historyDisposisi={localSurat.form_data?.history_disposisi} onPreview={handlePreview} />
             </div>
           </div>
         </div>
