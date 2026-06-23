@@ -9,12 +9,9 @@ import useUser from '../../../../hooks/useUser'
 import useDatatable from '../../../../hooks/useDatatable'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import useForm from '../../../../hooks/useForm'
-import useDosen from '../../../../repo/dosen'
-import { MySwal, loadingAlert, toastAlert } from '../../../../lib/sweetalert'
+import { loadingAlert, toastAlert } from '../../../../lib/sweetalert'
 import { Loading } from '../../../../components/Loading'
 import useMahasiswa from '../../../../repo/mahasiswa'
-import useDosenExt from '../../../../repo/dosen-ext'
 
 export default function GenerateQrCode() {
   const router = useRouter()
@@ -22,216 +19,242 @@ export default function GenerateQrCode() {
   const { prefix, menu, setActive } = useMenu()
 
   const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/profile/getDataPribadi`
-  const { data, loading, refresh } = useDatatable(DATA_URL)
+  const { data, loading } = useDatatable(DATA_URL)
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
-  const { data: listDosenExt, isLoading: isDosenExtLoading } = useDosenExt([user])
 
-  const [courseOptions, setCourseOptions] = useState([])
-  const [selectedCourse, setSelectedCourse] = useState('')
-  const [pertemuanData, setPertemuanData] = useState(null)
+  const [mataKuliahOptions, setMataKuliahOptions] = useState([])
+  const [kelasOptions, setKelasOptions] = useState([])
+  const [dosenOptions, setDosenOptions] = useState([])
+
+  const [selectedMataKuliah, setSelectedMataKuliah] = useState(null)
+  const [selectedKelas, setSelectedKelas] = useState(null)
+  const [selectedDosenPengganti, setSelectedDosenPengganti] = useState('')
   const [selectedMhs, setSelectedMhs] = useState('')
+  const [pertemuanData, setPertemuanData] = useState('')
+  const [statusKelas, setStatusKelas] = useState('')
+  const [dosenTamu, setDosenTamu] = useState('')
+  const [rps, setRps] = useState({ rps_dasar: '', rps_pelaksanaan: '' })
 
-  const [rps, setRps] = useState({
-    rps_dasar: null,
-    rps_pelaksanaan: null,
-  })
+  const [showQr, setShowQr] = useState(false)
+  const [qrCode, setQrCode] = useState(null)
+  const [qrToken, setQrToken] = useState(null)
+  const [qrLoading, setQrLoading] = useState(false)
+
+  const SIAK_URL = process.env.NEXT_PUBLIC_SIAK_API_URL
+  const ABSEN_URL = process.env.NEXT_PUBLIC_API_URL_ABSEN
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const fetchMataKuliah = async () => {
       try {
-        if (data.nip) {
-          const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/dosen-for-mk`,
-            {
-              params: {
-                code: data.nip,
-                academic_year: '2024/2025',
-                semester: 'genap',
-              },
-            },
-            {
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            },
+        if (SIAK_URL) {
+          const response = await axios.get(`${SIAK_URL}/api/public/mata-kuliah`, {
+            params: { perPage: 200 },
+          })
+          const mk = response.data.data || []
+          setMataKuliahOptions(
+            mk.map(c => ({
+              label: `${c.nama} (${c.kode})`,
+              value: c.kode,
+            })),
           )
-
-          const courses = response.data.Data
-
-          const options = courses.map(course => ({
-            label: `${course.name} | ${course.class}`,
-            value: `${course.course_code} - ${course.class}`,
-            dataId: course.id,
-            kelas: course.class,
-          }))
-
-          setCourseOptions(options)
         }
       } catch (error) {
-        console.error('Error fetching courses:', error)
+        console.error('Error fetching mata kuliah:', error)
       }
     }
-
-    fetchCourses()
-  }, [data.nip])
-
-  const INITIAL_FORM = {
-    status_kelas: '',
-    dosen_tamu: '',
-  }
-
-  const { form, inputHandler } = useForm(INITIAL_FORM, {
-    rules: [{ field: 'status_kelas', label: 'status_kelas' }],
-  })
+    fetchMataKuliah()
+  }, [SIAK_URL])
 
   useEffect(() => {
-    const fetchPertemuan = async () => {
+    const fetchKelas = async () => {
       try {
-        if (selectedCourse) {
-          const selectedOption = courseOptions.find(option => option.value === selectedCourse)
-
-          if (!selectedOption) {
-            console.error('Selected course not found in options')
-            return
+        if (SIAK_URL) {
+          const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`, {
+            params: { perPage: 200 },
+          })
+          const kls = response.data.data || []
+          const uniqueClasses = []
+          const classMap = new Map()
+          for (const item of kls) {
+            if (!classMap.has(item.nama)) {
+              classMap.set(item.nama, true)
+              uniqueClasses.push({
+                label: item.nama,
+                value: item.nama,
+              })
+            }
           }
-
-          const [selectedCourseCode, selectedClass] = selectedCourse.split('-')
-          const [optionCourseCode, optionClass] = selectedOption.value.split('-')
-
-          if (selectedCourseCode !== optionCourseCode || selectedClass !== optionClass) {
-            console.error("Selected course and class don't match with options")
-            return
-          }
-          if (data.nip) {
-            const response = await axios.get(
-              `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/pembelajaran/cek-pertemuan`,
-              {
-                params: {
-                  nik_dosen: data.nip,
-                  id_matkul: selectedCourseCode,
-                  kelas: selectedOption.kelas,
-                  id_lecture: selectedOption.dataId,
-                },
-              },
-            )
-
-            const pertemuanData = response.data.data.pertemuan_ke
-            const rps = response.data.data.rps_dasar
-            const rpsp = response.data.data.rps_pelaksanaan
-            setPertemuanData(pertemuanData)
-            setRps({
-              rps_dasar: rps !== null ? rps : '',
-              rps_pelaksanaan: rpsp !== null ? rpsp : '',
-            })
-          }
+          setKelasOptions(uniqueClasses)
         }
       } catch (error) {
-        console.error('Error fetching pertemuan:', error)
+        console.error('Error fetching kelas:', error)
       }
     }
+    fetchKelas()
+  }, [SIAK_URL])
 
-    fetchPertemuan()
-  }, [selectedCourse, courseOptions, data.nip])
+  useEffect(() => {
+    const fetchDosen = async () => {
+      try {
+        if (SIAK_URL) {
+          const response = await axios.get(`${SIAK_URL}/api/public/dosen`, {
+            params: { perPage: 200 },
+          })
+          const dosens = response.data.data || []
+          setDosenOptions(
+            dosens.map(d => ({
+              label: d.nama,
+              value: d.nidn,
+            })),
+          )
+        }
+      } catch (error) {
+        console.error('Error fetching dosen:', error)
+      }
+    }
+    fetchDosen()
+  }, [SIAK_URL])
 
-  const [selectedDosen, setSelectedDosen] = useState('')
-  const [selectedDosenExt, setSelectedDosenExt] = useState('')
-
-  const handleDosenChange = selected => {
-    setSelectedDosen(selected?.value)
-  }
-
-  const handleDosenExtChange = selected => {
-    setSelectedDosenExt(selected?.value)
-  }
-
-  const handleChange = e => {
+  const handleRpsChange = e => {
     const { name, value } = e.target
-    setRps(prevState => ({
-      ...prevState,
-      [name]: value,
-    }))
-  }
-
-  const handleChangePertemuan = e => {
-    const { name, value } = e.target
-    setPertemuanData(value)
-  }
-
-  const handleMhsChange = selected => {
-    setSelectedMhs(selected?.value)
+    setRps(prev => ({ ...prev, [name]: value }))
   }
 
   async function submitHandler(event) {
     event.preventDefault()
+
+    if (!selectedMataKuliah) {
+      toastAlert('error', 'Mohon pilih mata kuliah')
+      return
+    }
+    if (!selectedKelas) {
+      toastAlert('error', 'Mohon pilih kelas')
+      return
+    }
+    if (!statusKelas) {
+      toastAlert('error', 'Mohon pilih status kelas')
+      return
+    }
+
     try {
-      const selectedOption = courseOptions.find(option => option.value === selectedCourse)
-
-      if (!selectedOption) {
-        console.error('Selected course not found in options')
-        return
-      }
-
-      const [selectedCourseCode, selectedClass] = selectedCourse.split('-')
-      const [optionCourseCode, optionClass] = selectedOption.value.split('-')
-
-      // Pemeriksaan course_code dan class
-      if (selectedCourseCode !== optionCourseCode || selectedClass !== optionClass) {
-        console.error("Selected course and class don't match with options")
-        return
-      }
-      if (!form.status_kelas) {
-        toastAlert('error', 'Pleas fill in all the required fields.')
-
-        return
-      }
-
       const requestData = {
-        ...form,
-        ...rps,
-        nik_dosen: data.nip,
-        id_matkul: selectedCourseCode,
-        kelas: selectedClass,
+        nik_dosen: data.nip ? data.nip.trim() : '',
+        id_matkul: selectedMataKuliah,
+        id_lecture: -1,
+        kelas: selectedKelas,
         pertemuan: pertemuanData,
-        id_lecture: selectedOption.dataId,
-        nidn_dosen_pengganti: selectedDosen,
+        status_kelas: statusKelas,
+        rps_dasar: rps.rps_dasar,
+        rps_pelaksanaan: rps.rps_pelaksanaan,
+        nidn_dosen_pengganti: selectedDosenPengganti,
+        dosen_tamu: dosenTamu,
         npm_komti: selectedMhs,
-        dosen_tamu: selectedDosenExt,
       }
-
-      console.log(requestData)
 
       const request = await axios({
-        url: `${process.env.NEXT_PUBLIC_API_URL_ABSEN}/pembelajaran/store`,
+        url: `${ABSEN_URL}/pembelajaran/store`,
         method: 'POST',
         data: requestData,
       })
 
-      const response = await request.data
+      const response = request.data
+      const token = response?.data?.token
 
-      toastAlert('success', 'QRCODE created successfully')
-      router.push(prefix + menu.url)
+      if (token) {
+        setQrToken(token)
+        setQrLoading(true)
+        setShowQr(true)
+
+        try {
+          const qrResponse = await axios.get(`${ABSEN_URL}/absensi/show-qr?token=${token}`)
+          setQrCode(qrResponse.data)
+        } catch (qrError) {
+          console.error('Error fetching QR:', qrError)
+          toastAlert('error', 'QR Code gagal dimuat, token: ' + token)
+        } finally {
+          setQrLoading(false)
+        }
+
+        toastAlert('success', 'QR Code berhasil dibuat!')
+      } else {
+        toastAlert('success', 'Data pembelajaran berhasil disimpan')
+        router.push(prefix + menu.url)
+      }
     } catch (error) {
-      if (error.name === 'AxiosError') {
-        const { status_code, message, data } = error.response.data
-        toastAlert('error', message)
-
+      if (error.name === 'AxiosError' && error.response) {
+        const { message } = error.response.data
+        toastAlert('error', message || 'Terjadi kesalahan')
         return
       }
-      loadingAlert()
-      MySwal.close()
-
       toastAlert('error', error.message)
     }
   }
 
-  if (
-    [user, menu, loading, isDosenLoading, isMahasiswaLoading, isDosenExtLoading].some(
-      item => item == null,
+  if ([user, menu, loading, isMahasiswaLoading].some(item => item == null)) return <Loading />
+
+  if (showQr) {
+    return (
+      <Layout>
+        <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
+        <Card className="mt-4">
+          <Card.Header className="text-center">QR Code Presensi</Card.Header>
+          <Card.Body>
+            {qrLoading ? (
+              <div className="flex justify-center items-center py-12">
+                <p className="text-lg">Memuat QR Code...</p>
+              </div>
+            ) : qrCode ? (
+              <div className="flex flex-col items-center gap-4">
+                <div
+                  dangerouslySetInnerHTML={{ __html: qrCode }}
+                  style={{ maxWidth: '100%', maxHeight: '60vh' }}
+                />
+                <h1 className="text-center font-bold text-4xl">{qrToken}</h1>
+                <p className="text-center text-gray-500 text-sm">
+                  Gunakan token di atas atau scan QR Code untuk melakukan presensi
+                </p>
+              </div>
+            ) : (
+              <div className="flex justify-center items-center py-12">
+                <p className="text-lg text-red-500">QR Code tidak tersedia. Token: {qrToken}</p>
+              </div>
+            )}
+          </Card.Body>
+        </Card>
+        <div className="flex gap-4 mt-4">
+          <Button
+            as="a"
+            href={prefix + menu.url}
+            variant="secondary"
+            className="w-full h-12"
+          >
+            Kembali ke Daftar Hadir
+          </Button>
+          <Button
+            variant="primary"
+            className="w-full h-12"
+            onClick={() => {
+              setShowQr(false)
+              setQrCode(null)
+              setQrToken(null)
+              setSelectedMataKuliah(null)
+              setSelectedKelas(null)
+              setPertemuanData('')
+              setStatusKelas('')
+              setRps({ rps_dasar: '', rps_pelaksanaan: '' })
+              setSelectedDosenPengganti('')
+              setDosenTamu('')
+              setSelectedMhs('')
+            }}
+          >
+            Buat QR Code Lagi
+          </Button>
+        </div>
+      </Layout>
     )
-  )
-    return <Loading />
+  }
+
   return (
     <Layout>
       <PageHeader title={menu.label} icon={menu.icon} handler={setActive} />
@@ -247,9 +270,8 @@ export default function GenerateQrCode() {
               <Form.Input
                 type="text"
                 className="flex-1"
-                onChange={inputHandler}
                 name="nik_dosen"
-                value={data.nip}
+                value={data.nip ? data.nip.trim() : ''}
                 readOnly
               />
             </Form.Group>
@@ -258,15 +280,27 @@ export default function GenerateQrCode() {
                 Matakuliah <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
+              <Form.Combobox
                 name="id_matkul"
-                onChange={e => {
-                  setSelectedCourse(e.target.value)
-                }}
-                value={selectedCourse}
-                options={courseOptions}
-                required
+                className="flex-1"
+                onChange={selected => setSelectedMataKuliah(selected?.value || null)}
+                value={selectedMataKuliah}
+                options={mataKuliahOptions}
+                menuTarget={typeof document !== 'undefined' ? document.body : undefined}
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[14rem]">
+                Kelas <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Combobox
+                name="kelas"
+                className="flex-1"
+                onChange={selected => setSelectedKelas(selected?.value || null)}
+                value={selectedKelas}
+                options={kelasOptions}
+                menuTarget={typeof document !== 'undefined' ? document.body : undefined}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -279,7 +313,7 @@ export default function GenerateQrCode() {
                 className="flex-1"
                 name="pertemuan"
                 value={pertemuanData}
-                onChange={handleChangePertemuan}
+                onChange={e => setPertemuanData(e.target.value)}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -289,16 +323,22 @@ export default function GenerateQrCode() {
               <span>:</span>
               <div className="flex gap-4">
                 <Form.Label>
-                  <Form.Radio name="status_kelas" onChange={inputHandler} value={0} />
+                  <Form.Radio
+                    name="status_kelas"
+                    onChange={() => setStatusKelas('0')}
+                    value={0}
+                    checked={statusKelas === '0'}
+                  />
                   Offline
                 </Form.Label>
                 <Form.Label>
-                  <Form.Radio name="status_kelas" onChange={inputHandler} value={1} />
+                  <Form.Radio
+                    name="status_kelas"
+                    onChange={() => setStatusKelas('1')}
+                    value={1}
+                    checked={statusKelas === '1'}
+                  />
                   Online
-                </Form.Label>
-                <Form.Label>
-                  <Form.Radio name="status_kelas" onChange={inputHandler} value={2} />
-                  Hybird
                 </Form.Label>
               </div>
             </Form.Group>
@@ -310,7 +350,7 @@ export default function GenerateQrCode() {
                 className="flex-1"
                 name="rps_dasar"
                 value={rps.rps_dasar}
-                onChange={handleChange}
+                onChange={handleRpsChange}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -321,7 +361,7 @@ export default function GenerateQrCode() {
                 className="flex-1"
                 name="rps_pelaksanaan"
                 value={rps.rps_pelaksanaan}
-                onChange={handleChange}
+                onChange={handleRpsChange}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
@@ -330,36 +370,22 @@ export default function GenerateQrCode() {
               <Form.Combobox
                 name="nidn_dosen_pengganti"
                 className="flex-1"
-                onChange={handleDosenChange}
-                value={selectedDosen}
-                options={listDosen?.map(dosen => ({
-                  label: dosen.nama_lengkap,
-                  value: dosen.nip,
-                }))}
-                menuTarget={document.body}
+                onChange={selected => setSelectedDosenPengganti(selected?.value || '')}
+                value={selectedDosenPengganti}
+                options={dosenOptions}
+                menuTarget={typeof document !== 'undefined' ? document.body : undefined}
               />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">Dosen Tamu</Form.Label>
               <span>:</span>
-              <Form.Combobox
-                name="dosen_tamu"
-                className="flex-1"
-                onChange={handleDosenExtChange}
-                value={selectedDosenExt}
-                options={listDosenExt?.map(dosen => ({
-                  label: dosen.nama_lengkap,
-                  value: `${dosen.nama_lengkap} - ${dosen.nip}`,
-                }))}
-                menuTarget={document.body}
-              />
-              {/* <Form.Input
+              <Form.Input
                 type="text"
                 className="flex-1"
                 name="dosen_tamu"
-                onChange={inputHandler}
-                value={data.dosen_tamu}
-              /> */}
+                value={dosenTamu}
+                onChange={e => setDosenTamu(e.target.value)}
+              />
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[14rem]">
@@ -368,13 +394,13 @@ export default function GenerateQrCode() {
               <span>:</span>
               <Form.Combobox
                 name="npm_komti"
-                onChange={handleMhsChange}
+                onChange={selected => setSelectedMhs(selected?.value || '')}
                 value={selectedMhs}
                 options={listMahasiswa?.map(mhs => ({
                   label: `${mhs.nama_lengkap} - ${mhs.npm}`,
                   value: mhs.npm,
                 }))}
-                menuTarget={document.body}
+                menuTarget={typeof document !== 'undefined' ? document.body : undefined}
               />
             </Form.Group>
           </Card.Body>
@@ -384,7 +410,7 @@ export default function GenerateQrCode() {
             Batal
           </Button>
           <Button type="submit" variant="primary" className="w-full h-12">
-            Konfirmasi
+            Generate
           </Button>
         </div>
       </Form>
