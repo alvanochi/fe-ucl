@@ -78,13 +78,14 @@ export default function ChatRoom({ replies, user, isTerminalState, status, isSen
                       <div
                         key={i}
                         className={classNames(
-                          "mt-2 sm:mt-3 flex items-center justify-between gap-2 sm:gap-3 px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl transition-all border-2 font-bold",
+                          // Tambahkan max-w-[220px] sm:max-w-[280px] di baris bawah ini
+                          "mt-2 sm:mt-3 flex items-center justify-between gap-2 sm:gap-3 px-2 sm:px-3 py-2 sm:py-2.5 rounded-xl transition-all border-2 font-bold w-full max-w-[220px] sm:max-w-[280px]",
                           isMe ? "bg-white/10 border-transparent text-white" : "bg-gray-50 border-gray-100 text-gray-700",
                         )}
                       >
                         <div onClick={() => onPreview(lampiran)} className="flex items-center gap-2 cursor-pointer hover:opacity-70 flex-1 overflow-hidden min-w-0">
                           <Icon icon={lampiran.file_url.endsWith(".pdf") ? "mdi:file-pdf-box" : "mdi:image-outline"} width={18} className="shrink-0 sm:w-[20px]" />
-                          <span className="text-[10px] sm:text-xs truncate">{lampiran.nama_file}</span>
+                          <span className="text-[10px] sm:text-xs truncate block">{lampiran.nama_file}</span>
                         </div>
                         <a
                           href={`${process.env.NEXT_PUBLIC_API_URL}/lampiran-surat/${lampiran.file_url}`}
