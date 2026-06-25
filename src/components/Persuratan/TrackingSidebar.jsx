@@ -3,6 +3,11 @@ import classNames from "classnames";
 import Card from "../Card";
 
 export default function TrackingSidebar({ lampirans, trackingList, historyDisposisi, onPreview }) {
+  const cleanActorText = (str) => {
+    if (!str) return str;
+    return str.replace(/\([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\s*-\s*/gi, "(");
+  };
+
   const renderCatatanTracking = (text) => {
     if (!text) return "-";
     const parts = text.split(/dilakukan oleh:\s*/i);
@@ -12,7 +17,7 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
           <span className="leading-relaxed text-gray-700 text-sm">{parts[0].trim()}</span>
           <div className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white rounded-lg border border-gray-200 shadow-sm">
             <Icon icon="mdi:account-circle" className="text-gray-500 shrink-0" width={16} />
-            <span className="text-[11px] font-bold text-gray-700">{parts[1].trim()}</span>
+            <span className="text-[11px] font-bold text-gray-700">{cleanActorText(parts[1].trim())}</span>
           </div>
         </div>
       );
@@ -133,7 +138,6 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
               <div className="relative border-l-[3px] border-gray-200 ml-4 space-y-6 pb-2">
                 {historyDisposisi.map((disp, idx) => (
                   <div key={idx} className="relative pl-8 animate-in fade-in slide-in-from-right-2">
-                    {/* Icon Node — sama persis dengan timeline */}
                     <div className="absolute -left-[18px] top-0 w-8 h-8 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md z-10 bg-indigo-500">
                       <Icon icon="mdi:share-all" width={16} />
                     </div>
@@ -156,7 +160,7 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
                       {/* Aktor pill */}
                       <div className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white rounded-lg border border-gray-200 shadow-sm mb-2">
                         <Icon icon="mdi:account-circle" className="text-gray-500 shrink-0" width={16} />
-                        <span className="text-[11px] font-bold text-gray-700">{disp.aktor}</span>
+                        <span className="text-[11px] font-bold text-gray-700">{cleanActorText(disp.aktor)}</span>
                       </div>
 
                       {/* Panah → Target */}
