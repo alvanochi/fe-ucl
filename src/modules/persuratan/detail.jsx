@@ -238,26 +238,38 @@ export default function PersuratanDetail({ onBack, surat }) {
 
       <div className="w-full bg-[#F1F5F9] min-h-[calc(100vh-2rem)] py-6 px-4 sm:px-6 rounded-2xl">
         <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-5 mb-8">
+            <div className="flex items-start sm:items-center gap-4 w-full xl:w-auto">
               <button
                 onClick={onBack}
                 aria-label="Kembali"
-                className="p-3 sm:p-2.5 hover:bg-gray-200 rounded-xl border-2 border-gray-200 bg-white transition-all shadow-sm active:scale-95 text-gray-600 focus:ring-2 focus:ring-primary-500 outline-none"
+                className="p-3 sm:p-2.5 hover:bg-gray-200 rounded-xl border-2 border-gray-200 bg-white transition-all shadow-sm active:scale-95 text-gray-600 focus:ring-2 focus:ring-primary-500 outline-none shrink-0"
               >
                 <Icon icon="mdi:arrow-left" width={22} />
               </button>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-black text-gray-800 tracking-tight leading-none">Detail Pengajuan</h1>
-                <p className="text-[10px] text-gray-400 font-mono mt-1 tracking-widest uppercase">ID: {localSurat.id}</p>
+              <div className="min-w-0">
+                <h1 className="text-xl sm:text-2xl font-black text-gray-800 tracking-tight leading-none truncate">Detail Pengajuan</h1>
+                <p className="text-[10px] text-gray-400 font-mono mt-1 tracking-widest uppercase truncate">ID: {localSurat.id}</p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center justify-start xl:justify-end gap-3 w-full xl:w-auto">
+              <div
+                className={classNames("px-5 py-3 sm:py-2.5 rounded-xl border-2 text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-sm font-mono w-full sm:w-auto text-center flex items-center justify-center shrink-0", {
+                  "bg-gray-200 text-gray-700 border-gray-300": localSurat.status === "Archived",
+                  "bg-green-50 text-green-700 border-green-200": localSurat.status === "Disetujui",
+                  "bg-red-50 text-red-700 border-red-200": localSurat.status === "Ditolak",
+                  "bg-indigo-50 text-indigo-700 border-indigo-200": localSurat.status === "Disposisi",
+                  "bg-primary-50 text-primary-700 border-primary-200": !["Archived", "Disetujui", "Ditolak", "Disposisi"].includes(localSurat.status),
+                })}
+              >
+                STATUS: {localSurat.status}
+              </div>
+
               {canDisposisi && (
                 <button
                   onClick={() => setShowDisposisi(true)}
-                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
+                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center shrink-0"
                 >
                   <Icon icon="mdi:share-all" width={16} /> Disposisi Surat
                 </button>
@@ -265,7 +277,7 @@ export default function PersuratanDetail({ onBack, surat }) {
               {canReject && (
                 <button
                   onClick={handleReject}
-                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
+                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center shrink-0"
                 >
                   <Icon icon="mdi:close-circle" width={16} /> Tolak Pengajuan
                 </button>
@@ -273,25 +285,11 @@ export default function PersuratanDetail({ onBack, surat }) {
               {canComplete && (
                 <button
                   onClick={handleComplete}
-                  className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
+                  className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center shrink-0"
                 >
                   <Icon icon="mdi:check-all" width={16} /> Setujui Pengajuan
                 </button>
               )}
-              <div
-                className={classNames(
-                  "px-5 py-2.5 rounded-xl border-2 text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-sm font-mono w-full sm:w-auto text-center",
-                  {
-                    "bg-gray-200 text-gray-700 border-gray-300": localSurat.status === "Archived",
-                    "bg-green-50 text-green-700 border-green-200": localSurat.status === "Disetujui",
-                    "bg-red-50 text-red-700 border-red-200": localSurat.status === "Ditolak",
-                    "bg-indigo-50 text-indigo-700 border-indigo-200": localSurat.status === "Disposisi",
-                    "bg-primary-50 text-primary-700 border-primary-200": !["Archived", "Disetujui", "Ditolak", "Disposisi"].includes(localSurat.status),
-                  }
-                )}
-              >
-                STATUS: {localSurat.status}
-              </div>
             </div>
           </div>
 
