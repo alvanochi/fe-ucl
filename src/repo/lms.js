@@ -46,8 +46,11 @@ export function useLmsClasses({ semester, search, page = 1, limit = 12, enabled 
 }
 
 /**
- * Daftar topik (section) beserta item-nya untuk satu kelas.
+ * Daftar topik (section) beserta item-nya untuk satu kelas, plus info kelas.
  * `kelasKuliahId` null/kosong → SWR tidak fetch (mencegah panggilan tanpa konteks kelas).
+ *
+ * Respons backend (baru): { class: {...}, sections: [...] }. Bentuk LAMA (array sections
+ * langsung) tetap didukung agar aman saat urutan deploy FE/BE berbeda.
  */
 export function useLmsSections(kelasKuliahId) {
   const url = kelasKuliahId
@@ -56,10 +59,16 @@ export function useLmsSections(kelasKuliahId) {
 
   const { data, error, isLoading, mutate } = useSWR(url);
 
-  // Fetcher repo bisa mengembalikan objek error (bukan array) saat gagal → jaga tetap array.
-  const sections = Array.isArray(data) ? data : [];
+  // Dukung dua bentuk: array (lama) atau { class, sections } (baru). Fetcher juga bisa
+  // mengembalikan objek error saat gagal → jaga `sections` tetap array & `classInfo` null.
+  const sections = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.sections)
+    ? data.sections
+    : [];
+  const classInfo = (!Array.isArray(data) && data?.class) || null;
 
-  return { sections, error, isLoading, mutate };
+  return { sections, classInfo, error, isLoading, mutate };
 }
 
 /**

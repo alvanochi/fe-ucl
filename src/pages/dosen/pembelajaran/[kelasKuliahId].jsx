@@ -4,6 +4,7 @@ import PageHeader from "../../../components/PageHeader";
 import { Loading } from "../../../components/Loading";
 import useUser from "../../../hooks/useUser";
 import KelasLmsModule from "../../../modules/pembelajaran/lms";
+import { useLmsSections } from "../../../repo/lms";
 
 /**
  * Halaman kelas — Modul Pembelajaran (LMS) sisi DOSEN (mode kelola).
@@ -15,6 +16,10 @@ export default function DosenPembelajaranKelas() {
   const { user } = useUser({ redirectTo: "/login" });
   const router = useRouter();
   const { kelasKuliahId, demo } = router.query;
+  const isDemo = demo === "1";
+  // Info kelas untuk judul. Key URL SWR sama dengan modul → satu request dipakai bersama (dedupe).
+  const { classInfo } = useLmsSections(!isDemo && router.isReady ? kelasKuliahId : null);
+  const namaMatakuliah = classInfo?.nama_matakuliah;
 
   if (user == null || !router.isReady) return <Loading />;
 
@@ -22,12 +27,15 @@ export default function DosenPembelajaranKelas() {
 
   return (
     <Layout>
-      <PageHeader title="Modul Pembelajaran" icon="mdi:book-education-outline" />
+      <PageHeader
+        title={namaMatakuliah ? `Modul Pembelajaran — ${namaMatakuliah}` : "Modul Pembelajaran"}
+        icon="mdi:book-education-outline"
+      />
       <div className="my-8">
         <KelasLmsModule
           kelasKuliahId={kelasKuliahId}
           canManage={canManage}
-          demo={demo === "1"}
+          demo={isDemo}
         />
       </div>
     </Layout>
