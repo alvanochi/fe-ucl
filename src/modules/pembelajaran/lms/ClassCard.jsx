@@ -13,6 +13,9 @@ import { Icon } from "@iconify-icon/react";
 export default function ClassCard({ kelas, basePath, demo = false }) {
   const href = `${basePath}/${encodeURIComponent(kelas.kelasKuliahId)}${demo ? "?demo=1" : ""}`;
 
+  // Label tampilan: prodi "MKU" ditampilkan sebagai "Pelatihan" (kosmetik, data tidak berubah)
+  const displayProdi = (p) => (p === 'MKU' ? 'Pelatihan' : (p || 'Prodi —'));
+
   return (
     <Link href={href} legacyBehavior>
       <a className="group flex flex-col overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-md">
@@ -40,7 +43,7 @@ export default function ClassCard({ kelas, basePath, demo = false }) {
           <div className="space-y-1.5 text-sm text-gray-600">
             <p className="flex items-center gap-2">
               <Icon icon="mdi:school-outline" width={16} height={16} className="text-gray-400" />
-              <span className="line-clamp-1">{kelas.nama_prodi || "Prodi —"}</span>
+              <span className="line-clamp-1">{displayProdi(kelas.nama_prodi)}</span>
             </p>
             <p className="flex items-center gap-2">
               <Icon icon="mdi:office-building-outline" width={16} height={16} className="text-gray-400" />
