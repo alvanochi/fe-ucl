@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Head from "next/head";
 import { Icon } from "@iconify-icon/react";
 import Card from "../../components/Card";
 import Form from "../../components/Form";
 import Layout from "../../components/Layout";
-import useCRUD from "../../hooks/useCRUD";
+import axios from "axios";
 import useUser from "../../hooks/useUser";
 import { toastAlert } from "../../lib/sweetalert";
 
@@ -25,78 +25,85 @@ const FIELD_CONFIG = {
 const MAX_FILES = 5;
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+const INITIAL_FORM = {
+  jenis_surat: "", perihal: "", catatan_surat: "",
+  semester_cuti: "", tahun_akademik_cuti: "", semester_aktif: "", tahun_akademik_aktif: "",
+  semester: "", tanggal_pengarahan: "", nama_ortu_wali: "",
+};
+
 export default function PersuratanCreate({ onBack }) {
   const { user } = useUser({ redirectTo: "/login" });
   const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/surat`;
 
-  const userRef = useRef(user);
-  const selectedFilesRef = useRef([]);
+  const [form, setForm] = useState(INITIAL_FORM);
   const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isSubmit, setIsSubmit] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const [isTtdError, setIsTtdError] = useState(false);
+  const errorRef = useRef(null);
 
   useEffect(() => {
-    userRef.current = user;
-  }, [user]);
+    if ((isTtdError || errorMessage) && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [isTtdError, errorMessage]);
 
-  useEffect(() => {
-    selectedFilesRef.current = selectedFiles;
-  }, [selectedFiles]);
+  const inputHandler = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
 
-  const { formdata, submitHandler, isSubmit } = useCRUD(
-    API_URL,
-    { jenis_surat: "", perihal: "", catatan_surat: "" },
-    {
-      rules: [
-        { field: "jenis_surat", label: "Jenis Surat" },
-        { field: "perihal", label: "Perihal" },
-      ],
-      transformData: (data) => {
-        const currentUser = userRef.current;
-        const currentFiles = selectedFilesRef.current;
-        const fd = new FormData();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.jenis_surat) { toastAlert("warning", "Pilih jenis surat terlebih dahulu."); return; }
+    if (!form.perihal) { toastAlert("warning", "Perihal surat wajib diisi."); return; }
 
-        fd.append("jenis_surat", data.jenis_surat || "");
+    setIsSubmit(true);
+    setErrorMessage(null);
+    setIsTtdError(false);
 
-        const actorName = currentUser?.personalData?.nama_lengkap || currentUser?.nama_lengkap || "Mahasiswa";
-        fd.append("nama_aktor", `${actorName} (MAHASISWA)`);
+    try {
+      const fd = new FormData();
+      fd.append("jenis_surat", form.jenis_surat);
 
-        const { jenis_surat, perihal, catatan_surat, ...dynamicFields } = data;
-        const jsonPayload = {
-          perihal: perihal || `Pengajuan ${jenis_surat}`,
-          catatan_surat,
-          ...dynamicFields,
-          nama_lengkap: currentUser?.personalData?.nama_lengkap || currentUser?.nama_lengkap,
-          npm: currentUser?.npm,
-          alamat: currentUser?.personalData?.alamat,
-          no_hp: currentUser?.personalData?.no_hp,
-        };
+      const actorName = user?.personal_data?.nama_lengkap || user?.personalData?.nama_lengkap || user?.nama_lengkap || "Mahasiswa";
+      fd.append("nama_aktor", `${actorName} (MAHASISWA)`);
 
-        try {
-          fd.append("form_data", JSON.stringify(jsonPayload));
-        } catch (e) {
-          console.error("Gagal stringify form_data", e);
-        }
+      const { jenis_surat, perihal, catatan_surat, ...dynamicFields } = form;
+      const jsonPayload = {
+        perihal: perihal || `Pengajuan ${jenis_surat}`,
+        catatan_surat,
+        ...Object.fromEntries(Object.entries(dynamicFields).filter(([, v]) => v !== "")),
+        nama_lengkap: user?.personal_data?.nama_lengkap || user?.personalData?.nama_lengkap || user?.nama_lengkap,
+        npm: user?.npm,
+        alamat: user?.personal_data?.alamat || user?.personalData?.alamat,
+        no_hp: user?.personal_data?.no_hp || user?.personalData?.no_hp,
+      };
+      fd.append("form_data", JSON.stringify(jsonPayload));
+      selectedFiles.forEach((file) => fd.append("lampiran", file));
 
-        currentFiles.forEach((file) => fd.append("lampiran", file));
-        return fd;
-      },
-      success: () => {
+      const token = localStorage.getItem("token");
+      const res = await axios.post(API_URL, fd, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+      });
+
+      if (res.data.isSuccess || res.status === 200 || res.status === 201) {
         toastAlert("success", "Pengajuan surat berhasil dikirim ke Admin TU!");
-        setErrorMessage(null);
         onBack();
-      },
-      error: (err) => {
-        // Tangkap pesan error dari backend (responseMessage atau message)
-        const msg =
-          err?.response?.data?.responseMessage ||
-          err?.response?.data?.message ||
-          "Terjadi kesalahan. Silakan coba lagi.";
-        setErrorMessage(msg);
-      },
-    },
-  );
-
-  const { form, inputHandler } = formdata;
+      }
+    } catch (err) {
+      const msg =
+        err?.response?.data?.responseMessage ||
+        err?.response?.data?.message ||
+        "Terjadi kesalahan. Silakan coba lagi.";
+      // Deteksi error TTD — tampilkan UI khusus
+      const isTtd = msg?.toLowerCase().includes("tanda tangan digital");
+      setIsTtdError(isTtd);
+      setErrorMessage(isTtd ? null : msg);
+    } finally {
+      setIsSubmit(false);
+    }
+  };
 
   const handleFileChange = (e) => {
     if (!e.target.files?.length) return;
@@ -139,34 +146,43 @@ export default function PersuratanCreate({ onBack }) {
           <h1 className="text-2xl lg:text-3xl font-black text-gray-800 tracking-tight">Pengajuan Baru</h1>
         </div>
 
-        {/* Alert Error dari Backend */}
-        {errorMessage && (
-          <div className="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-5 py-4 animate-in fade-in slide-in-from-top-2">
-            <Icon icon="mdi:alert-circle-outline" width={22} className="shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <p className="font-bold text-sm">Pengajuan Gagal</p>
-              <p className="text-sm mt-0.5">{errorMessage}</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setErrorMessage(null)}
-              className="shrink-0 text-red-400 hover:text-red-600 transition-colors outline-none"
-              aria-label="Tutup"
-            >
-              <Icon icon="mdi:close" width={18} />
-            </button>
+        {/* ── Error Area (auto-scroll target) ── */}
+        {(isTtdError || errorMessage) && (
+          <div ref={errorRef} className="mb-6 scroll-mt-6">
+
+            {/* TTD Error: compact card */}
+            {isTtdError && (
+              <div className="flex gap-4 items-start bg-amber-50 border border-amber-300 rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-top-2">
+                <div className="w-9 h-9 rounded-xl bg-amber-400 flex items-center justify-center text-white shrink-0">
+                  <Icon icon="mdi:draw-pen" width={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-black text-amber-900 text-sm mb-1">Tanda Tangan Digital Belum Dibuat</p>
+                  <p className="text-amber-700 text-xs leading-relaxed">
+                    Buka <strong>TIAS Mobile</strong> → <strong>Profil</strong> → <strong>Tanda Tangan Digital</strong>, buat TTD kamu, lalu coba ajukan lagi.
+                  </p>
+                </div>
+                <button type="button" onClick={() => setIsTtdError(false)} className="shrink-0 text-amber-400 hover:text-amber-700 outline-none">
+                  <Icon icon="mdi:close" width={18} />
+                </button>
+              </div>
+            )}
+
+            {/* Generic Error */}
+            {errorMessage && (
+              <div className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 animate-in fade-in slide-in-from-top-2">
+                <Icon icon="mdi:alert-circle-outline" width={20} className="shrink-0 mt-0.5" />
+                <p className="flex-1 text-sm font-medium">{errorMessage}</p>
+                <button type="button" onClick={() => setErrorMessage(null)} className="shrink-0 text-red-400 hover:text-red-600 outline-none">
+                  <Icon icon="mdi:close" width={16} />
+                </button>
+              </div>
+            )}
           </div>
         )}
 
-        <Form
-          onSubmit={(e) =>
-            submitHandler(e, {
-              headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              },
-            })
-          }
-        >
+        <Form onSubmit={handleSubmit}>
+
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
             <div className="xl:col-span-1">
               <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden h-full">

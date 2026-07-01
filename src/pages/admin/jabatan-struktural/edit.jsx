@@ -6,14 +6,14 @@ import Form from '../../../components/Form'
 import useModal from '../../../hooks/useModal'
 import { Icon } from '@iconify-icon/react'
 import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
-import useDosen from '../../../repo/dosen'
+import useAllPegawai from '../../../repo/all-pegawai'
 import useJabatan from '../../../repo/jabatan'
 import useUnit from '../../../repo/unit'
 
 const EditStruktural = ({ id, onAction }) => {
   const { show, toggle, close } = useModal()
 
-  const { data: listDosen, isLoading: isDosenLoading } = useDosen()
+  const { data: listPegawai, isLoading: isPegawaiLoading } = useAllPegawai()
   const { data: listDepartemen, isLoading: isDepartemenLoading } = useUnit()
   const { data: listJabatan, isLoading: isJabatanLoading } = useJabatan()
 
@@ -134,18 +134,19 @@ const EditStruktural = ({ id, onAction }) => {
           </Form.Group>
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">
-              Dosen <span className="text-danger-600">*</span>
+              Pegawai <span className="text-danger-600">*</span>
             </Form.Label>
             <span>:</span>
             <Form.Combobox
               name="user_id"
               onChange={handleDosenChange}
               value={selectedDosen}
-              options={listDosen?.map(dosen => ({
-                label: `${dosen.nama_lengkap} - ${dosen.nip}`,
-                value: dosen.user_id,
-                nip: dosen.nip,
-              }))}
+              options={listPegawai
+                ?.map(user => ({
+                  label: `${user.personal_data?.nama_lengkap} - ${user.personal_data?.nip?.trim()}`,
+                  value: user.user_id,
+                  nip: user.personal_data?.nip?.trim(),
+                }))}
             />
           </Form.Group>
           <Form.Group className="flex items-baseline gap-3">
