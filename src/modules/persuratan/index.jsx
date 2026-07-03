@@ -248,7 +248,7 @@ export default function PersuratanModule({ isPreview = false }) {
           <div className="flex flex-col sm:flex-row gap-2">
             <PersuratanFilter filter={filter} handler={setFilter} className="w-full sm:w-auto justify-center" canSeeOutbox={hasOutboxPrivilege} />
 
-            {hasOutboxPrivilege && (
+            {hasOutboxPrivilege && !isAdmin && (
               <Button onClick={() => setView("create")} variant="primary" className="w-full sm:w-auto justify-center" icon={<Icon icon="mdi:file-plus-outline" width={20} />} pill>
                 Ajukan Surat
               </Button>
