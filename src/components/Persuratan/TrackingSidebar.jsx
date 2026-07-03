@@ -5,7 +5,10 @@ import Card from "../Card";
 export default function TrackingSidebar({ lampirans, trackingList, historyDisposisi, onPreview }) {
   const cleanActorText = (str) => {
     if (!str) return str;
-    return str.replace(/\([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\s*-\s*/gi, "(");
+    let cleaned = str.replace(/\([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\s*-\s*/gi, "(");
+    cleaned = cleaned.replace(/\(\s*null\s*-\s*/gi, "(");
+    cleaned = cleaned.replace(/\(\s*tanpa npm\s*-\s*/gi, "(");
+    return cleaned;
   };
 
   const renderCatatanTracking = (text) => {
@@ -168,7 +171,7 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
                         <Icon icon="mdi:arrow-right-bold" className="text-indigo-400 shrink-0" width={16} />
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-50 rounded-lg border border-indigo-200 shadow-sm">
                           <Icon icon="mdi:account-arrow-right" className="text-indigo-500 shrink-0" width={16} />
-                          <span className="text-[11px] font-bold text-indigo-700">{disp.target_penerima}</span>
+                          <span className="text-[11px] font-bold text-indigo-700">{cleanActorText(disp.target_penerima)}</span>
                         </div>
                       </div>
 
