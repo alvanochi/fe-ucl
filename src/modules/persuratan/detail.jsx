@@ -116,9 +116,13 @@ export default function PersuratanDetail({ onBack, surat }) {
 
   const getMyIdentity = () => {
     const name = user?.personal_data?.nama_lengkap || user?.username || "Pengguna";
-    const npm  = user?.npm;
-    const nidn = user?.nidn;
-    const nip  = user?.personal_data?.nip?.trim();
+
+    const isValid = (val) => val && val.trim().toLowerCase() !== "null";
+
+    const npm  = isValid(user?.npm) ? user.npm.trim() : null;
+    const nidn = isValid(user?.nidn) ? user.nidn.trim() : null;
+    const nip  = isValid(user?.personal_data?.nip) ? user.personal_data.nip.trim() : null;
+
     const identitas = npm || nidn || nip || null;
     const role = user?.role ? user.role.toUpperCase() : "USER";
     return identitas ? `${name} (${identitas} - ${role})` : `${name} (${role})`;

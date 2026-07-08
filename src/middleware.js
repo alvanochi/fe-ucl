@@ -29,6 +29,7 @@ export const middleware = async (req) => {
     "/register-pmm",
     "/forgot-password",
     "/validasi-dokumen",
+    "/validasi-surat",
     "/register-dosen-ext",
     "/register-pegawai",
     "/oauth/callback",
@@ -39,6 +40,7 @@ export const middleware = async (req) => {
   if (user == null && universalRoute.includes(url.pathname)) return response;
 
   if (url.pathname.startsWith("/validasi-dokumen") === true) return response;
+  if (url.pathname.startsWith("/validasi-surat") === true) return response;
 
   if (user == null && url.pathname.startsWith("/resetPassword") === true)
     return response;
