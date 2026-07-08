@@ -86,6 +86,70 @@ export async function fetchLmsFileBlob(itemId) {
   return res.data;
 }
 
+/**
+ * Forum (thread + balasan) di dalam content item bertipe `forum`.
+ * Respons backend: { limit, page, total, total_page, rows: [...] } (thread & post list),
+ * dan { thread, posts: {...paginasi...} } untuk detail satu thread.
+ */
+export function useLmsThreads(itemId, { page = 1, limit = 10 } = {}) {
+  const qs = new URLSearchParams({ page, limit });
+  const url = itemId ? `${LMS_BASE()}/items/${itemId}/threads?${qs.toString()}` : null;
+  const { data, error, isLoading, mutate } = useSWR(url);
+
+  const payload = data && Array.isArray(data.rows) ? data : null;
+
+  return {
+    threads: payload?.rows || [],
+    total: payload?.total || 0,
+    page: payload?.page || page,
+    totalPage: payload?.total_page || 0,
+    error,
+    isLoading,
+    mutate,
+  };
+}
+
+export function useLmsThread(threadId, { page = 1, limit = 20 } = {}) {
+  const qs = new URLSearchParams({ page, limit });
+  const url = threadId ? `${LMS_BASE()}/threads/${threadId}?${qs.toString()}` : null;
+  const { data, error, isLoading, mutate } = useSWR(url);
+
+  return {
+    thread: data?.thread || null,
+    posts: Array.isArray(data?.posts?.rows) ? data.posts.rows : [],
+    page: data?.posts?.page || page,
+    totalPage: data?.posts?.total_page || 0,
+    error,
+    isLoading,
+    mutate,
+  };
+}
+
+export async function createThread(itemId, payload) {
+  const res = await axios.post(`${LMS_BASE()}/items/${itemId}/threads`, payload);
+  return res.data;
+}
+export async function updateThreadFlags(threadId, payload) {
+  const res = await axios.patch(`${LMS_BASE()}/threads/${threadId}`, payload);
+  return res.data;
+}
+export async function deleteThread(threadId) {
+  const res = await axios.delete(`${LMS_BASE()}/threads/${threadId}`);
+  return res.data;
+}
+export async function createPost(threadId, payload) {
+  const res = await axios.post(`${LMS_BASE()}/threads/${threadId}/posts`, payload);
+  return res.data;
+}
+export async function updatePost(postId, payload) {
+  const res = await axios.put(`${LMS_BASE()}/posts/${postId}`, payload);
+  return res.data;
+}
+export async function deletePost(postId) {
+  const res = await axios.delete(`${LMS_BASE()}/posts/${postId}`);
+  return res.data;
+}
+
 /* ----------------------------- MUTASI (sisi dosen) ----------------------------- */
 // Semua memakai axios global (header JWT `token` sudah disuntik useUser). Mengembalikan
 // body respons backend: { isSuccess, statusCode, responseMessage, data }.
@@ -113,6 +177,11 @@ export async function createItem(sectionId, payload) {
 // field: file, type, title, is_published. axios menyetel Content-Type multipart otomatis.
 export async function uploadItem(sectionId, formData) {
   const res = await axios.post(`${LMS_BASE()}/sections/${sectionId}/items/upload`, formData);
+  return res.data;
+}
+// Ganti berkas item pdf/ppt yang sudah ada (multipart, sama seperti uploadItem).
+export async function replaceUploadItem(id, formData) {
+  const res = await axios.put(`${LMS_BASE()}/items/${id}/upload`, formData);
   return res.data;
 }
 export async function updateItem(id, payload) {

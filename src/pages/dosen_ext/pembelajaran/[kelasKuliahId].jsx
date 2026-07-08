@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import Layout from "../../../components/Layout";
 import PageHeader from "../../../components/PageHeader";
+import BackButton from "../../../components/BackButton";
 import { Loading } from "../../../components/Loading";
 import useUser from "../../../hooks/useUser";
 import KelasLmsModule from "../../../modules/pembelajaran/lms";
@@ -30,6 +31,7 @@ export default function DosenExtPembelajaranKelas() {
       <PageHeader
         title={namaMatakuliah ? `Modul Pembelajaran — ${namaMatakuliah}` : "Modul Pembelajaran"}
         icon="mdi:book-education-outline"
+        leading={<BackButton />}
       />
       <div className="my-8">
         <KelasLmsModule

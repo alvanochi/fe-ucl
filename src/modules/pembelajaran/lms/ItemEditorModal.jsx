@@ -5,7 +5,7 @@ import Modal from "../../../components/Modal";
 import Form from "../../../components/Form";
 import { toastAlert } from "../../../lib/sweetalert";
 import { typeMeta } from "./typeMeta";
-import { createItem, uploadItem, updateItem } from "../../../repo/lms";
+import { createItem, uploadItem, replaceUploadItem, updateItem } from "../../../repo/lms";
 
 // Tipe yang punya editor di langkah ini. assignment & exam (CBT) menyusul.
 const EDITOR_TYPES = ["page", "url", "video", "pdf", "ppt", "forum"];
@@ -71,7 +71,11 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
       case "video":
         return { youtube_url: form.youtube_url.trim(), title: form.videoTitle || null };
       default:
-        return null; // forum: payload kosong
+        // forum: payload kosong. assignment/exam: editor ini belum punya form-nya (menyusul) —
+        // JANGAN kirim `null`, backend menolak payload assignment yang bukan object valid.
+        // `undefined` membuat axios/JSON.stringify membuang field ini dari body sepenuhnya,
+        // sehingga backend melewati payload (nilai lama tetap dipakai, bukan ditimpa).
+        return undefined;
     }
   };
 
@@ -109,7 +113,17 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
           is_published: form.is_published,
           payload: buildPayload(),
         });
+      } else if (FILE_TYPES.includes(type) && file) {
+        // Berkas baru dipilih saat edit → ganti berkas lewat endpoint upload (multipart);
+        // title/description/is_published ikut disertakan agar tidak perlu 2 request.
+        const fd = new FormData();
+        fd.append("file", file);
+        fd.append("title", form.title.trim());
+        fd.append("description", form.description.trim());
+        fd.append("is_published", String(form.is_published));
+        res = await replaceUploadItem(item.id, fd);
       } else if (FILE_TYPES.includes(type)) {
+        // Tidak ada berkas baru dipilih → tetap pakai berkas lama, cuma metadata yang berubah.
         res = await updateItem(item.id, {
           title: form.title.trim(),
           description: form.description.trim() || null,
@@ -138,7 +152,11 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
     }
   };
 
-  const meta = type ? typeMeta(type) : null;
+  // Saat baru dibuka utk edit, `type` state belum sempat disinkronkan dari `item` (efek di
+  // atas baru jalan SETELAH render pertama) — fallback ke `item.type` mencegah `meta` null
+  // pada render pertama itu (dulu meledak "Cannot read properties of null (reading 'bg')"
+  // setiap kali modal edit dibuka, apapun tipe aktivitasnya).
+  const meta = type ? typeMeta(type) : item ? typeMeta(item.type) : null;
 
   return (
     <Modal
@@ -241,24 +259,29 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
           {FILE_TYPES.includes(type) && (
             <Form.Group>
               <Form.Label>Berkas {type.toUpperCase()}</Form.Label>
-              {isEdit ? (
+              {isEdit && (
                 <p className="mt-1 rounded-lg border border-dashed border-gray-200 px-3 py-2 text-xs text-gray-500">
-                  Berkas saat ini: <b>{item.payload?.file_name || "-"}</b>. Untuk mengganti berkas, hapus item ini lalu unggah baru.
+                  Berkas saat ini: <b>{item.payload?.file_name || "-"}</b>
                 </p>
-              ) : (
-                <input
-                  type="file"
-                  accept={ACCEPT[type]}
-                  onChange={(e) => setFile(e.target.files?.[0] || null)}
-                  className="mt-1 block w-full text-sm text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-primary-600 file:px-3 file:py-2 file:text-white"
-                />
+              )}
+              <input
+                type="file"
+                accept={ACCEPT[type]}
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                className="mt-1 block w-full text-sm text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-primary-600 file:px-3 file:py-2 file:text-white"
+              />
+              {isEdit && (
+                <p className="mt-1 text-xs text-gray-400">
+                  {file ? `Berkas baru "${file.name}" akan menggantikan berkas lama saat disimpan.` : "Kosongkan untuk tetap memakai berkas saat ini."}
+                </p>
               )}
             </Form.Group>
           )}
 
           {type === "forum" && (
             <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
-              Forum dibuat dengan judul di atas. Thread & balasan dikelola di langkah berikutnya.
+              Forum dibuat dengan judul di atas. Diskusi (thread) & balasan dikelola langsung di
+              halaman aktivitas setelah forum ini disimpan.
             </p>
           )}
 
