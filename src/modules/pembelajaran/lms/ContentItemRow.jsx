@@ -108,7 +108,7 @@ export default function ContentItemRow({ item, manage = false, demo = false, onE
       <div className={classNames("grid transition-all duration-300 ease-in-out", open ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}>
         <div className="overflow-hidden">
           <div className="px-4 py-3">
-            <ContentItemViewer item={item} demo={demo} inline />
+            <ContentItemViewer item={item} demo={demo} manage={manage} inline />
           </div>
         </div>
       </div>

@@ -6,14 +6,17 @@ import VideoRenderer from "./renderers/VideoRenderer";
 import PageRenderer from "./renderers/PageRenderer";
 import PdfRenderer from "./renderers/PdfRenderer";
 import PptRenderer from "./renderers/PptRenderer";
+import ForumRenderer from "./renderers/ForumRenderer";
 
 /**
- * Dispatcher penampil item berdasar tipe. page/url/video/pdf/ppt aktif;
- * forum/assignment/exam → placeholder "menyusul".
+ * Dispatcher penampil item berdasar tipe. page/url/video/pdf/ppt/forum aktif;
+ * assignment/exam → placeholder "menyusul".
  *
  * `inline`: bila true, chip tipe (header) tidak dirender karena pemanggil (ContentItemRow)
  * sudah menampilkan judul + tipe + deskripsi di atas konten. Dipakai untuk tampilan
  * langsung-terbuka (tanpa modal).
+ * `manage`: afordansi moderator forum (pin/lock/hapus thread orang lain) — diteruskan
+ * ke ForumRenderer; tipe lain mengabaikannya.
  */
 const RENDERERS = {
   url: UrlRenderer,
@@ -21,15 +24,15 @@ const RENDERERS = {
   page: PageRenderer,
   pdf: PdfRenderer,
   ppt: PptRenderer,
+  forum: ForumRenderer,
 };
 
 const SOON = {
-  forum: "Forum diskusi akan tersedia di langkah berikutnya.",
   assignment: "Tugas (assignment) menyusul.",
   exam: "Ujian (CBT) ditangani modul terpisah, menyusul.",
 };
 
-export default function ContentItemViewer({ item, demo = false, inline = false }) {
+export default function ContentItemViewer({ item, demo = false, inline = false, manage = false }) {
   if (!item) return null;
 
   const Renderer = RENDERERS[item.type];
@@ -48,7 +51,7 @@ export default function ContentItemViewer({ item, demo = false, inline = false }
       )}
 
       {Renderer ? (
-        <Renderer item={item} demo={demo} />
+        <Renderer item={item} demo={demo} manage={manage} />
       ) : (
         <div className="flex flex-col items-center gap-2 py-10 text-center">
           <Icon icon="mdi:progress-clock" width={44} height={44} className="text-gray-300" />
