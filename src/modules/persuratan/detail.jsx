@@ -6,7 +6,7 @@ import classNames from "classnames";
 import Layout from "../../components/Layout";
 import Card from "../../components/Card";
 import useUser from "../../hooks/useUser";
-import { toastAlert, warningAlert, loadingAlert } from "../../lib/sweetalert";
+import { toastAlert, warningAlert, loadingAlert, MySwal } from "../../lib/sweetalert";
 
 import DisposisiModal from "../../components/Persuratan/DisposisiModal";
 import ChatRoom from "../../components/Persuratan/ChatRoom";
@@ -191,7 +191,31 @@ export default function PersuratanDetail({ onBack, surat }) {
             await refreshDetailData();
           }
         } catch (err) {
-          toastAlert("error", "Gagal memperbarui status");
+          const resMsg = err.response?.data?.responseMessage || err.response?.data?.message || err.message;
+          
+          // Deteksi khusus jika TTD belum dibuat (terutama untuk Kaprodi)
+          const isTtdError = resMsg?.toLowerCase().includes("tanda tangan digital") || resMsg?.toLowerCase().includes("ttd");
+
+          if (isTtdError) {
+            MySwal.fire({
+              icon: "warning",
+              title: "Tanda Tangan Belum Dibuat!",
+              text: resMsg,
+              confirmButtonText: "Mengerti",
+              confirmButtonColor: "#f59e0b",
+              backdrop: `rgba(0,0,0,0.5)`,
+              customClass: {
+                title: "text-lg font-black text-amber-600",
+                popup: "rounded-2xl shadow-xl border-2 border-amber-100",
+              }
+            });
+            return;
+          }
+
+          const errMsg = err.response?.status === 502 
+            ? "Gagal menerbitkan dokumen: Server Timeout (502 Proxy Error). Backend gagal memproses PDF." 
+            : resMsg || "Gagal memperbarui status";
+          toastAlert("error", errMsg);
         }
       },
       "Status akan diubah menjadi Selesai. Ruang percakapan akan ditutup dan sistem akan otomatis men-generate dokumen resmi (.PDF).",
