@@ -581,16 +581,6 @@ export default function PelaksanaanSidang() {
           <title>Berita Acara Sidang - ${ba.nama_lengkap}</title>
           <style>
             body { margin: 0; padding: 0; }
-            .watermark {
-              position: fixed;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              opacity: 0.35;
-              z-index: -1;
-              width: 500px;
-              pointer-events: none;
-            }
             @media print {
               @page { size: A4 portrait; margin: 15mm; }
               body { -webkit-print-color-adjust: exact; }
@@ -598,7 +588,6 @@ export default function PelaksanaanSidang() {
           </style>
         </head>
         <body>
-          <img src="${FILE_URL_KOP}/foot_kop.png" alt="Watermark" class="watermark" />
           ${page1}
           ${formPages}
           ${rekapPage}
