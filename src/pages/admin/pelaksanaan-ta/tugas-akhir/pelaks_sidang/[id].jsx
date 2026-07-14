@@ -528,7 +528,7 @@ export default function PelaksanaanSidang() {
         </div>
       `;
 
-      const buildLembarPerbaikan = (peranLabel, dosenNip) => `
+      const buildLembarPerbaikan = (peranLabel, dosenNip, dosenNama) => `
         <div style="font-family:'Times New Roman'; font-size:12px; max-width:700px; margin:0 auto; padding:30px; page-break-before:always;">
           <div style="text-align:center; margin-bottom:20px;">
             <img src="${FILE_URL_KOP}/kop_surat.png" alt="Kop Surat" style="width:100%;max-width:680px;" />
@@ -560,7 +560,7 @@ export default function PelaksanaanSidang() {
             <div>Bogor, ${tanggalFormatted}</div>
             <div>Dosen ${peranLabel}</div>
             <div style="margin:50px 0 4px;">&nbsp;</div>
-            <div>.........................................................</div>
+            <div style="font-weight:bold;text-decoration:underline;">${dosenNama && dosenNama !== "-" ? dosenNama : "........................................................."}</div>
             <div>NIK. ${dosenNip || "......................................"}</div>
           </div>
 
@@ -570,7 +570,7 @@ export default function PelaksanaanSidang() {
 
       const perbaikanPages = expectedDosenList
         .filter(d => ["pembimbing_1", "pembimbing_2", "penguji_1", "penguji_2"].includes(d.roleKey))
-        .map(d => buildLembarPerbaikan(d.label, d.nip))
+        .map(d => buildLembarPerbaikan(d.label, d.nip, d.name))
         .join("");
 
       const fullContent = `
