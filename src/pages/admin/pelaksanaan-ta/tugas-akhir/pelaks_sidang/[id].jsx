@@ -582,12 +582,13 @@ export default function PelaksanaanSidang() {
           <style>
             body { margin: 0; padding: 0; }
             @media print {
-              @page { size: A4 portrait; margin: 15mm; }
+              @page { size: A4 portrait; margin: 15mm 15mm 25mm 15mm; }
               body { -webkit-print-color-adjust: exact; }
             }
           </style>
         </head>
         <body>
+          <img src="${FILE_URL_KOP}/foot_kop.png" alt="Footer" style="position:fixed;bottom:0;left:0;width:100%;z-index:9999;display:block;" />
           ${page1}
           ${formPages}
           ${rekapPage}
