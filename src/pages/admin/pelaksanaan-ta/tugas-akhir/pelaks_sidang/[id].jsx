@@ -381,10 +381,21 @@ export default function PelaksanaanSidang() {
       const formPages = expectedDosenList.map(dosen => {
         let p = penilaianList.find(x => String(x.dosen_id) === String(dosen.dbId));
         if (!p) {
-           p = penilaianList.find(x => {
-             const role = x.peran ? x.peran.trim().toLowerCase().replace(/\s+/g, "_") : "";
-             return role === dosen.roleKey;
-           });
+          p = penilaianList.find(x => {
+            if (!x.peran) return false;
+            const r = x.peran.trim().toLowerCase();
+            const rNorm = r.replace(/\s+/g, "_");
+            const roleKey = dosen.roleKey;
+            const label = dosen.label.trim().toLowerCase();
+            return (
+              rNorm === roleKey ||
+              r === label ||
+              (roleKey === "penguji_1" && (r === "penguji i" || r === "penguji 1" || rNorm === "penguji_i" || rNorm === "penguji_1")) ||
+              (roleKey === "penguji_2" && (r === "penguji ii" || r === "penguji 2" || rNorm === "penguji_ii" || rNorm === "penguji_2")) ||
+              (roleKey === "pembimbing_1" && (r === "pembimbing utama" || rNorm === "pembimbing_utama")) ||
+              (roleKey === "pembimbing_2" && (r === "pembimbing pendamping" || rNorm === "pembimbing_pendamping"))
+            );
+          });
         }
         if (!p) p = {};
 
@@ -396,8 +407,19 @@ export default function PelaksanaanSidang() {
         let p = penilaianList.find(x => String(x.dosen_id) === String(dosenInfo.dbId));
         if (!p) {
           p = penilaianList.find(x => {
-            const r = x.peran ? x.peran.trim().toLowerCase().replace(/\s+/g, "_") : "";
-            return r === dosenInfo.roleKey;
+            if (!x.peran) return false;
+            const r = x.peran.trim().toLowerCase();
+            const rNorm = r.replace(/\s+/g, "_");
+            const roleKey = dosenInfo.roleKey;
+            const label = dosenInfo.label.trim().toLowerCase();
+            return (
+              rNorm === roleKey ||
+              r === label ||
+              (roleKey === "penguji_1" && (r === "penguji i" || r === "penguji 1" || rNorm === "penguji_i" || rNorm === "penguji_1")) ||
+              (roleKey === "penguji_2" && (r === "penguji ii" || r === "penguji 2" || rNorm === "penguji_ii" || rNorm === "penguji_2")) ||
+              (roleKey === "pembimbing_1" && (r === "pembimbing utama" || rNorm === "pembimbing_utama")) ||
+              (roleKey === "pembimbing_2" && (r === "pembimbing pendamping" || rNorm === "pembimbing_pendamping"))
+            );
           });
         }
         if (!p) p = {};
