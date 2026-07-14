@@ -98,7 +98,11 @@ export default function PelaksanaanSidang() {
     try {
       const BA_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/berita-acara-sidang/${router.query.id}`;
       const response = await axios.get(BA_URL);
-      const ba = response.data.data;
+      const ba = response.data?.data;
+
+      if (!ba) {
+        throw new Error(response.data?.message || "Data berita acara tidak ditemukan atau format respon tidak sesuai.");
+      }
 
       const nilaiAkhir = ba.nilai_akhir;
       const tanggalFormatted = formatTanggalIndo(ba.jadwal_pelaksanaan);
