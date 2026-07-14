@@ -193,9 +193,9 @@ export default function PelaksanaanSidang() {
         const displayName = (!nama || nama === "-") ? "" : nama;
         return `
           <tr>
-            <td style="border:1px solid black;padding:6px 8px;font-size:11px;">${displayName}</td>
-            <td style="border:1px solid black;padding:6px 8px;text-align:center;font-size:11px;">${jabatan}</td>
-            <td style="border:1px solid black;padding:6px 8px;width:120px;height:40px;"></td>
+            <td style="border:1px solid black;padding:3px 6px;font-size:10px;">${displayName}</td>
+            <td style="border:1px solid black;padding:3px 6px;text-align:center;font-size:10px;">${jabatan}</td>
+            <td style="border:1px solid black;padding:3px 6px;width:90px;height:28px;"></td>
           </tr>
         `;
       };
@@ -241,12 +241,12 @@ export default function PelaksanaanSidang() {
 
           <p style="margin-bottom:8px;font-size:12px;line-height:1.5;">Susunan Tim Penguji Ujian Skripsi (Tugas Akhir) pada Sidang Sarjana:</p>
 
-          <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px;">
+          <table style="width:100%;border-collapse:collapse;font-size:10px;margin-bottom:12px;">
             <thead>
               <tr style="background-color:#f0f0f0;">
-                <th style="border:1px solid black;padding:6px 8px;text-align:center;">NAMA</th>
-                <th style="border:1px solid black;padding:6px 8px;text-align:center;width:200px;">JABATAN</th>
-                <th style="border:1px solid black;padding:6px 8px;text-align:center;width:120px;">TANDA TANGAN</th>
+                <th style="border:1px solid black;padding:3px 6px;text-align:center;">NAMA</th>
+                <th style="border:1px solid black;padding:3px 6px;text-align:center;width:160px;">JABATAN</th>
+                <th style="border:1px solid black;padding:3px 6px;text-align:center;width:90px;">TANDA TANGAN</th>
               </tr>
             </thead>
             <tbody>
@@ -593,19 +593,11 @@ export default function PelaksanaanSidang() {
                 z-index: -1;
                 width: 500px;
               }
-              .footer-line {
-                position: fixed;
-                bottom: 20px;
-                left: 0;
-                width: 100%;
-                border-top: 3px solid #2b5592;
-              }
             }
           </style>
         </head>
         <body>
           <img src="${FILE_URL_KOP}/foot_kop.png" alt="Watermark" class="watermark" />
-          <div class="footer-line"></div>
           ${page1}
           ${formPages}
           ${rekapPage}
@@ -1798,6 +1790,14 @@ export default function PelaksanaanSidang() {
 
       <div className="flex gap-4 mt-4">
         <Button
+          as="a"
+          href={prefix + menu.url}
+          variant="secondary"
+          className="w-full h-12"
+        >
+          Kembali
+        </Button>
+        <Button
           type="button"
           variant="primary"
           className="w-full h-12"
@@ -1805,14 +1805,6 @@ export default function PelaksanaanSidang() {
           disabled={isPrinting}
         >
           {isPrinting ? "Mencetak..." : "Cetak Berita Acara"}
-        </Button>
-        <Button
-          as="a"
-          href={prefix + menu.url}
-          variant="secondary"
-          className="w-full h-12"
-        >
-          Kembali
         </Button>
       </div>
     </Layout>
