@@ -1087,30 +1087,14 @@ export default function PelaksanaanKolo() {
           <style>
             body { margin: 0; padding: 0; }
             @media print {
-              @page { size: A4 portrait; margin: 15mm; }
+              @page { size: A4 portrait; margin: 15mm 15mm 25mm 15mm; }
               body { -webkit-print-color-adjust: exact; }
-              .watermark {
-                position: fixed;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                opacity: 0.35;
-                z-index: -1;
-                width: 500px;
-              }
-              .footer-line {
-                position: fixed;
-                bottom: 20px;
-                left: 0;
-                width: 100%;
-                border-top: 3px solid #2b5592;
-              }
+
             }
           </style>
         </head>
         <body>
-          <img src="${FILE_URL_KOP}/foot_kop.png" alt="Watermark" class="watermark" />
-          <div class="footer-line"></div>
+          <img src="${FILE_URL_KOP}/foot_kop.png" alt="Footer" style="position:fixed;bottom:0;left:0;width:100%;z-index:9999;display:block;" />
           ${page1}
           ${formPages}
         </body>
