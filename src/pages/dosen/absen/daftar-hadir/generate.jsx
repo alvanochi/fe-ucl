@@ -47,9 +47,9 @@ export default function GenerateQrCode() {
   useEffect(() => {
     const fetchMataKuliah = async () => {
       try {
-        if (SIAK_URL) {
+        if (SIAK_URL && data?.nip) {
           const response = await axios.get(`${SIAK_URL}/api/public/mata-kuliah`, {
-            params: { perPage: 200 },
+            params: { nip: data.nip.trim() },
           })
           const mk = response.data.data || []
           setMataKuliahOptions(
@@ -64,15 +64,13 @@ export default function GenerateQrCode() {
       }
     }
     fetchMataKuliah()
-  }, [SIAK_URL])
+  }, [SIAK_URL, data?.nip])
 
   useEffect(() => {
     const fetchKelas = async () => {
       try {
         if (SIAK_URL) {
-          const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`, {
-            params: { perPage: 200 },
-          })
+          const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`)
           const kls = response.data.data || []
           const uniqueClasses = []
           const classMap = new Map()
@@ -98,9 +96,7 @@ export default function GenerateQrCode() {
     const fetchDosen = async () => {
       try {
         if (SIAK_URL) {
-          const response = await axios.get(`${SIAK_URL}/api/public/dosen`, {
-            params: { perPage: 200 },
-          })
+          const response = await axios.get(`${SIAK_URL}/api/public/dosen`)
           const dosens = response.data.data || []
           setDosenOptions(
             dosens.map(d => ({
@@ -141,7 +137,7 @@ export default function GenerateQrCode() {
       const requestData = {
         nik_dosen: data.nip ? data.nip.trim() : '',
         id_matkul: selectedMataKuliah,
-        id_lecture: -1,
+        id_lecture: data?.id || '',
         kelas: selectedKelas,
         pertemuan: pertemuanData,
         status_kelas: statusKelas,
