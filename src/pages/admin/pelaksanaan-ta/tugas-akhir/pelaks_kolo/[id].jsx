@@ -759,8 +759,8 @@ export default function PelaksanaanKolo() {
       const kaprodiTTD = ba.kaprodi?.ttd || null;
 
       const ttdImgTag = kaprodiTTD
-        ? `<img src="${FILE_URL}/${kaprodiTTD}" alt="TTD" style="width:80px;height:80px;object-fit:contain;" />`
-        : `<div style="width:80px;height:80px;"></div>`;
+        ? `<img src="${FILE_URL}/${kaprodiTTD}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;margin:0 auto;" />`
+        : `<div style="height:50px;"></div>`;
 
       // Fallback calculations for dummy data missing values
       let calcP1 = nilaiAkhir?.penilaian_1;

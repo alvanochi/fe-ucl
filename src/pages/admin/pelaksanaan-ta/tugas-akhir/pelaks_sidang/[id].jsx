@@ -134,16 +134,16 @@ export default function PelaksanaanSidang() {
       const pembimbing3Nama = ba.nama_pembimbing_3 || getDosenNama(ba.sidang_pembimbing_3);
       const penguji1Nama = ba.nama_penguji_1 || getDosenNama(ba.penguji_1);
       const penguji2Nama = ba.nama_penguji_2 || getDosenNama(ba.penguji_2);
-      const ketuaPengujiNama = ba.nama_ketua_penguji || getDosenNama(ba.ketua_penguji);
-      const sekretarisSidangNama = ba.nama_sekertaris_sidang || getDosenNama(ba.sekertaris_sidang);
+      const ketuaPengujiNama = ba.nama_ketua_penguji || getDosenNama(ba.ketua_penguji) || pembimbing1Nama;
+      const sekretarisSidangNama = ba.nama_sekertaris_sidang || getDosenNama(ba.sekertaris_sidang) || penguji1Nama;
 
       const kaprodiNama = ba.kaprodi?.nama_lengkap || "Hersanto Fajri, S.Ds., M.MD";
       const kaprodiNIK = ba.kaprodi?.nip || "";
       const kaprodiTTD = ba.kaprodi?.ttd || null;
 
       const ttdImgTag = kaprodiTTD
-        ? `<img src="${FILE_URL}/${kaprodiTTD}" alt="TTD" style="width:80px;height:80px;object-fit:contain;" />`
-        : `<div style="width:80px;height:80px;"></div>`;
+        ? `<img src="${FILE_URL}/${kaprodiTTD}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;" />`
+        : `<div style="height:50px;"></div>`;
 
       let calcP1 = nilaiAkhir?.penilaian_1;
       let calcP2 = nilaiAkhir?.penilaian_2;
@@ -274,21 +274,22 @@ export default function PelaksanaanSidang() {
             `}
           </p>
 
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:16px;">
-            <div style="text-align:left;min-width:200px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:20px;margin-bottom:10px;">
+            <div style="text-align:left;min-width:220px;">
               <div>Mengetahui:</div>
               <div>Dekan Fakultas Teknik dan Sains,</div>
-              <div style="margin:50px 0 4px;">&nbsp;</div>
+              <div style="height:50px;margin:4px 0;">&nbsp;</div>
               <div style="font-weight:bold;text-decoration:underline;">Dr. Feril Hariati, S.T., M.Eng</div>
               <div>NIK: 410 100 280</div>
-              <div style="margin-top:8px;font-size:11px;">*) pilih salah satu</div>
+              <div style="margin-top:4px;font-size:11px;">*) pilih salah satu</div>
             </div>
-            <div style="text-align:left;min-width:200px;">
+            <div style="text-align:left;min-width:220px;">
               <div>Bogor, ${tanggalFormatted}</div>
               <div>Ketua Jurusan/PS Teknik Informatika,</div>
-              <div style="margin:10px 0;">${ttdImgTag}</div>
+              <div style="height:50px;margin:4px 0;display:flex;align-items:center;">${ttdImgTag}</div>
               <div style="font-weight:bold;text-decoration:underline;">${kaprodiNama}</div>
               <div>NIK: ${kaprodiNIK}</div>
+            </div>
           </div>
         </div>
       `;
