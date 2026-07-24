@@ -6,11 +6,13 @@ import Form from "../../../components/Form";
 import { toastAlert } from "../../../lib/sweetalert";
 import { typeMeta } from "./typeMeta";
 import { createItem, uploadItem, replaceUploadItem, updateItem } from "../../../repo/lms";
+import axiosCbt from "../../../lib/axiosCbt";
 
-// Tipe yang punya editor di langkah ini. assignment & exam (CBT) menyusul.
-const EDITOR_TYPES = ["page", "url", "video", "pdf", "ppt", "forum"];
+const EDITOR_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "assignment", "exam"];
 const FILE_TYPES = ["pdf", "ppt"];
 const ACCEPT = { pdf: "application/pdf,.pdf", ppt: ".ppt,.pptx" };
+// Sinkron dengan SUBMISSION_FILE_TYPES di lib/lms/payloadValidators.js (tias-backend).
+const SUBMISSION_FILE_TYPES = ["pdf", "doc", "docx", "ppt", "pptx", "jpg", "png", "zip"];
 
 const emptyForm = {
   title: "",
@@ -22,7 +24,23 @@ const emptyForm = {
   open_in_new_tab: true,
   youtube_url: "",
   videoTitle: "",
+  cbt_exam_id: "",
+  cbt_nama_ujian: "",
+  instructions: "",
+  due_at: "",
+  max_score: "",
+  allow_late: true,
+  allowed_file_types: [],
 };
+
+// ISO datetime → value untuk <input type="datetime-local"> (jam lokal browser).
+function isoToDatetimeLocal(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 /**
  * Editor Item dinamis (sisi dosen). Pilih tipe → form sesuai payload tipe (SPEC v6 §5).
@@ -36,6 +54,8 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
   const [form, setForm] = useState(emptyForm);
   const [file, setFile] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [cbtExams, setCbtExams] = useState([]);
+  const [cbtExamsState, setCbtExamsState] = useState("idle"); // idle | loading | ready | error
 
   useEffect(() => {
     if (!open) return;
@@ -52,13 +72,36 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
         open_in_new_tab: p.open_in_new_tab !== undefined ? p.open_in_new_tab : true,
         youtube_url: p.youtube_url || "",
         videoTitle: p.title || "",
+        cbt_exam_id: p.cbt_exam_id || "",
+        cbt_nama_ujian: p.cbt_nama_ujian || "",
+        instructions: p.instructions || "",
+        due_at: isoToDatetimeLocal(p.due_at),
+        max_score: p.max_score != null ? String(p.max_score) : "",
+        allow_late: p.allow_late !== undefined ? p.allow_late : true,
+        allowed_file_types: Array.isArray(p.allowed_file_types) ? p.allowed_file_types : [],
       });
     } else {
       setType("");
       setForm(emptyForm);
     }
     setFile(null);
+    setCbtExams([]);
+    setCbtExamsState("idle");
   }, [open, item]);
+
+  // Daftar ujian CBT milik dosen ybs (cbt-api sudah scope by kode_dosen === req.user.id)
+  // — diambil langsung (native) begitu tipe "exam" dipilih.
+  useEffect(() => {
+    if (type !== "exam" || cbtExamsState !== "idle") return;
+    setCbtExamsState("loading");
+    axiosCbt
+      .get("/api/exams")
+      .then((res) => {
+        setCbtExams(res.data?.data || []);
+        setCbtExamsState("ready");
+      })
+      .catch(() => setCbtExamsState("error"));
+  }, [type, cbtExamsState]);
 
   const set = (k, v) => setForm((s) => ({ ...s, [k]: v }));
 
@@ -70,11 +113,21 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
         return { url: form.url.trim(), label: form.label || null, open_in_new_tab: form.open_in_new_tab };
       case "video":
         return { youtube_url: form.youtube_url.trim(), title: form.videoTitle || null };
+      case "exam":
+        return { cbt_exam_id: form.cbt_exam_id, cbt_nama_ujian: form.cbt_nama_ujian || null };
+      case "assignment":
+        return {
+          instructions: form.instructions.trim() || null,
+          due_at: form.due_at ? new Date(form.due_at).toISOString() : null,
+          max_score: Number(form.max_score),
+          allow_late: form.allow_late,
+          allowed_file_types: form.allowed_file_types.length ? form.allowed_file_types : null,
+        };
       default:
-        // forum: payload kosong. assignment/exam: editor ini belum punya form-nya (menyusul) —
-        // JANGAN kirim `null`, backend menolak payload assignment yang bukan object valid.
-        // `undefined` membuat axios/JSON.stringify membuang field ini dari body sepenuhnya,
-        // sehingga backend melewati payload (nilai lama tetap dipakai, bukan ditimpa).
+        // forum: payload kosong. JANGAN kirim `null` untuk tipe berpayload — backend menolak
+        // payload yang bukan object valid. `undefined` membuat axios/JSON.stringify membuang
+        // field ini dari body sepenuhnya, sehingga backend melewati payload (nilai lama tetap
+        // dipakai, bukan ditimpa).
         return undefined;
     }
   };
@@ -84,6 +137,13 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
     if (type === "page" && !form.html.trim()) return "Isi halaman tidak boleh kosong.";
     if (type === "url" && !form.url.trim()) return "URL wajib diisi.";
     if (type === "video" && !form.youtube_url.trim()) return "URL YouTube wajib diisi.";
+    if (type === "exam" && !form.cbt_exam_id) return "Pilih ujian CBT terlebih dahulu.";
+    if (type === "assignment") {
+      const score = Number(form.max_score);
+      if (!form.max_score || !Number.isFinite(score) || score <= 0) {
+        return "Skor maksimum wajib diisi (angka > 0).";
+      }
+    }
     if (!isEdit && FILE_TYPES.includes(type) && !file) return "Pilih berkas untuk diunggah.";
     return null;
   };
@@ -252,6 +312,114 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
               <Form.Group>
                 <Form.Label>Judul video (opsional)</Form.Label>
                 <Form.Input type="text" value={form.videoTitle} onChange={(e) => set("videoTitle", e.target.value)} className="mt-1 w-full" />
+              </Form.Group>
+            </>
+          )}
+
+          {type === "exam" && (
+            <Form.Group>
+              <Form.Label>Ujian CBT</Form.Label>
+              {cbtExamsState === "loading" && (
+                <p className="mt-1 text-sm text-gray-500">Memuat daftar ujian…</p>
+              )}
+              {cbtExamsState === "error" && (
+                <p className="mt-1 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+                  Gagal memuat daftar ujian dari sistem CBT. Pastikan akun Anda sudah terdaftar di sana, lalu coba lagi.
+                </p>
+              )}
+              {cbtExamsState === "ready" && cbtExams.length === 0 && (
+                <p className="mt-1 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
+                  Anda belum punya ujian CBT.{" "}
+                  <a href={process.env.NEXT_PUBLIC_CBT_WEB_URL} target="_blank" rel="noopener noreferrer" className="font-semibold underline">
+                    Buat ujian di Sistem CBT
+                  </a>{" "}
+                  terlebih dahulu, lalu kembali ke sini.
+                </p>
+              )}
+              {cbtExamsState === "ready" && cbtExams.length > 0 && (
+                <select
+                  value={form.cbt_exam_id}
+                  onChange={(e) => {
+                    const selected = cbtExams.find((x) => String(x.id) === e.target.value);
+                    set("cbt_exam_id", selected ? selected.id : "");
+                    set("cbt_nama_ujian", selected ? selected.nama_ujian : "");
+                  }}
+                  className="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                >
+                  <option value="">— Pilih ujian —</option>
+                  {cbtExams.map((exam) => (
+                    <option key={exam.id} value={exam.id}>
+                      {exam.nama_ujian} ({exam.mata_kuliah?.nama_mk || exam.kode_mk})
+                    </option>
+                  ))}
+                </select>
+              )}
+              <p className="mt-1 text-xs text-gray-400">
+                Mahasiswa akan diarahkan ke Sistem CBT untuk mengerjakan ujian ini & memasukkan token yang Anda umumkan di kelas.
+              </p>
+            </Form.Group>
+          )}
+
+          {type === "assignment" && (
+            <>
+              <Form.Group>
+                <Form.Label>Instruksi (opsional)</Form.Label>
+                <Form.Textarea
+                  rows={5}
+                  value={form.instructions}
+                  onChange={(e) => set("instructions", e.target.value)}
+                  className="mt-1 w-full"
+                  placeholder="Jelaskan apa yang harus dikerjakan mahasiswa…"
+                />
+              </Form.Group>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <Form.Group>
+                  <Form.Label>Tenggat (opsional)</Form.Label>
+                  <Form.Input
+                    type="datetime-local"
+                    value={form.due_at}
+                    onChange={(e) => set("due_at", e.target.value)}
+                    className="mt-1 w-full"
+                  />
+                  <p className="mt-1 text-xs text-gray-400">Kosongkan = selalu terbuka, tanpa batas waktu.</p>
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Skor Maksimum</Form.Label>
+                  <Form.Input
+                    type="number"
+                    min="1"
+                    value={form.max_score}
+                    onChange={(e) => set("max_score", e.target.value)}
+                    className="mt-1 w-full"
+                    placeholder="100"
+                  />
+                </Form.Group>
+              </div>
+              <label className="flex items-center gap-2 text-sm text-gray-700">
+                <Form.Checkbox checked={form.allow_late} onChange={(e) => set("allow_late", e.target.checked)} />
+                Terima pengumpulan telat (ditandai &ldquo;Telat&rdquo;, tetap bisa dikirim setelah tenggat)
+              </label>
+              <Form.Group>
+                <Form.Label>Tipe berkas yang diizinkan (opsional)</Form.Label>
+                <div className="mt-1 flex flex-wrap gap-3">
+                  {SUBMISSION_FILE_TYPES.map((t) => (
+                    <label key={t} className="flex items-center gap-1.5 text-sm text-gray-700">
+                      <Form.Checkbox
+                        checked={form.allowed_file_types.includes(t)}
+                        onChange={(e) =>
+                          set(
+                            "allowed_file_types",
+                            e.target.checked
+                              ? [...form.allowed_file_types, t]
+                              : form.allowed_file_types.filter((x) => x !== t)
+                          )
+                        }
+                      />
+                      {t}
+                    </label>
+                  ))}
+                </div>
+                <p className="mt-1 text-xs text-gray-400">Tidak dicentang sama sekali = semua tipe di atas diizinkan.</p>
               </Form.Group>
             </>
           )}
