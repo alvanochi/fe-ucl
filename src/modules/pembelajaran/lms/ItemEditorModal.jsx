@@ -7,6 +7,7 @@ import { toastAlert } from "../../../lib/sweetalert";
 import { typeMeta } from "./typeMeta";
 import { createItem, uploadItem, replaceUploadItem, updateItem } from "../../../repo/lms";
 import axiosCbt from "../../../lib/axiosCbt";
+import { bootstrapCbtToken } from "../../../lib/cbtAuth";
 
 const EDITOR_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "assignment", "exam"];
 const FILE_TYPES = ["pdf", "ppt"];
@@ -56,6 +57,7 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
   const [saving, setSaving] = useState(false);
   const [cbtExams, setCbtExams] = useState([]);
   const [cbtExamsState, setCbtExamsState] = useState("idle"); // idle | loading | ready | error
+  const [openingCbt, setOpeningCbt] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -102,6 +104,21 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
       })
       .catch(() => setCbtExamsState("error"));
   }, [type, cbtExamsState]);
+
+  // Bridge, bukan link mentah — dosen sudah login di LMS, jangan disuruh login/daftar
+  // ulang manual di CBT. Sama seperti tombol "Ikuti Ujian" di ExamRenderer.
+  const openCbtToCreateExam = async () => {
+    setOpeningCbt(true);
+    try {
+      const cbtToken = await bootstrapCbtToken();
+      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (_) {
+      toastAlert("error", "Gagal membuka Sistem CBT. Coba lagi.");
+    } finally {
+      setOpeningCbt(false);
+    }
+  };
 
   const set = (k, v) => setForm((s) => ({ ...s, [k]: v }));
 
@@ -328,13 +345,17 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
                 </p>
               )}
               {cbtExamsState === "ready" && cbtExams.length === 0 && (
-                <p className="mt-1 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
-                  Anda belum punya ujian CBT.{" "}
-                  <a href={process.env.NEXT_PUBLIC_CBT_WEB_URL} target="_blank" rel="noopener noreferrer" className="font-semibold underline">
-                    Buat ujian di Sistem CBT
-                  </a>{" "}
-                  terlebih dahulu, lalu kembali ke sini.
-                </p>
+                <div className="mt-1 space-y-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
+                  <p>Anda belum punya ujian CBT. Buat dulu di Sistem CBT, lalu kembali ke sini.</p>
+                  <button
+                    type="button"
+                    onClick={openCbtToCreateExam}
+                    disabled={openingCbt}
+                    className="font-semibold underline disabled:opacity-60"
+                  >
+                    {openingCbt ? "Membuka…" : "Buat ujian di Sistem CBT"}
+                  </button>
+                </div>
               )}
               {cbtExamsState === "ready" && cbtExams.length > 0 && (
                 <select
