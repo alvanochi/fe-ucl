@@ -23,5 +23,5 @@ const FALLBACK = {
 
 export const typeMeta = (type) => CONTENT_TYPE_META[type] || { ...FALLBACK, label: type || FALLBACK.label };
 
-// Tipe yang boleh dibuat dosen di langkah editor (exam ditunda ke CBT — paling akhir).
-export const CREATABLE_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "assignment"];
+// Tipe yang boleh dibuat dosen di langkah editor.
+export const CREATABLE_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "assignment", "exam"];
