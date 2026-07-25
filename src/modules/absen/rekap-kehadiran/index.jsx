@@ -22,7 +22,7 @@ export default function RekapKehadiran({ baseURL, user }) {
   useEffect(() => {
     if (!user) return
 
-    const cleanedNip = user.nip.trim()
+    const cleanedNip = user?.nip ? user.nip.trim() : ''
 
     setNip(cleanedNip)
 

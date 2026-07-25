@@ -47,9 +47,9 @@ export default function GenerateQrCode() {
   useEffect(() => {
     const fetchMataKuliah = async () => {
       try {
-        if (SIAK_URL && data?.nip) {
+        if (SIAK_URL && user?.nip) {
           const response = await axios.get(`${SIAK_URL}/api/public/mata-kuliah`, {
-            params: { nip: data.nip.trim() },
+            params: { nip: user.nip.trim() },
           })
           const mk = response.data.data || []
           setMataKuliahOptions(
@@ -69,8 +69,10 @@ export default function GenerateQrCode() {
   useEffect(() => {
     const fetchKelas = async () => {
       try {
-        if (SIAK_URL) {
-          const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`)
+        if (SIAK_URL && user?.nip) {
+          const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`, {
+            params: { nip: user.nip.trim() },
+          })
           const kls = response.data.data || []
           const uniqueClasses = []
           const classMap = new Map()
@@ -135,7 +137,7 @@ export default function GenerateQrCode() {
 
     try {
       const requestData = {
-        nik_dosen: data.nip ? data.nip.trim() : '',
+        nik_dosen: user?.nip ? user.nip.trim() : '',
         id_matkul: selectedMataKuliah,
         id_lecture: data?.id || '',
         kelas: selectedKelas,
@@ -267,7 +269,7 @@ export default function GenerateQrCode() {
                 type="text"
                 className="flex-1"
                 name="nik_dosen"
-                value={data.nip ? data.nip.trim() : ''}
+                value={user?.nip ? user.nip.trim() : ''}
                 readOnly
               />
             </Form.Group>
