@@ -68,7 +68,7 @@ export const Login = () => {
           }),
         );
 
-        await axios.post("/staging/api/login", userData);
+        await axios.post("/api/login", userData);
 
         const role = userData.role?.toLowerCase();
         let targetPath = "/dashboard";
@@ -159,7 +159,7 @@ export const Login = () => {
   async function setLoginSession(data) {
     try {
       const response = await axios({
-        url: "/staging/api/login",
+        url: "/api/login",
         method: "POST",
         data: data,
       });
