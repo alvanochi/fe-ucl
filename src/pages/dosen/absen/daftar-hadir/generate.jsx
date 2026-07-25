@@ -137,7 +137,7 @@ export default function GenerateQrCode() {
       const requestData = {
         nik_dosen: user?.nip ? user.nip.trim() : '',
         id_matkul: selectedMataKuliah,
-        id_lecture: data?.id || '',
+        id_lecture: user?.nip ? parseInt(user.nip.trim(), 10) : '',
         kelas: selectedKelas,
         pertemuan: pertemuanData,
         status_kelas: statusKelas,
