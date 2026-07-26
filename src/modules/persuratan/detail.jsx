@@ -596,7 +596,7 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
                   </div>
                 </Card>
               )}
-              {anonymityRole !== "mahasiswa" && (
+              {!isOrtu && (
                 <ChatRoom replies={localSurat.Replies} user={user} isTerminalState={isTerminalState} status={localSurat.status} isSending={isSending} onSendReply={handleSendReply} onPreview={handlePreview} />
               )}
             </div>

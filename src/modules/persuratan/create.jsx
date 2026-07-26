@@ -51,7 +51,14 @@ export default function PersuratanCreate({ onBack }) {
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => {
+      const newForm = { ...prev, [name]: value };
+      if (name === "jenis_surat" && value) {
+        const formattedJenis = value.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+        newForm.perihal = `Permohonan ${formattedJenis}`;
+      }
+      return newForm;
+    });
   };
 
   const handleSubmit = async (e) => {

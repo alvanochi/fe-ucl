@@ -240,18 +240,20 @@ export default function PersuratanModule({ isPreview = false }) {
 
       <div className="my-6 lg:my-8">
         {/* SUMMARY CARDS */}
-        <Card className="mb-8 rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-          <Card.Header className="bg-primary-600 text-white text-center text-sm font-bold py-3 uppercase tracking-widest">Ringkasan Pengajuan Surat</Card.Header>
-          <Card.Body className="p-6">
-            <div className={classNames("grid gap-4", hasOutboxPrivilege ? "grid-cols-2 md:grid-cols-5" : "grid-cols-2 md:grid-cols-4")}>
-              {hasOutboxPrivilege && <SummaryCard label="Surat Keluar" count={baseSuratList.filter((s) => user?.role?.toLowerCase() === "parent" ? s.Penerima?.role?.toLowerCase() !== "mahasiswa" : s.penerima_id !== myUserId).length} icon="mdi:email-send-outline" />}
-              <SummaryCard label="Belum Dibalas" count={baseSuratList.filter((s) => ["Sent", "Read"].includes(s.status)).length} icon="mdi:email-alert-outline" />
-              <SummaryCard label="Dibalas" count={baseSuratList.filter((s) => s.status === "Replied").length} icon="mdi:email-check-outline" />
-              <SummaryCard label="Open" count={baseSuratList.filter((s) => !["Selesai", "Ditolak"].includes(s.status)).length} icon="mdi:folder-open-outline" />
-              <SummaryCard label="Closed" count={baseSuratList.filter((s) => ["Selesai", "Ditolak"].includes(s.status)).length} icon="mdi:folder-lock-outline" />
-            </div>
-          </Card.Body>
-        </Card>
+        {user?.role?.toLowerCase() !== "parent" && (
+          <Card className="mb-8 rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <Card.Header className="bg-primary-600 text-white text-center text-sm font-bold py-3 uppercase tracking-widest">Ringkasan Pengajuan Surat</Card.Header>
+            <Card.Body className="p-6">
+              <div className={classNames("grid gap-4", hasOutboxPrivilege ? "grid-cols-2 md:grid-cols-5" : "grid-cols-2 md:grid-cols-4")}>
+                {hasOutboxPrivilege && <SummaryCard label="Surat Keluar" count={baseSuratList.filter((s) => user?.role?.toLowerCase() === "parent" ? s.Penerima?.role?.toLowerCase() !== "mahasiswa" : s.penerima_id !== myUserId).length} icon="mdi:email-send-outline" />}
+                <SummaryCard label="Belum Dibalas" count={baseSuratList.filter((s) => ["Sent", "Read"].includes(s.status)).length} icon="mdi:email-alert-outline" />
+                <SummaryCard label="Dibalas" count={baseSuratList.filter((s) => s.status === "Replied").length} icon="mdi:email-check-outline" />
+                <SummaryCard label="Open" count={baseSuratList.filter((s) => !["Selesai", "Ditolak"].includes(s.status)).length} icon="mdi:folder-open-outline" />
+                <SummaryCard label="Closed" count={baseSuratList.filter((s) => ["Selesai", "Ditolak"].includes(s.status)).length} icon="mdi:folder-lock-outline" />
+              </div>
+            </Card.Body>
+          </Card>
+        )}
 
         {/* TOOLBAR */}
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
@@ -343,7 +345,17 @@ export default function PersuratanModule({ isPreview = false }) {
                       </td>
                       <td className="text-sm border-2 border-white bg-gray-50">
                         <div className="mb-1">
-                          <span className={classNames("text-[9px] font-bold uppercase px-2 py-0.5 rounded", isSuratMasuk ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700")}>{isSuratMasuk ? "Masuk" : "Keluar"}</span>
+                          {(() => {
+                            let badgeText = isSuratMasuk ? "Masuk" : "Keluar";
+                            if (user?.role?.toLowerCase() === "parent") {
+                              badgeText = isSuratMasuk ? "Dari Kampus" : "Ajuan Anak";
+                            }
+                            return (
+                              <span className={classNames("text-[9px] font-bold uppercase px-2 py-0.5 rounded", isSuratMasuk ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700")}>
+                                {badgeText}
+                              </span>
+                            );
+                          })()}
                         </div>
                         <p className="font-bold text-gray-800 leading-tight">{s.form_data?.nama_lengkap || s.Pengirim?.personal_data?.nama_lengkap || "N/A"}</p>
                         <p className="text-[10px] text-gray-400">{s.form_data?.npm || s.Pengirim?.npm || s.Pengirim?.nidn || "-"}</p>

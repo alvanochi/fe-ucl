@@ -36,6 +36,8 @@ export default function ChatRoom({ replies, user, isTerminalState, status, isSen
     });
   };
 
+  const isReadOnlyParent = user?.role?.toLowerCase() === "parent";
+
   return (
     <div className="border-2 border-gray-200 shadow-sm bg-white rounded-3xl p-4 sm:p-8 flex flex-col">
       <div className="flex items-center gap-2 mb-4 sm:mb-6 pb-4 border-b-2 border-gray-100 shrink-0 px-2 sm:px-0">
@@ -64,7 +66,9 @@ export default function ChatRoom({ replies, user, isTerminalState, status, isSen
               <div key={index} className={classNames("flex w-full animate-in fade-in slide-in-from-bottom-2", isMe ? "justify-end" : "justify-start")}>
                 <div className={classNames("flex flex-col gap-1 sm:gap-1.5 max-w-[92%] sm:max-w-[85%] md:max-w-[75%]", isMe ? "items-end" : "items-start")}>
                   <div className={classNames("flex items-center gap-2 px-1 mb-0.5 sm:mb-1", isMe ? "flex-row-reverse" : "flex-row")}>
-                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">{isMe ? "Anda" : reply.Pengirim?.personal_data?.nama_lengkap || "Pengguna"}</span>
+                    <span className="text-[10px] font-black uppercase tracking-widest text-gray-500">
+                      {isMe ? "Anda" : `${reply.Pengirim?.personal_data?.nama_lengkap || reply.Pengirim?.username || "Pengguna"} ${reply.Pengirim?.role ? `(${reply.Pengirim.role})` : ""}`}
+                    </span>
                     <span className="text-[9px] font-mono text-gray-400">{timeChat}</span>
                   </div>
                   <div
@@ -113,6 +117,12 @@ export default function ChatRoom({ replies, user, isTerminalState, status, isSen
           <Icon icon={status === "Selesai" ? "mdi:lock-check" : "mdi:lock-alert"} width={36} className="text-gray-400 mb-2" />
           <p className="text-sm font-bold text-gray-600">Pengajuan ini telah {status.toLowerCase()}.</p>
           <p className="text-[10px] sm:text-[11px] text-gray-400 mt-1 font-medium">Ruang percakapan ditutup.</p>
+        </div>
+      ) : isReadOnlyParent ? (
+        <div className="bg-gray-50 border-2 border-dashed border-gray-300 rounded-2xl sm:rounded-3xl p-6 flex flex-col items-center justify-center text-center">
+          <Icon icon="mdi:eye-outline" width={36} className="text-gray-400 mb-2" />
+          <p className="text-sm font-bold text-gray-600">Mode Pantau (Read-Only).</p>
+          <p className="text-[10px] sm:text-[11px] text-gray-400 mt-1 font-medium">Akun Orang Tua hanya dapat melihat riwayat percakapan.</p>
         </div>
       ) : (
         <div className="bg-gray-900 p-2 sm:p-4 rounded-2xl sm:rounded-3xl shadow-xl border-2 border-gray-800 transition-all focus-within:ring-2 focus-within:ring-primary-500">
