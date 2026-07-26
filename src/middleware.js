@@ -78,6 +78,13 @@ export const middleware = async (req) => {
   )
     return NextResponse.redirect(new URL("/pegawai", req.url));
 
+  if (
+    user?.role == "Parent" &&
+    url.pathname.startsWith("/parent") === false &&
+    !universalRoute.includes(url.pathname)
+  )
+    return NextResponse.redirect(new URL("/parent/persuratan", req.url));
+
   return response;
 };
 

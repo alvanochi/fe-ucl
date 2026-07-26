@@ -45,7 +45,7 @@ export default function Home() {
     )
   }
 
-  if ([menu, user].some(item => item == null)) return <Loading />
+  if ([menu, user, data].some(item => item == null)) return <Loading />
   return (
     <Layout>
       <Head>
@@ -73,17 +73,9 @@ export default function Home() {
                   className="ml-0 sm:ml-1 text-info-600"
                 />
               </h1>
-              <span className="block text-sm sm:text-base text-gray-500 font-normal">
+              <span className="block text-sm sm:text-base text-gray-500 font-normal mt-2">
                 <Icon icon="el:user" width={16} height={16} className="mr-1" />
-                NPM : {data.userData?.npm}
-              </span>
-              <span className="block text-sm sm:text-base text-gray-500 font-normal">
-                <Icon icon="ri:briefcase-fill" width={16} height={16} className="mr-1" />
-                STATUS : {data.userData?.kode_mhs}
-              </span>
-              <span className="block text-sm sm:text-base text-gray-500 font-normal">
-                <Icon icon="ep:rank" width={16} height={16} className="mr-1" />
-                POINT : {data.userData?.total_point}
+                NIP : {data.userData?.nip || '-'}
               </span>
             </div>
             <div className="flex flex-col items-start">
@@ -107,32 +99,7 @@ export default function Home() {
                   LENGKAPI DATA PRIBADI TERLEBIH DAHULU!
                 </Link>
               )}
-              {data.status_frs == 0 && (
-                <div
-                  href="/mahasiswa/profil"
-                  type="button"
-                  className="mt-2 mb-2 sm:mt-0 ml-0 sm:ml-4 inline-flex justify-center rounded-md border border-transparent shadow-sm px-3 sm:px-4 py-1.5 sm:py-2 bg-yellow-600 text-sm sm:text-base font-medium text-white hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 sm:w-auto uppercase"
-                >
-                  <div className="mr-2">
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                    >
-                      <circle cx="12" cy="12" r="10" />
-                      <line x1="12" y1="16" x2="12" y2="12" />
-                      <line x1="12" y1="8" x2="12" y2="8" />
-                    </svg>
-                  </div>
-                  Anda Belum Mengisi FRS
-                </div>
-              )}
+
             </div>
           </div>
         </div>
