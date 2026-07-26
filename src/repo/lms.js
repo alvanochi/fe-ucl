@@ -46,8 +46,11 @@ export function useLmsClasses({ semester, search, page = 1, limit = 12, enabled 
 }
 
 /**
- * Daftar topik (section) beserta item-nya untuk satu kelas.
+ * Daftar topik (section) beserta item-nya untuk satu kelas, plus info kelas.
  * `kelasKuliahId` null/kosong → SWR tidak fetch (mencegah panggilan tanpa konteks kelas).
+ *
+ * Respons backend (baru): { class: {...}, sections: [...] }. Bentuk LAMA (array sections
+ * langsung) tetap didukung agar aman saat urutan deploy FE/BE berbeda.
  */
 export function useLmsSections(kelasKuliahId) {
   const url = kelasKuliahId
@@ -56,10 +59,16 @@ export function useLmsSections(kelasKuliahId) {
 
   const { data, error, isLoading, mutate } = useSWR(url);
 
-  // Fetcher repo bisa mengembalikan objek error (bukan array) saat gagal → jaga tetap array.
-  const sections = Array.isArray(data) ? data : [];
+  // Dukung dua bentuk: array (lama) atau { class, sections } (baru). Fetcher juga bisa
+  // mengembalikan objek error saat gagal → jaga `sections` tetap array & `classInfo` null.
+  const sections = Array.isArray(data)
+    ? data
+    : Array.isArray(data?.sections)
+    ? data.sections
+    : [];
+  const classInfo = (!Array.isArray(data) && data?.class) || null;
 
-  return { sections, error, isLoading, mutate };
+  return { sections, classInfo, error, isLoading, mutate };
 }
 
 /**
@@ -74,6 +83,70 @@ export function useLmsSections(kelasKuliahId) {
  */
 export async function fetchLmsFileBlob(itemId) {
   const res = await axios.get(`${LMS_BASE()}/files/${itemId}`, { responseType: "blob" });
+  return res.data;
+}
+
+/**
+ * Forum (thread + balasan) di dalam content item bertipe `forum`.
+ * Respons backend: { limit, page, total, total_page, rows: [...] } (thread & post list),
+ * dan { thread, posts: {...paginasi...} } untuk detail satu thread.
+ */
+export function useLmsThreads(itemId, { page = 1, limit = 10 } = {}) {
+  const qs = new URLSearchParams({ page, limit });
+  const url = itemId ? `${LMS_BASE()}/items/${itemId}/threads?${qs.toString()}` : null;
+  const { data, error, isLoading, mutate } = useSWR(url);
+
+  const payload = data && Array.isArray(data.rows) ? data : null;
+
+  return {
+    threads: payload?.rows || [],
+    total: payload?.total || 0,
+    page: payload?.page || page,
+    totalPage: payload?.total_page || 0,
+    error,
+    isLoading,
+    mutate,
+  };
+}
+
+export function useLmsThread(threadId, { page = 1, limit = 20 } = {}) {
+  const qs = new URLSearchParams({ page, limit });
+  const url = threadId ? `${LMS_BASE()}/threads/${threadId}?${qs.toString()}` : null;
+  const { data, error, isLoading, mutate } = useSWR(url);
+
+  return {
+    thread: data?.thread || null,
+    posts: Array.isArray(data?.posts?.rows) ? data.posts.rows : [],
+    page: data?.posts?.page || page,
+    totalPage: data?.posts?.total_page || 0,
+    error,
+    isLoading,
+    mutate,
+  };
+}
+
+export async function createThread(itemId, payload) {
+  const res = await axios.post(`${LMS_BASE()}/items/${itemId}/threads`, payload);
+  return res.data;
+}
+export async function updateThreadFlags(threadId, payload) {
+  const res = await axios.patch(`${LMS_BASE()}/threads/${threadId}`, payload);
+  return res.data;
+}
+export async function deleteThread(threadId) {
+  const res = await axios.delete(`${LMS_BASE()}/threads/${threadId}`);
+  return res.data;
+}
+export async function createPost(threadId, payload) {
+  const res = await axios.post(`${LMS_BASE()}/threads/${threadId}/posts`, payload);
+  return res.data;
+}
+export async function updatePost(postId, payload) {
+  const res = await axios.put(`${LMS_BASE()}/posts/${postId}`, payload);
+  return res.data;
+}
+export async function deletePost(postId) {
+  const res = await axios.delete(`${LMS_BASE()}/posts/${postId}`);
   return res.data;
 }
 
@@ -106,12 +179,65 @@ export async function uploadItem(sectionId, formData) {
   const res = await axios.post(`${LMS_BASE()}/sections/${sectionId}/items/upload`, formData);
   return res.data;
 }
+// Ganti berkas item pdf/ppt yang sudah ada (multipart, sama seperti uploadItem).
+export async function replaceUploadItem(id, formData) {
+  const res = await axios.put(`${LMS_BASE()}/items/${id}/upload`, formData);
+  return res.data;
+}
 export async function updateItem(id, payload) {
   const res = await axios.put(`${LMS_BASE()}/items/${id}`, payload);
   return res.data;
 }
 export async function deleteItem(id) {
   const res = await axios.delete(`${LMS_BASE()}/items/${id}`);
+  return res.data;
+}
+
+/* --------------------------- Assignment / Submission --------------------------- */
+// Config tugas (due_at, max_score, allow_late, allowed_file_types) hidup di payload item
+// tipe `assignment` (lihat createItem/updateItem di atas). Fungsi di bawah untuk submission.
+
+// Submit / kumpul ulang tugas (mahasiswa). `formData` berisi field `text` dan/atau `file`.
+export async function submitAssignment(itemId, formData) {
+  const res = await axios.post(`${LMS_BASE()}/items/${itemId}/submissions`, formData);
+  return res.data;
+}
+
+// Submission milik sendiri (mahasiswa). `data: null` bila belum pernah submit.
+export function useMySubmission(itemId) {
+  const url = itemId ? `${LMS_BASE()}/items/${itemId}/submissions/me` : null;
+  const { data, error, isLoading, mutate } = useSWR(url);
+  return { submission: data || null, error, isLoading, mutate };
+}
+
+// Semua submission pada satu assignment (dosen pengampu/admin), dilengkapi npm/nama_mahasiswa.
+export function useLmsSubmissions(itemId, { page = 1, limit = 10 } = {}) {
+  const qs = new URLSearchParams({ page, limit });
+  const url = itemId ? `${LMS_BASE()}/items/${itemId}/submissions?${qs.toString()}` : null;
+  const { data, error, isLoading, mutate } = useSWR(url);
+
+  const payload = data && Array.isArray(data.rows) ? data : null;
+
+  return {
+    submissions: payload?.rows || [],
+    total: payload?.total || 0,
+    page: payload?.page || page,
+    totalPage: payload?.total_page || 0,
+    error,
+    isLoading,
+    mutate,
+  };
+}
+
+// File submission (blob berotorisasi, sama pola dengan fetchLmsFileBlob).
+export async function fetchSubmissionFileBlob(submissionId) {
+  const res = await axios.get(`${LMS_BASE()}/submissions/${submissionId}/file`, { responseType: "blob" });
+  return res.data;
+}
+
+// Nilai (dosen pengampu/admin; boleh re-grade). payload = { score, feedback? }.
+export async function gradeSubmission(submissionId, payload) {
+  const res = await axios.patch(`${LMS_BASE()}/submissions/${submissionId}/grade`, payload);
   return res.data;
 }
 

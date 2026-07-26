@@ -562,6 +562,11 @@ export const APP_MENU = [
             url: "#list-pegawai",
             allowedRoles: [ROLE_ID_ADMIN],
           },
+          {
+            label: "Orang Tua",
+            url: "#list-orangtua",
+            allowedRoles: [ROLE_ID_ADMIN],
+          },
         ],
       },
       {

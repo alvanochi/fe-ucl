@@ -30,7 +30,7 @@ export default function DaftarHadirModule({ baseURL, user }) {
     DATA_URL,
     {
       filter: ['nik_dosen'],
-      filterValue: [user && user.nip],
+      filterValue: [user?.nip ? user.nip.trim() : ''],
     },
     searchValue,
   )

@@ -178,6 +178,7 @@ export const Login = () => {
         data: form,
       });
       const response = await request.data;
+      console.log("LOGIN RESPONSE:", response);
 
       if (response.data) {
         loadingAlert();

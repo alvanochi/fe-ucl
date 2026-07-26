@@ -8,6 +8,7 @@ import { Loading } from "../../../components/Loading";
 import DosenExtModule from "../../../modules/admin/users/dosenExt";
 import MahasiswaExtModule from "../../../modules/admin/users/mahasiswaBeasiswa";
 import PegawaiModule from "../../../modules/admin/users/pegawai";
+import OrangTuaModule from "../../../modules/admin/users/orangtua";
 
 export default function Users() {
   /* eslint-disable */
@@ -40,6 +41,9 @@ export default function Users() {
         )}
         {active.url === "#list-pegawai" && (
           <PegawaiModule baseURL={prefix + menu.url} />
+        )}
+        {active.url === "#list-orangtua" && (
+          <OrangTuaModule baseURL={prefix + menu.url} />
         )}
       </div>
     </Layout>

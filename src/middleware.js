@@ -6,9 +6,22 @@ export const middleware = async (req) => {
   const response = NextResponse.next();
   const url = req.nextUrl;
 
+  console.log("RAW COOKIE:", req.cookies.get("tias_staging_session"));
+  console.log("SESSION PASSWORD LOADED:", sessionConfig.password ? "YES-" + sessionConfig.password.length + "chars" : "MISSING");
+  try {
+    const { unsealData } = await import("iron-session/edge");
+    const rawVal = req.cookies.get("tias_staging_session")?.value;
+    if (rawVal) {
+      const unsealed = await unsealData(rawVal, { password: sessionConfig.password });
+      console.log("UNSEAL RESULT:", JSON.stringify(unsealed));
+    }
+  } catch (e) {
+    console.log("UNSEAL ERROR:", e.message);
+  }
   const session = await getIronSession(req, response, sessionConfig);
 
   const { user } = session;
+  console.log("MIDDLEWARE SESSION USER:", user);
 
   const universalRoute = [
     "/",
