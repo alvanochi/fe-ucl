@@ -114,7 +114,7 @@ export default function PersuratanModule({ isPreview = false }) {
 
   // Penentu hak akses pembuatan & pencatatan surat keluar
   const hasOutboxPrivilege = useMemo(() => {
-    return ["mahasiswa", "admin", "parent"].includes(user?.role?.toLowerCase());
+    return ["mahasiswa", "admin"].includes(user?.role?.toLowerCase());
   }, [user]);
 
   useEffect(() => {

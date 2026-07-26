@@ -33,7 +33,7 @@ const INITIAL_FORM = {
 
 export default function PersuratanCreate({ onBack }) {
   const { user } = useUser({ redirectTo: "/login" });
-  const API_URL = `/api-backend/surat`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/surat`;
 
   const [form, setForm] = useState(INITIAL_FORM);
   const [selectedFiles, setSelectedFiles] = useState([]);
