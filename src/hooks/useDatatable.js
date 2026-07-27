@@ -54,6 +54,10 @@ export const useDatatable = (url, options = {}) => {
         method: "GET",
         url: url,
         params: query,
+        // Pass the token explicitly instead of relying only on the shared
+        // axios.defaults set by useUser — avoids depending on render/effect
+        // ordering across hooks for auth to work.
+        headers: { token: user.token },
       });
 
       const response = await request.data;
@@ -86,7 +90,11 @@ export const useDatatable = (url, options = {}) => {
   };
 
   useEffect(() => {
-    if (!user) return;
+    // Wait for the token to actually be known (and attached to axios by
+    // useUser), not just for `user` to be truthy — a logged-in user with a
+    // still-loading token would otherwise fire this request with no `token`
+    // header and get bounced with a 401.
+    if (!user?.token) return;
 
     fetchData();
   }, [page, filter, sort, user]);
