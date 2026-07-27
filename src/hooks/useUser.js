@@ -5,7 +5,15 @@ import axios from 'axios'
 
 export default function useUser({ redirectTo = '', redirectIfFound = false } = {}) {
   const { data: user, mutate: mutateUser } = useSWR('/staging/api/user')
-  if (user && user.is_logged_in) axios.defaults.headers.common['token'] = user.token
+
+  // Attach the auth token as soon as it's known. This runs in an effect
+  // (not during render) so callers that gate on `user` can rely on the
+  // header already being set by the time their own effects run.
+  useEffect(() => {
+    if (user?.is_logged_in && user?.token) {
+      axios.defaults.headers.common['token'] = user.token
+    }
+  }, [user])
 
   // const [profile, setProfile] = useState({});
   const [profile, setProfile] = useState({
