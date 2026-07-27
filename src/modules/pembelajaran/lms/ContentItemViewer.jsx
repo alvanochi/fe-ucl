@@ -7,16 +7,17 @@ import PageRenderer from "./renderers/PageRenderer";
 import PdfRenderer from "./renderers/PdfRenderer";
 import PptRenderer from "./renderers/PptRenderer";
 import ForumRenderer from "./renderers/ForumRenderer";
+import ExamRenderer from "./renderers/ExamRenderer";
+import AssignmentRenderer from "./renderers/AssignmentRenderer";
 
 /**
- * Dispatcher penampil item berdasar tipe. page/url/video/pdf/ppt/forum aktif;
- * assignment/exam → placeholder "menyusul".
+ * Dispatcher penampil item berdasar tipe. Semua tipe di CONTENT_TYPE_META aktif.
  *
  * `inline`: bila true, chip tipe (header) tidak dirender karena pemanggil (ContentItemRow)
  * sudah menampilkan judul + tipe + deskripsi di atas konten. Dipakai untuk tampilan
  * langsung-terbuka (tanpa modal).
- * `manage`: afordansi moderator forum (pin/lock/hapus thread orang lain) — diteruskan
- * ke ForumRenderer; tipe lain mengabaikannya.
+ * `manage`: afordansi dosen pengampu/admin — moderator forum (pin/lock/hapus thread orang
+ * lain) di ForumRenderer, antrean+nilai submission di AssignmentRenderer; tipe lain mengabaikannya.
  */
 const RENDERERS = {
   url: UrlRenderer,
@@ -25,12 +26,11 @@ const RENDERERS = {
   pdf: PdfRenderer,
   ppt: PptRenderer,
   forum: ForumRenderer,
+  exam: ExamRenderer,
+  assignment: AssignmentRenderer,
 };
 
-const SOON = {
-  assignment: "Tugas (assignment) menyusul.",
-  exam: "Ujian (CBT) ditangani modul terpisah, menyusul.",
-};
+const SOON = {};
 
 export default function ContentItemViewer({ item, demo = false, inline = false, manage = false }) {
   if (!item) return null;

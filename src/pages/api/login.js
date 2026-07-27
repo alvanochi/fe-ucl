@@ -11,6 +11,8 @@ async function loginRoute(req, res) {
     nama_lengkap: userData.nama_lengkap,
     email: userData.email,
     token: userData.token,
+    nip: userData.nip,
+    kode_mhs: userData.kode_mhs,
     is_logged_in: true,
   };
   await req.session.save();

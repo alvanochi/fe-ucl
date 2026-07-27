@@ -14,13 +14,15 @@ function MyApp({ Component, pageProps }) {
     const loadCSSBasedOnPath = async () => {
       const path = router.pathname;
 
-      if (path === "/" || path.startsWith("/validasi-dokumen")) {
+      if (path === "/" || path.startsWith("/validasi-dokumen") || path.startsWith("/validasi-surat")) {
         await import("../../styles/main.css");
         await import("../../styles/tailwind.globals.css");
       } else if (
+        path.startsWith("/parent") ||
         path.startsWith("/mahasiswa") ||
         path.startsWith("/dosen") ||
         path.startsWith("/admin") ||
+        path.startsWith("/pegawai") ||
         path.startsWith("/demo") ||
         path.startsWith("/login") ||
         path.startsWith("/register") ||

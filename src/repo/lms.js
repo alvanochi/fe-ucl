@@ -193,6 +193,54 @@ export async function deleteItem(id) {
   return res.data;
 }
 
+/* --------------------------- Assignment / Submission --------------------------- */
+// Config tugas (due_at, max_score, allow_late, allowed_file_types) hidup di payload item
+// tipe `assignment` (lihat createItem/updateItem di atas). Fungsi di bawah untuk submission.
+
+// Submit / kumpul ulang tugas (mahasiswa). `formData` berisi field `text` dan/atau `file`.
+export async function submitAssignment(itemId, formData) {
+  const res = await axios.post(`${LMS_BASE()}/items/${itemId}/submissions`, formData);
+  return res.data;
+}
+
+// Submission milik sendiri (mahasiswa). `data: null` bila belum pernah submit.
+export function useMySubmission(itemId) {
+  const url = itemId ? `${LMS_BASE()}/items/${itemId}/submissions/me` : null;
+  const { data, error, isLoading, mutate } = useSWR(url);
+  return { submission: data || null, error, isLoading, mutate };
+}
+
+// Semua submission pada satu assignment (dosen pengampu/admin), dilengkapi npm/nama_mahasiswa.
+export function useLmsSubmissions(itemId, { page = 1, limit = 10 } = {}) {
+  const qs = new URLSearchParams({ page, limit });
+  const url = itemId ? `${LMS_BASE()}/items/${itemId}/submissions?${qs.toString()}` : null;
+  const { data, error, isLoading, mutate } = useSWR(url);
+
+  const payload = data && Array.isArray(data.rows) ? data : null;
+
+  return {
+    submissions: payload?.rows || [],
+    total: payload?.total || 0,
+    page: payload?.page || page,
+    totalPage: payload?.total_page || 0,
+    error,
+    isLoading,
+    mutate,
+  };
+}
+
+// File submission (blob berotorisasi, sama pola dengan fetchLmsFileBlob).
+export async function fetchSubmissionFileBlob(submissionId) {
+  const res = await axios.get(`${LMS_BASE()}/submissions/${submissionId}/file`, { responseType: "blob" });
+  return res.data;
+}
+
+// Nilai (dosen pengampu/admin; boleh re-grade). payload = { score, feedback? }.
+export async function gradeSubmission(submissionId, payload) {
+  const res = await axios.patch(`${LMS_BASE()}/submissions/${submissionId}/grade`, payload);
+  return res.data;
+}
+
 // Urut ulang. `items` = [{ id, position }]. Backend men-scope ke kelas/section terverifikasi.
 export async function reorderSections(kelasKuliahId, items) {
   const res = await axios.patch(`${LMS_BASE()}/sections/reorder`, { kelasKuliahId, items });

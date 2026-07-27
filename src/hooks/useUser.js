@@ -29,7 +29,7 @@ export default function useUser({ redirectTo = '', redirectIfFound = false } = {
   })
 
   async function logout() {
-    return mutateUser(axios.post('/staging/api/logout').then(() => Router.reload()))
+    return mutateUser(axios.post('/api/logout').then(() => Router.reload()))
   }
 
   async function getProfile() {

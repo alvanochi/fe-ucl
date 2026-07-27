@@ -35,9 +35,12 @@ export default function ShowQr({ data }) {
         onClick={handleShowQr}
       />
       <Modal
-        title={`${data && data.matkul ? data.matkul : ''} ${
-          data && data.pertemuan ? data.pertemuan : ''
-        } | ${data && data.kelas ? data.kelas : ''}`}
+        title={
+          <div className="flex flex-col items-center">
+            <span>{`${data?.matkul || ''} ${data?.pertemuan || ''}`.trim()}</span>
+            <span className="text-base text-gray-500 mt-1 font-medium">{data?.kelas || ''}</span>
+          </div>
+        }
         show={qrCode !== null}
         handler={() => setQrCode(null)}
       >
