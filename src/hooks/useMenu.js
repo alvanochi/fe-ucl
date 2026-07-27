@@ -15,7 +15,7 @@ export const useMenu = () => {
     if (user == null) return;
 
     const fixedUrl =
-      ["/admin", "/dosen", "/mahasiswa", "/dosen_ext"].includes(
+      ["/admin", "/dosen", "/mahasiswa", "/dosen_ext", "/pegawai", "/parent"].includes(
         Router.pathname
       ) === false
         ? `/${Router.pathname.split("/").at(2)}`
@@ -32,8 +32,16 @@ export const useMenu = () => {
       case "Admin":
         menuPrefix = "/admin";
         break;
+      case "Pegawai":
+        menuPrefix = "/pegawai";
+        break;
       case "Dosen_Ext":
         menuPrefix = "/dosen_ext";
+        break;
+      case "Parent":
+      case "Orang Tua":
+        menuPrefix = "/parent";
+        break;
     }
 
     const findMenu = utils.getAppMenuByUrl(fixedUrl, user.role);

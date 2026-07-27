@@ -18,9 +18,11 @@ function MyApp({ Component, pageProps }) {
         await import("../../styles/main.css");
         await import("../../styles/tailwind.globals.css");
       } else if (
+        path.startsWith("/parent") ||
         path.startsWith("/mahasiswa") ||
         path.startsWith("/dosen") ||
         path.startsWith("/admin") ||
+        path.startsWith("/pegawai") ||
         path.startsWith("/demo") ||
         path.startsWith("/login") ||
         path.startsWith("/register") ||

@@ -41,6 +41,10 @@ export const useForm = (initialState, initialFormOptionState = INITIAL_FORM_OPTI
 	};
 
 	const inputHandler = (event, cb) => {
+		if (!event || !event.target) {
+			console.warn('[useForm] inputHandler dipanggil tanpa event yang valid:', event);
+			return;
+		}
 		const INPUT_NAME = event.target.name;
 		let INPUT_VALUE = event.target.value;
 

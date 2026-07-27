@@ -29,7 +29,7 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
   };
 
   const getTimelineVisual = (status, text) => {
-    const isDisposisi = text?.toLowerCase().includes("disposisi");
+    const isDisposisi = text?.toLowerCase().includes("disposisi") || status === "Disposisi";
     if (isDisposisi) return { icon: "mdi:share-all", color: "bg-indigo-500", border: "border-indigo-100", bgCard: "bg-indigo-50/50" };
 
     switch (status) {
@@ -47,6 +47,11 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
         return { icon: "mdi:record-circle", color: "bg-gray-500", border: "border-gray-100", bgCard: "bg-gray-50/50" };
     }
   };
+
+  const mergedTimeline = [
+    ...(trackingList || []).map((t) => ({ type: "tracking", date: new Date(t.created_at).getTime(), data: t })),
+    ...(historyDisposisi || []).map((d) => ({ type: "disposisi", date: new Date(d.tanggal).getTime(), data: d }))
+  ].sort((a, b) => a.date - b.date);
 
   return (
     <div className="space-y-6">
@@ -91,28 +96,26 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
         </div>
       </Card>
 
-      <div className="sticky top-6 space-y-6">
-        <Card className="border-2 border-gray-200 shadow-sm overflow-hidden bg-white rounded-3xl">
-          <div className="bg-gray-800 border-b-2 border-gray-900 text-white px-5 sm:px-6 py-4 flex justify-between items-center">
-            <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 font-mono">
-              <Icon icon="mdi:timeline-check" width={20} /> Timeline Pengajuan
-            </span>
-          </div>
-          <div className="p-5 sm:p-6 bg-white max-h-[500px] overflow-y-auto">
-            {trackingList?.length === 0 ? (
-              <p className="text-xs text-center text-gray-400 font-medium py-4">Memuat timeline...</p>
-            ) : (
-              <div className="relative border-l-[3px] border-gray-200 ml-4 space-y-6 pb-2">
-                {trackingList?.map((track, i) => {
+      <Card className="border-2 border-gray-200 shadow-sm overflow-hidden bg-white rounded-3xl">
+        <div className="bg-gray-800 border-b-2 border-gray-900 text-white px-5 sm:px-6 py-4 flex justify-between items-center">
+          <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 font-mono">
+            <Icon icon="mdi:timeline-check" width={20} /> Timeline Pengajuan
+          </span>
+        </div>
+        <div className="p-5 sm:p-6 bg-white max-h-[700px] overflow-y-auto">
+          {mergedTimeline.length === 0 ? (
+            <p className="text-xs text-center text-gray-400 font-medium py-4">Memuat timeline...</p>
+          ) : (
+            <div className="relative border-l-[3px] border-gray-200 ml-4 space-y-6 pb-2">
+              {mergedTimeline.map((item, i) => {
+                if (item.type === "tracking") {
+                  const track = item.data;
                   const visual = getTimelineVisual(track.status, track.catatan);
                   return (
-                    <div key={track.id || i} className="relative pl-8 animate-in fade-in slide-in-from-right-2">
-                      {/* Icon Node */}
+                    <div key={`track-${track.id || i}`} className="relative pl-8 animate-in fade-in slide-in-from-right-2">
                       <div className={classNames("absolute -left-[18px] top-0 w-8 h-8 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md z-10", visual.color)}>
                         <Icon icon={visual.icon} width={16} />
                       </div>
-
-                      {/* Content Card */}
                       <div className={classNames("p-4 rounded-xl border border-gray-200 shadow-sm", visual.bgCard)}>
                         <div className="flex justify-between items-start gap-4 mb-2">
                           <p className={classNames("text-[11px] font-black uppercase tracking-widest", visual.color.replace("bg-", "text-"))}>{track.status}</p>
@@ -122,81 +125,56 @@ export default function TrackingSidebar({ lampirans, trackingList, historyDispos
                       </div>
                     </div>
                   );
-                })}
-              </div>
-            )}
-          </div>
-        </Card>
-
-        {/* History Disposisi */}
-        {historyDisposisi && historyDisposisi.length > 0 && (
-          <Card className="border-2 border-gray-200 shadow-sm overflow-hidden bg-white rounded-3xl animate-in fade-in slide-in-from-bottom-2">
-            <div className="bg-indigo-600 border-b-2 border-indigo-700 text-white px-5 sm:px-6 py-4 flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase tracking-widest flex items-center gap-2 font-mono">
-                <Icon icon="mdi:source-branch" width={20} /> Rute Disposisi
-              </span>
-              <span className="bg-indigo-700 text-white border border-indigo-500 px-2 py-0.5 rounded-md text-[9px] font-bold">{historyDisposisi.length} Rute</span>
-            </div>
-            <div className="p-5 sm:p-6 bg-white max-h-[400px] overflow-y-auto">
-              <div className="relative border-l-[3px] border-gray-200 ml-4 space-y-6 pb-2">
-                {historyDisposisi.map((disp, idx) => (
-                  <div key={idx} className="relative pl-8 animate-in fade-in slide-in-from-right-2">
-                    <div className="absolute -left-[18px] top-0 w-8 h-8 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md z-10 bg-indigo-500">
-                      <Icon icon="mdi:share-all" width={16} />
-                    </div>
-
-                    {/* Content Card */}
-                    <div className="p-4 rounded-xl border border-indigo-100 shadow-sm bg-indigo-50/50">
-                      {/* Header: label + timestamp */}
-                      <div className="flex justify-between items-start gap-4 mb-3">
-                        <p className="text-[11px] font-black uppercase tracking-widest text-indigo-500">Disposisi</p>
-                        <p className="text-[10px] text-gray-500 font-mono font-bold whitespace-nowrap">
-                          {new Date(disp.tanggal).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
-                        </p>
+                } else {
+                  const disp = item.data;
+                  return (
+                    <div key={`disp-${i}`} className="relative pl-8 animate-in fade-in slide-in-from-right-2">
+                      <div className="absolute -left-[18px] top-0 w-8 h-8 rounded-full border-[3px] border-white flex items-center justify-center text-white shadow-md z-10 bg-indigo-500">
+                        <Icon icon="mdi:share-all" width={16} />
                       </div>
-
-                      {/* Catatan */}
-                      {disp.catatan && (
-                        <p className="leading-relaxed text-gray-700 text-sm mb-3">&quot;{disp.catatan}&quot;</p>
-                      )}
-
-                      {/* Aktor pill */}
-                      <div className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white rounded-lg border border-gray-200 shadow-sm mb-2">
-                        <Icon icon="mdi:account-circle" className="text-gray-500 shrink-0" width={16} />
-                        <span className="text-[11px] font-bold text-gray-700">{cleanActorText(disp.aktor)}</span>
-                      </div>
-
-                      {/* Panah → Target */}
-                      <div className="flex items-center gap-2 mt-1 mb-2">
-                        <Icon icon="mdi:arrow-right-bold" className="text-indigo-400 shrink-0" width={16} />
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-50 rounded-lg border border-indigo-200 shadow-sm">
-                          <Icon icon="mdi:account-arrow-right" className="text-indigo-500 shrink-0" width={16} />
-                          <span className="text-[11px] font-bold text-indigo-700">{cleanActorText(disp.target_penerima)}</span>
+                      <div className="p-4 rounded-xl border border-indigo-100 shadow-sm bg-indigo-50/50">
+                        <div className="flex justify-between items-start gap-4 mb-3">
+                          <p className="text-[11px] font-black uppercase tracking-widest text-indigo-500">Disposisi</p>
+                          <p className="text-[10px] text-gray-500 font-mono font-bold whitespace-nowrap">
+                            {new Date(disp.tanggal).toLocaleString("id-ID", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" })}
+                          </p>
                         </div>
+                        {disp.catatan && (
+                          <p className="leading-relaxed text-gray-700 text-sm mb-3">&quot;{disp.catatan}&quot;</p>
+                        )}
+                        <div className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white rounded-lg border border-gray-200 shadow-sm mb-2">
+                          <Icon icon="mdi:account-circle" className="text-gray-500 shrink-0" width={16} />
+                          <span className="text-[11px] font-bold text-gray-700">{cleanActorText(disp.aktor)}</span>
+                        </div>
+                        <div className="flex items-center gap-2 mt-1 mb-2">
+                          <Icon icon="mdi:arrow-right-bold" className="text-indigo-400 shrink-0" width={16} />
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-indigo-50 rounded-lg border border-indigo-200 shadow-sm">
+                            <Icon icon="mdi:account-arrow-right" className="text-indigo-500 shrink-0" width={16} />
+                            <span className="text-[11px] font-bold text-indigo-700">{cleanActorText(disp.target_penerima)}</span>
+                          </div>
+                        </div>
+                        {disp.lampiran && (
+                          <a
+                            href={`${process.env.NEXT_PUBLIC_API_URL}/lampiran-surat/${disp.lampiran.file_url}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            download
+                            className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm rounded-lg text-xs font-bold text-gray-700 transition-colors mt-1"
+                          >
+                            <Icon icon={disp.lampiran.file_url.endsWith(".pdf") ? "mdi:file-pdf-box" : "mdi:image-outline"} className={disp.lampiran.file_url.endsWith(".pdf") ? "text-red-500" : "text-primary-500"} width={16} />
+                            <span className="truncate max-w-[150px]">{disp.lampiran.nama_file}</span>
+                            <Icon icon="mdi:download" width={14} className="text-gray-400 shrink-0" />
+                          </a>
+                        )}
                       </div>
-
-                      {/* Lampiran */}
-                      {disp.lampiran && (
-                        <a
-                          href={`${process.env.NEXT_PUBLIC_API_URL}/lampiran-surat/${disp.lampiran.file_url}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          download
-                          className="inline-flex items-center gap-1.5 w-fit px-2.5 py-1.5 bg-white hover:bg-gray-50 border border-gray-200 shadow-sm rounded-lg text-xs font-bold text-gray-700 transition-colors mt-1"
-                        >
-                          <Icon icon={disp.lampiran.file_url.endsWith(".pdf") ? "mdi:file-pdf-box" : "mdi:image-outline"} className={disp.lampiran.file_url.endsWith(".pdf") ? "text-red-500" : "text-primary-500"} width={16} />
-                          <span className="truncate max-w-[150px]">{disp.lampiran.nama_file}</span>
-                          <Icon icon="mdi:download" width={14} className="text-gray-400 shrink-0" />
-                        </a>
-                      )}
                     </div>
-                  </div>
-                ))}
-              </div>
+                  );
+                }
+              })}
             </div>
-          </Card>
-        )}
-      </div>
+          )}
+        </div>
+      </Card>
     </div>
   );
 }
