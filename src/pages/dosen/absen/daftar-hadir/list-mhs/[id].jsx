@@ -89,7 +89,7 @@ export default function ListMhs() {
   return (
     <Layout>
       <PageHeader
-        title={`${matkulData[0]?.matkul.name} | Pertemuan ke-${matkulData[0]?.pertemuan}`}
+        title={`${matkulData[0]?.matkul?.name || '-'} | Pertemuan ke-${matkulData[0]?.pertemuan}`}
         icon={menu.icon}
         handler={setActive}
       />
