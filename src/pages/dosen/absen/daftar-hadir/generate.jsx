@@ -92,7 +92,7 @@ export default function GenerateQrCode() {
       }
     }
     fetchKelas()
-  }, [SIAK_URL])
+  }, [SIAK_URL, user?.nip])
 
   useEffect(() => {
     const fetchDosen = async () => {
