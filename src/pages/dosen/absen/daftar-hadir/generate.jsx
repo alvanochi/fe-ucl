@@ -69,7 +69,7 @@ export default function GenerateQrCode() {
   useEffect(() => {
     const fetchKelas = async () => {
       try {
-        if (SIAK_URL) {
+        if (SIAK_URL && user?.nip) {
           const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`, {
             params: { nip: user.nip.trim() },
           })
