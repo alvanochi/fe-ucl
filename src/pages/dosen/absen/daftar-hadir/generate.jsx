@@ -70,7 +70,9 @@ export default function GenerateQrCode() {
     const fetchKelas = async () => {
       try {
         if (SIAK_URL) {
-          const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`)
+          const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`, {
+            params: { nip: user.nip.trim() },
+          })
           const kls = response.data.data || []
           const uniqueClasses = []
           const classMap = new Map()
