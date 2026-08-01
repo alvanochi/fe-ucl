@@ -69,8 +69,10 @@ export default function GenerateQrCode() {
   useEffect(() => {
     const fetchKelas = async () => {
       try {
-        if (SIAK_URL) {
-          const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`)
+        if (SIAK_URL && user?.nip) {
+          const response = await axios.get(`${SIAK_URL}/api/public/kelas-kuliah`, {
+            params: { nip: user.nip.trim() },
+          })
           const kls = response.data.data || []
           const uniqueClasses = []
           const classMap = new Map()
@@ -90,7 +92,7 @@ export default function GenerateQrCode() {
       }
     }
     fetchKelas()
-  }, [SIAK_URL])
+  }, [SIAK_URL, user?.nip])
 
   useEffect(() => {
     const fetchDosen = async () => {
