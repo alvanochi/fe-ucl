@@ -264,7 +264,6 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
   const handleCompleteClick = () => {
     const jenisSurat = localSurat.jenis_surat.toLowerCase();
 
-    // Validasi: Cegah TU/Admin menyelesaikan Surat Pengunduran Diri jika Ortu belum TTD
     if (jenisSurat === "surat pengunduran diri" && !localSurat.form_data?.ttd_ortu) {
       MySwal.fire({
         icon: "warning",
@@ -347,10 +346,7 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
   const isSender = user?.user_id === localSurat.user_id;
   const isReceiver = user?.user_id === localSurat.penerima_id;
   const anonymityRole = user?.role?.toLowerCase();
-
-  // Deteksi khusus untuk persetujuan Kaprodi
   const isCutiAkademik = localSurat.jenis_surat?.toLowerCase() === "surat pengajuan cuti";
-  // isKaprodi: hanya berdasarkan role eksplisit 'kaprodi', bukan heuristik isReceiver!
   const isKaprodi = anonymityRole?.includes("kaprodi");
   const needsKaprodiSignature = isCutiAkademik && !isTerminalState && !localSurat.form_data?.ttd_kaprodi && isReceiver && !["mahasiswa", "admin", "pegawai", "staf", "tu"].includes(anonymityRole);
 
@@ -358,14 +354,10 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
   const isAdmin = adminRoles.includes(anonymityRole);
 
   const canComplete = !isTerminalState && (isSender || isReceiver || isAdmin) && anonymityRole !== "mahasiswa" && !isCutiAkademik;
-  const canReject = !isTerminalState && isReceiver && isAdmin;
-  
-  // Aturan Disposisi: 
-  // - Cuti Akademik: Bisa didisposisikan kapan saja (Normal atau Tindak Lanjut). Kaprodi tidak perlu disposisi.
-  // - Selain Cuti (Pengunduran Diri): Wajib "Selesai" baru bisa didisposisikan (Tindak Lanjut).
-  // - Admin (TU) memiliki *Super Power* untuk bisa mendisposisikan surat kapanpun walau surat sedang berada di orang lain.
+  const canReject = !isTerminalState && (isAdmin ? isReceiver : needsKaprodiSignature);
+
   const isTindakLanjut = localSurat.jenis_surat?.toLowerCase() === "tindak lanjut dokumen";
-  // - Selain Tindak Lanjut (Surat Induk): HANYA Admin/TU yang boleh melakukan disposisi awal.
+
   const canDisposisi = isTindakLanjut ? (isReceiver || isAdmin) : isAdmin;
 
   const isOrtu = anonymityRole?.includes("ortu") || anonymityRole?.includes("orang") || anonymityRole === "parent" || (isReceiver && !["mahasiswa", "admin", "pegawai", "staf", "staff", "tu", "kaprodi", "dosen"].includes(anonymityRole));

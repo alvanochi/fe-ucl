@@ -105,7 +105,9 @@ export default function PersuratanCreate({ onBack }) {
       });
 
       if (res.data.isSuccess || res.status === 200 || res.status === 201) {
-        toastAlert("success", "Pengajuan surat berhasil dikirim ke Staf Tata Usaha Prodi Teknik Informatika!");
+        const userDept = user?.department_code || "Informatika";
+        const formattedDept = userDept.charAt(0).toUpperCase() + userDept.slice(1);
+        toastAlert("success", `Pengajuan surat berhasil dikirim ke Staf Tata Usaha Prodi ${formattedDept}!`);
         onBack();
       }
     } catch (err) {
@@ -113,7 +115,7 @@ export default function PersuratanCreate({ onBack }) {
         err?.response?.data?.responseMessage ||
         err?.response?.data?.message ||
         "Terjadi kesalahan. Silakan coba lagi.";
-      // Deteksi error TTD — tampilkan UI khusus
+        
       const isTtd = msg?.toLowerCase().includes("tanda tangan digital");
       setIsTtdError(isTtd);
       setErrorMessage(isTtd ? null : msg);
@@ -243,7 +245,11 @@ export default function PersuratanCreate({ onBack }) {
                         <Form.Label className="font-bold text-gray-700">Penerima Tujuan</Form.Label>
                         <div className="w-full h-11 px-4 bg-gray-100 border border-gray-200 rounded-lg text-gray-500 font-medium flex items-center gap-2 cursor-not-allowed">
                           <Icon icon="mdi:lock-outline" width={18} />
-                          Staf Tata Usaha Prodi Teknik Informatika (Otomatis)
+                          {`Staf Tata Usaha Prodi ${
+                            user?.department_code 
+                              ? user.department_code.charAt(0).toUpperCase() + user.department_code.slice(1) 
+                              : "Informatika"
+                          } (Otomatis)`}
                         </div>
                       </Form.Group>
 

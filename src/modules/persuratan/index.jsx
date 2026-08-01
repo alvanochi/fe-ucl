@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { Icon } from "@iconify-icon/react";
 import classNames from "classnames";
@@ -83,14 +84,15 @@ function PersuratanFilter({ filter, handler, defaultFilter, className, canSeeOut
 }
 
 export default function PersuratanModule({ isPreview = false }) {
+  const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
+  const [isRestoring, setIsRestoring] = useState(true);
   const [view, setView] = useState("index");
   const [search, setSearch] = useState("");
   
   const [filter, setFilter] = useState({});
   const [isFilterInitialized, setIsFilterInitialized] = useState(false);
 
-  // Set default filter setelah user berhasil dimuat (menghindari bug async)
   useEffect(() => {
     if (user && !isFilterInitialized) {
       const role = user.role?.toLowerCase();
@@ -112,7 +114,6 @@ export default function PersuratanModule({ isPreview = false }) {
   const isAdmin = user?.role?.toLowerCase() === "admin";
   const myUserId = user?.user_id || user?.id;
 
-  // Penentu hak akses pembuatan & pencatatan surat keluar
   const hasOutboxPrivilege = useMemo(() => {
     return ["mahasiswa", "admin"].includes(user?.role?.toLowerCase());
   }, [user]);
@@ -148,7 +149,6 @@ export default function PersuratanModule({ isPreview = false }) {
 
   const getSortBy = (key) => (sortConfig.key === key ? sortConfig.direction : undefined);
 
-  // Filter dasar untuk memisahkan Inbox / Outbox agar Ringkasan Angka sinkron dengan tabel
   const baseSuratList = useMemo(() => {
     return suratList.filter((s) => {
       let isSuratMasuk = s.penerima_id === myUserId;
@@ -206,11 +206,12 @@ export default function PersuratanModule({ isPreview = false }) {
   }, [processedSurat, page]);
 
   const handleGoDetail = async (s) => {
+    const targetId = typeof s === "object" ? s.id : s;
     if (loadingId) return;
     try {
       const token = localStorage.getItem("token");
-      setLoadingId(s.id);
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${s.id}`, {
+      setLoadingId(targetId);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${targetId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -218,19 +219,64 @@ export default function PersuratanModule({ isPreview = false }) {
       if (fetchedData) {
         setSelectedSurat(fetchedData);
         setView("detail");
+        router.push({ query: { ...router.query, action: "detail", id: targetId } }, undefined, { shallow: true });
       }
     } catch (err) {
       console.error("Gagal memuat detail surat:", err);
       toastAlert("error", "Gagal memuat detail surat.");
+      const { action, id, ...rest } = router.query;
+      router.push({ query: rest }, undefined, { shallow: true });
     } finally {
       setLoadingId(null);
     }
   };
 
+  useEffect(() => {
+    if (!router.isReady || !user) return;
+    const { action, id } = router.query;
+    
+    if (action === "detail" && id && (!selectedSurat || String(selectedSurat.id) !== String(id))) {
+      handleGoDetail(id).finally(() => {
+        setIsRestoring(false);
+      });
+    } else if (action === "create" && view !== "create") {
+      setView("create");
+      setIsRestoring(false);
+    } else if (!action && view !== "index") {
+      setView("index");
+      setSelectedSurat(null);
+      setIsRestoring(false);
+    } else {
+      setIsRestoring(false);
+    }
+  }, [router.isReady, router.query.action, router.query.id, user]);
 
+  const handleBackToIndex = () => {
+    setView("index");
+    setSelectedSurat(null);
+    const { action, id, ...rest } = router.query;
+    router.push({ query: rest }, undefined, { shallow: true });
+  };
 
-  if (view === "create") return <PersuratanCreate onBack={() => setView("index")} />;
-  if (view === "detail") return <PersuratanDetail onBack={() => setView("index")} onCreateNew={() => setView("create")} surat={selectedSurat} isAdmin={isAdmin} />;
+  const handleGoCreate = () => {
+    setView("create");
+    router.push({ query: { ...router.query, action: "create" } }, undefined, { shallow: true });
+  };
+
+  if (isRestoring || !router.isReady) {
+    const loadingContent = (
+      <div className="w-full min-h-[calc(100vh-2rem)] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Icon icon="mdi:loading" className="animate-spin text-primary-500" width={48} />
+          <p className="text-gray-500 font-medium">Memulihkan halaman...</p>
+        </div>
+      </div>
+    );
+    return isPreview ? loadingContent : <Layout>{loadingContent}</Layout>;
+  }
+
+  if (view === "create") return <PersuratanCreate onBack={handleBackToIndex} />;
+  if (view === "detail") return <PersuratanDetail onBack={handleBackToIndex} onCreateNew={handleGoCreate} surat={selectedSurat} isAdmin={isAdmin} />;
 
   const content = (
     <>
@@ -271,7 +317,7 @@ export default function PersuratanModule({ isPreview = false }) {
             <PersuratanFilter filter={filter} handler={setFilter} defaultFilter={{ tipe: user?.role?.toLowerCase() === "mahasiswa" ? "" : "Masuk" }} className="w-full sm:w-auto justify-center" canSeeOutbox={hasOutboxPrivilege} />
 
             {hasOutboxPrivilege && !isAdmin && (
-              <Button onClick={() => setView("create")} variant="primary" className="w-full sm:w-auto justify-center" icon={<Icon icon="mdi:file-plus-outline" width={20} />} pill>
+              <Button onClick={handleGoCreate} variant="primary" className="w-full sm:w-auto justify-center" icon={<Icon icon="mdi:file-plus-outline" width={20} />} pill>
                 Ajukan Surat
               </Button>
             )}
