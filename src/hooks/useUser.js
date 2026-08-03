@@ -4,7 +4,7 @@ import useSWR from 'swr'
 import axios from 'axios'
 
 export default function useUser({ redirectTo = '', redirectIfFound = false } = {}) {
-  const { data: user, mutate: mutateUser } = useSWR('/api/user')
+  const { data: user, mutate: mutateUser } = useSWR('/staging/api/user')
   if (user && user.is_logged_in) axios.defaults.headers.common['token'] = user.token
 
   // const [profile, setProfile] = useState({});
@@ -21,7 +21,7 @@ export default function useUser({ redirectTo = '', redirectIfFound = false } = {
   })
 
   async function logout() {
-    return mutateUser(axios.post('/api/logout').then(() => Router.reload()))
+    return mutateUser(axios.post('/staging/api/logout').then(() => Router.reload()))
   }
 
   async function getProfile() {
@@ -52,7 +52,11 @@ export default function useUser({ redirectTo = '', redirectIfFound = false } = {
       (redirectTo && !redirectIfFound && !user?.is_logged_in) ||
       (redirectIfFound && user?.is_logged_in)
     ) {
-      Router.push(redirectTo)
+      // Callers pass plain paths like '/login' — staging and prod share a
+      // domain split by this prefix at the proxy, so it must be added here
+      // once rather than at each of the ~350 call sites.
+      const target = redirectTo.startsWith('/staging') ? redirectTo : `/staging${redirectTo}`
+      Router.push(target)
     }
   }, [user, redirectIfFound, redirectTo])
 
