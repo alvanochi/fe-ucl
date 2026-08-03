@@ -47,7 +47,7 @@ const Verification = () => {
         MySwal.close()
 
         toastAlert('success', response.data.message)
-        return Router.push('/staging/login')
+        return Router.push('/login')
       }
     } catch (error) {
       if (error.name === 'AxiosError') {

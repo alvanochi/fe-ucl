@@ -23,10 +23,6 @@ export const middleware = async (req) => {
   const { user } = session;
   console.log("MIDDLEWARE SESSION USER:", user);
 
-  // Staging & prod share one domain, split by this path prefix at the proxy.
-  // Any redirect built without it escapes staging's proxy scope and lands on prod.
-  const STAGING_PREFIX = "/staging";
-
   const universalRoute = [
     "/",
     "/register",
@@ -37,75 +33,70 @@ export const middleware = async (req) => {
     "/register-dosen-ext",
     "/register-pegawai",
     "/oauth/callback",
-  ].map((route) => STAGING_PREFIX + route);
+  ];
 
-  const protectedRoute = ["/login", "/auth/verify"].map(
-    (route) => STAGING_PREFIX + route
-  );
+  // const universalRouteId = ["/resetPassword"]
+  const protectedRoute = ["/login", "/auth/verify"];
   if (user == null && universalRoute.includes(url.pathname)) return response;
 
-  if (url.pathname.startsWith(`${STAGING_PREFIX}/validasi-dokumen`))
-    return response;
-  if (url.pathname.startsWith(`${STAGING_PREFIX}/validasi-surat`))
+  if (url.pathname.startsWith("/validasi-dokumen") === true) return response;
+  if (url.pathname.startsWith("/validasi-surat") === true) return response;
+
+  if (user == null && url.pathname.startsWith("/resetPassword") === true)
     return response;
 
-  if (user == null && url.pathname.startsWith(`${STAGING_PREFIX}/resetPassword`))
-    return response;
-
-  if (user == null && url.pathname.startsWith(`${STAGING_PREFIX}/verification`))
+  if (user == null && url.pathname.startsWith("/verification") === true)
     return response;
 
   if (user == null && !protectedRoute.includes(url.pathname))
-    return NextResponse.redirect(new URL(`${STAGING_PREFIX}/login`, req.url));
+    return NextResponse.redirect(new URL("/login", req.url));
 
   if (
     user?.role == "Dosen" &&
-    url.pathname.startsWith(`${STAGING_PREFIX}/dosen`) === false &&
+    url.pathname.startsWith("/dosen") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL(`${STAGING_PREFIX}/dosen`, req.url));
+    return NextResponse.redirect(new URL("/dosen", req.url));
   if (
     user?.role == "Demo" &&
-    url.pathname.startsWith(`${STAGING_PREFIX}/demo`) === false &&
+    url.pathname.startsWith("/demo") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL(`${STAGING_PREFIX}/demo`, req.url));
+    return NextResponse.redirect(new URL("/demo", req.url));
 
   if (
     user?.role == "Dosen_Ext" &&
-    url.pathname.startsWith(`${STAGING_PREFIX}/dosen_ext`) === false &&
+    url.pathname.startsWith("/dosen_ext") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL(`${STAGING_PREFIX}/dosen_ext`, req.url));
+    return NextResponse.redirect(new URL("/dosen_ext", req.url));
   if (
     user?.role == "Mahasiswa" &&
-    url.pathname.startsWith(`${STAGING_PREFIX}/mahasiswa`) === false &&
+    url.pathname.startsWith("/mahasiswa") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL(`${STAGING_PREFIX}/mahasiswa`, req.url));
+    return NextResponse.redirect(new URL("/mahasiswa", req.url));
 
   if (
     user?.role == "Admin" &&
-    url.pathname.startsWith(`${STAGING_PREFIX}/admin`) === false &&
+    url.pathname.startsWith("/admin") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL(`${STAGING_PREFIX}/admin`, req.url));
+    return NextResponse.redirect(new URL("/admin", req.url));
 
   if (
     user?.role == "Pegawai" &&
-    url.pathname.startsWith(`${STAGING_PREFIX}/pegawai`) === false &&
+    url.pathname.startsWith("/pegawai") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL(`${STAGING_PREFIX}/pegawai`, req.url));
+    return NextResponse.redirect(new URL("/pegawai", req.url));
 
   if (
     user?.role == "Parent" &&
-    url.pathname.startsWith(`${STAGING_PREFIX}/parent`) === false &&
+    url.pathname.startsWith("/parent") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(
-      new URL(`${STAGING_PREFIX}/parent/persuratan`, req.url)
-    );
+    return NextResponse.redirect(new URL("/parent/persuratan", req.url));
 
   return response;
 };
