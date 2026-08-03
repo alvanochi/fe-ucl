@@ -23,6 +23,15 @@ export const middleware = async (req) => {
   const { user } = session;
   console.log("MIDDLEWARE SESSION USER:", user);
 
+  // new URL(path, req.url) drops the /staging basePath from the Location
+  // header on this Next version — req.nextUrl.clone() keeps it, since
+  // NextURL tracks basePath separately from pathname.
+  const redirectTo = (pathname) => {
+    const target = url.clone();
+    target.pathname = pathname;
+    return NextResponse.redirect(target);
+  };
+
   const universalRoute = [
     "/",
     "/register",
@@ -49,54 +58,54 @@ export const middleware = async (req) => {
     return response;
 
   if (user == null && !protectedRoute.includes(url.pathname))
-    return NextResponse.redirect(new URL("/login", req.url));
+    return redirectTo("/login");
 
   if (
     user?.role == "Dosen" &&
     url.pathname.startsWith("/dosen") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL("/dosen", req.url));
+    return redirectTo("/dosen");
   if (
     user?.role == "Demo" &&
     url.pathname.startsWith("/demo") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL("/demo", req.url));
+    return redirectTo("/demo");
 
   if (
     user?.role == "Dosen_Ext" &&
     url.pathname.startsWith("/dosen_ext") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL("/dosen_ext", req.url));
+    return redirectTo("/dosen_ext");
   if (
     user?.role == "Mahasiswa" &&
     url.pathname.startsWith("/mahasiswa") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL("/mahasiswa", req.url));
+    return redirectTo("/mahasiswa");
 
   if (
     user?.role == "Admin" &&
     url.pathname.startsWith("/admin") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL("/admin", req.url));
+    return redirectTo("/admin");
 
   if (
     user?.role == "Pegawai" &&
     url.pathname.startsWith("/pegawai") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL("/pegawai", req.url));
+    return redirectTo("/pegawai");
 
   if (
     user?.role == "Parent" &&
     url.pathname.startsWith("/parent") === false &&
     !universalRoute.includes(url.pathname)
   )
-    return NextResponse.redirect(new URL("/parent/persuratan", req.url));
+    return redirectTo("/parent/persuratan");
 
   return response;
 };
