@@ -52,11 +52,7 @@ export default function useUser({ redirectTo = '', redirectIfFound = false } = {
       (redirectTo && !redirectIfFound && !user?.is_logged_in) ||
       (redirectIfFound && user?.is_logged_in)
     ) {
-      // Callers pass plain paths like '/login' — staging and prod share a
-      // domain split by this prefix at the proxy, so it must be added here
-      // once rather than at each of the ~350 call sites.
-      const target = redirectTo.startsWith('/staging') ? redirectTo : `/staging${redirectTo}`
-      Router.push(target)
+      Router.push(redirectTo)
     }
   }, [user, redirectIfFound, redirectTo])
 
