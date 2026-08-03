@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { Icon } from "@iconify-icon/react";
 import classNames from "classnames";
@@ -19,12 +20,12 @@ import PersuratanCreate from "./create";
 import PersuratanDetail from "./detail";
 import ShowQrSurat from "../../pages/persuratan/show-qr-surat";
 
-function PersuratanFilter({ filter, handler, className, canSeeOutbox }) {
+function PersuratanFilter({ filter, handler, defaultFilter, className, canSeeOutbox }) {
   const { form, inputHandler, setForm } = useForm(filter);
   const { show, toggle, close } = useModal({
     onClose: () => {
-      handler({});
-      setForm({});
+      handler(defaultFilter || {});
+      setForm(defaultFilter || {});
     },
   });
 
@@ -83,10 +84,23 @@ function PersuratanFilter({ filter, handler, className, canSeeOutbox }) {
 }
 
 export default function PersuratanModule({ isPreview = false }) {
+  const router = useRouter();
   const { user } = useUser({ redirectTo: "/login" });
+  const [isRestoring, setIsRestoring] = useState(true);
   const [view, setView] = useState("index");
   const [search, setSearch] = useState("");
+  
   const [filter, setFilter] = useState({});
+  const [isFilterInitialized, setIsFilterInitialized] = useState(false);
+
+  useEffect(() => {
+    if (user && !isFilterInitialized) {
+      const role = user.role?.toLowerCase();
+      setFilter({ tipe: ["mahasiswa", "parent"].includes(role) ? "" : "Masuk" });
+      setIsFilterInitialized(true);
+    }
+  }, [user, isFilterInitialized]);
+  
   const [selectedSurat, setSelectedSurat] = useState(null);
   const [suratList, setSuratList] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -100,7 +114,6 @@ export default function PersuratanModule({ isPreview = false }) {
   const isAdmin = user?.role?.toLowerCase() === "admin";
   const myUserId = user?.user_id || user?.id;
 
-  // Penentu hak akses pembuatan & pencatatan surat keluar
   const hasOutboxPrivilege = useMemo(() => {
     return ["mahasiswa", "admin"].includes(user?.role?.toLowerCase());
   }, [user]);
@@ -136,26 +149,33 @@ export default function PersuratanModule({ isPreview = false }) {
 
   const getSortBy = (key) => (sortConfig.key === key ? sortConfig.direction : undefined);
 
+  const baseSuratList = useMemo(() => {
+    return suratList.filter((s) => {
+      let isSuratMasuk = s.penerima_id === myUserId;
+      if (user?.role?.toLowerCase() === "parent") {
+        isSuratMasuk = s.Penerima?.role?.toLowerCase() === "mahasiswa";
+      }
+      if (filter.tipe === "Masuk") return isSuratMasuk;
+      if (filter.tipe === "Keluar") return !isSuratMasuk;
+      return true;
+    });
+  }, [suratList, filter.tipe, myUserId, user]);
+
   const processedSurat = useMemo(() => {
-    let result = suratList.filter((s) => {
+    let result = baseSuratList.filter((s) => {
       const searchLower = search.toLowerCase();
       const perihal = s.form_data?.perihal?.toLowerCase() || "";
       const jenis = s.jenis_surat?.toLowerCase() || "";
       const namaMhs = (s.form_data?.nama_lengkap || s.Pengirim?.personal_data?.nama_lengkap || "").toLowerCase();
       const matchSearch = perihal.includes(searchLower) || namaMhs.includes(searchLower) || jenis.includes(searchLower);
 
-      const isSuratMasuk = s.penerima_id === myUserId;
-      let matchType = true;
-      if (filter.tipe === "Masuk") matchType = isSuratMasuk;
-      if (filter.tipe === "Keluar") matchType = !isSuratMasuk;
-
       let matchKondisi = true;
       if (filter.kondisi === "Belum Dibalas") matchKondisi = ["Sent", "Read"].includes(s.status);
       if (filter.kondisi === "Dibalas") matchKondisi = s.status === "Replied";
-      if (filter.kondisi === "Open") matchKondisi = !["Selesai"].includes(s.status);
-      if (filter.kondisi === "Closed") matchKondisi = ["Selesai"].includes(s.status);
+      if (filter.kondisi === "Open") matchKondisi = !["Selesai", "Ditolak"].includes(s.status);
+      if (filter.kondisi === "Closed") matchKondisi = ["Selesai", "Ditolak"].includes(s.status);
 
-      return matchSearch && matchType && matchKondisi;
+      return matchSearch && matchKondisi;
     });
 
     result.sort((a, b) => {
@@ -173,7 +193,7 @@ export default function PersuratanModule({ isPreview = false }) {
     });
 
     return result;
-  }, [suratList, search, filter, sortConfig, myUserId]);
+  }, [baseSuratList, search, filter.kondisi, sortConfig]);
 
   useEffect(() => {
     setPage(1);
@@ -186,11 +206,12 @@ export default function PersuratanModule({ isPreview = false }) {
   }, [processedSurat, page]);
 
   const handleGoDetail = async (s) => {
+    const targetId = typeof s === "object" ? s.id : s;
     if (loadingId) return;
     try {
       const token = localStorage.getItem("token");
-      setLoadingId(s.id);
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${s.id}`, {
+      setLoadingId(targetId);
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/surat/${targetId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -198,19 +219,64 @@ export default function PersuratanModule({ isPreview = false }) {
       if (fetchedData) {
         setSelectedSurat(fetchedData);
         setView("detail");
+        router.push({ query: { ...router.query, action: "detail", id: targetId } }, undefined, { shallow: true });
       }
     } catch (err) {
       console.error("Gagal memuat detail surat:", err);
       toastAlert("error", "Gagal memuat detail surat.");
+      const { action, id, ...rest } = router.query;
+      router.push({ query: rest }, undefined, { shallow: true });
     } finally {
       setLoadingId(null);
     }
   };
 
+  useEffect(() => {
+    if (!router.isReady || !user) return;
+    const { action, id } = router.query;
+    
+    if (action === "detail" && id && (!selectedSurat || String(selectedSurat.id) !== String(id))) {
+      handleGoDetail(id).finally(() => {
+        setIsRestoring(false);
+      });
+    } else if (action === "create" && view !== "create") {
+      setView("create");
+      setIsRestoring(false);
+    } else if (!action && view !== "index") {
+      setView("index");
+      setSelectedSurat(null);
+      setIsRestoring(false);
+    } else {
+      setIsRestoring(false);
+    }
+  }, [router.isReady, router.query.action, router.query.id, user]);
 
+  const handleBackToIndex = () => {
+    setView("index");
+    setSelectedSurat(null);
+    const { action, id, ...rest } = router.query;
+    router.push({ query: rest }, undefined, { shallow: true });
+  };
 
-  if (view === "create") return <PersuratanCreate onBack={() => setView("index")} />;
-  if (view === "detail") return <PersuratanDetail onBack={() => setView("index")} surat={selectedSurat} isAdmin={isAdmin} />;
+  const handleGoCreate = () => {
+    setView("create");
+    router.push({ query: { ...router.query, action: "create" } }, undefined, { shallow: true });
+  };
+
+  if (isRestoring || !router.isReady) {
+    const loadingContent = (
+      <div className="w-full min-h-[calc(100vh-2rem)] flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <Icon icon="mdi:loading" className="animate-spin text-primary-500" width={48} />
+          <p className="text-gray-500 font-medium">Memulihkan halaman...</p>
+        </div>
+      </div>
+    );
+    return isPreview ? loadingContent : <Layout>{loadingContent}</Layout>;
+  }
+
+  if (view === "create") return <PersuratanCreate onBack={handleBackToIndex} />;
+  if (view === "detail") return <PersuratanDetail onBack={handleBackToIndex} onCreateNew={handleGoCreate} surat={selectedSurat} isAdmin={isAdmin} />;
 
   const content = (
     <>
@@ -220,18 +286,20 @@ export default function PersuratanModule({ isPreview = false }) {
 
       <div className="my-6 lg:my-8">
         {/* SUMMARY CARDS */}
-        <Card className="mb-8 rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-          <Card.Header className="bg-primary-600 text-white text-center text-sm font-bold py-3 uppercase tracking-widest">Ringkasan Pengajuan Surat</Card.Header>
-          <Card.Body className="p-6">
-            <div className={classNames("grid gap-4", hasOutboxPrivilege ? "grid-cols-2 md:grid-cols-5" : "grid-cols-2 md:grid-cols-4")}>
-              {hasOutboxPrivilege && <SummaryCard label="Surat Keluar" count={suratList.filter((s) => s.penerima_id !== myUserId).length} icon="mdi:email-send-outline" />}
-              <SummaryCard label="Belum Dibalas" count={suratList.filter((s) => ["Sent", "Read"].includes(s.status) && s.penerima_id === myUserId).length} icon="mdi:email-alert-outline" />
-              <SummaryCard label="Dibalas" count={suratList.filter((s) => s.status === "Replied").length} icon="mdi:email-check-outline" />
-              <SummaryCard label="Open" count={suratList.filter((s) => !["Selesai"].includes(s.status)).length} icon="mdi:folder-open-outline" />
-              <SummaryCard label="Closed" count={suratList.filter((s) => ["Selesai"].includes(s.status)).length} icon="mdi:folder-lock-outline" />
-            </div>
-          </Card.Body>
-        </Card>
+        {user?.role?.toLowerCase() !== "parent" && (
+          <Card className="mb-8 rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+            <Card.Header className="bg-primary-600 text-white text-center text-sm font-bold py-3 uppercase tracking-widest">Ringkasan Pengajuan Surat</Card.Header>
+            <Card.Body className="p-6">
+              <div className={classNames("grid gap-4", hasOutboxPrivilege ? "grid-cols-2 md:grid-cols-5" : "grid-cols-2 md:grid-cols-4")}>
+                {hasOutboxPrivilege && <SummaryCard label="Surat Keluar" count={baseSuratList.filter((s) => user?.role?.toLowerCase() === "parent" ? s.Penerima?.role?.toLowerCase() !== "mahasiswa" : s.penerima_id !== myUserId).length} icon="mdi:email-send-outline" />}
+                <SummaryCard label="Belum Dibalas" count={baseSuratList.filter((s) => ["Sent", "Read"].includes(s.status)).length} icon="mdi:email-alert-outline" />
+                <SummaryCard label="Dibalas" count={baseSuratList.filter((s) => s.status === "Replied").length} icon="mdi:email-check-outline" />
+                <SummaryCard label="Open" count={baseSuratList.filter((s) => !["Selesai", "Ditolak"].includes(s.status)).length} icon="mdi:folder-open-outline" />
+                <SummaryCard label="Closed" count={baseSuratList.filter((s) => ["Selesai", "Ditolak"].includes(s.status)).length} icon="mdi:folder-lock-outline" />
+              </div>
+            </Card.Body>
+          </Card>
+        )}
 
         {/* TOOLBAR */}
         <div className="flex flex-col lg:flex-row gap-4 mb-6">
@@ -246,10 +314,10 @@ export default function PersuratanModule({ isPreview = false }) {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-2">
-            <PersuratanFilter filter={filter} handler={setFilter} className="w-full sm:w-auto justify-center" canSeeOutbox={hasOutboxPrivilege} />
+            <PersuratanFilter filter={filter} handler={setFilter} defaultFilter={{ tipe: user?.role?.toLowerCase() === "mahasiswa" ? "" : "Masuk" }} className="w-full sm:w-auto justify-center" canSeeOutbox={hasOutboxPrivilege} />
 
             {hasOutboxPrivilege && !isAdmin && (
-              <Button onClick={() => setView("create")} variant="primary" className="w-full sm:w-auto justify-center" icon={<Icon icon="mdi:file-plus-outline" width={20} />} pill>
+              <Button onClick={handleGoCreate} variant="primary" className="w-full sm:w-auto justify-center" icon={<Icon icon="mdi:file-plus-outline" width={20} />} pill>
                 Ajukan Surat
               </Button>
             )}
@@ -306,7 +374,10 @@ export default function PersuratanModule({ isPreview = false }) {
                 </tr>
               ) : (
                 paginatedSurat.map((s, i) => {
-                  const isSuratMasuk = s.penerima_id === myUserId;
+                  let isSuratMasuk = s.penerima_id === myUserId;
+                  if (user?.role?.toLowerCase() === "parent") {
+                    isSuratMasuk = s.Penerima?.role?.toLowerCase() === "mahasiswa";
+                  }
                   const d = new Date(s.created_at);
                   const rowNumber = (page - 1) * ITEMS_PER_PAGE + i + 1;
                   const isDisposisi = !!s.form_data?.catatan_disposisi;
@@ -320,7 +391,17 @@ export default function PersuratanModule({ isPreview = false }) {
                       </td>
                       <td className="text-sm border-2 border-white bg-gray-50">
                         <div className="mb-1">
-                          <span className={classNames("text-[9px] font-bold uppercase px-2 py-0.5 rounded", isSuratMasuk ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700")}>{isSuratMasuk ? "Masuk" : "Keluar"}</span>
+                          {(() => {
+                            let badgeText = isSuratMasuk ? "Masuk" : "Keluar";
+                            if (user?.role?.toLowerCase() === "parent") {
+                              badgeText = isSuratMasuk ? "Dari Kampus" : "Ajuan Anak";
+                            }
+                            return (
+                              <span className={classNames("text-[9px] font-bold uppercase px-2 py-0.5 rounded", isSuratMasuk ? "bg-green-100 text-green-700" : "bg-blue-100 text-blue-700")}>
+                                {badgeText}
+                              </span>
+                            );
+                          })()}
                         </div>
                         <p className="font-bold text-gray-800 leading-tight">{s.form_data?.nama_lengkap || s.Pengirim?.personal_data?.nama_lengkap || "N/A"}</p>
                         <p className="text-[10px] text-gray-400">{s.form_data?.npm || s.Pengirim?.npm || s.Pengirim?.nidn || "-"}</p>
@@ -333,10 +414,25 @@ export default function PersuratanModule({ isPreview = false }) {
                             </span>
                           </div>
                         )}
-                        <p className="font-bold text-gray-700 capitalize">{s.jenis_surat}</p>
-                        <p className="text-xs text-primary-600 font-semibold truncate max-w-[250px]" title={s.form_data?.perihal || "-"}>
-                          {s.form_data?.perihal || "-"}
-                        </p>
+                        {s.jenis_surat?.toLowerCase() === "tindak lanjut dokumen" ? (
+                          <>
+                            <div className="mb-1">
+                              <span className="inline-flex items-center gap-1 text-[9px] font-bold uppercase px-2 py-0.5 rounded bg-amber-100 text-amber-700">
+                                <Icon icon="mdi:file-document-edit-outline" width={12} /> Tindak Lanjut
+                              </span>
+                            </div>
+                            <p className="font-bold text-gray-700 capitalize">
+                              {s.form_data?.perihal?.replace(/Tindak Lanjut:\s*/i, "") || "-"}
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="font-bold text-gray-700 capitalize">{s.jenis_surat}</p>
+                            <p className="text-xs text-primary-600 font-semibold truncate max-w-[250px]" title={s.form_data?.perihal || "-"}>
+                              {s.form_data?.perihal || "-"}
+                            </p>
+                          </>
+                        )}
                       </td>
                       <td className="text-sm border-2 border-white bg-gray-50 text-center">
                         <span
@@ -344,7 +440,8 @@ export default function PersuratanModule({ isPreview = false }) {
                             "bg-blue-100 text-blue-700": s.status === "Sent",
                             "bg-yellow-100 text-yellow-700": s.status === "Read",
                             "bg-purple-100 text-purple-700": s.status === "Replied",
-                            "bg-gray-200 text-gray-700": s.status === "Selesai",
+                            "bg-green-100 text-green-700": s.status === "Selesai",
+                            "bg-red-100 text-red-700": s.status === "Ditolak",
                           })}
                         >
                           {s.status}
@@ -365,7 +462,7 @@ export default function PersuratanModule({ isPreview = false }) {
                           </button>
 
                           {/* Tombol QR Code — mengikuti pola ShowQr di esign */}
-                          <ShowQrSurat data={{ id: s.id }} />
+                          {s.status === "Selesai" && <ShowQrSurat data={{ id: s.id }} />}
                         </div>
                       </td>
                     </tr>

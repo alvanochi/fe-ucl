@@ -11,6 +11,7 @@ import { toastAlert, warningAlert, loadingAlert, MySwal } from "../../lib/sweeta
 import DisposisiModal from "../../components/Persuratan/DisposisiModal";
 import ChatRoom from "../../components/Persuratan/ChatRoom";
 import TrackingSidebar from "../../components/Persuratan/TrackingSidebar";
+import SignatureModal from "../../components/Persuratan/SignatureModal";
 
 const InfoBlock = ({ label, value, highlight }) => (
   <div className="flex flex-col gap-1.5 font-bold">
@@ -40,7 +41,7 @@ const ReadMoreText = ({ text, maxLength = 150 }) => {
   );
 };
 
-export default function PersuratanDetail({ onBack, surat }) {
+export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
   const { user } = useUser();
   const [localSurat, setLocalSurat] = useState(surat);
   const [trackingList, setTrackingList] = useState([]);
@@ -49,6 +50,9 @@ export default function PersuratanDetail({ onBack, surat }) {
   const [activePreview, setActivePreview] = useState(null);
   const [showDisposisi, setShowDisposisi] = useState(false);
   const [isSending, setIsSending] = useState(false);
+
+  const [showSignatureModal, setShowSignatureModal] = useState(false);
+  const [signatureConfig, setSignatureConfig] = useState(null);
 
   const fetchTracking = useCallback(async (suratId) => {
     if (!suratId) return;
@@ -115,7 +119,7 @@ export default function PersuratanDetail({ onBack, surat }) {
   }, []);
 
   const getMyIdentity = () => {
-    const name = user?.personal_data?.nama_lengkap || user?.username || "Pengguna";
+    const name = user?.personal_data?.nama_lengkap || user?.nama_lengkap || user?.username || (user?.email ? user.email.split('@')[0] : "Pengguna");
 
     const isValid = (val) => val && val.trim().toLowerCase() !== "null";
 
@@ -168,59 +172,172 @@ export default function PersuratanDetail({ onBack, surat }) {
 
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat/disposisi/${localSurat.id}`, fd, { headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } });
       if (res.data.isSuccess) {
-        onSuccess();
+        if (onSuccess) onSuccess();
         setShowDisposisi(false);
         toastAlert("success", "Surat berhasil didisposisikan!");
         await refreshDetailData();
       }
     } catch (err) {
-      toastAlert("error", err?.response?.data?.message || "Gagal melakukan disposisi!");
+      toastAlert("error", err?.response?.data?.message || err?.response?.data?.responseMessage || "Gagal melakukan disposisi!");
     }
   };
 
-  const handleComplete = () => {
-    warningAlert(
-      async () => {
+  const handleAutoForwardKaprodi = () => {
+    MySwal.fire({
+      icon: "info",
+      title: "Otomatisasi Disposisi",
+      text: "Sistem akan melacak akun Kaprodi secara otomatis dan mengirimkan dokumen ini ke antrean beliau. Lanjutkan?",
+      showCancelButton: true,
+      confirmButtonText: "Ya, Teruskan Sekarang",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#3b82f6",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
         try {
-          loadingAlert("Harap Tunggu", "Sedang menerbitkan dokumen...");
+          loadingAlert("Memproses...", "Mencari akun Kaprodi di database...");
           const token = localStorage.getItem("token");
-          const catatanLog = `Pengajuan telah diselesaikan dan ditutup secara permanen. Dilakukan oleh: ${getMyIdentity()}`;
-          const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/surat/status/${localSurat.id}`, { status: "Selesai", catatan: catatanLog }, { headers: { Authorization: `Bearer ${token}` } });
+          const fd = new FormData();
+          fd.append("target_penerima_id", "AUTO_KAPRODI");
+          fd.append("nama_aktor", getMyIdentity());
+
+          const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/surat/disposisi/${localSurat.id}`, fd, { 
+            headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" } 
+          });
+          
           if (res.data.isSuccess) {
-            toastAlert("success", "Dokumen Berhasil Diterbitkan!");
+            toastAlert("success", "Surat berhasil diteruskan ke Kaprodi secara otomatis!");
             await refreshDetailData();
           }
         } catch (err) {
-          const resMsg = err.response?.data?.responseMessage || err.response?.data?.message || err.message;
-          
-          // Deteksi khusus jika TTD belum dibuat (terutama untuk Kaprodi)
-          const isTtdError = resMsg?.toLowerCase().includes("tanda tangan digital") || resMsg?.toLowerCase().includes("ttd");
-
-          if (isTtdError) {
-            MySwal.fire({
-              icon: "warning",
-              title: "Tanda Tangan Belum Dibuat!",
-              text: resMsg,
-              confirmButtonText: "Mengerti",
-              confirmButtonColor: "#f59e0b",
-              backdrop: `rgba(0,0,0,0.5)`,
-              customClass: {
-                title: "text-lg font-black text-amber-600",
-                popup: "rounded-2xl shadow-xl border-2 border-amber-100",
-              }
-            });
-            return;
-          }
-
-          const errMsg = err.response?.status === 502 
-            ? "Gagal menerbitkan dokumen: Server Timeout (502 Proxy Error). Backend gagal memproses PDF." 
-            : resMsg || "Gagal memperbarui status";
-          toastAlert("error", errMsg);
+          toastAlert("error", err?.response?.data?.message || err?.response?.data?.responseMessage || "Gagal otomatisasi disposisi!");
         }
+      }
+    });
+  };
+
+  const submitStatus = async (status, catatan, formDataUpdates = null) => {
+    try {
+      const isTindakLanjutCtx = localSurat?.jenis_surat?.toLowerCase() === "tindak lanjut dokumen";
+      const loadingMsg = isTindakLanjutCtx ? "Menyelesaikan pengajuan..." : "Sedang menerbitkan dokumen...";
+      loadingAlert(status === "Selesai" ? "Harap Tunggu" : "Menyimpan...", status === "Selesai" ? loadingMsg : "Menyimpan data...");
+      const token = localStorage.getItem("token");
+      const payload = { status, catatan };
+      if (formDataUpdates) {
+        payload.form_data_updates = JSON.stringify(formDataUpdates);
+      }
+      
+      const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/surat/status/${localSurat.id}`, payload, { headers: { Authorization: `Bearer ${token}` } });
+      if (res.data.isSuccess) {
+        const successMsg = isTindakLanjutCtx ? "Pengajuan berhasil diselesaikan!" : status === "Selesai" ? "Dokumen Berhasil Diterbitkan!" : status === "Ditolak" ? "Pengajuan Berhasil Ditolak!" : "Tanda tangan berhasil disimpan!";
+        toastAlert("success", successMsg);
+        setShowSignatureModal(false);
+        await refreshDetailData();
+      }
+    } catch (err) {
+      const resMsg = err.response?.data?.responseMessage || err.response?.data?.message || err.message;
+      
+      const isTtdError = resMsg?.toLowerCase().includes("tanda tangan digital") || resMsg?.toLowerCase().includes("ttd");
+
+      if (isTtdError) {
+        MySwal.fire({
+          icon: "warning",
+          title: "Tanda Tangan Belum Dibuat!",
+          text: resMsg,
+          confirmButtonText: "Mengerti",
+          confirmButtonColor: "#f59e0b",
+          backdrop: `rgba(0,0,0,0.5)`,
+          customClass: {
+            title: "text-lg font-black text-amber-600",
+            popup: "rounded-2xl shadow-xl border-2 border-amber-100",
+          }
+        });
+        return;
+      }
+
+      const errMsg = err.response?.status === 502 
+        ? "Gagal memproses request: Server Timeout (502 Proxy Error). Backend gagal memproses PDF." 
+        : resMsg || "Gagal memperbarui status";
+      toastAlert("error", errMsg);
+    }
+  };
+
+  const handleCompleteClick = () => {
+    const jenisSurat = localSurat.jenis_surat.toLowerCase();
+
+    if (jenisSurat === "surat pengunduran diri" && !localSurat.form_data?.ttd_ortu) {
+      MySwal.fire({
+        icon: "warning",
+        title: "Tanda Tangan Belum Lengkap!",
+        text: "Pengajuan belum bisa diselesaikan karena Orang Tua / Wali belum memberikan Tanda Tangan Digital.",
+        confirmButtonText: "Mengerti",
+        confirmButtonColor: "#f59e0b",
+        backdrop: `rgba(0,0,0,0.5)`,
+        customClass: {
+          title: "text-lg font-black text-amber-600",
+          popup: "rounded-2xl shadow-xl border-2 border-amber-100",
+        }
+      });
+      return;
+    }
+
+    warningAlert(
+      async () => {
+        const catatanLog = `Verifikasi Administrasi Selesai. Dilakukan oleh: ${getMyIdentity()}`;
+        await submitStatus("Selesai", catatanLog);
       },
-      "Status akan diubah menjadi Selesai. Ruang percakapan akan ditutup dan sistem akan otomatis men-generate dokumen resmi (.PDF).",
-      "Selesaikan Pengajuan?",
+      "Status akan diubah menjadi Selesai. Lanjutkan dengan mendisposisikan surat ke Kaprodi.",
+      "Selesaikan Verifikasi?",
     );
+  };
+
+  const handleRejectClick = () => {
+    MySwal.fire({
+      title: "Tolak Pengajuan?",
+      text: "Silakan masukkan alasan penolakan / instruksi revisi:",
+      input: "textarea",
+      inputPlaceholder: "Ketik alasan di sini...",
+      showCancelButton: true,
+      confirmButtonText: "Tolak Pengajuan",
+      cancelButtonText: "Batal",
+      confirmButtonColor: "#ef4444",
+      preConfirm: (catatan) => {
+        if (!catatan) {
+          MySwal.showValidationMessage("Alasan penolakan wajib diisi!");
+        }
+        return catatan;
+      }
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const catatanLog = `Ditolak oleh ${getMyIdentity()}. Alasan: ${result.value}`;
+        await submitStatus("Ditolak", catatanLog);
+      }
+    });
+  };
+
+  const handleKaprodiSignClick = () => {
+    setSignatureConfig({
+      title: "Tanda Tangan Kaprodi",
+      subtitle: "Silakan gambar tanda tangan Anda untuk menyetujui Cuti Akademik",
+      submitText: "Setujui & Terbitkan PDF",
+      onSubmit: async (ttd) => {
+         const catatanLog = `Pengajuan telah disetujui penuh. Dilakukan oleh: Kaprodi (${getMyIdentity()})`;
+         const namaKaprodi = user?.personal_data?.nama_lengkap || user?.username || "Ketua Program Studi";
+         await submitStatus("Selesai", catatanLog, { ttd_kaprodi: ttd, nama_kaprodi: namaKaprodi });
+      }
+    });
+    setShowSignatureModal(true);
+  };
+
+  const handleSignOrtuClick = () => {
+    setSignatureConfig({
+      title: "Tanda Tangan Orang Tua / Wali",
+      subtitle: "Silakan gambar tanda tangan Anda sebagai persetujuan Pengunduran Diri",
+      submitText: "Simpan Tanda Tangan",
+      onSubmit: async (ttd) => {
+         await submitStatus("Sent", `Telah ditandatangani oleh Orang Tua / Wali: ${getMyIdentity()}`, { ttd_ortu: ttd });
+      }
+    });
+    setShowSignatureModal(true);
   };
 
   if (!localSurat) return null;
@@ -229,11 +346,27 @@ export default function PersuratanDetail({ onBack, surat }) {
   const isSender = user?.user_id === localSurat.user_id;
   const isReceiver = user?.user_id === localSurat.penerima_id;
   const anonymityRole = user?.role?.toLowerCase();
+  const isCutiAkademik = localSurat.jenis_surat?.toLowerCase() === "surat pengajuan cuti";
+  const isKaprodi = anonymityRole?.includes("kaprodi");
+  const needsKaprodiSignature = isCutiAkademik && !isTerminalState && !localSurat.form_data?.ttd_kaprodi && isReceiver && !["mahasiswa", "admin", "pegawai", "staf", "tu"].includes(anonymityRole);
 
-  const canComplete = !isTerminalState && (isSender || isReceiver) && anonymityRole !== "mahasiswa";
-  const canDisposisi = !isTerminalState && isReceiver && anonymityRole !== "mahasiswa";
+  const adminRoles = ["admin", "staf", "staff", "tu", "pegawai"];
+  const isAdmin = adminRoles.includes(anonymityRole);
 
-  const hasGeneratedPDF = localSurat.status === "Selesai" && localSurat.form_data?.pdf_url;
+  const canComplete = !isTerminalState && (isSender || isReceiver || isAdmin) && anonymityRole !== "mahasiswa" && !isCutiAkademik;
+  const canReject = !isTerminalState && (isAdmin ? isReceiver : needsKaprodiSignature);
+
+  const isTindakLanjut = localSurat.jenis_surat?.toLowerCase() === "tindak lanjut dokumen";
+
+  const canDisposisi = isTindakLanjut ? (isReceiver || isAdmin) : isAdmin;
+
+  const isOrtu = anonymityRole?.includes("ortu") || anonymityRole?.includes("orang") || anonymityRole === "parent" || (isReceiver && !["mahasiswa", "admin", "pegawai", "staf", "staff", "tu", "kaprodi", "dosen"].includes(anonymityRole));
+  const isPengunduranDiri = localSurat.jenis_surat?.toLowerCase() === "surat pengunduran diri";
+  const isOrtuSignatureMissing = isPengunduranDiri && !localSurat.form_data?.ttd_ortu;
+  const needsOrtuSignature = isOrtuSignatureMissing && !isTerminalState && isOrtu;
+
+  const hasGeneratedPDF = (localSurat.status === "Selesai" && localSurat.form_data?.pdf_url) || (isTindakLanjut && localSurat.form_data?.pdf_url);
+  
   const tglSuratLengkap = new Date(localSurat.created_at).toLocaleString("id-ID", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" }) + " WIB";
 
   return (
@@ -243,6 +376,17 @@ export default function PersuratanDetail({ onBack, surat }) {
       </Head>
 
       <DisposisiModal show={showDisposisi} onClose={() => setShowDisposisi(false)} onSubmit={handleDisposisiSubmit} userList={userList} />
+      
+      {signatureConfig && (
+        <SignatureModal 
+          show={showSignatureModal} 
+          onClose={() => setShowSignatureModal(false)} 
+          onSubmit={signatureConfig.onSubmit}
+          title={signatureConfig.title}
+          subtitle={signatureConfig.subtitle}
+          submitText={signatureConfig.submitText}
+        />
+      )}
 
       <div className="w-full bg-[#F1F5F9] min-h-[calc(100vh-2rem)] py-6 px-4 sm:px-6 rounded-2xl">
         <div className="max-w-7xl mx-auto">
@@ -263,31 +407,96 @@ export default function PersuratanDetail({ onBack, surat }) {
 
             <div className="flex flex-wrap items-center gap-3">
               {canDisposisi && (
+                <>
+                  {isAdmin && isCutiAkademik && !isTerminalState && localSurat.penerima_id === user?.user_id && (
+                    <button
+                      onClick={handleAutoForwardKaprodi}
+                      className="w-full sm:w-auto bg-blue-50 hover:bg-blue-100 text-blue-700 border-2 border-blue-200 shadow-sm px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 outline-none flex items-center gap-2 justify-center"
+                    >
+                      <Icon icon="mdi:rocket-launch" width={16} /> Kirim ke Kaprodi
+                    </button>
+                  )}
+                  {((localSurat.status === "Selesai" && !isTindakLanjut) || (isTindakLanjut && localSurat.status !== "Selesai")) && (
+                    <button
+                      onClick={() => setShowDisposisi(true)}
+                      className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
+                    >
+                      <Icon icon="mdi:share-all" width={16} /> Disposisi Lanjutan
+                    </button>
+                  )}
+                </>
+              )}
+              {needsOrtuSignature && (
                 <button
-                  onClick={() => setShowDisposisi(true)}
-                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
+                  onClick={handleSignOrtuClick}
+                  className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
                 >
-                  <Icon icon="mdi:share-all" width={16} /> Disposisi Surat
+                  <Icon icon="mdi:draw-pen" width={16} /> Tanda Tangan
+                </button>
+              )}
+              {needsKaprodiSignature && (
+                <button
+                  onClick={handleKaprodiSignClick}
+                  className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
+                >
+                  <Icon icon="mdi:draw-pen" width={16} /> Setujui (TTD Kaprodi)
                 </button>
               )}
               {canComplete && (
                 <button
-                  onClick={handleComplete}
-                  className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
+                  onClick={handleCompleteClick}
+                  disabled={isOrtuSignatureMissing}
+                  title={isOrtuSignatureMissing ? "Menunggu Tanda Tangan Orang Tua" : "Selesaikan Pengajuan"}
+                  className={classNames(
+                    "w-full sm:w-auto shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center",
+                    isOrtuSignatureMissing 
+                      ? "bg-gray-300 text-gray-500 cursor-not-allowed" 
+                      : "bg-green-600 hover:bg-green-700 text-white"
+                  )}
                 >
-                  <Icon icon="mdi:check-all" width={16} /> Selesaikan Pengajuan
+                  <Icon icon={isOrtuSignatureMissing ? "mdi:clock-outline" : "mdi:check-all"} width={16} /> 
+                  Selesaikan Pengajuan
+                </button>
+              )}
+              {canReject && (
+                <button
+                  onClick={handleRejectClick}
+                  className="w-full sm:w-auto bg-red-50 hover:bg-red-100 text-red-600 border-2 border-red-200 shadow-sm px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 outline-none flex items-center gap-2 justify-center"
+                >
+                  <Icon icon="mdi:close-circle" width={16} /> Tolak / Revisi
                 </button>
               )}
               <div
                 className={classNames(
                   "px-5 py-2.5 rounded-xl border-2 text-[10px] sm:text-xs font-black uppercase tracking-widest shadow-sm font-mono w-full sm:w-auto text-center",
-                  localSurat.status === "Selesai" ? "bg-gray-200 text-gray-700 border-gray-300" : localSurat.status === "Ditolak" ? "bg-red-50 text-red-700 border-red-200" : "bg-primary-50 text-primary-700 border-primary-200",
+                  localSurat.status === "Selesai" ? "bg-green-100 text-green-700 border-green-200" : localSurat.status === "Ditolak" ? "bg-red-50 text-red-700 border-red-200" : "bg-primary-50 text-primary-700 border-primary-200",
                 )}
               >
                 STATUS: {localSurat.status}
               </div>
             </div>
           </div>
+
+          {localSurat.status === "Ditolak" && anonymityRole === "mahasiswa" && (
+            <div className="mb-8 p-4 sm:p-5 bg-red-50 border-2 border-red-200 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in slide-in-from-top-4">
+              <div className="flex gap-3 items-start">
+                <div className="w-10 h-10 shrink-0 bg-red-100 text-red-600 rounded-full flex items-center justify-center border border-red-200">
+                  <Icon icon="mdi:alert-circle" width={24} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-red-800 text-sm sm:text-base">Pengajuan Ditolak / Butuh Revisi</h3>
+                  <p className="text-xs sm:text-sm text-red-700 mt-1">Silakan baca instruksi dari staf kami di panel <strong className="font-black">Timeline Pengajuan</strong>. Buat pengajuan baru setelah memperbaiki atau melengkapi syarat yang diminta.</p>
+                </div>
+              </div>
+              <button 
+                onClick={onCreateNew}
+                type="button"
+                className="shrink-0 w-full sm:w-auto px-5 py-3 sm:py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold uppercase tracking-wider shadow-md border-2 border-red-700 flex items-center justify-center gap-2 transition-all active:scale-95 outline-none"
+              >
+                <Icon icon="mdi:file-document-plus" width={16} /> Buat Pengajuan Baru
+              </button>
+            </div>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
             <div className="lg:col-span-8 space-y-6 lg:space-y-8">
@@ -335,6 +544,16 @@ export default function PersuratanDetail({ onBack, surat }) {
                           <InfoBlock label="Semester" value={localSurat.form_data?.semester} />
                           <InfoBlock label="Tanggal Pengarahan" value={localSurat.form_data?.tanggal_pengarahan} />
                           <InfoBlock label="Nama Orang Tua / Wali" value={localSurat.form_data?.nama_ortu_wali} />
+                          <InfoBlock 
+                            label="Status TTD Orang Tua" 
+                            value={localSurat.form_data?.ttd_ortu ? (
+                              <span className="flex items-center gap-1.5 text-green-600"><Icon icon="mdi:check-circle" width={16} /> Lengkap</span>
+                            ) : localSurat.status === "Ditolak" ? (
+                              <span className="flex items-center gap-1.5 text-red-500"><Icon icon="mdi:close-circle" width={16} /> Dibatalkan</span>
+                            ) : (
+                              <span className="flex items-center gap-1.5 text-amber-500"><Icon icon="mdi:clock-outline" width={16} /> Menunggu</span>
+                            )} 
+                          />
                         </>
                       )}
 
@@ -344,6 +563,16 @@ export default function PersuratanDetail({ onBack, surat }) {
                           <InfoBlock label="Tahun Akademik Cuti" value={localSurat.form_data?.tahun_akademik_cuti} />
                           <InfoBlock label="Rencana Aktif Semester" value={localSurat.form_data?.semester_aktif} />
                           <InfoBlock label="Tahun Akademik Aktif" value={localSurat.form_data?.tahun_akademik_aktif} />
+                          <InfoBlock 
+                            label="Status TTD Kaprodi" 
+                            value={localSurat.form_data?.ttd_kaprodi ? (
+                              <span className="flex items-center gap-1.5 text-green-600"><Icon icon="mdi:check-circle" width={16} /> Lengkap</span>
+                            ) : localSurat.status === "Ditolak" ? (
+                              <span className="flex items-center gap-1.5 text-red-500"><Icon icon="mdi:close-circle" width={16} /> Dibatalkan</span>
+                            ) : (
+                              <span className="flex items-center gap-1.5 text-amber-500"><Icon icon="mdi:clock-outline" width={16} /> Menunggu</span>
+                            )} 
+                          />
                         </>
                       )}
                     </div>
@@ -359,11 +588,12 @@ export default function PersuratanDetail({ onBack, surat }) {
                   </div>
                 </Card>
               )}
-
-              <ChatRoom replies={localSurat.Replies} user={user} isTerminalState={isTerminalState} status={localSurat.status} isSending={isSending} onSendReply={handleSendReply} onPreview={handlePreview} />
+              {!isOrtu && (
+                <ChatRoom replies={localSurat.Replies} user={user} isTerminalState={isTerminalState} status={localSurat.status} isSending={isSending} onSendReply={handleSendReply} onPreview={handlePreview} />
+              )}
             </div>
 
-            <div className="lg:col-span-4">
+            <div className="lg:col-span-4 lg:sticky lg:top-6 lg:self-start">
               <TrackingSidebar lampirans={localSurat.DokumenLampirans} trackingList={trackingList} historyDisposisi={localSurat.form_data?.history_disposisi} onPreview={handlePreview} />
             </div>
           </div>

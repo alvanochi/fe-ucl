@@ -13,6 +13,7 @@ async function loginRoute(req, res) {
     token: userData.token,
     nip: userData.nip,
     kode_mhs: userData.kode_mhs,
+    department_code: userData.department_code,
     is_logged_in: true,
   };
   await req.session.save();

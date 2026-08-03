@@ -7,18 +7,18 @@ import Layout from "../../components/Layout";
 import axios from "axios";
 import useUser from "../../hooks/useUser";
 import { toastAlert } from "../../lib/sweetalert";
+import SignaturePad from "../../components/Persuratan/SignaturePad";
 
 const FIELD_CONFIG = {
   "surat pengajuan cuti": [
-    { name: "semester_cuti", label: "Cuti Pada Semester (Ganjil/Genap)", placeholder: "Contoh: Ganjil" },
-    { name: "tahun_akademik_cuti", label: "Tahun Akademik Cuti", placeholder: "Contoh: 2025/2026" },
-    { name: "semester_aktif", label: "Aktif Kembali Pada Semester (Ganjil/Genap)", placeholder: "Contoh: Genap" },
-    { name: "tahun_akademik_aktif", label: "Tahun Akademik Aktif", placeholder: "Contoh: 2026/2027" },
+    { name: "semester_cuti", label: "Cuti Pada Semester", type: "select", options: [{label: "Ganjil", value: "Ganjil"}, {label: "Genap", value: "Genap"}] },
+    { name: "tahun_akademik_cuti", label: "Tahun Akademik Cuti", type: "text", placeholder: "Contoh: 2025/2026" },
+    { name: "semester_aktif", label: "Aktif Kembali Pada Semester", type: "select", options: [{label: "Ganjil", value: "Ganjil"}, {label: "Genap", value: "Genap"}] },
+    { name: "tahun_akademik_aktif", label: "Tahun Akademik Aktif", type: "text", placeholder: "Contoh: 2026/2027" },
   ],
   "surat pengunduran diri": [
-    { name: "semester", label: "Semester Saat Ini", placeholder: "Contoh: Semester 1 (Ganjil)" },
-    { name: "tanggal_pengarahan", label: "Tanggal Pengarahan KIP Kuliah", placeholder: "Contoh: Senin, 12 Januari 2026" },
-    { name: "nama_ortu_wali", label: "Nama Orang Tua / Wali", placeholder: "Masukkan nama lengkap Orang Tua atau Wali" },
+    { name: "semester", label: "Semester Saat Ini", type: "text", placeholder: "Contoh: Semester 1 (Ganjil)" },
+    { name: "tanggal_pengarahan", label: "Tanggal Pengarahan KIP Kuliah", type: "text", placeholder: "Contoh: Senin, 12 Januari 2026" },
   ],
 };
 
@@ -28,7 +28,7 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const INITIAL_FORM = {
   jenis_surat: "", perihal: "", catatan_surat: "",
   semester_cuti: "", tahun_akademik_cuti: "", semester_aktif: "", tahun_akademik_aktif: "",
-  semester: "", tanggal_pengarahan: "", nama_ortu_wali: "",
+  semester: "", tanggal_pengarahan: "",
 };
 
 export default function PersuratanCreate({ onBack }) {
@@ -40,6 +40,7 @@ export default function PersuratanCreate({ onBack }) {
   const [isSubmit, setIsSubmit] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
   const [isTtdError, setIsTtdError] = useState(false);
+  const [ttdMhs, setTtdMhs] = useState(null);
   const errorRef = useRef(null);
 
   useEffect(() => {
@@ -50,13 +51,24 @@ export default function PersuratanCreate({ onBack }) {
 
   const inputHandler = (e) => {
     const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
+    setForm((prev) => {
+      const newForm = { ...prev, [name]: value };
+      if (name === "jenis_surat" && value) {
+        const formattedJenis = value.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+        newForm.perihal = `Permohonan ${formattedJenis}`;
+      }
+      return newForm;
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.jenis_surat) { toastAlert("warning", "Pilih jenis surat terlebih dahulu."); return; }
     if (!form.perihal) { toastAlert("warning", "Perihal surat wajib diisi."); return; }
+    if (form.jenis_surat === "surat pengunduran diri" && !ttdMhs) {
+      toastAlert("warning", "Silakan gambar tanda tangan Anda pada form yang disediakan.");
+      return;
+    }
 
     setIsSubmit(true);
     setErrorMessage(null);
@@ -79,6 +91,11 @@ export default function PersuratanCreate({ onBack }) {
         alamat: user?.personal_data?.alamat || user?.personalData?.alamat,
         no_hp: user?.personal_data?.no_hp || user?.personalData?.no_hp,
       };
+      
+      if (form.jenis_surat === "surat pengunduran diri" && ttdMhs) {
+        jsonPayload.ttd_mhs = ttdMhs;
+      }
+      
       fd.append("form_data", JSON.stringify(jsonPayload));
       selectedFiles.forEach((file) => fd.append("lampiran", file));
 
@@ -88,7 +105,9 @@ export default function PersuratanCreate({ onBack }) {
       });
 
       if (res.data.isSuccess || res.status === 200 || res.status === 201) {
-        toastAlert("success", "Pengajuan surat berhasil dikirim ke Admin TU!");
+        const userDept = user?.department_code || "Informatika";
+        const formattedDept = userDept.charAt(0).toUpperCase() + userDept.slice(1);
+        toastAlert("success", `Pengajuan surat berhasil dikirim ke Staf Tata Usaha Prodi ${formattedDept}!`);
         onBack();
       }
     } catch (err) {
@@ -96,10 +115,14 @@ export default function PersuratanCreate({ onBack }) {
         err?.response?.data?.responseMessage ||
         err?.response?.data?.message ||
         "Terjadi kesalahan. Silakan coba lagi.";
-      // Deteksi error TTD — tampilkan UI khusus
+        
       const isTtd = msg?.toLowerCase().includes("tanda tangan digital");
       setIsTtdError(isTtd);
       setErrorMessage(isTtd ? null : msg);
+      
+      if (!isTtd) {
+        toastAlert("error", msg);
+      }
     } finally {
       setIsSubmit(false);
     }
@@ -222,13 +245,23 @@ export default function PersuratanCreate({ onBack }) {
                         <Form.Label className="font-bold text-gray-700">Penerima Tujuan</Form.Label>
                         <div className="w-full h-11 px-4 bg-gray-100 border border-gray-200 rounded-lg text-gray-500 font-medium flex items-center gap-2 cursor-not-allowed">
                           <Icon icon="mdi:lock-outline" width={18} />
-                          Admin TU Prodi Teknik Informatika (Otomatis)
+                          {`Staf Tata Usaha Prodi ${
+                            user?.department_code 
+                              ? user.department_code.charAt(0).toUpperCase() + user.department_code.slice(1) 
+                              : "Informatika"
+                          } (Otomatis)`}
                         </div>
                       </Form.Group>
 
                       <Form.Group className="space-y-2">
                         <Form.Label className="font-bold text-gray-700">Perihal / Topik Surat</Form.Label>
-                        <Form.Input name="perihal" value={form.perihal || ""} onChange={inputHandler} placeholder="Contoh: Permohonan Surat Pengunduran Diri" required />
+                        <Form.Input 
+                          name="perihal" 
+                          value={form.perihal || ""} 
+                          onChange={inputHandler} 
+                          placeholder={form.jenis_surat === "surat pengajuan cuti" ? "Contoh: Permohonan Surat Pengajuan Cuti" : "Contoh: Permohonan Surat Pengunduran Diri"} 
+                          required 
+                        />
                       </Form.Group>
                     </div>
 
@@ -237,9 +270,39 @@ export default function PersuratanCreate({ onBack }) {
                         {FIELD_CONFIG[form.jenis_surat].map((field, idx) => (
                           <Form.Group key={idx} className="space-y-2">
                             <Form.Label className="font-bold text-gray-700">{field.label}</Form.Label>
-                            <Form.Input name={field.name} value={form[field.name] || ""} onChange={inputHandler} placeholder={field.placeholder} required />
+                            {field.type === "select" ? (
+                              <Form.Select
+                                name={field.name}
+                                value={form[field.name] || ""}
+                                onChange={inputHandler}
+                                options={field.options}
+                                emptyStateLabel={`-- Pilih ${field.label.split(" ").pop()} --`}
+                                required
+                              />
+                            ) : (
+                              <Form.Input name={field.name} value={form[field.name] || ""} onChange={inputHandler} placeholder={field.placeholder} required />
+                            )}
                           </Form.Group>
                         ))}
+                      </div>
+                    )}
+
+                    {form.jenis_surat === "surat pengunduran diri" && (
+                      <div className="space-y-4 animate-in fade-in">
+                        <div className="flex items-start gap-3 bg-amber-50/80 border border-amber-200 text-amber-800 rounded-xl px-5 py-4">
+                          <Icon icon="mdi:information-outline" width={24} className="shrink-0 mt-0.5 text-amber-600" />
+                          <div className="text-sm">
+                            <p className="font-bold mb-1">Perhatian Penting!</p>
+                            <p className="leading-relaxed text-amber-700">Pengajuan ini mewajibkan <strong>Tanda Tangan Orang Tua</strong>. Setelah dikirim, harap beri tahu Orang Tua/Wali Anda untuk login ke portal dan memberikan persetujuan/TTD agar dokumen dapat diproses oleh TU.</p>
+                          </div>
+                        </div>
+                        <div className="p-5 bg-amber-50/50 border border-amber-100 rounded-xl">
+                          <SignaturePad
+                            label="Tanda Tangan Pemohon (Mahasiswa)"
+                            onEnd={(dataUrl) => setTtdMhs(dataUrl)}
+                            onClear={() => setTtdMhs(null)}
+                          />
+                        </div>
                       </div>
                     )}
 
