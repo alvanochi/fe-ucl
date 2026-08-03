@@ -68,16 +68,16 @@ export const Login = () => {
           }),
         );
 
-        await axios.post("/api/login", userData);
+        await axios.post("/staging/api/login", userData);
 
         const role = userData.role?.toLowerCase();
-        let targetPath = "/dashboard";
+        let targetPath = "/staging/dashboard";
 
-        if (role === "admin") targetPath = "/admin";
-        else if (role === "mahasiswa") targetPath = "/mahasiswa";
-        else if (role === "dosen") targetPath = "/dosen";
-        else if (role === "dosen_ext") targetPath = "/dosen_ext";
-        else if (role === "pegawai") targetPath = "/pegawai";
+        if (role === "admin") targetPath = "/staging/admin";
+        else if (role === "mahasiswa") targetPath = "/staging/mahasiswa";
+        else if (role === "dosen") targetPath = "/staging/dosen";
+        else if (role === "dosen_ext") targetPath = "/staging/dosen_ext";
+        else if (role === "pegawai") targetPath = "/staging/pegawai";
 
         window.location.href = targetPath;
       } catch (error) {
@@ -159,7 +159,7 @@ export const Login = () => {
   async function setLoginSession(data) {
     try {
       const response = await axios({
-        url: "/api/login",
+        url: "/staging/api/login",
         method: "POST",
         data: data,
       });
