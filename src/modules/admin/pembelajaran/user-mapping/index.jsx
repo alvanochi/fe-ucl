@@ -10,7 +10,7 @@ export default function UserMappingModule() {
     <div className="my-8">
       <p className="mb-4 text-sm text-gray-500">
         Tautkan akun dosen/mahasiswa TIAS ke identitas SIAK ketika pencocokan otomatis
-        (NIDN/NPM) tidak berhasil. Ini bukan sekadar "isian data" — otorisasi LMS (kelas
+        (NIDN/NPM) tidak berhasil. Ini bukan sekadar &quot;isian data&quot; — otorisasi LMS (kelas
         mana yang boleh dilihat/dikelola) bergantung pada tautan ini.
       </p>
       <div className="mb-6 flex gap-2 border-b border-gray-200">

@@ -45,7 +45,7 @@ export default function RoleScopesModule() {
   return (
     <div className="my-8">
       <p className="mb-4 text-sm text-gray-500">
-        Berikan akses "Admin LMS" terbatas per fakultas/prodi ke pengguna tertentu, tanpa
+        Berikan akses &quot;Admin LMS&quot; terbatas per fakultas/prodi ke pengguna tertentu, tanpa
         menjadikan mereka Admin global. Admin global (role Admin) selalu punya akses penuh.
       </p>
       <div className="flex mb-8 justify-end items-center">
