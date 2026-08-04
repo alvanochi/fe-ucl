@@ -72,6 +72,21 @@ export function useLmsSections(kelasKuliahId) {
 }
 
 /**
+ * Trigger sync SIAK v2 manual (admin) — `POST /lms/sync-siak`. Backend menarik langsung
+ * dari endpoint publik SIAKAD (kelas+matkul+jadwal+dosen+peserta nested, bukan cache lokal)
+ * dan meng-upsert `siak_v2_*` + relink `siak_user_mappings`. Dipakai saat ada matkul/kelas
+ * baru di SIAKAD yang belum kebawa ke LMS (tidak ada polling otomatis di backend).
+ *
+ * @returns {Promise<object>} body backend { isSuccess, statusCode, responseMessage, data }.
+ *  `data` = reconciliation report: { classes, program_studi, lecturers, jadwal, participants,
+ *  linking: { dosen: {matched,unmatched,conflict}, mahasiswa: {...} }, synced_at }.
+ */
+export async function syncSiak(pageSize) {
+  const res = await axios.post(`${LMS_BASE()}/sync-siak`, pageSize ? { pageSize } : {});
+  return res.data;
+}
+
+/**
  * Ambil file LMS (PDF/PPT) dari endpoint BEROTORISASI `GET /lms/files/:id` sebagai Blob.
  *
  * ⚠️ Endpoint ini butuh header JWT `token`, jadi TIDAK bisa dipakai lewat `<iframe src>`

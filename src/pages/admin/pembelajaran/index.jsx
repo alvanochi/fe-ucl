@@ -30,7 +30,7 @@ export default function Pembelajaran() {
       />
       <div className="my-8">
         {active.url === "#kelas-lms" && (
-          <ClassList basePath="/admin/pembelajaran" demo={demo} />
+          <ClassList basePath="/admin/pembelajaran" demo={demo} canSync />
         )}
         {active.url === "#matakuliah" && (
           <MatakuliahModule baseURL={prefix + menu.url} />

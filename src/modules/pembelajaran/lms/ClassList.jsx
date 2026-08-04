@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { Icon } from "@iconify-icon/react";
 import ClassCard from "./ClassCard";
-import { useLmsClasses } from "../../../repo/lms";
+import { useLmsClasses, syncSiak } from "../../../repo/lms";
 import { SAMPLE_CLASSES, SAMPLE_SEMESTERS } from "./sampleClasses";
+import { toastAlert } from "../../../lib/sweetalert";
 
 const PAGE_SIZE = 12;
 
@@ -34,12 +35,14 @@ function recentSemesters() {
  * props:
  *  - basePath: prefix halaman detail per-role (mis. "/dosen/pembelajaran")
  *  - demo: bila true, pakai data contoh lokal (?demo=1) tanpa memanggil backend
+ *  - canSync: tampilkan tombol "Sync SIAK" (admin only — backend `adminOnly` di route)
  */
-export default function ClassList({ basePath, demo = false }) {
+export default function ClassList({ basePath, demo = false, canSync = false }) {
   const [searchInput, setSearchInput] = useState("");
   const [search, setSearch] = useState("");
   const [semester, setSemester] = useState("");
   const [page, setPage] = useState(1);
+  const [syncing, setSyncing] = useState(false);
 
   // --- Mode LIVE: backend yang filter & paginasi ---
   const live = useLmsClasses({
@@ -92,6 +95,35 @@ export default function ClassList({ basePath, demo = false }) {
 
   const hasFilter = !!(search || semester);
 
+  const handleSync = async () => {
+    setSyncing(true);
+    try {
+      const res = await syncSiak();
+      const r = res?.data || {};
+      const dosenLink = r.linking?.dosen || {};
+      const mhsLink = r.linking?.mahasiswa || {};
+      const warn =
+        (dosenLink.unmatched?.length || 0) + (dosenLink.conflict?.length || 0) > 0
+          ? ` (${dosenLink.unmatched?.length || 0} dosen belum ke-link)`
+          : "";
+      toastAlert(
+        "success",
+        `Sinkron selesai: ${r.classes?.upserted ?? 0} kelas, ${r.participants?.rows ?? 0} peserta. ` +
+          `Link: ${dosenLink.matched ?? 0} dosen, ${mhsLink.matched ?? 0} mahasiswa${warn}.`,
+        6000
+      );
+      setPage(1);
+      live.mutate();
+    } catch (error) {
+      toastAlert(
+        "error",
+        error?.response?.data?.responseMessage || error.message || "Sinkron SIAK gagal."
+      );
+    } finally {
+      setSyncing(false);
+    }
+  };
+
   return (
     <div className="space-y-5">
       {/* Toolbar: pencarian + filter semester */}
@@ -109,6 +141,23 @@ export default function ClassList({ basePath, demo = false }) {
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          {canSync && (
+            <button
+              type="button"
+              onClick={handleSync}
+              disabled={syncing}
+              className="flex items-center gap-2 rounded-xl border border-gray-200 px-3 py-2 text-sm font-medium text-gray-600 transition enabled:hover:bg-gray-50 disabled:opacity-60"
+              title="Tarik ulang kelas/matkul/dosen/peserta terbaru dari SIAKAD"
+            >
+              <Icon
+                icon={syncing ? "mdi:loading" : "mdi:sync"}
+                width={16}
+                height={16}
+                className={syncing ? "animate-spin" : ""}
+              />
+              {syncing ? "Menyinkron…" : "Sync SIAK"}
+            </button>
+          )}
           <select
             value={semester}
             onChange={changeSemester}
