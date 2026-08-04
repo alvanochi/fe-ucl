@@ -8,6 +8,7 @@ import { Loading } from "../../../components/Loading";
 import MatakuliahModule from "../../../modules/admin/pembelajaran/matakuliah";
 import KurikulumModule from "../../../modules/admin/pembelajaran/kurikulum";
 import RoleScopesModule from "../../../modules/admin/pembelajaran/role-scopes";
+import UserMappingModule from "../../../modules/admin/pembelajaran/user-mapping";
 import ClassList from "../../../modules/pembelajaran/lms/ClassList";
 import { useRouter } from "next/router";
 
@@ -38,6 +39,7 @@ export default function Pembelajaran() {
           <KurikulumModule baseURL={prefix + menu.url} />
         )}
         {active.url === "#role-scopes" && <RoleScopesModule />}
+        {active.url === "#user-mapping" && <UserMappingModule />}
       </div>
     </Layout>
   );
