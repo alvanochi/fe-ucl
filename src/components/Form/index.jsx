@@ -104,12 +104,13 @@ const Combobox = ({
   const handleChange = (selectedOption) => {
     setSelected(selectedOption);
     if (props.onChange) {
-      props.onChange({
-        target: {
-          name: props.name,
-          value: selectedOption ? selectedOption.value : null,
-        },
-      });
+      // Kasih objek option {label,value} (atau null) apa adanya — bukan event
+      // sintetis {target:{value}}. Hampir semua pemakai Form.Combobox di seluruh
+      // app menulis `onChange={selected => ... selected.value}`, jadi versi
+      // sintetis (dari 79149f5, Mar 2024) selama ini selalu ngasih undefined ke
+      // mereka; pilihan "nempel" secara visual (state internal di atas sudah
+      // benar) tapi nilai yang sampai ke form pemanggil salah/kosong.
+      props.onChange(selectedOption);
     }
   };
 
