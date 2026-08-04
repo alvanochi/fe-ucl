@@ -61,17 +61,18 @@ function StatusPanel({ state, entry }) {
   if (!entry) {
     return <p className="rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-500">Belum dikerjakan.</p>;
   }
-  if (entry.status === "MENUNGGU_VERIFIKASI") {
-    return (
-      <p className="rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
-        Sudah dikumpulkan — menunggu koreksi/verifikasi dosen.
-      </p>
-    );
-  }
+
+  // cbt-api (getHistory) sengaja menahan final_score sampai status SELESAI
+  // (terverifikasi dosen), tapi skor pecahan (pilgan/esai/upload) — pilgan
+  // sudah terkoreksi otomatis saat submit — selalu ikut dikirim, tidak ditahan.
+  const pending = entry.status === "MENUNGGU_VERIFIKASI";
+
   return (
-    <div className="space-y-1 rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-800">
-      <p className="font-semibold">Nilai akhir: {entry.final_score ?? "-"}</p>
-      <p className="text-xs text-emerald-700">
+    <div className={`space-y-1 rounded-lg px-3 py-2 text-sm ${pending ? "bg-amber-50 text-amber-800" : "bg-emerald-50 text-emerald-800"}`}>
+      <p className="font-semibold">
+        {pending ? "Menunggu verifikasi dosen — nilai akhir belum final" : `Nilai akhir: ${entry.final_score ?? "-"}`}
+      </p>
+      <p className={`text-xs ${pending ? "text-amber-700" : "text-emerald-700"}`}>
         Pilgan: {entry.skor_pilgan_100} · Esai: {entry.skor_esai_100} · Upload: {entry.skor_file_100}
       </p>
     </div>
