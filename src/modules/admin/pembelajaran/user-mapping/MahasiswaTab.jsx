@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Select from "react-select";
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
 import Form from "../../../../components/Form";
@@ -15,10 +16,11 @@ async function postMapping(tiasUserId, siakUserUuid) {
   });
 }
 
-// Baris sendiri (bukan inline di .map()) supaya state combobox pencarian manual
-// (`selected`/`manualOptions`) jadi lokal milik baris ini — tidak ikut dibuat ulang
-// tiap kali baris LAIN atau state pencarian/paginasi di tab ini berubah. Itu yang
-// bikin pilihan combobox sempat tidak "nempel" pada percobaan sebelumnya.
+// Baris sendiri (bukan inline di .map()) supaya state pencarian manual
+// (`selected`/`manualOptions`) jadi lokal milik baris ini, tidak ikut dibuat ulang
+// tiap kali baris lain berubah. Pakai react-select LANGSUNG (bukan Form.Combobox) —
+// onChange kasih objek option yang dipilih apa adanya, tanpa lapisan penerjemah
+// event-sintetis yang sebelumnya bikin pilihan tidak "nempel".
 function MahasiswaRow({ row, checked, onToggleSelect, onLinked }) {
   const [manualOptions, setManualOptions] = useState([]);
   const [selected, setSelected] = useState(null);
@@ -86,15 +88,15 @@ function MahasiswaRow({ row, checked, onToggleSelect, onLinked }) {
         ) : (
           <div className="flex min-w-[260px] items-center gap-2">
             <div className="flex-1">
-              <Form.Combobox
+              <Select
                 placeholder="Cari nama/NPM TIAS…"
                 value={selected}
                 options={manualOptions}
-                onSearch={searchManual}
-                onChange={(e) => {
-                  const found = manualOptions.find((o) => o.value === e.target.value) || null;
-                  setSelected(found);
+                onChange={(option) => setSelected(option)}
+                onInputChange={(term, meta) => {
+                  if (meta.action === "input-change") searchManual(term);
                 }}
+                isClearable
               />
             </div>
             <Button.Icon

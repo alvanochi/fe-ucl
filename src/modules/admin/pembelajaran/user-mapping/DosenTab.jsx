@@ -1,18 +1,17 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Select from "react-select";
 import { Icon } from "@iconify-icon/react";
 import Button from "../../../../components/Button";
-import Form from "../../../../components/Form";
 import { toastAlert } from "../../../../lib/sweetalert";
 
 const SYNC_BASE = () => `${process.env.NEXT_PUBLIC_API_URL}/siak-sync`;
 
-// Baris sendiri (bukan inline di .map()) supaya `selected`/`manualOptions` jadi state
-// LOKAL milik baris ini — tidak ikut kebuat ulang tiap kali baris LAIN di tab ini
-// berubah. Round-trip value lewat Form.Combobox (yang expect {value,label} atau
-// string, lalu re-derive dari `options`) sempat tidak "nempel" saat options
-// dibuat ulang dari nol tiap render induk; state lokal per-baris ini menghilangkan
-// churn referensi itu.
+// react-select LANGSUNG, bukan lewat Form.Combobox — Form.Combobox menerjemahkan
+// onChange jadi event sintetis {target:{value}} lalu re-derive `selected` dari situ
+// lewat effect terpisah; pilihan sempat tidak "nempel" lewat jalur itu. Di sini
+// `onChange` react-select langsung kasih objek option yang dipilih, disimpan
+// apa adanya — tidak ada lapisan penerjemah yang bisa berantakan.
 function DosenRow({ row, onLinked }) {
   const suggestionOptions = (row.name_suggestions || []).map((s) => ({
     value: s.tias_user_id,
@@ -74,15 +73,15 @@ function DosenRow({ row, onLinked }) {
         </p>
       </div>
       <div className="min-w-[280px] flex-1">
-        <Form.Combobox
+        <Select
           placeholder="Pilih atau cari nama dosen TIAS…"
           value={selected}
           options={options}
-          onSearch={searchManual}
-          onChange={(e) => {
-            const found = options.find((o) => o.value === e.target.value) || null;
-            setSelected(found);
+          onChange={(option) => setSelected(option)}
+          onInputChange={(term, meta) => {
+            if (meta.action === "input-change") searchManual(term);
           }}
+          isClearable
         />
       </div>
       <Button
