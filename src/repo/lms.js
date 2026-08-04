@@ -251,4 +251,11 @@ export async function reorderItems(sectionId, items) {
   return res.data;
 }
 
+// Daftar prodi (+fakultas induknya) dari siak_v2_program_studi, dipakai form
+// Role Admin LMS untuk pilih scope fakultas/prodi. Admin-only di backend.
+export function useLmsAcademicUnits() {
+  const { data, error, isLoading } = useSWR(`${LMS_BASE()}/role-scopes/academic-units`);
+  return { units: Array.isArray(data) ? data : [], error, isLoading };
+}
+
 export { LMS_BASE };

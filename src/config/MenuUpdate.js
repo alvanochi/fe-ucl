@@ -651,6 +651,16 @@ export const APP_MENU = [
         url: "#kurikulum",
         allowedRoles: [ROLE_ID_ADMIN],
       },
+      {
+        label: "Role Admin LMS",
+        url: "#role-scopes",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Verifikasi Mapping SIAK",
+        url: "#user-mapping",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
     ],
   },
   {
