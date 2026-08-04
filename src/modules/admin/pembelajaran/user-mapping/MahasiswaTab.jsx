@@ -8,6 +8,108 @@ import useDebounce from "../../../../hooks/useDebounce";
 
 const SYNC_BASE = () => `${process.env.NEXT_PUBLIC_API_URL}/siak-sync`;
 
+async function postMapping(tiasUserId, siakUserUuid) {
+  return axios.post(`${SYNC_BASE()}/user-mappings`, {
+    tias_user_id: tiasUserId,
+    siak_user_uuid: siakUserUuid,
+  });
+}
+
+// Baris sendiri (bukan inline di .map()) supaya state combobox pencarian manual
+// (`selected`/`manualOptions`) jadi lokal milik baris ini — tidak ikut dibuat ulang
+// tiap kali baris LAIN atau state pencarian/paginasi di tab ini berubah. Itu yang
+// bikin pilihan combobox sempat tidak "nempel" pada percobaan sebelumnya.
+function MahasiswaRow({ row, checked, onToggleSelect, onLinked }) {
+  const [manualOptions, setManualOptions] = useState([]);
+  const [selected, setSelected] = useState(null);
+  const [linking, setLinking] = useState(false);
+
+  const searchManual = async (term) => {
+    if (!term || term.trim().length < 2) return;
+    try {
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/list-users`, {
+        params: { search: term, limit: 10, filter: "role", filterValue: "Mahasiswa" },
+      });
+      const users = res.data?.data?.rows || [];
+      setManualOptions(
+        users.map((u) => ({
+          value: u.user_id,
+          label: `${u.personal_data?.nama_lengkap || u.email} (${u.email})`,
+        }))
+      );
+    } catch (_) {
+      // biarkan dropdown kosong, admin bisa coba lagi
+    }
+  };
+
+  const link = async (tiasUserId) => {
+    if (!tiasUserId) return toastAlert("error", "Pilih akun TIAS terlebih dahulu.");
+    setLinking(true);
+    try {
+      await postMapping(tiasUserId, row.siak_mahasiswa_id);
+      toastAlert("success", `${row.nama_siak} berhasil ditautkan.`);
+      onLinked(row.siak_mahasiswa_id);
+    } catch (error) {
+      toastAlert("error", error?.response?.data?.responseMessage || "Gagal menautkan.");
+    } finally {
+      setLinking(false);
+    }
+  };
+
+  return (
+    <tr>
+      <td className="text-sm border-2 border-white bg-gray-50">
+        {row.match_status === "npm_match" && (
+          <Form.Checkbox checked={checked} onChange={() => onToggleSelect(row.siak_mahasiswa_id)} />
+        )}
+      </td>
+      <td className="text-sm border-2 border-white bg-gray-50">{row.nama_siak || "-"}</td>
+      <td className="text-sm border-2 border-white bg-gray-50">{row.npm || "-"}</td>
+      <td className="text-sm border-2 border-white bg-gray-50">{row.jumlah_kelas}</td>
+      <td className="text-sm border-2 border-white bg-gray-50">
+        {row.match_status === "npm_match" ? (
+          <span className="text-emerald-600">
+            Match NPM: {row.nama_tias} ({row.tias_email})
+          </span>
+        ) : (
+          <span className="text-gray-400">Tidak ada match NPM</span>
+        )}
+      </td>
+      <td className="text-sm border-2 border-white bg-gray-50">
+        {row.match_status === "npm_match" ? (
+          <Button.Icon
+            variant="primary"
+            icon={<Icon icon="ic:baseline-link" width={18} height={18} />}
+            disabled={linking}
+            onClick={() => link(row.tias_user_id)}
+          />
+        ) : (
+          <div className="flex min-w-[260px] items-center gap-2">
+            <div className="flex-1">
+              <Form.Combobox
+                placeholder="Cari nama/NPM TIAS…"
+                value={selected}
+                options={manualOptions}
+                onSearch={searchManual}
+                onChange={(e) => {
+                  const found = manualOptions.find((o) => o.value === e.target.value) || null;
+                  setSelected(found);
+                }}
+              />
+            </div>
+            <Button.Icon
+              variant="primary"
+              icon={<Icon icon="ic:baseline-link" width={18} height={18} />}
+              disabled={linking || !selected}
+              onClick={() => link(selected?.value)}
+            />
+          </div>
+        )}
+      </td>
+    </tr>
+  );
+}
+
 export default function MahasiswaTab() {
   const { debounce } = useDebounce();
 
@@ -18,10 +120,6 @@ export default function MahasiswaTab() {
   const [totalPage, setTotalPage] = useState(1);
   const [selected, setSelected] = useState(new Set()); // siak_mahasiswa_id (npm_match saja)
   const [bulkSubmitting, setBulkSubmitting] = useState(false);
-
-  const [manualSelections, setManualSelections] = useState({});
-  const [manualOptions, setManualOptions] = useState({});
-  const [linking, setLinking] = useState(null);
 
   const load = async () => {
     setLoading(true);
@@ -59,13 +157,15 @@ export default function MahasiswaTab() {
     });
   };
 
+  const handleLinked = (siakId) => {
+    setRows((prev) => prev.filter((r) => r.siak_mahasiswa_id !== siakId));
+  };
+
   const npmMatchRows = rows.filter((r) => r.match_status === "npm_match");
   const allNpmMatchSelected = npmMatchRows.length > 0 && npmMatchRows.every((r) => selected.has(r.siak_mahasiswa_id));
 
   const toggleSelectAll = () => {
-    setSelected(
-      allNpmMatchSelected ? new Set() : new Set(npmMatchRows.map((r) => r.siak_mahasiswa_id))
-    );
+    setSelected(allNpmMatchSelected ? new Set() : new Set(npmMatchRows.map((r) => r.siak_mahasiswa_id)));
   };
 
   const confirmSelected = async () => {
@@ -87,43 +187,6 @@ export default function MahasiswaTab() {
       toastAlert("error", error?.response?.data?.responseMessage || "Gagal konfirmasi mapping terpilih.");
     } finally {
       setBulkSubmitting(false);
-    }
-  };
-
-  const searchManual = async (siakId, term) => {
-    if (!term || term.trim().length < 2) return;
-    try {
-      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/list-users`, {
-        params: { search: term, limit: 10, filter: "role", filterValue: "Mahasiswa" },
-      });
-      const users = res.data?.data?.rows || [];
-      setManualOptions((prev) => ({
-        ...prev,
-        [siakId]: users.map((u) => ({
-          value: u.user_id,
-          label: `${u.personal_data?.nama_lengkap || u.email} (${u.email})`,
-        })),
-      }));
-    } catch (_) {
-      // biarkan dropdown kosong, admin bisa coba lagi
-    }
-  };
-
-  const linkRow = async (row, tiasUserId) => {
-    if (!tiasUserId) return toastAlert("error", "Pilih akun TIAS terlebih dahulu.");
-
-    setLinking(row.siak_mahasiswa_id);
-    try {
-      await axios.post(`${SYNC_BASE()}/user-mappings`, {
-        tias_user_id: tiasUserId,
-        siak_user_uuid: row.siak_mahasiswa_id,
-      });
-      toastAlert("success", `${row.nama_siak} berhasil ditautkan.`);
-      setRows((prev) => prev.filter((r) => r.siak_mahasiswa_id !== row.siak_mahasiswa_id));
-    } catch (error) {
-      toastAlert("error", error?.response?.data?.responseMessage || "Gagal menautkan.");
-    } finally {
-      setLinking(null);
     }
   };
 
@@ -174,64 +237,15 @@ export default function MahasiswaTab() {
             </tr>
           )}
           {!loading &&
-            rows.map((row) => {
-              const options = manualOptions[row.siak_mahasiswa_id] || [];
-              return (
-                <tr key={row.siak_mahasiswa_id}>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.match_status === "npm_match" && (
-                      <Form.Checkbox
-                        checked={selected.has(row.siak_mahasiswa_id)}
-                        onChange={() => toggleSelect(row.siak_mahasiswa_id)}
-                      />
-                    )}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">{row.nama_siak || "-"}</td>
-                  <td className="text-sm border-2 border-white bg-gray-50">{row.npm || "-"}</td>
-                  <td className="text-sm border-2 border-white bg-gray-50">{row.jumlah_kelas}</td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.match_status === "npm_match" ? (
-                      <span className="text-emerald-600">
-                        Match NPM: {row.nama_tias} ({row.tias_email})
-                      </span>
-                    ) : (
-                      <span className="text-gray-400">Tidak ada match NPM</span>
-                    )}
-                  </td>
-                  <td className="text-sm border-2 border-white bg-gray-50">
-                    {row.match_status === "npm_match" ? (
-                      <Button.Icon
-                        variant="primary"
-                        icon={<Icon icon="ic:baseline-link" width={18} height={18} />}
-                        disabled={linking === row.siak_mahasiswa_id}
-                        onClick={() => linkRow(row, row.tias_user_id)}
-                      />
-                    ) : (
-                      <div className="flex min-w-[260px] items-center gap-2">
-                        <div className="flex-1">
-                          <Form.Combobox
-                            placeholder="Cari nama/NPM TIAS…"
-                            value={manualSelections[row.siak_mahasiswa_id] || null}
-                            options={options}
-                            onSearch={(term) => searchManual(row.siak_mahasiswa_id, term)}
-                            onChange={(e) => {
-                              const found = options.find((o) => o.value === e.target.value);
-                              setManualSelections((prev) => ({ ...prev, [row.siak_mahasiswa_id]: found || null }));
-                            }}
-                          />
-                        </div>
-                        <Button.Icon
-                          variant="primary"
-                          icon={<Icon icon="ic:baseline-link" width={18} height={18} />}
-                          disabled={linking === row.siak_mahasiswa_id || !manualSelections[row.siak_mahasiswa_id]}
-                          onClick={() => linkRow(row, manualSelections[row.siak_mahasiswa_id]?.value)}
-                        />
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
+            rows.map((row) => (
+              <MahasiswaRow
+                key={row.siak_mahasiswa_id}
+                row={row}
+                checked={selected.has(row.siak_mahasiswa_id)}
+                onToggleSelect={toggleSelect}
+                onLinked={handleLinked}
+              />
+            ))}
         </tbody>
       </table>
 
