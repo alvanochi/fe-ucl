@@ -125,7 +125,8 @@ export default function ExamRenderer({ item }) {
     setOpening(true);
     try {
       const cbtToken = await bootstrapCbtToken();
-      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}`;
+      const returnTo = encodeURIComponent(window.location.href);
+      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}&returnTo=${returnTo}`;
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (_) {
       // biarkan tombol tetap bisa dicoba ulang; kegagalan sudah cukup jelas dari tidak terbukanya tab baru

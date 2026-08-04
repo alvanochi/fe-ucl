@@ -114,7 +114,8 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
     setOpeningCbt(true);
     try {
       const cbtToken = await bootstrapCbtToken();
-      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}`;
+      const returnTo = encodeURIComponent(window.location.href);
+      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}&returnTo=${returnTo}`;
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (_) {
       toastAlert("error", "Gagal membuka Sistem CBT. Coba lagi.");
