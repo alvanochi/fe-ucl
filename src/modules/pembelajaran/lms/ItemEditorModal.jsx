@@ -108,6 +108,33 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
       .catch(() => setCbtExamsState("error"));
   }, [type, cbtExamsState]);
 
+  // Begitu ujian baru selesai dibuat di tab CBT, tab itu postMessage balik ke sini
+  // (window.opener — makanya window.open di bawah TIDAK pakai noopener) supaya dosen
+  // tidak perlu menutup modal ini dan mengulang "Tambah Aktivitas" dari awal.
+  useEffect(() => {
+    const cbtOrigin = (() => {
+      try {
+        return new URL(process.env.NEXT_PUBLIC_CBT_WEB_URL).origin;
+      } catch (_) {
+        return null;
+      }
+    })();
+    const handler = (event) => {
+      if (cbtOrigin && event.origin !== cbtOrigin) return;
+      const exam = event.data?.type === "cbt:exam-created" ? event.data.exam : null;
+      if (!exam) return;
+      setCbtExams((prev) => (prev.some((x) => x.id === exam.id) ? prev : [exam, ...prev]));
+      setCbtExamsState("ready");
+      if (type === "exam") {
+        set("cbt_exam_id", exam.id);
+        set("cbt_nama_ujian", exam.nama_ujian);
+        toastAlert("success", "Ujian baru berhasil dibuat & langsung dipilih di sini.");
+      }
+    };
+    window.addEventListener("message", handler);
+    return () => window.removeEventListener("message", handler);
+  }, [type]);
+
   // Bridge, bukan link mentah — dosen sudah login di LMS, jangan disuruh login/daftar
   // ulang manual di CBT. Sama seperti tombol "Ikuti Ujian" di ExamRenderer.
   const openCbtToCreateExam = async () => {
@@ -116,7 +143,7 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
       const cbtToken = await bootstrapCbtToken();
       const returnTo = encodeURIComponent(window.location.href);
       const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}&returnTo=${returnTo}`;
-      window.open(url, "_blank", "noopener,noreferrer");
+      window.open(url, "_blank");
     } catch (_) {
       toastAlert("error", "Gagal membuka Sistem CBT. Coba lagi.");
     } finally {
