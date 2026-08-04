@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import Select from "react-select";
 import Button from "../../../../components/Button";
 import Modal from "../../../../components/Modal";
 import Form from "../../../../components/Form";
@@ -113,16 +114,15 @@ const CreateRoleScope = ({ onAction }) => {
             </Form.Label>
             <span>:</span>
             <div className="flex-1">
-              <Form.Combobox
-                name="user_id"
+              <Select
                 placeholder="Ketik nama/email untuk cari…"
                 value={selectedUser}
                 options={userOptions}
-                onSearch={searchUsers}
-                onChange={(e) => {
-                  const found = userOptions.find((o) => o.value === e.target.value);
-                  setSelectedUser(found || null);
+                onChange={(option) => setSelectedUser(option)}
+                onInputChange={(term, meta) => {
+                  if (meta.action === "input-change") searchUsers(term);
                 }}
+                isClearable
               />
             </div>
           </Form.Group>
