@@ -375,36 +375,41 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
                   Gagal memuat daftar ujian dari sistem CBT. Pastikan akun Anda sudah terdaftar di sana, lalu coba lagi.
                 </p>
               )}
-              {cbtExamsState === "ready" && cbtExams.length === 0 && (
-                <div className="mt-1 space-y-2 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
-                  <p>Anda belum punya ujian CBT. Buat dulu di Sistem CBT, lalu kembali ke sini.</p>
+              {cbtExamsState === "ready" && (
+                <>
+                  {cbtExams.length === 0 ? (
+                    <p className="mt-1 rounded-lg bg-amber-50 px-3 py-2 text-sm text-amber-700">
+                      Anda belum punya ujian CBT.
+                    </p>
+                  ) : (
+                    <select
+                      value={form.cbt_exam_id}
+                      onChange={(e) => {
+                        const selected = cbtExams.find((x) => String(x.id) === e.target.value);
+                        set("cbt_exam_id", selected ? selected.id : "");
+                        set("cbt_nama_ujian", selected ? selected.nama_ujian : "");
+                      }}
+                      className="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
+                    >
+                      <option value="">— Pilih ujian —</option>
+                      {cbtExams.map((exam) => (
+                        <option key={exam.id} value={exam.id}>
+                          {exam.nama_ujian} ({exam.mata_kuliah?.nama_mk || exam.kode_mk})
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                  {/* Selalu tersedia, bukan cuma saat daftar kosong — dosen bisa terus
+                      membuat ujian baru (mis. UAS baru) walau sudah ada ujian berjalan. */}
                   <button
                     type="button"
                     onClick={openCbtToCreateExam}
                     disabled={openingCbt}
-                    className="font-semibold underline disabled:opacity-60"
+                    className="mt-2 text-sm font-semibold text-primary-600 underline disabled:opacity-60"
                   >
-                    {openingCbt ? "Membuka…" : "Buat ujian di Sistem CBT"}
+                    {openingCbt ? "Membuka…" : "+ Buat ujian baru di Sistem CBT"}
                   </button>
-                </div>
-              )}
-              {cbtExamsState === "ready" && cbtExams.length > 0 && (
-                <select
-                  value={form.cbt_exam_id}
-                  onChange={(e) => {
-                    const selected = cbtExams.find((x) => String(x.id) === e.target.value);
-                    set("cbt_exam_id", selected ? selected.id : "");
-                    set("cbt_nama_ujian", selected ? selected.nama_ujian : "");
-                  }}
-                  className="mt-1 block w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
-                >
-                  <option value="">— Pilih ujian —</option>
-                  {cbtExams.map((exam) => (
-                    <option key={exam.id} value={exam.id}>
-                      {exam.nama_ujian} ({exam.mata_kuliah?.nama_mk || exam.kode_mk})
-                    </option>
-                  ))}
-                </select>
+                </>
               )}
               {(() => {
                 const selectedExam = cbtExams.find((x) => String(x.id) === String(form.cbt_exam_id));
