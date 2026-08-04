@@ -9,7 +9,10 @@ import { createItem, uploadItem, replaceUploadItem, updateItem } from "../../../
 import axiosCbt from "../../../lib/axiosCbt";
 import { bootstrapCbtToken } from "../../../lib/cbtAuth";
 
-const EDITOR_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "assignment", "exam"];
+// "assignment" sengaja tidak masuk sini — Tugas & Ujian digabung jadi satu
+// pilihan "exam" (link ke CBT). Item assignment lama tetap bisa diedit lewat
+// jalur isEdit (yang tidak melewati grid ini), lihat typeMeta.js.
+const EDITOR_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "exam"];
 const FILE_TYPES = ["pdf", "ppt"];
 const ACCEPT = { pdf: "application/pdf,.pdf", ppt: ".ppt,.pptx" };
 // Sinkron dengan SUBMISSION_FILE_TYPES di lib/lms/payloadValidators.js (tias-backend).
@@ -375,8 +378,29 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
                   ))}
                 </select>
               )}
+              {(() => {
+                const selectedExam = cbtExams.find((x) => String(x.id) === String(form.cbt_exam_id));
+                if (!selectedExam?.token_ujian) return null;
+                return (
+                  <div className="mt-2 flex items-center gap-2 rounded-lg bg-purple-50 px-3 py-2 text-sm text-purple-700">
+                    <span>
+                      Token ujian: <strong className="font-mono">{selectedExam.token_ujian}</strong>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        navigator.clipboard.writeText(selectedExam.token_ujian);
+                        toastAlert("success", "Token disalin");
+                      }}
+                      className="ml-auto shrink-0 font-semibold underline"
+                    >
+                      Salin
+                    </button>
+                  </div>
+                );
+              })()}
               <p className="mt-1 text-xs text-gray-400">
-                Mahasiswa akan diarahkan ke Sistem CBT untuk mengerjakan ujian ini & memasukkan token yang Anda umumkan di kelas.
+                Mahasiswa akan melihat token ujian ini otomatis di LMS begitu jadwal ujian dimulai — Anda tidak perlu mengumumkan token secara manual.
               </p>
             </Form.Group>
           )}

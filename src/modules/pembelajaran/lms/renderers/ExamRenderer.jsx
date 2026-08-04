@@ -6,10 +6,46 @@ import axiosCbt from "../../../../lib/axiosCbt";
 /**
  * Renderer tipe "exam" — integrasi LMS-CBT (native, lihat lmsRoutes/CbtAuthController di
  * tias-backend). Pengerjaan ujian TIDAK dilakukan di fe-ucl — mahasiswa diarahkan ke
- * cbt-frontend (SSO via /sso?token=) untuk masuk token ujian yang diumumkan dosen di kelas.
+ * cbt-frontend (SSO via /sso?token=) untuk mengerjakan ujian. Token ujian ditampilkan
+ * otomatis di sini begitu jendela waktu ujian buka (`GET /api/student/exams/:id/token`,
+ * cbt-api yang menahan token di luar jendela waktu) — dosen tak perlu umumkan manual.
  * Status/nilai ditarik dengan polling `GET /api/student/history` langsung ke cbt-api,
  * difilter ke exam_id yang tertaut pada item ini.
  */
+
+function formatWaktu(iso) {
+  return new Date(iso).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
+}
+
+function TokenPanel({ state, access, onCopy }) {
+  if (state === "loading") {
+    return <p className="text-sm text-gray-500">Memuat info token…</p>;
+  }
+  if (state === "error" || !access) {
+    return (
+      <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+        Gagal memuat info token ujian. Coba refresh.
+      </p>
+    );
+  }
+  if (!access.is_open) {
+    return (
+      <p className="rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-500">
+        Ujian belum dibuka. Sesi dimulai {formatWaktu(access.waktu_mulai)} WIB.
+      </p>
+    );
+  }
+  return (
+    <div className="flex items-center gap-2 rounded-lg bg-purple-50 px-3 py-2 text-sm text-purple-700">
+      <span>
+        Token ujian: <strong className="font-mono">{access.token_ujian}</strong>
+      </span>
+      <button type="button" onClick={onCopy} className="ml-auto shrink-0 font-semibold underline">
+        Salin
+      </button>
+    </div>
+  );
+}
 
 function StatusPanel({ state, entry }) {
   if (state === "loading") {
@@ -46,6 +82,8 @@ export default function ExamRenderer({ item }) {
   const { cbt_exam_id, cbt_nama_ujian } = item.payload || {};
   const [status, setStatus] = useState("loading"); // loading | ready | error
   const [entry, setEntry] = useState(null);
+  const [accessState, setAccessState] = useState("loading"); // loading | ready | error
+  const [access, setAccess] = useState(null);
   const [opening, setOpening] = useState(false);
 
   const loadHistory = async () => {
@@ -61,8 +99,25 @@ export default function ExamRenderer({ item }) {
     }
   };
 
+  const loadAccess = async () => {
+    setAccessState("loading");
+    try {
+      await bootstrapCbtToken();
+      const res = await axiosCbt.get(`/api/student/exams/${cbt_exam_id}/token`);
+      setAccess(res.data?.data || null);
+      setAccessState("ready");
+    } catch (_) {
+      setAccessState("error");
+    }
+  };
+
+  const refreshAll = () => {
+    loadHistory();
+    loadAccess();
+  };
+
   useEffect(() => {
-    if (cbt_exam_id) loadHistory();
+    if (cbt_exam_id) refreshAll();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cbt_exam_id]);
 
@@ -91,9 +146,17 @@ export default function ExamRenderer({ item }) {
         </span>
         <div className="min-w-0">
           <p className="truncate font-medium text-gray-800">{cbt_nama_ujian || "Ujian CBT"}</p>
-          <p className="text-xs text-gray-400">Dikerjakan di Sistem CBT — masukkan token yang diumumkan dosen.</p>
+          <p className="text-xs text-gray-400">Dikerjakan di Sistem CBT — masukkan token di bawah begitu sesi dibuka.</p>
         </div>
       </div>
+
+      <TokenPanel
+        state={accessState}
+        access={access}
+        onCopy={() => {
+          navigator.clipboard.writeText(access.token_ujian);
+        }}
+      />
 
       <div className="flex flex-wrap gap-2">
         <button
@@ -107,11 +170,11 @@ export default function ExamRenderer({ item }) {
         </button>
         <button
           type="button"
-          onClick={loadHistory}
+          onClick={refreshAll}
           className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
         >
           <Icon icon="mdi:refresh" width={18} height={18} />
-          Refresh Nilai
+          Refresh
         </button>
       </div>
 
