@@ -10,7 +10,7 @@ export const CONTENT_TYPE_META = {
   url: { label: "Tautan", icon: "mdi:link-variant", color: "text-indigo-600", bg: "bg-indigo-100", desc: "Tautan ke sumber belajar di luar kelas (web, drive, dll)." },
   forum: { label: "Forum Diskusi", icon: "mdi:forum-outline", color: "text-emerald-600", bg: "bg-emerald-100", desc: "Ruang diskusi tanya-jawab antara dosen dan mahasiswa." },
   assignment: { label: "Tugas", icon: "mdi:clipboard-text-outline", color: "text-amber-600", bg: "bg-amber-100", desc: "Tugas yang dikerjakan lalu dikumpulkan oleh mahasiswa." },
-  exam: { label: "Ujian", icon: "mdi:clipboard-check-outline", color: "text-purple-600", bg: "bg-purple-100", desc: "Ujian atau kuis daring (CBT)." },
+  exam: { label: "Tugas/Ujian", icon: "mdi:clipboard-check-outline", color: "text-purple-600", bg: "bg-purple-100", desc: "Tugas atau ujian yang dikerjakan lewat Sistem CBT." },
 };
 
 const FALLBACK = {
@@ -23,5 +23,7 @@ const FALLBACK = {
 
 export const typeMeta = (type) => CONTENT_TYPE_META[type] || { ...FALLBACK, label: type || FALLBACK.label };
 
-// Tipe yang boleh dibuat dosen di langkah editor.
-export const CREATABLE_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "assignment", "exam"];
+// Tipe yang boleh dibuat dosen di langkah editor. "assignment" sengaja tidak
+// masuk sini — Tugas & Ujian digabung jadi satu pilihan "exam" (link ke CBT).
+// Item "assignment" LAMA yang sudah ada tetap tampil & bisa dinilai seperti biasa.
+export const CREATABLE_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "exam"];
