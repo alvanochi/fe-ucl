@@ -29,8 +29,10 @@ export default function ShowQrSurat({ data }) {
   // URL yang akan di-encode ke QR — arahkan ke halaman validasi surat publik
   const getQrValue = () => {
     if (!suratData) return null
-    // Arahkan ke halaman /validasi-surat/:id (bukan PDF langsung)
-    const baseUrl = typeof window !== 'undefined' ? window.location.origin : ''
+    const baseUrl =
+      process.env.BASE_URL ||
+      process.env.NEXT_PUBLIC_APP_URL ||
+      (typeof window !== 'undefined' ? window.location.origin : '')
     return `${baseUrl}/validasi-surat/${suratData.id}`
   }
 
