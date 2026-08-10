@@ -20,9 +20,15 @@ export default function useUser({ redirectTo = '', redirectIfFound = false } = {
     userData: {},
   })
 
+  // async function logout() {
+  //   return mutateUser(axios.post('/staging/api/logout').then(() => Router.reload()))
+  // }
+
   async function logout() {
-    return mutateUser(axios.post('/staging/api/logout').then(() => Router.reload()))
-  }
+  await axios.post('/staging/api/logout');
+  // Redirect ke eportal login setelah logout
+  window.location.href = process.env.NEXT_PUBLIC_EPORTAL_URL + '/login';
+}
 
   async function getProfile() {
     return axios({ url: `${process.env.NEXT_PUBLIC_API_URL}/dashboard` })
