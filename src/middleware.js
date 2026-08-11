@@ -57,8 +57,8 @@ export const middleware = async (req) => {
   if (user == null && url.pathname.startsWith("/verification") === true)
     return response;
 
-  if (user == null && !protectedRoute.includes(url.pathname))
-    return redirectTo("/login");
+if (user == null && !protectedRoute.includes(url.pathname))
+    return NextResponse.redirect('http://103.158.196.79/eportal/login');
 
   if (
     user?.role == "Dosen" &&

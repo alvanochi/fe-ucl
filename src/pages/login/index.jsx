@@ -79,7 +79,7 @@ export const Login = () => {
         else if (role === "dosen_ext") targetPath = "/staging/dosen_ext";
         else if (role === "pegawai") targetPath = "/staging/pegawai";
 
-        window.location.href = targetPath;
+        window.location.replace(targetPath);
       } catch (error) {
         console.error("[SSO Error]", error);
         setIsSsoLoading(false); // ← tambahin ini
