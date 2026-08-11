@@ -100,12 +100,7 @@ if (user == null && !protectedRoute.includes(url.pathname))
   )
     return redirectTo("/pegawai");
 
-  if (
-    user?.role == "Parent" &&
-    url.pathname.startsWith("/parent") === false &&
-    !universalRoute.includes(url.pathname)
-  )
-    return redirectTo("/parent/persuratan");
+
 
   return response;
 };

@@ -4,4 +4,3 @@ export const ROLE_ID_ADMIN = "Admin";
 export const ROLE_ID_DEMO = "Demo";
 export const ROLE_ID_DOSEN_EXT = "Dosen_Ext";
 export const ROLE_ID_PEGAWAI = "Pegawai";
-export const ROLE_ID_ORANGTUA = "Parent"
