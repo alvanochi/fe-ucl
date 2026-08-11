@@ -360,10 +360,8 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
 
   const canDisposisi = isTindakLanjut ? (isReceiver || isAdmin) : isAdmin;
 
-  const isOrtu = anonymityRole?.includes("ortu") || anonymityRole?.includes("orang") || anonymityRole === "parent" || (isReceiver && !["mahasiswa", "admin", "pegawai", "staf", "staff", "tu", "kaprodi", "dosen"].includes(anonymityRole));
   const isPengunduranDiri = localSurat.jenis_surat?.toLowerCase() === "surat pengunduran diri";
   const isOrtuSignatureMissing = isPengunduranDiri && !localSurat.form_data?.ttd_ortu;
-  const needsOrtuSignature = isOrtuSignatureMissing && !isTerminalState && isOrtu;
 
   const hasGeneratedPDF = (localSurat.status === "Selesai" && localSurat.form_data?.pdf_url) || (isTindakLanjut && localSurat.form_data?.pdf_url);
   
@@ -426,14 +424,7 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
                   )}
                 </>
               )}
-              {needsOrtuSignature && (
-                <button
-                  onClick={handleSignOrtuClick}
-                  className="w-full sm:w-auto bg-amber-500 hover:bg-amber-600 text-white shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center"
-                >
-                  <Icon icon="mdi:draw-pen" width={16} /> Tanda Tangan
-                </button>
-              )}
+
               {needsKaprodiSignature && (
                 <button
                   onClick={handleKaprodiSignClick}
@@ -588,9 +579,7 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
                   </div>
                 </Card>
               )}
-              {!isOrtu && (
-                <ChatRoom replies={localSurat.Replies} user={user} isTerminalState={isTerminalState} status={localSurat.status} isSending={isSending} onSendReply={handleSendReply} onPreview={handlePreview} />
-              )}
+              <ChatRoom replies={localSurat.Replies} user={user} isTerminalState={isTerminalState} status={localSurat.status} isSending={isSending} onSendReply={handleSendReply} onPreview={handlePreview} />
             </div>
 
             <div className="lg:col-span-4 lg:sticky lg:top-6 lg:self-start">

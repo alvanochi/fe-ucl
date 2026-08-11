@@ -100,12 +100,7 @@ export const middleware = async (req) => {
   )
     return redirectTo("/pegawai");
 
-  if (
-    user?.role == "Parent" &&
-    url.pathname.startsWith("/parent") === false &&
-    !universalRoute.includes(url.pathname)
-  )
-    return redirectTo("/parent/persuratan");
+
 
   return response;
 };

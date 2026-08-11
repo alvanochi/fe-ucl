@@ -6,7 +6,6 @@ import {
   ROLE_ID_DEMO,
   ROLE_ID_DOSEN_EXT,
   ROLE_ID_PEGAWAI,
-  ROLE_ID_ORANGTUA,
 } from "./role";
 
 export const APP_MENU = [
@@ -323,12 +322,12 @@ export const APP_MENU = [
     label: "Persuratan",
     url: "/persuratan",
     icon: "mdi:email-multiple-outline",
-    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA, ROLE_ID_PEGAWAI, ROLE_ID_ORANGTUA],
+    allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA, ROLE_ID_PEGAWAI],
     submenus: [
       {
         label: "Daftar Surat",
         url: "#index",
-        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA, ROLE_ID_PEGAWAI, ROLE_ID_ORANGTUA],
+        allowedRoles: [ROLE_ID_ADMIN, ROLE_ID_DOSEN, ROLE_ID_MAHASISWA, ROLE_ID_PEGAWAI],
       },
     ],
   },
