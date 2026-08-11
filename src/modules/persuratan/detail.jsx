@@ -328,17 +328,7 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
     setShowSignatureModal(true);
   };
 
-  const handleSignOrtuClick = () => {
-    setSignatureConfig({
-      title: "Tanda Tangan Orang Tua / Wali",
-      subtitle: "Silakan gambar tanda tangan Anda sebagai persetujuan Pengunduran Diri",
-      submitText: "Simpan Tanda Tangan",
-      onSubmit: async (ttd) => {
-         await submitStatus("Sent", `Telah ditandatangani oleh Orang Tua / Wali: ${getMyIdentity()}`, { ttd_ortu: ttd });
-      }
-    });
-    setShowSignatureModal(true);
-  };
+
 
   if (!localSurat) return null;
 
