@@ -264,11 +264,11 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
   const handleCompleteClick = () => {
     const jenisSurat = localSurat.jenis_surat.toLowerCase();
 
-    if (jenisSurat === "surat pengunduran diri" && !localSurat.form_data?.ttd_ortu) {
+    if (jenisSurat === "surat pengunduran diri" && !localSurat.is_approved_by_parent) {
       MySwal.fire({
         icon: "warning",
-        title: "Tanda Tangan Belum Lengkap!",
-        text: "Pengajuan belum bisa diselesaikan karena Orang Tua / Wali belum memberikan Tanda Tangan Digital.",
+        title: "Persetujuan Orang Tua Belum Ada!",
+        text: "Pengajuan belum bisa diselesaikan karena Orang Tua / Wali belum memberikan persetujuan digital.",
         confirmButtonText: "Mengerti",
         confirmButtonColor: "#f59e0b",
         backdrop: `rgba(0,0,0,0.5)`,
@@ -351,7 +351,7 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
   const canDisposisi = isTindakLanjut ? (isReceiver || isAdmin) : isAdmin;
 
   const isPengunduranDiri = localSurat.jenis_surat?.toLowerCase() === "surat pengunduran diri";
-  const isOrtuSignatureMissing = isPengunduranDiri && !localSurat.form_data?.ttd_ortu;
+  const isOrtuSignatureMissing = isPengunduranDiri && !localSurat.is_approved_by_parent;
 
   const hasGeneratedPDF = (localSurat.status === "Selesai" && localSurat.form_data?.pdf_url) || (isTindakLanjut && localSurat.form_data?.pdf_url);
   
@@ -526,13 +526,13 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
                           <InfoBlock label="Tanggal Pengarahan" value={localSurat.form_data?.tanggal_pengarahan} />
                           <InfoBlock label="Nama Orang Tua / Wali" value={localSurat.form_data?.nama_ortu_wali} />
                           <InfoBlock 
-                            label="Status TTD Orang Tua" 
-                            value={localSurat.form_data?.ttd_ortu ? (
-                              <span className="flex items-center gap-1.5 text-green-600"><Icon icon="mdi:check-circle" width={16} /> Lengkap</span>
+                            label="Status Approval dari Orang Tua" 
+                            value={localSurat.is_approved_by_parent ? (
+                              <span className="flex items-center gap-1.5 text-green-600"><Icon icon="mdi:check-circle" width={16} /> Disetujui</span>
                             ) : localSurat.status === "Ditolak" ? (
                               <span className="flex items-center gap-1.5 text-red-500"><Icon icon="mdi:close-circle" width={16} /> Dibatalkan</span>
                             ) : (
-                              <span className="flex items-center gap-1.5 text-amber-500"><Icon icon="mdi:clock-outline" width={16} /> Menunggu</span>
+                              <span className="flex items-center gap-1.5 text-amber-500"><Icon icon="mdi:clock-outline" width={16} /> Menunggu Persetujuan</span>
                             )} 
                           />
                         </>
