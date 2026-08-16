@@ -293,7 +293,7 @@ export default function PersuratanCreate({ onBack }) {
                           <Icon icon="mdi:information-outline" width={24} className="shrink-0 mt-0.5 text-amber-600" />
                           <div className="text-sm">
                             <p className="font-bold mb-1">Perhatian Penting!</p>
-                            <p className="leading-relaxed text-amber-700">Pengajuan ini mewajibkan <strong>Tanda Tangan Orang Tua</strong>. Setelah dikirim, harap beri tahu Orang Tua/Wali Anda untuk login ke portal dan memberikan persetujuan/TTD agar dokumen dapat diproses oleh TU.</p>
+                            <p className="leading-relaxed text-amber-700">Pengajuan ini memerlukan <strong>Persetujuan Orang Tua</strong>. Setelah dikirim, harap beri tahu Orang Tua/Wali Anda untuk membuka aplikasi <strong>TIAS Mobile</strong> dan melakukan <strong>approval</strong> agar dokumen dapat diproses lebih lanjut.</p>
                           </div>
                         </div>
                         <div className="p-5 bg-amber-50/50 border border-amber-100 rounded-xl">
