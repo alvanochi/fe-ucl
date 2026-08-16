@@ -76,6 +76,14 @@ export const Header = () => {
                 Validasi Dokumen
               </Link>
             </li>
+            <li>
+              <Link
+                href="/validasi-surat"
+                className="hover:text-color-secondary ease-in duration-200"
+              >
+                Validasi Surat
+              </Link>
+            </li>
 
             <li>
               <Link
@@ -147,6 +155,14 @@ export const Header = () => {
                 className="hover:text-color-secondary ease-in duration-200"
               >
                 Validasi Dokumen
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/validasi-surat"
+                className="hover:text-color-secondary ease-in duration-200"
+              >
+                Validasi Surat
               </Link>
             </li>
 
