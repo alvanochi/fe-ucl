@@ -427,7 +427,7 @@ export default function PersuratanDetail({ onBack, onCreateNew, surat }) {
                 <button
                   onClick={handleCompleteClick}
                   disabled={isOrtuSignatureMissing}
-                  title={isOrtuSignatureMissing ? "Menunggu Tanda Tangan Orang Tua" : "Selesaikan Pengajuan"}
+                  title={isOrtuSignatureMissing ? "Menunggu Approval Orang Tua via TIAS Mobile" : "Selesaikan Pengajuan"}
                   className={classNames(
                     "w-full sm:w-auto shadow-md px-5 py-3 sm:py-2.5 rounded-xl font-bold uppercase tracking-wider text-[10px] sm:text-xs transition-all active:scale-95 border-none outline-none flex items-center gap-2 justify-center",
                     isOrtuSignatureMissing 
