@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Icon } from "@iconify-icon/react";
 import { bootstrapCbtToken } from "../../../../lib/cbtAuth";
 import axiosCbt from "../../../../lib/axiosCbt";
+import ExamGradingPanel from "./ExamGradingPanel";
 
 /**
  * Renderer tipe "exam" — integrasi LMS-CBT (native, lihat lmsRoutes/CbtAuthController di
@@ -79,13 +80,15 @@ function StatusPanel({ state, entry }) {
   );
 }
 
-export default function ExamRenderer({ item }) {
+export default function ExamRenderer({ item, manage = false }) {
   const { cbt_exam_id, cbt_nama_ujian } = item.payload || {};
   const [status, setStatus] = useState("loading"); // loading | ready | error
   const [entry, setEntry] = useState(null);
   const [accessState, setAccessState] = useState("loading"); // loading | ready | error
   const [access, setAccess] = useState(null);
   const [opening, setOpening] = useState(false);
+  const [openingRekap, setOpeningRekap] = useState(false);
+  const [showGrading, setShowGrading] = useState(false);
 
   const loadHistory = async () => {
     setStatus("loading");
@@ -136,6 +139,24 @@ export default function ExamRenderer({ item }) {
     }
   };
 
+  // Dosen — fallback bridge SSO ke halaman "Rekap Nilai" penuh di cbt-frontend, untuk aksi
+  // yang belum dibangun ulang inline di sini (export Excel, dashboard AI-proctoring, editor
+  // soal/bobot). Alur koreksi/verifikasi/push SIAKAD rutin sekarang jalan inline lewat
+  // ExamGradingPanel di bawah (lihat toggle showGrading) — dosen tidak perlu keluar dari LMS.
+  const handleOpenRekap = async () => {
+    setOpeningRekap(true);
+    try {
+      const cbtToken = await bootstrapCbtToken();
+      const returnTo = encodeURIComponent(window.location.href);
+      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}&target=rekap-nilai&exam_id=${encodeURIComponent(cbt_exam_id)}&returnTo=${returnTo}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (_) {
+      // sama seperti handleOpenExam — tombol tetap bisa dicoba ulang
+    } finally {
+      setOpeningRekap(false);
+    }
+  };
+
   if (!cbt_exam_id) {
     return <p className="text-sm text-gray-400">Ujian belum ditautkan.</p>;
   }
@@ -161,15 +182,37 @@ export default function ExamRenderer({ item }) {
       />
 
       <div className="flex flex-wrap gap-2">
-        <button
-          type="button"
-          onClick={handleOpenExam}
-          disabled={opening}
-          className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700 disabled:opacity-60"
-        >
-          <Icon icon="mdi:open-in-new" width={18} height={18} />
-          Ikuti Ujian di Sistem CBT
-        </button>
+        {manage ? (
+          <button
+            type="button"
+            onClick={() => setShowGrading((v) => !v)}
+            className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700"
+          >
+            <Icon icon="mdi:clipboard-check-outline" width={18} height={18} />
+            {showGrading ? "Tutup Koreksi & Rekap Nilai" : "Koreksi & Rekap Nilai"}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleOpenExam}
+            disabled={opening}
+            className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700 disabled:opacity-60"
+          >
+            <Icon icon="mdi:open-in-new" width={18} height={18} />
+            Ikuti Ujian di Sistem CBT
+          </button>
+        )}
+        {manage && (
+          <button
+            type="button"
+            onClick={handleOpenRekap}
+            disabled={openingRekap}
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-60"
+          >
+            <Icon icon="mdi:open-in-new" width={16} height={16} />
+            Buka Rekap Lengkap di CBT
+          </button>
+        )}
         <button
           type="button"
           onClick={refreshAll}
@@ -180,7 +223,8 @@ export default function ExamRenderer({ item }) {
         </button>
       </div>
 
-      <StatusPanel state={status} entry={entry} />
+      {manage && showGrading && <ExamGradingPanel examId={cbt_exam_id} />}
+      {!manage && <StatusPanel state={status} entry={entry} />}
     </div>
   );
 }
