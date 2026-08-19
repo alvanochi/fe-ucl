@@ -125,12 +125,15 @@ export default function ExamRenderer({ item, manage = false }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cbt_exam_id]);
 
+  // Mahasiswa — bridge SSO langsung ke halaman input token CBT (bukan dashboard umum).
+  // Token-nya sendiri sudah tampil di TokenPanel di atas begitu sesi ujian dibuka, jadi
+  // mahasiswa tinggal salin dari sini lalu tempel di sana, tanpa perlu cari-cari menu lagi.
   const handleOpenExam = async () => {
     setOpening(true);
     try {
       const cbtToken = await bootstrapCbtToken();
       const returnTo = encodeURIComponent(window.location.href);
-      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}&returnTo=${returnTo}`;
+      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}&target=take-exam&returnTo=${returnTo}`;
       window.open(url, "_blank", "noopener,noreferrer");
     } catch (_) {
       // biarkan tombol tetap bisa dicoba ulang; kegagalan sudah cukup jelas dari tidak terbukanya tab baru
