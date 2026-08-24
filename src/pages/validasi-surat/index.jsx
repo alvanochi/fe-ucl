@@ -131,7 +131,7 @@ const ValidasiSuratPage = () => {
                     <div className="border-t border-gray-100 bg-gray-50 px-8 py-4 flex items-center gap-2">
                       <Icon icon="mdi:lock-outline" className="text-gray-300" width={14} />
                       <p className="text-[10px] text-gray-400 font-mono uppercase tracking-widest">
-                        Sistem Verifikasi Dokumen Resmi UIKA
+                        Sistem Verifikasi Dokumen
                       </p>
                     </div>
                   </div>
