@@ -138,7 +138,6 @@ const ValidasiSuratDetail = () => {
                           }
                         />
                         <InfoRow label="Tanggal Pengajuan" value={formatDate(data.created_at)} />
-                        <InfoRow label="Nomor Surat" value={data.nomor_surat} />
                       </div>
 
                       {/* Footer Surat ID */}
