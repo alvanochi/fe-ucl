@@ -118,44 +118,17 @@ const ValidasiSuratDetail = () => {
                       {/* Konten */}
                       <div className="px-7 py-8 space-y-0">
                         <InfoRow label="Jenis Surat" value={data.jenis_surat} />
-                        <InfoRow label="Perihal" value={data.form_data?.perihal} />
-                        <InfoRow
-                          label="Nama Mahasiswa"
-                          value={
-                            data.form_data?.nama_lengkap ||
-                            data.Pengirim?.personal_data?.nama_lengkap
-                          }
-                        />
-                        <InfoRow
-                          label="NPM"
-                          value={data.form_data?.npm || data.Pengirim?.npm}
-                        />
-                        <InfoRow
-                          label="Penerima / Tujuan"
-                          value={
-                            data.Penerima?.personal_data?.nama_lengkap ||
-                            data.Penerima?.email
-                          }
-                        />
+                        <InfoRow label="Nomor Surat" value={data.nomor_surat} />
+                        <InfoRow label="Nama Mahasiswa" value={data.nama_pengirim} />
+                        <InfoRow label="Penerima / Tujuan" value={data.nama_penerima} />
                         <InfoRow label="Tanggal Pengajuan" value={formatDate(data.created_at)} />
                       </div>
 
                       {/* Footer Surat ID */}
-                      <div className="border-t border-gray-100 px-7 py-4 bg-gray-50 flex items-center justify-between">
+                      <div className="border-t border-gray-100 px-7 py-4 bg-gray-50">
                         <p className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
                           ID Surat: {data.id}
                         </p>
-                        {data.form_data?.pdf_url && (
-                          <a
-                            href={`${process.env.NEXT_PUBLIC_API_URL}${data.form_data.pdf_url}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1.5 text-[10px] font-bold text-primary-600 hover:text-primary-800 uppercase tracking-widest transition-colors"
-                          >
-                            <Icon icon="mdi:file-pdf-box" width={16} />
-                            Lihat PDF
-                          </a>
-                        )}
                       </div>
                     </div>
                   )}

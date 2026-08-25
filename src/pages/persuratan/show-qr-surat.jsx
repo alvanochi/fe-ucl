@@ -73,7 +73,7 @@ export default function ShowQrSurat({ data }) {
                 {suratData.jenis_surat}
               </p>
               <p className="text-xs text-gray-500">
-                {suratData.form_data?.nama_lengkap || suratData.Pengirim?.personal_data?.nama_lengkap || '-'}
+                {suratData.nama_pengirim || '-'}
               </p>
               <p className="text-[10px] text-gray-400 font-mono">{suratData.id}</p>
             </div>
