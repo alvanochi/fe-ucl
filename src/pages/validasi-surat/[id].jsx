@@ -118,7 +118,6 @@ const ValidasiSuratDetail = () => {
                       {/* Konten */}
                       <div className="px-7 py-8 space-y-0">
                         <InfoRow label="Jenis Surat" value={data.jenis_surat} />
-                        <InfoRow label="Nomor Surat" value={data.nomor_surat} />
                         <InfoRow label="Nama Mahasiswa" value={data.nama_pengirim} />
                         <InfoRow label="Penerima / Tujuan" value={data.nama_penerima} />
                         <InfoRow label="Tanggal Pengajuan" value={formatDate(data.created_at)} />
