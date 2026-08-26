@@ -1,6 +1,7 @@
 import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
+import { asset } from "../../lib/basePath";
 
 export const Support = () => {
   return (
@@ -36,7 +37,7 @@ export const Support = () => {
                 className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
               >
                 <div className="md:w-80">
-                  <img src="/img/wahyu.jpeg" alt="" className="rounded-2xl" />
+                  <img src={asset("/img/wahyu.jpeg")} alt="" className="rounded-2xl" />
                 </div>
 
                 <div className="py-10 text-center text-primary-700">
@@ -59,7 +60,7 @@ export const Support = () => {
                 className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
               >
                 <div className="md:w-80">
-                  <img src="/img/azis.jpg" alt="" className="rounded-2xl" />
+                  <img src={asset("/img/azis.jpg")} alt="" className="rounded-2xl" />
                 </div>
 
                 <div className="py-10 text-center text-primary-700">
@@ -82,7 +83,7 @@ export const Support = () => {
                 className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
               >
                 <div className="md:w-80">
-                  <img src="/img/tamam.jpeg" alt="" className="rounded-2xl" />
+                  <img src={asset("/img/tamam.jpeg")} alt="" className="rounded-2xl" />
                 </div>
 
                 <div className="py-10 text-center text-primary-700">
@@ -104,7 +105,7 @@ export const Support = () => {
                 className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
               >
                 <div className="md:w-80">
-                  <img src="/img/tamam.jpeg" alt="" className="rounded-2xl" />
+                  <img src={asset("/img/tamam.jpeg")} alt="" className="rounded-2xl" />
                 </div>
 
                 <div className="py-10 text-center text-primary-700">
@@ -126,7 +127,7 @@ export const Support = () => {
                 className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
               >
                 <div className="md:w-80">
-                  <img src="/img/tamam.jpeg" alt="" className="rounded-2xl" />
+                  <img src={asset("/img/tamam.jpeg")} alt="" className="rounded-2xl" />
                 </div>
 
                 <div className="py-10 text-center text-primary-700">
@@ -148,7 +149,7 @@ export const Support = () => {
                 className="front px-7 py-11 rounded-2xl border-2 border-solid border-color-gray h-full w-full"
               >
                 <div className="md:w-80">
-                  <img src="/img/tamam.jpeg" alt="" className="rounded-2xl" />
+                  <img src={asset("/img/tamam.jpeg")} alt="" className="rounded-2xl" />
                 </div>
 
                 <div className="py-10 text-center text-primary-700">

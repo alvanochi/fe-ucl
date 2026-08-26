@@ -13,6 +13,7 @@ import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify-icon/react/dist/iconify.js";
 import Swal from "sweetalert2";
+import { asset } from "../../lib/basePath";
 
 export const Login = () => {
   const [stylesPage, setStylesPage] = useState({
@@ -230,7 +231,7 @@ export const Login = () => {
     return (
       <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-white">
         <img
-          src="/img/app_logo.png"
+          src={asset("/img/app_logo.png")}
           alt="Logo"
           className="object-contain h-16 mb-8"
         />
@@ -246,7 +247,7 @@ export const Login = () => {
   return (
     <>
       <Head>
-        <title>{`Login - awda`}</title>
+        <title>{`Login - ${process.env.APP_NAME}`}</title>
       </Head>
       <div
         className={`w-full min-h-screen bg-motion bg-cover bg-no-repeat`}
@@ -256,7 +257,7 @@ export const Login = () => {
           className={`relative flex flex-col grow py-12 px-10 ${styles["slider"]}`}
         >
           <Link href="/" className={`mb-16 ${styles["logo"]}`}>
-            <img src="/img/app_logo.png" alt="App Logo" />
+            <img src={asset("/img/app_logo.png")} alt="App Logo" />
           </Link>
           <div className="block relative w-[32rem] mx-auto my-auto">
             {/* SLIDER HERE */}
@@ -276,7 +277,7 @@ export const Login = () => {
               <div>
                 <div className="w-full p-8 bg-white rounded-2xl bg-opacity-20">
                   <img
-                    src="/img/login/vector-1.png"
+                    src={asset("/img/login/vector-1.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />
@@ -289,7 +290,7 @@ export const Login = () => {
               <div>
                 <div className="w-full p-8 bg-white rounded-2xl bg-opacity-20">
                   <img
-                    src="/img/login/vector-2.png"
+                    src={asset("/img/login/vector-2.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />
@@ -372,7 +373,7 @@ export const Login = () => {
               className="flex items-center justify-center w-full h-12 px-4 py-2 mt-2 font-semibold text-gray-700 bg-white rounded-lg shadow-md hover:bg-gray-100"
             >
               <img
-                src="/img/google.png"
+                src={asset("/img/google.png")}
                 alt="Google Logo"
                 className="w-6 h-6 mr-2"
               />

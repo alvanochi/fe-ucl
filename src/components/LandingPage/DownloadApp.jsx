@@ -1,4 +1,5 @@
 import React from "react";
+import { asset } from "../../lib/basePath";
 
 export const DownloadApp = () => {
   return (
@@ -17,13 +18,13 @@ export const DownloadApp = () => {
               href="#"
               className="bg-color-white h-16 w-44 grid place-items-center rounded-lg hover:opacity-70"
             >
-              <img src="/img/landing-page/ios-store-dark.png" alt="" />
+              <img src={asset("/img/landing-page/ios-store-dark.png")} alt="" />
             </a>
             <a
               href="#"
               className="bg-color-white h-16 w-44 grid place-items-center rounded-lg hover:opacity-70"
             >
-              <img src="/img/landing-page/g-play-dark.png" alt="" />
+              <img src={asset("/img/landing-page/g-play-dark.png")} alt="" />
             </a>
           </div>
         </div>

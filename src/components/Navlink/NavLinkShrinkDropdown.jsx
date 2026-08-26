@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Icon } from "@iconify-icon/react";
 import classNames from "classnames";
+import { asset } from "../../lib/basePath";
 
 export const NavLinkShrinkDropdown = ({
   label,
@@ -48,7 +49,7 @@ export const NavLinkShrinkDropdown = ({
           })}
         >
           <img
-            src="/img/sidebar_shrink_bg.svg"
+            src={asset("/img/sidebar_shrink_bg.svg")}
             alt="bg shrink"
             className="w-16 h-auto"
           />

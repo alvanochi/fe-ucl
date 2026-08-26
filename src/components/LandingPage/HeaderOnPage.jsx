@@ -1,6 +1,7 @@
 import { Icon } from "@iconify-icon/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { asset } from "../../lib/basePath";
 
 const HeaderOnPage = () => {
   useEffect(() => {
@@ -62,7 +63,7 @@ const HeaderOnPage = () => {
       <nav className="container flex justify-between items-center">
         <div className="py-5 text-color-secondary font-bold text-3xl">
           <Link href="/">
-            <img src="/img/landing-page/logo-tias.png" alt="" width="170" />
+            <img src={asset("/img/landing-page/logo-tias.png")} alt="" width="170" />
           </Link>
         </div>
         <div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import { asset } from "../../lib/basePath";
 
 export const Hero = () => {
   return (
@@ -22,7 +23,7 @@ export const Hero = () => {
           </div>
 
           <div data-aos="zoom-in-down" className="md:w-1/2">
-            <img src="/img/landing-page/hero-image.png" alt="" />
+            <img src={asset("/img/landing-page/hero-image.png")} alt="" />
           </div>
         </div>
       </div>

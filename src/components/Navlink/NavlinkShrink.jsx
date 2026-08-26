@@ -1,6 +1,7 @@
 import { Icon } from "@iconify-icon/react";
 import classNames from "classnames";
 import Link from "next/link";
+import { asset } from "../../lib/basePath";
 
 export const NavbarShrink = ({
   label,
@@ -38,7 +39,7 @@ export const NavbarShrink = ({
         })}
       >
         <img
-          src="/img/sidebar_shrink_bg.svg"
+          src={asset("/img/sidebar_shrink_bg.svg")}
           alt="bg shrink"
           className="w-16 h-auto"
         />

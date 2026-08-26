@@ -1,4 +1,5 @@
 import React from "react";
+import { asset } from "../../lib/basePath";
 
 export const About = () => {
   return (
@@ -6,7 +7,7 @@ export const About = () => {
       <div className="container py-20 relative">
         <div className="flex flex-col items-center justify-between md:flex-row">
           <div data-aos="fade-right" className="mb-12 md:w-1/2">
-            <img src="/img/landing-page/about.png" alt="" />
+            <img src={asset("/img/landing-page/about.png")} alt="" />
           </div>
 
           <div

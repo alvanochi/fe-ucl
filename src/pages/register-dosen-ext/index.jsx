@@ -15,6 +15,7 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import Form from '../../components/Form'
 import { Icon } from '@iconify-icon/react/dist/iconify.js'
+import { asset } from "../../lib/basePath";
 const Slider = dynamic(() => import('react-slick'), { ssr: false })
 
 const RegisterDosenExt = () => {
@@ -419,7 +420,7 @@ const RegisterDosenExt = () => {
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <img
-                    src="/img/login/vector-1.png"
+                    src={asset("/img/login/vector-1.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />
@@ -431,7 +432,7 @@ const RegisterDosenExt = () => {
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <img
-                    src="/img/login/vector-2.png"
+                    src={asset("/img/login/vector-2.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />

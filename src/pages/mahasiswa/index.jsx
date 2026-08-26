@@ -13,6 +13,7 @@ import Link from 'next/link'
 import resolveConfig from 'tailwindcss/resolveConfig'
 import twConfig from '../../../tailwind.config.js'
 import { Loading } from '../../components/Loading'
+import { asset } from "../../lib/basePath";
 
 const AreaChart = dynamic(() => import('../../components/Chart/area'), {
   ssr: false,
@@ -346,7 +347,7 @@ export default function Home() {
               </div>
               <div className="shrink-0">
                 <img
-                  src="/icon/print_cv.png"
+                  src={asset("/icon/print_cv.png")}
                   alt="Print Illustration"
                   className="w-full h-auto"
                 />

@@ -1,4 +1,5 @@
 import React from "react";
+import { asset } from "../../lib/basePath";
 
 export const Footer = () => {
   return (
@@ -91,14 +92,14 @@ export const Footer = () => {
                       Subscribe With Email And Loads Of News Will Be Sent To You
                     </p> */}
               <div className="flex items-center">
-                <img src="/img/landing-page/ti-logo.png" alt="" width={80} />
+                <img src={asset("/img/landing-page/ti-logo.png")} alt="" width={80} />
                 <img
-                  src="/img/landing-page/himatekinfo-logo.png"
+                  src={asset("/img/landing-page/himatekinfo-logo.png")}
                   alt=""
                   width={80}
                 />
                 <img
-                  src="/img/landing-page/logo-uika.png"
+                  src={asset("/img/landing-page/logo-uika.png")}
                   alt=""
                   className="ml-2"
                   width={80}

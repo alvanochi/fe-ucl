@@ -8,6 +8,7 @@ import NavbarShrink from "../Navlink/NavlinkShrink";
 import NavLinkDropdown from "../Navlink/NavLinkDropdown";
 import NavLinkShrinkDropdown from "../Navlink/NavLinkShrinkDropdown";
 import useUser from "../../hooks/useUser";
+import { asset } from "../../lib/basePath";
 
 export const Sidebar = ({ expanded, toggle }) => {
   const router = useRouter();
@@ -47,7 +48,7 @@ export const Sidebar = ({ expanded, toggle }) => {
         {expanded && (
           <div className="flex items-center px-4 grow">
             <img
-              src="/img/app_logo.png"
+              src={asset("/img/app_logo.png")}
               alt="app logo"
               className={classNames("w-50 h-16", { hidden: !expanded })}
             />
@@ -59,7 +60,7 @@ export const Sidebar = ({ expanded, toggle }) => {
             onClick={toggle}
           >
             <img
-              src="/icon/icon_maximize.svg"
+              src={asset("/icon/icon_maximize.svg")}
               alt="sidebar control icon"
               className={classNames(
                 "h-6 w-6 transition-transform duration-100",

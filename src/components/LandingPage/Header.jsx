@@ -1,6 +1,7 @@
 import { Icon } from "@iconify-icon/react";
 import Link from "next/link";
 import React, { useState } from "react";
+import { asset } from "../../lib/basePath";
 
 export const Header = () => {
   const handleHamburgerClick = () => {
@@ -26,7 +27,7 @@ export const Header = () => {
       <nav className="container flex justify-between items-center bg-color-primary-dark">
         <div className="py-5 text-color-secondary font-bold text-3xl">
           <a href="#home">
-            <img src="/img/landing-page/logo-tias.png" alt="" width="170" />
+            <img src={asset("/img/landing-page/logo-tias.png")} alt="" width="170" />
           </a>
         </div>
         <div>
