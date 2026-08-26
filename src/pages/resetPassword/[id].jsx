@@ -13,6 +13,7 @@ import { MySwal, loadingAlert } from '../../lib/sweetalert'
 
 import axios from 'axios'
 import { useEffect, useState } from 'react'
+import { asset } from "../../lib/basePath";
 
 const ResetPassword = () => {
   const [stylesPage, setStylesPage] = useState({
@@ -165,7 +166,7 @@ const ResetPassword = () => {
         </form>
         <div className={`relative flex flex-col grow py-12 px-10 ${styles['slider']}`}>
           <div className="block mb-16">
-            <img src="/img/app_logo.png" alt="App Logo" />
+            <img src={asset("/img/app_logo.png")} alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">
             {/* SLIDER HERE */}
@@ -183,7 +184,7 @@ const ResetPassword = () => {
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <img
-                    src="/img/login/vector-1.png"
+                    src={asset("/img/login/vector-1.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />
@@ -195,7 +196,7 @@ const ResetPassword = () => {
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <img
-                    src="/img/login/vector-2.png"
+                    src={asset("/img/login/vector-2.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />

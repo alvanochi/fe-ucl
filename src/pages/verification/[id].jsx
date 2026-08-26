@@ -4,6 +4,7 @@ import Button from '../../components/Button'
 import Router, { useRouter } from 'next/router'
 import axios from 'axios'
 import { MySwal, loadingAlert, toastAlert } from '../../lib/sweetalert'
+import { asset } from "../../lib/basePath";
 
 const Verification = () => {
   const [stylesPage, setStylesPage] = useState({
@@ -73,7 +74,7 @@ const Verification = () => {
       >
         <div className="relative flex flex-col grow py-7 px-6">
           <div className={`block ${stylesPage.mLogo}`}>
-            <img src="/img/app_logo.png" alt="App Logo" />
+            <img src={asset("/img/app_logo.png")} alt="App Logo" />
           </div>
           <div className={`block relative ${stylesPage.widthCard} mx-auto my-auto `}>
             <div>
@@ -85,7 +86,7 @@ const Verification = () => {
                   Verify
                 </Button>
                 <img
-                  src="/img/verification/verification-vector.png"
+                  src={asset("/img/verification/verification-vector.png")}
                   alt="Login slider"
                   className="mx-auto mb-2 h-42"
                 />

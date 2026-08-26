@@ -1,4 +1,5 @@
 import React from "react";
+import { asset } from "../../lib/basePath";
 
 export const Blog = () => {
   return (
@@ -15,7 +16,7 @@ export const Blog = () => {
           <div>
             <div className="lg:h-[40vh] rounded-xl scale-100 overflow-hidden">
               <img
-                src="/img/landing-page/blog1.jpg"
+                src={asset("/img/landing-page/blog1.jpg")}
                 alt=""
                 className="lg:h-full w-full hover:scale-125 transition duration-300 ease-in-out"
               />
@@ -53,7 +54,7 @@ export const Blog = () => {
           <div>
             <div className="lg:h-[40vh] rounded-xl scale-100 overflow-hidden">
               <img
-                src="/img/landing-page/blog2.jpg"
+                src={asset("/img/landing-page/blog2.jpg")}
                 alt=""
                 className="lg:h-full w-full hover:scale-125 transition duration-300 ease-in-out"
               />
@@ -91,7 +92,7 @@ export const Blog = () => {
           <div>
             <div className="lg:h-[40vh] rounded-xl scale-100 overflow-hidden">
               <img
-                src="/img/landing-page/blog3.jpg"
+                src={asset("/img/landing-page/blog3.jpg")}
                 alt=""
                 className="lg:h-full w-full hover:scale-125 transition duration-300 ease-in-out"
               />

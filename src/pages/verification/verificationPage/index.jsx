@@ -1,5 +1,6 @@
 import Head from "next/head";
 import React, { useEffect, useState } from "react";
+import { asset } from "../../../lib/basePath";
 
 const VerificationPage = () => {
   const [stylesPage, setStylesPage] = useState({
@@ -39,7 +40,7 @@ const VerificationPage = () => {
       >
         <div className="relative flex flex-col grow py-7 px-6">
           <div className={`block ${stylesPage.mLogo}`}>
-            <img src="/img/app_logo.png" alt="App Logo" />
+            <img src={asset("/img/app_logo.png")} alt="App Logo" />
           </div>
           <div
             className={`block relative ${stylesPage.widthCard} mx-auto my-auto`}
@@ -53,7 +54,7 @@ const VerificationPage = () => {
                   Check Your Email Or Spam Email For Verification Account.
                 </h1>
                 <img
-                  src="/img/verification/verify-send-vector.png"
+                  src={asset("/img/verification/verify-send-vector.png")}
                   alt="Login slider"
                   className="mx-auto mb-2 h-42"
                 />

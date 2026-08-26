@@ -10,6 +10,7 @@ import 'slick-carousel/slick/slick-theme.css'
 import styles from './register.module.css'
 import Link from 'next/link'
 import { toastAlert } from '../../lib/sweetalert'
+import { asset } from "../../lib/basePath";
 
 export const Verify = () => {
   const INITIAL_FORM = {
@@ -66,7 +67,7 @@ export const Verify = () => {
       <div className="flex w-full min-h-screen bg-motion bg-cover bg-no-repeat">
         <div className="relative flex flex-col grow py-12 px-10">
           <div className="block mb-16">
-            <img src="/img/app_logo.png" alt="App Logo" />
+            <img src={asset("/img/app_logo.png")} alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">
             {/* SLIDER HERE */}
@@ -84,7 +85,7 @@ export const Verify = () => {
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <img
-                    src="/img/login/vector-1.png"
+                    src={asset("/img/login/vector-1.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />
@@ -96,7 +97,7 @@ export const Verify = () => {
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <img
-                    src="/img/login/vector-2.png"
+                    src={asset("/img/login/vector-2.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />

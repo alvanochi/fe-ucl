@@ -1,4 +1,5 @@
 import React from "react";
+import { asset } from "../../lib/basePath";
 
 export const TestiMonials = () => {
   const handleReviewClick = (event) => {
@@ -49,31 +50,31 @@ export const TestiMonials = () => {
         <div className="mt-8">
           <div className="flex items-center justify-center flex-wrap">
             <img
-              src="/img/bpk_fitrah.jpeg"
+              src={asset("/img/bpk_fitrah.jpeg")}
               alt=""
               className="h-20 w-20 rounded-full p-1 m-3 cursor-pointer user-pic active-pic"
               onClick={handleReviewClickDsn}
             />
             <img
-              src="/img/bpk_safar.JPG"
+              src={asset("/img/bpk_safar.JPG")}
               alt=""
               className="h-20 w-20 rounded-full p-1 m-3 cursor-pointer user-pic"
               onClick={handleReviewClickDsn}
             />
             <img
-              src="/img/azis.jpg"
+              src={asset("/img/azis.jpg")}
               alt=""
               className="h-20 w-20 rounded-full p-1 m-3 cursor-pointer user-pic"
               onClick={handleReviewClick}
             />
             <img
-              src="/img/wahyu.jpeg"
+              src={asset("/img/wahyu.jpeg")}
               alt=""
               className="h-20 w-20 rounded-full p-1 m-3 cursor-pointer user-pic"
               onClick={handleReviewClick}
             />
             <img
-              src="/img/tamam.jpeg"
+              src={asset("/img/tamam.jpeg")}
               alt=""
               className="h-20 w-20 rounded-full p-1 m-3 cursor-pointer user-pic"
               onClick={handleReviewClick}

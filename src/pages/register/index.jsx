@@ -12,6 +12,7 @@ import Link from 'next/link'
 import { MySwal, loadingAlert, toastAlert } from '../../lib/sweetalert'
 import { useEffect, useState } from 'react'
 import { Icon } from '@iconify-icon/react/dist/iconify.js'
+import { asset } from "../../lib/basePath";
 
 export const Register = () => {
   const [displayValue, setDisplayValue] = useState('flex')
@@ -178,7 +179,7 @@ export const Register = () => {
       >
         <div className={`relative flex flex-col grow py-12 px-10 ${styles['slider']}`}>
           <div className={`mb-16 ${styles['logo']}`}>
-            <img src="/img/app_logo.png" alt="App Logo" />
+            <img src={asset("/img/app_logo.png")} alt="App Logo" />
           </div>
           <div className="block relative w-[32rem] mx-auto my-auto">
             <Slider {...settings} arrows={false} className={styles['slider']}>
@@ -195,7 +196,7 @@ export const Register = () => {
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <img
-                    src="/img/login/vector-1.png"
+                    src={asset("/img/login/vector-1.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />
@@ -207,7 +208,7 @@ export const Register = () => {
               <div>
                 <div className="w-full rounded-2xl bg-opacity-20 bg-white p-8">
                   <img
-                    src="/img/login/vector-2.png"
+                    src={asset("/img/login/vector-2.png")}
                     alt="Login slider"
                     className="mx-auto mb-2 h-72"
                   />
