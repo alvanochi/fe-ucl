@@ -35,6 +35,7 @@ export default function ClassCard({ kelas, basePath, demo = false }) {
           </h3>
           <p className="mt-0.5 text-sm text-white/80">
             Kelas {kelas.nama_kelas || "—"} • {kelas.sks ?? "?"} SKS
+            {kelas.nama_periode ? ` • ${kelas.nama_periode}` : ""}
           </p>
         </div>
 

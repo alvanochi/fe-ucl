@@ -102,6 +102,19 @@ export async function fetchLmsFileBlob(itemId) {
 }
 
 /**
+ * Ambil representasi PREVIEW (selalu PDF) dari `GET /lms/files/:id/preview` sebagai Blob —
+ * pdf asli utk item type=pdf, PDF hasil konversi server-side utk type=ppt (bila tersedia).
+ * Sama pola auth/blob dengan fetchLmsFileBlob di atas. Bisa 404 kalau preview belum ada
+ * (mis. konversi ppt gagal di backend) — caller (renderer) yang menangani fallback-nya.
+ *
+ * @returns {Promise<Blob>}
+ */
+export async function fetchLmsFilePreviewBlob(itemId) {
+  const res = await axios.get(`${LMS_BASE()}/files/${itemId}/preview`, { responseType: "blob" });
+  return res.data;
+}
+
+/**
  * Forum (thread + balasan) di dalam content item bertipe `forum`.
  * Respons backend: { limit, page, total, total_page, rows: [...] } (thread & post list),
  * dan { thread, posts: {...paginasi...} } untuk detail satu thread.
