@@ -35,6 +35,8 @@ const emptyForm = {
   max_score: "",
   allow_late: true,
   allowed_file_types: [],
+  attendanceMetode: "",
+  attendanceDurasi: "",
 };
 
 // ISO datetime → value untuk <input type="datetime-local"> (jam lokal browser).
@@ -84,6 +86,8 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
         max_score: p.max_score != null ? String(p.max_score) : "",
         allow_late: p.allow_late !== undefined ? p.allow_late : true,
         allowed_file_types: Array.isArray(p.allowed_file_types) ? p.allowed_file_types : [],
+        attendanceMetode: p.metode || "",
+        attendanceDurasi: p.durasi_menit != null ? String(p.durasi_menit) : "",
       });
     } else {
       setType("");
@@ -171,6 +175,11 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
           allow_late: form.allow_late,
           allowed_file_types: form.allowed_file_types.length ? form.allowed_file_types : null,
         };
+      case "attendance":
+        return {
+          metode: form.attendanceMetode,
+          durasi_menit: form.attendanceDurasi ? Number(form.attendanceDurasi) : null,
+        };
       default:
         // forum: payload kosong. JANGAN kirim `null` untuk tipe berpayload — backend menolak
         // payload yang bukan object valid. `undefined` membuat axios/JSON.stringify membuang
@@ -186,6 +195,13 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
     if (type === "url" && !form.url.trim()) return "URL wajib diisi.";
     if (type === "video" && !form.youtube_url.trim()) return "URL YouTube wajib diisi.";
     if (type === "exam" && !form.cbt_exam_id) return "Pilih ujian CBT terlebih dahulu.";
+    if (type === "attendance") {
+      if (!form.attendanceMetode) return "Pilih metode kelas (online/offline).";
+      if (form.attendanceDurasi) {
+        const d = Number(form.attendanceDurasi);
+        if (!Number.isFinite(d) || d <= 0) return "Batas waktu harus angka > 0 (atau dikosongkan).";
+      }
+    }
     if (type === "assignment") {
       const score = Number(form.max_score);
       if (!form.max_score || !Number.isFinite(score) || score <= 0) {
@@ -532,11 +548,55 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
           )}
 
           {type === "attendance" && (
-            <p className="rounded-lg bg-cyan-50 px-3 py-2 text-sm text-cyan-700">
-              Aktivitas presensi dibuat dengan judul di atas. Sesi presensi (token, lokasi,
-              verifikasi wajah) dibuka langsung oleh dosen dari halaman aktivitas ini setelah
-              disimpan — tidak ada pengaturan tambahan di sini.
-            </p>
+            <>
+              <Form.Group>
+                <Form.Label>Metode Kelas</Form.Label>
+                <div className="mt-1 flex gap-2">
+                  {[
+                    { value: "offline", label: "Offline (Tatap Muka)" },
+                    { value: "online", label: "Online" },
+                  ].map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => set("attendanceMetode", opt.value)}
+                      className={classNames(
+                        "flex-1 rounded-xl border px-4 py-2 text-sm font-medium transition",
+                        form.attendanceMetode === opt.value
+                          ? "border-cyan-500 bg-cyan-50 text-cyan-700"
+                          : "border-gray-200 text-gray-600 hover:bg-gray-50"
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-1 text-xs text-gray-400">
+                  Offline: mahasiswa wajib membagikan lokasi (diverifikasi radius terhadap lokasi
+                  dosen saat membuka sesi). Online: lokasi tidak diminta.
+                </p>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Batas Waktu Sesi (menit, opsional)</Form.Label>
+                <Form.Input
+                  type="number"
+                  min="1"
+                  value={form.attendanceDurasi}
+                  onChange={(e) => set("attendanceDurasi", e.target.value)}
+                  className="mt-1 w-full"
+                  placeholder="Kosongkan = tanpa batas, ditutup manual"
+                />
+                <p className="mt-1 text-xs text-gray-400">
+                  Tentukan sendiri sesuai kebutuhan (mis. 15). Sesi otomatis dianggap berakhir
+                  sekian menit sejak dibuka — tetap bisa ditutup lebih awal secara manual.
+                </p>
+              </Form.Group>
+              <p className="rounded-lg bg-cyan-50 px-3 py-2 text-sm text-cyan-700">
+                Pengaturan di atas berlaku tiap kali sesi presensi dibuka untuk pertemuan ini.
+                Token, verifikasi lokasi, dan wajah diproses saat dosen membuka sesi dari halaman
+                aktivitas — tidak ada pengaturan tambahan lain di sini.
+              </p>
+            </>
           )}
 
           <label className="flex items-center gap-2 text-sm text-gray-700">

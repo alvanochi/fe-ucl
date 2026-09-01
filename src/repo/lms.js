@@ -301,7 +301,10 @@ export function useCurrentAttendanceSession(kelasKuliahId, pertemuanKe, { pollMs
       ? `${ATT_BASE()}/sessions/current?kelasKuliahId=${encodeURIComponent(kelasKuliahId)}&pertemuan_ke=${pertemuanKe}`
       : null;
   const { data, error, isLoading, mutate } = useSWR(url, { refreshInterval: pollMs || 0 });
-  return { session: data?.data?.session || null, error, isLoading, mutate };
+  // `fetcher` global sudah unwrap response.data (lihat src/lib/fetcher.js) — `data` di sini
+  // SUDAH jadi { session } langsung, bukan envelope penuh. `data?.data?.session` (versi lama)
+  // selalu undefined karena nge-unwrap dua kali, makanya token tidak pernah tampil di dosen.
+  return { session: data?.session || null, error, isLoading, mutate };
 }
 
 // payload: { kelasKuliahId, pertemuan_ke, session_date, lat?, lng?, accuracy_m?, radius_m? }
@@ -318,7 +321,8 @@ export async function closeAttendanceSession(sessionId) {
 export function useAttendanceSessionRecords(sessionId, { pollMs = 5000 } = {}) {
   const url = sessionId ? `${ATT_BASE()}/sessions/${sessionId}/records` : null;
   const { data, error, isLoading } = useSWR(url, { refreshInterval: pollMs });
-  return { records: Array.isArray(data?.data) ? data.data : [], error, isLoading };
+  // Sama seperti di atas — `data` sudah array records langsung (fetcher sudah unwrap).
+  return { records: Array.isArray(data) ? data : [], error, isLoading };
 }
 
 // Mahasiswa: cek token sebelum minta izin lokasi/kamera (juga menolak dini kalau wajah
