@@ -9,6 +9,7 @@ import PptRenderer from "./renderers/PptRenderer";
 import ForumRenderer from "./renderers/ForumRenderer";
 import ExamRenderer from "./renderers/ExamRenderer";
 import AssignmentRenderer from "./renderers/AssignmentRenderer";
+import PresensiRenderer from "./renderers/PresensiRenderer";
 
 /**
  * Dispatcher penampil item berdasar tipe. Semua tipe di CONTENT_TYPE_META aktif.
@@ -28,6 +29,7 @@ const RENDERERS = {
   forum: ForumRenderer,
   exam: ExamRenderer,
   assignment: AssignmentRenderer,
+  attendance: PresensiRenderer,
 };
 
 const SOON = {};

@@ -12,7 +12,7 @@ import { bootstrapCbtToken } from "../../../lib/cbtAuth";
 // "assignment" sengaja tidak masuk sini — Tugas & Ujian digabung jadi satu
 // pilihan "exam" (link ke CBT). Item assignment lama tetap bisa diedit lewat
 // jalur isEdit (yang tidak melewati grid ini), lihat typeMeta.js.
-const EDITOR_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "exam"];
+const EDITOR_TYPES = ["page", "url", "video", "pdf", "ppt", "forum", "exam", "attendance"];
 const FILE_TYPES = ["pdf", "ppt"];
 const ACCEPT = { pdf: "application/pdf,.pdf", ppt: ".ppt,.pptx" };
 // Sinkron dengan SUBMISSION_FILE_TYPES di lib/lms/payloadValidators.js (tias-backend).
@@ -528,6 +528,14 @@ export default function ItemEditorModal({ open, onClose, sectionId, item, onSave
             <p className="rounded-lg bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
               Forum dibuat dengan judul di atas. Diskusi (thread) & balasan dikelola langsung di
               halaman aktivitas setelah forum ini disimpan.
+            </p>
+          )}
+
+          {type === "attendance" && (
+            <p className="rounded-lg bg-cyan-50 px-3 py-2 text-sm text-cyan-700">
+              Aktivitas presensi dibuat dengan judul di atas. Sesi presensi (token, lokasi,
+              verifikasi wajah) dibuka langsung oleh dosen dari halaman aktivitas ini setelah
+              disimpan — tidak ada pengaturan tambahan di sini.
             </p>
           )}
 

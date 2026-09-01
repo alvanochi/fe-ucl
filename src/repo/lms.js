@@ -286,4 +286,52 @@ export function useLmsAcademicUnits() {
   return { units: Array.isArray(data) ? data : [], error, isLoading };
 }
 
+/* --------------------------------- Presensi --------------------------------- */
+// tias-backend: /lms/attendance/* (module terpisah dari /lms/sections dkk di atas, tapi
+// base URL sama — reuse LMS_BASE()). Alur: dosen buka sesi (token+geofence opsional) →
+// mahasiswa resolve token → submit token+lokasi+foto wajah → backend verifikasi via face-api.
+
+const ATT_BASE = () => `${LMS_BASE()}/attendance`;
+
+// Sesi presensi yang SEDANG 'open' utk pertemuan ini, atau null bila belum ada dibuka —
+// dipakai dosen supaya refresh halaman tidak selalu menawarkan "buka sesi baru".
+export function useCurrentAttendanceSession(kelasKuliahId, pertemuanKe, { pollMs } = {}) {
+  const url =
+    kelasKuliahId && pertemuanKe
+      ? `${ATT_BASE()}/sessions/current?kelasKuliahId=${encodeURIComponent(kelasKuliahId)}&pertemuan_ke=${pertemuanKe}`
+      : null;
+  const { data, error, isLoading, mutate } = useSWR(url, { refreshInterval: pollMs || 0 });
+  return { session: data?.data?.session || null, error, isLoading, mutate };
+}
+
+// payload: { kelasKuliahId, pertemuan_ke, session_date, lat?, lng?, accuracy_m?, radius_m? }
+export async function openAttendanceSession(payload) {
+  const res = await axios.post(`${ATT_BASE()}/sessions`, payload);
+  return res.data;
+}
+export async function closeAttendanceSession(sessionId) {
+  const res = await axios.patch(`${ATT_BASE()}/sessions/${sessionId}/close`);
+  return res.data;
+}
+
+// Roster (siapa saja yang sudah presensi) — dipoll ringan selama panel sesi dosen terbuka.
+export function useAttendanceSessionRecords(sessionId, { pollMs = 5000 } = {}) {
+  const url = sessionId ? `${ATT_BASE()}/sessions/${sessionId}/records` : null;
+  const { data, error, isLoading } = useSWR(url, { refreshInterval: pollMs });
+  return { records: Array.isArray(data?.data) ? data.data : [], error, isLoading };
+}
+
+// Mahasiswa: cek token sebelum minta izin lokasi/kamera (juga menolak dini kalau wajah
+// belum terdaftar di face-api — pesannya sudah manusiawi dari backend).
+export async function resolveAttendanceToken(token) {
+  const res = await axios.get(`${ATT_BASE()}/sessions/resolve`, { params: { token } });
+  return res.data;
+}
+
+// Mahasiswa: submit presensi. `formData` = { token, lat?, lng?, accuracy_m?, image (Blob) }.
+export async function submitAttendance(formData) {
+  const res = await axios.post(`${ATT_BASE()}/submit`, formData);
+  return res.data;
+}
+
 export { LMS_BASE };
