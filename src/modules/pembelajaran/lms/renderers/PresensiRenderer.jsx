@@ -81,6 +81,8 @@ function DosenPanel({ item }) {
         kelasKuliahId,
         pertemuan_ke: pertemuanKe,
         session_date: new Date().toISOString().slice(0, 10),
+        metode: item.payload?.metode || undefined,
+        durasi_menit: item.payload?.durasi_menit || undefined,
         ...(loc || {}),
       });
       if (res?.isSuccess === false) {
@@ -118,6 +120,13 @@ function DosenPanel({ item }) {
       <div className="flex flex-col items-center gap-3 rounded-xl border border-dashed border-gray-200 py-10 text-center">
         <Icon icon="mdi:qrcode-scan" width={44} height={44} className="text-cyan-600" />
         <p className="text-sm text-gray-500">Belum ada sesi presensi dibuka untuk pertemuan ini.</p>
+        {!item.payload?.metode && (
+          <p className="max-w-sm rounded-lg bg-amber-50 px-3 py-2 text-xs text-amber-700">
+            Metode kelas belum diset di aktivitas ini — sesi akan pakai deteksi otomatis dari
+            jadwal SIAK. Edit aktivitas ini untuk mengunci metode online/offline & set batas
+            waktu sendiri.
+          </p>
+        )}
         <button
           type="button"
           onClick={handleOpen}
@@ -147,6 +156,16 @@ function DosenPanel({ item }) {
           Salin
         </button>
       </div>
+
+      {session.expires_at && (
+        <p className="text-xs text-gray-500">
+          Otomatis tertutup pukul{" "}
+          <strong>
+            {new Date(session.expires_at).toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })}
+          </strong>{" "}
+          — bisa ditutup lebih awal lewat tombol di bawah.
+        </p>
+      )}
 
       <div>
         <p className="mb-2 text-sm font-medium text-gray-700">Sudah presensi ({records.length}):</p>
