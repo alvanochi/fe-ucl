@@ -13,7 +13,7 @@ import { MySwal, loadingAlert, toastAlert } from "../../lib/sweetalert";
 import { useEffect, useState } from "react";
 import { Icon } from "@iconify-icon/react/dist/iconify.js";
 import Swal from "sweetalert2";
-import { asset } from "../../lib/basePath";
+import { asset, BASE_PATH } from "../../lib/basePath";
 
 export const Login = () => {
   const [stylesPage, setStylesPage] = useState({
@@ -69,16 +69,16 @@ export const Login = () => {
           }),
         );
 
-        await axios.post("/staging/api/login", userData);
+        await axios.post(`${BASE_PATH}/api/login`, userData);
 
         const role = userData.role?.toLowerCase();
-        let targetPath = "/staging/dashboard";
+        let targetPath = `${BASE_PATH}/dashboard`;
 
-        if (role === "admin") targetPath = "/staging/admin";
-        else if (role === "mahasiswa") targetPath = "/staging/mahasiswa";
-        else if (role === "dosen") targetPath = "/staging/dosen";
-        else if (role === "dosen_ext") targetPath = "/staging/dosen_ext";
-        else if (role === "pegawai") targetPath = "/staging/pegawai";
+        if (role === "admin") targetPath = `${BASE_PATH}/admin`;
+        else if (role === "mahasiswa") targetPath = `${BASE_PATH}/mahasiswa`;
+        else if (role === "dosen") targetPath = `${BASE_PATH}/dosen`;
+        else if (role === "dosen_ext") targetPath = `${BASE_PATH}/dosen_ext`;
+        else if (role === "pegawai") targetPath = `${BASE_PATH}/pegawai`;
 
         window.location.replace(targetPath);
       } catch (error) {
@@ -160,7 +160,7 @@ export const Login = () => {
   async function setLoginSession(data) {
     try {
       const response = await axios({
-        url: "/staging/api/login",
+        url: `${BASE_PATH}/api/login`,
         method: "POST",
         data: data,
       });

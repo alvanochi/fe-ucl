@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react'
 import Router from 'next/router'
 import useSWR from 'swr'
 import axios from 'axios'
+import { BASE_PATH } from '../lib/basePath'
 
 export default function useUser({ redirectTo = '', redirectIfFound = false } = {}) {
-  const { data: user, mutate: mutateUser } = useSWR('/staging/api/user')
+  const { data: user, mutate: mutateUser } = useSWR(`${BASE_PATH}/api/user`)
   if (user && user.is_logged_in) axios.defaults.headers.common['token'] = user.token
 
   // const [profile, setProfile] = useState({});
@@ -21,11 +22,11 @@ export default function useUser({ redirectTo = '', redirectIfFound = false } = {
   })
 
   // async function logout() {
-  //   return mutateUser(axios.post('/staging/api/logout').then(() => Router.reload()))
+  //   return mutateUser(axios.post(`${BASE_PATH}/api/logout`).then(() => Router.reload()))
   // }
 
   async function logout() {
-  await axios.post('/staging/api/logout');
+  await axios.post(`${BASE_PATH}/api/logout`);
   // Redirect ke eportal login setelah logout
   window.location.href = process.env.NEXT_PUBLIC_EPORTAL_URL + '/login';
 }
