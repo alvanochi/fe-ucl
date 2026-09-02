@@ -50,7 +50,7 @@ const CreateProgresBimbingan = ({ onAction, id, mhsid }) => {
       }
 
       const request = await axios({
-        url: `${process.env.API_ENDPOINT}/progres-tugas-akhir/create-progres`,
+        url: `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/create-progres`,
         method: "POST",
         data: requestData,
       });

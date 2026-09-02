@@ -23,8 +23,8 @@ export default function PengajuanSkAction() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-for-dosen`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/foto-profile`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-for-dosen`;
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/foto-profile`;
 
   const { formdata, show } = useCRUD(API_URL);
   const { form } = formdata;
@@ -63,7 +63,7 @@ export default function PengajuanSkAction() {
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/approve/${id}`,
         {
           [name]: true,
           db: "ta_pengajuan_sk",

@@ -23,8 +23,8 @@ export default function PengajuanKolo() {
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const [defaultData, setDefaultData] = useState({});
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-pengajuan-kolo`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/tugas-akhir/makalah-kolokium`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-pengajuan-kolo`;
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/makalah-kolokium`;
 
   const INITIAL_FORM = {
     pengajuan_sk_id: "",
@@ -100,7 +100,7 @@ export default function PengajuanKolo() {
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/approve/${id}`,
         {
           [name]: true,
           db: "ta_pendaftaran_kolokium",

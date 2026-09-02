@@ -16,9 +16,9 @@ export default function PengumpulanSkripsi() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
 
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-dokumen-skripsi`;
-  const FILE_URL_SKRIPSI = `${process.env.API_ENDPOINT}/tugas-akhir/final-skripsi`;
-  const FILE_URL_PENGESAHAN = `${process.env.API_ENDPOINT}/tugas-akhir/lembar-pengesahan`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-dokumen-skripsi`;
+  const FILE_URL_SKRIPSI = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/final-skripsi`;
+  const FILE_URL_PENGESAHAN = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/lembar-pengesahan`;
 
   const INITIAL_FORM = {
     pengajuan_sk_id: "",
@@ -40,7 +40,7 @@ export default function PengumpulanSkripsi() {
 
   const { form, inputHandler } = formdata;
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/upload-final-skripsi`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/upload-final-skripsi`;
   const EDIT_OPTION = {
     url: `${EDIT_URL}/${form.dokumen_id}`,
     method: "PATCH",

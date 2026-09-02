@@ -25,8 +25,8 @@ export default function PelaksanaanKolo() {
 
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-penilaian-kolo-dosen`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/tugas-akhir/makalah-kolokium`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-penilaian-kolo-dosen`;
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/makalah-kolokium`;
 
   const INITIAL_FORM = {
     pengajuan_sk_id: "",
@@ -75,7 +75,7 @@ export default function PelaksanaanKolo() {
 
   const { form, inputHandler } = formdata;
 
-  const CREATE_URL = `${process.env.API_ENDPOINT}/tugas-akhir/penilaian-kolo`;
+  const CREATE_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/penilaian-kolo`;
   const CREATE_OPTION = { url: `${CREATE_URL}`, method: "POST" };
 
   useEffect(() => {

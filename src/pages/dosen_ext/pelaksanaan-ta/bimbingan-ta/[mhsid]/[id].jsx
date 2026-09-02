@@ -22,10 +22,10 @@ export default function PelaksanaanKolo() {
   const { user } = useUser({ redirectTo: "/login" });
   const { prefix, menu, setActive } = useMenu();
   const dataUrl = router.query.id
-    ? `${process.env.API_ENDPOINT}/progres-tugas-akhir/list-progres/${router.query.id}`
+    ? `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/list-progres/${router.query.id}`
     : null;
 
-  const DELETE_URL = `${process.env.API_ENDPOINT}/progres-tugas-akhir/delete-progres`;
+  const DELETE_URL = `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/delete-progres`;
 
   const [searchValue, setSearchValue] = useState("");
 
@@ -58,14 +58,14 @@ export default function PelaksanaanKolo() {
     status_kelulusan: "",
     peran: "",
   };
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-for-bimbingan`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-for-bimbingan`;
 
   const { formdata, show, submitHandler } = useCRUD(API_URL, INITIAL_FORM, {
     rules: [{ field: "status_kelulusan", label: "Status Kelulusan" }],
     success: () => router.push(prefix + menu.url),
   });
   const { form, inputHandler } = formdata;
-  const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/update-kelulusan`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/update-kelulusan`;
   const EDIT_OPTION = { url: `${EDIT_URL}/${form.id}`, method: "PUT" };
 
   useEffect(() => {

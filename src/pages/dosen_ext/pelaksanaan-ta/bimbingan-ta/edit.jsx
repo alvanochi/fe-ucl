@@ -20,7 +20,7 @@ const Edit = ({ id, onAction }) => {
   const getData = async (id) => {
     try {
       const response = await axios.get(
-        `${process.env.API_ENDPOINT}/progres-tugas-akhir/detail-progres/${id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/detail-progres/${id}`
       );
 
       const dataResponse = response.data.data;
@@ -55,7 +55,7 @@ const Edit = ({ id, onAction }) => {
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/progres-tugas-akhir/update-progres/${
+        `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/update-progres/${
           id || ""
         }`,
         formData

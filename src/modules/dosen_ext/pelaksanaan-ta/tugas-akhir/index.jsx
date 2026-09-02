@@ -8,7 +8,7 @@ import useNewDataTableForMainApi from "../../../../hooks/useNewDataTableForMainA
 import Filter from "./filter";
 
 export default function TugasAkhirModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/tugas-akhir/get-for-dosen`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/get-for-dosen`;
   const [searchValue, setSearchValue] = useState("");
 
   const {

@@ -23,9 +23,9 @@ export default function PengajuanSidang() {
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const [defaultData, setDefaultData] = useState({});
-  const API_URL = `${process.env.API_ENDPOINT}/tugas-akhir/detail-pengajuan-sidang`;
-  const FILE_URL = `${process.env.API_ENDPOINT}/tugas-akhir/pas-foto`;
-  const FILE_DRAFT_SKRIPSI = `${process.env.API_ENDPOINT}/tugas-akhir/draft-skripsi`;
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-pengajuan-sidang`;
+  const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/pas-foto`;
+  const FILE_DRAFT_SKRIPSI = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/draft-skripsi`;
 
   const INITIAL_FORM = {
     pengajuan_sk_id: "",
@@ -133,7 +133,7 @@ export default function PengajuanSidang() {
 
   const { form, inputHandler } = formdata;
 
-  const EDIT_URL = `${process.env.API_ENDPOINT}/tugas-akhir/pengajuan-sidang`;
+  const EDIT_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/pengajuan-sidang`;
   const EDIT_OPTION = { url: `${EDIT_URL}/${form.sidang_id}`, method: "PATCH" };
 
   useEffect(() => {
@@ -167,7 +167,7 @@ export default function PengajuanSidang() {
 
     try {
       const response = await axios.put(
-        `${process.env.API_ENDPOINT}/tugas-akhir/approve/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/approve/${id}`,
         {
           [name]: true,
           db: "ta_pendaftaran_sidang",

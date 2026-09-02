@@ -8,7 +8,7 @@ import useNewDataTableForMainApi from "../../../../hooks/useNewDataTableForMainA
 import moment from "moment/moment";
 
 export default function BimbinganTaModule({ baseURL }) {
-  const DATA_URL = `${process.env.API_ENDPOINT}/progres-tugas-akhir/get-for-dosen`;
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/progres-tugas-akhir/get-for-dosen`;
   const [searchValue, setSearchValue] = useState("");
 
   const {
