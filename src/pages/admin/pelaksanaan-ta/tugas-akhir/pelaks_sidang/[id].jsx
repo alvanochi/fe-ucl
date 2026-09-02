@@ -1009,8 +1009,8 @@ export default function PelaksanaanSidang() {
 
         <p style={{ marginBottom: 0, marginTop: "8px" }}>
           Kandidat tersebut memperoleh angka mutu:{" "}
-          {form?.nilai_akhir.nilai_akhir} yang dikonversi ke huruf mutu:{" "}
-          {form?.nilai_akhir.huruf_mutu}, sehingga dinyatakan:{" "}
+          {form?.nilai_akhir?.nilai_akhir} yang dikonversi ke huruf mutu:{" "}
+          {form?.nilai_akhir?.huruf_mutu}, sehingga dinyatakan:{" "}
           {form.status_kelulusan} dengan catatan :
         </p>
         <span>{form.komentar}</span>
@@ -1442,8 +1442,8 @@ export default function PelaksanaanSidang() {
               </table>
               <h1 className="mt-2">
                 Kandidat tersebut memperoleh angka mutu:{" "}
-                {form?.nilai_akhir.nilai_akhir} yang dikonversi ke huruf mutu:{" "}
-                {form?.nilai_akhir.huruf_mutu}, sehingga dinyatakan:
+                {form?.nilai_akhir?.nilai_akhir} yang dikonversi ke huruf mutu:{" "}
+                {form?.nilai_akhir?.huruf_mutu}, sehingga dinyatakan:
                 <div className="flex gap-4">
                   <Form.Label className="mt-2 flex items-center">
                     <Form.Radio
@@ -1557,7 +1557,7 @@ export default function PelaksanaanSidang() {
               40%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_1}
+              {form?.nilai_akhir?.penilaian_1}
             </td>
           </tr>
           <tr>
@@ -1569,7 +1569,7 @@ export default function PelaksanaanSidang() {
               10%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_2}
+              {form?.nilai_akhir?.penilaian_2}
             </td>
           </tr>
           <tr>
@@ -1581,7 +1581,7 @@ export default function PelaksanaanSidang() {
               40%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_3}
+              {form?.nilai_akhir?.penilaian_3}
             </td>
           </tr>
           <tr>
@@ -1594,7 +1594,7 @@ export default function PelaksanaanSidang() {
               10%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_4}
+              {form?.nilai_akhir?.penilaian_4}
             </td>
           </tr>
         </tbody>
@@ -1604,13 +1604,13 @@ export default function PelaksanaanSidang() {
           <div className="flex justify-end">
             <div className="text-sm font-bold pr-10">
               <span className="mr-2">Nilai Akhir :</span>{" "}
-              <span>{form?.nilai_akhir.nilai_akhir}</span>
+              <span>{form?.nilai_akhir?.nilai_akhir}</span>
             </div>
           </div>
           <div className="flex justify-end mt-2">
             <div className="text-sm font-bold pr-10">
               <span className="mr-2">Huruf Mutu :</span>{" "}
-              <span>{form?.nilai_akhir.huruf_mutu}</span>
+              <span>{form?.nilai_akhir?.huruf_mutu}</span>
             </div>
           </div>
         </div>
