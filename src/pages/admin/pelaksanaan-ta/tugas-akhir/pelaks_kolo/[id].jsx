@@ -435,7 +435,7 @@ export default function PelaksanaanKolo() {
                   textAlign: "center",
                 }}
               >
-                {form?.nilai_akhir.penilaian_1}
+                {form?.nilai_akhir?.penilaian_1}
               </td>
             </tr>
             <tr>
@@ -473,7 +473,7 @@ export default function PelaksanaanKolo() {
                   textAlign: "center",
                 }}
               >
-                {form?.nilai_akhir.penilaian_2}
+                {form?.nilai_akhir?.penilaian_2}
               </td>
             </tr>
             <tr>
@@ -511,7 +511,7 @@ export default function PelaksanaanKolo() {
                   textAlign: "center",
                 }}
               >
-                {form?.nilai_akhir.penilaian_3}
+                {form?.nilai_akhir?.penilaian_3}
               </td>
             </tr>
 
@@ -549,7 +549,7 @@ export default function PelaksanaanKolo() {
                   textAlign: "center",
                 }}
               >
-                {form?.nilai_akhir.penilaian_4}
+                {form?.nilai_akhir?.penilaian_4}
               </td>
             </tr>
             <tr>
@@ -586,7 +586,7 @@ export default function PelaksanaanKolo() {
                   textAlign: "center",
                 }}
               >
-                {form?.nilai_akhir.penilaian_5}
+                {form?.nilai_akhir?.penilaian_5}
               </td>
             </tr>
           </tbody>
@@ -608,7 +608,7 @@ export default function PelaksanaanKolo() {
                 }}
               >
                 <span style={{ marginRight: "0.5rem" }}>Nilai Akhir :</span>
-                <span>{form?.nilai_akhir.nilai_akhir}</span>
+                <span>{form?.nilai_akhir?.nilai_akhir}</span>
               </div>
             </div>
             <div
@@ -626,7 +626,7 @@ export default function PelaksanaanKolo() {
                 }}
               >
                 <span style={{ marginRight: "0.5rem" }}>Huruf Mutu :</span>
-                <span>{form?.nilai_akhir.huruf_mutu}</span>
+                <span>{form?.nilai_akhir?.huruf_mutu}</span>
               </div>
             </div>
           </div>
@@ -1339,7 +1339,7 @@ export default function PelaksanaanKolo() {
               20%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_1}
+              {form?.nilai_akhir?.penilaian_1}
             </td>
           </tr>
           <tr>
@@ -1352,7 +1352,7 @@ export default function PelaksanaanKolo() {
               40%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_2}
+              {form?.nilai_akhir?.penilaian_2}
             </td>
           </tr>
           <tr>
@@ -1364,7 +1364,7 @@ export default function PelaksanaanKolo() {
               10%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_3}
+              {form?.nilai_akhir?.penilaian_3}
             </td>
           </tr>
           <tr>
@@ -1376,7 +1376,7 @@ export default function PelaksanaanKolo() {
               10%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_4}
+              {form?.nilai_akhir?.penilaian_4}
             </td>
           </tr>
           <tr>
@@ -1388,7 +1388,7 @@ export default function PelaksanaanKolo() {
               20%
             </td>
             <td className="text-sm border-2 border-white bg-gray-50 text-center">
-              {form?.nilai_akhir.penilaian_5}
+              {form?.nilai_akhir?.penilaian_5}
             </td>
           </tr>
         </tbody>
@@ -1398,13 +1398,13 @@ export default function PelaksanaanKolo() {
           <div className="flex justify-end">
             <div className="text-sm font-bold pr-10">
               <span className="mr-2">Nilai Akhir :</span>{" "}
-              <span>{form?.nilai_akhir.nilai_akhir}</span>
+              <span>{form?.nilai_akhir?.nilai_akhir}</span>
             </div>
           </div>
           <div className="flex justify-end mt-2">
             <div className="text-sm font-bold pr-10">
               <span className="mr-2">Huruf Mutu :</span>{" "}
-              <span>{form?.nilai_akhir.huruf_mutu}</span>
+              <span>{form?.nilai_akhir?.huruf_mutu}</span>
             </div>
           </div>
         </div>
