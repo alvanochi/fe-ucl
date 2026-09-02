@@ -17,6 +17,7 @@ import EditNilai from "../../../../../components/EditPenilaian/edit-nilai";
 import Accordion from "../../../../../components/Accordion";
 import ReactDOMServer from "react-dom/server";
 import axios from "axios";
+import { escapeHtmlDeep } from "../../../../../utils/escapeHtml";
 
 export default function PelaksanaanKolo() {
   const router = useRouter();
@@ -719,7 +720,10 @@ export default function PelaksanaanKolo() {
     try {
       const BA_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/berita-acara-kolo/${router.query.id}`;
       const response = await axios.get(BA_URL);
-      const ba = response.data.data;
+      // Data ini dirakit jadi HTML mentah lewat document.write() di bawah (bukan
+      // JSX, jadi tidak auto-escape React) — escape semua nilai string di sini,
+      // di satu titik, sebelum dipakai di template manapun.
+      const ba = escapeHtmlDeep(response.data.data);
 
       const nilaiAkhir = ba.nilai_akhir;
       const tanggalFormatted = formatTanggalIndo(ba.jadwal_pelaksanaan);

@@ -18,6 +18,7 @@ import date from "../../../../../utils/date";
 import axios from "axios";
 import ReactDOMServer from "react-dom/server";
 import EditNilaiSidang from "../../../../../components/EditPenilaian/edit-nilai-sidang";
+import { escapeHtmlDeep } from "../../../../../utils/escapeHtml";
 import { getDateNow } from "../../../../../repo/bulan-tahun";
 
 export default function PelaksanaanSidang() {
@@ -98,7 +99,10 @@ export default function PelaksanaanSidang() {
     try {
       const BA_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/berita-acara-sidang/${router.query.id}`;
       const response = await axios.get(BA_URL);
-      const ba = response.data?.data;
+      // Data ini dirakit jadi HTML mentah lewat document.write() di bawah (bukan
+      // JSX, jadi tidak auto-escape React) — escape semua nilai string di sini,
+      // di satu titik, sebelum dipakai di template manapun.
+      const ba = escapeHtmlDeep(response.data?.data);
 
       if (!ba) {
         throw new Error(response.data?.message || "Data berita acara tidak ditemukan atau format respon tidak sesuai.");
