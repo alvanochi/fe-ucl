@@ -128,17 +128,17 @@ export default function PelaksanaanKolo() {
         jadwal_pelaksanaan: data.jadwal_pelaksanaan
           ? date.formatToInput(data.jadwal_pelaksanaan)
           : "",
-        pembimbing_1: data.nilai_akhir.pembimbing_1,
-        pembimbing_2: data.nilai_akhir.pembimbing_2,
-        evaluator_1: data.nilai_akhir.evaluator_1,
-        evaluator_2: data.nilai_akhir.evaluator_2,
-        komentar: data.nilai_akhir.komentar,
-        nama: data.nilai_akhir.nama,
-        judu: data.nilai_akhir.judul,
-        npm: data.nilai_akhir.npm,
-        tempat: data.nilai_akhir.tempat,
-        waktu: data.nilai_akhir.waktu,
-        tanggal: data.nilai_akhir.tanggal,
+        pembimbing_1: data.nilai_akhir?.pembimbing_1,
+        pembimbing_2: data.nilai_akhir?.pembimbing_2,
+        evaluator_1: data.nilai_akhir?.evaluator_1,
+        evaluator_2: data.nilai_akhir?.evaluator_2,
+        komentar: data.nilai_akhir?.komentar,
+        nama: data.nilai_akhir?.nama,
+        judu: data.nilai_akhir?.judul,
+        npm: data.nilai_akhir?.npm,
+        tempat: data.nilai_akhir?.tempat,
+        waktu: data.nilai_akhir?.waktu,
+        tanggal: data.nilai_akhir?.tanggal,
       }),
     });
   }, [router, user]);
