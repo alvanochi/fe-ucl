@@ -592,7 +592,11 @@ export default function PelaksanaanSidang() {
         </div>
       `;
 
-      const buildLembarPerbaikan = (peranLabel, dosenNip, dosenNama, komentarSingkat) => `
+      const buildLembarPerbaikan = (peranLabel, dosenNip, dosenNama, komentarSingkat, dosenTtd) => {
+        const dosenTtdImgTag = buildTtdUrl(dosenTtd)
+          ? `<img src="${buildTtdUrl(dosenTtd)}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;" />`
+          : `<div style="height:50px;"></div>`;
+        return `
         <div style="font-family:'Times New Roman'; font-size:12px; max-width:700px; margin:0 auto; padding:30px; page-break-before:always;">
           <div style="text-align:center; margin-bottom:20px;">
             <img src="${FILE_URL_KOP}/kop_surat.png" alt="Kop Surat" style="width:100%;max-width:680px;" />
@@ -623,7 +627,7 @@ export default function PelaksanaanSidang() {
           <div style="text-align:right;margin-top:20px;">
             <div>Bogor, ${tanggalFormatted}</div>
             <div>Dosen ${peranLabel}</div>
-            <div style="margin:50px 0 4px;">&nbsp;</div>
+            <div style="margin:10px 0 4px;display:flex;justify-content:flex-end;">${dosenTtdImgTag}</div>
             <div style="font-weight:bold;text-decoration:underline;">${dosenNama && dosenNama !== "-" ? dosenNama : "........................................................."}</div>
             <div>NIK. ${dosenNip || "......................................"}</div>
           </div>
@@ -631,10 +635,11 @@ export default function PelaksanaanSidang() {
 
         </div>
       `;
+      };
 
       const perbaikanPages = expectedDosenList
         .filter(d => ["pembimbing_1", "pembimbing_2", "penguji_1", "penguji_2"].includes(d.roleKey))
-        .map(d => buildLembarPerbaikan(d.label, d.nip, d.name, findPenilaianForDosen(d).komentar_singkat))
+        .map(d => buildLembarPerbaikan(d.label, d.nip, d.name, findPenilaianForDosen(d).komentar_singkat, d.ttd))
         .join("");
 
       const fullContent = `
