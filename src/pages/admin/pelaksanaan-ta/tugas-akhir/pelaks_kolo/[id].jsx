@@ -26,6 +26,18 @@ export default function PelaksanaanKolo() {
   const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/ttd`;
   const FILE_URL_KOP = `${process.env.NEXT_PUBLIC_API_URL}/img`;
 
+  // Data ttd lama (peninggalan prod) kadang tersimpan sebagai URL penuh atau
+  // sudah menyertakan prefix "ttd/", beda dengan data baru yang cuma nama
+  // file — kalau digabung mentah-mentah dengan FILE_URL hasilnya broken image.
+  const buildTtdUrl = (value) => {
+    if (!value) return null;
+    const v = String(value).trim();
+    if (!v) return null;
+    if (/^https?:\/\//i.test(v)) return v;
+    const cleaned = v.replace(/^\/+/, "").replace(/^(public\/)?ttd\//i, "");
+    return `${FILE_URL}/${cleaned}`;
+  };
+
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user]);
 
   const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/tugas-akhir/detail-penilaian-kolo`;
@@ -665,7 +677,7 @@ export default function PelaksanaanKolo() {
           }}
         >
           <img
-            src={`${FILE_URL}/${dataKaprodi.ttd}`}
+            src={buildTtdUrl(dataKaprodi.ttd)}
             alt="TTD"
             style={{
               width: "100%",
@@ -772,7 +784,7 @@ export default function PelaksanaanKolo() {
       const kaprodiTTD = ba.kaprodi?.ttd || null;
 
       const ttdImgTag = kaprodiTTD
-        ? `<img src="${FILE_URL}/${kaprodiTTD}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;margin:0 auto;" />`
+        ? `<img src="${buildTtdUrl(kaprodiTTD)}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;margin:0 auto;" />`
         : `<div style="height:50px;"></div>`;
 
       // Fallback calculations for dummy data missing values
@@ -948,7 +960,7 @@ export default function PelaksanaanKolo() {
       // Page 2+: Form Penilaian per Dosen (one page per penilaian)
       const buildFormPenilaian = (p, peranLabel, dosenNamaDisplay, dosenNip, dosenTtd) => {
         const dosenTtdImgTag = dosenTtd
-          ? `<img src="${FILE_URL}/${dosenTtd}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;margin:0 auto;" />`
+          ? `<img src="${buildTtdUrl(dosenTtd)}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;" />`
           : `<div style="height:50px;"></div>`;
         let finalNilai = p.final_nilai;
         let hurufMutu = p.huruf_mutu;

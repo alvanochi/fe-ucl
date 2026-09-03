@@ -32,6 +32,18 @@ export default function PelaksanaanSidang() {
   const FILE_URL = `${process.env.NEXT_PUBLIC_API_URL}/ttd`;
   const FILE_URL_KOP = `${process.env.NEXT_PUBLIC_API_URL}/img`;
 
+  // Data ttd lama (peninggalan prod) kadang tersimpan sebagai URL penuh atau
+  // sudah menyertakan prefix "ttd/", beda dengan data baru yang cuma nama
+  // file — kalau digabung mentah-mentah dengan FILE_URL hasilnya broken image.
+  const buildTtdUrl = (value) => {
+    if (!value) return null;
+    const v = String(value).trim();
+    if (!v) return null;
+    if (/^https?:\/\//i.test(v)) return v;
+    const cleaned = v.replace(/^\/+/, "").replace(/^(public\/)?ttd\//i, "");
+    return `${FILE_URL}/${cleaned}`;
+  };
+
   const INITIAL_FORM = {
     pengajuan_sk_id: "",
     sidang_id: "",
@@ -155,7 +167,7 @@ export default function PelaksanaanSidang() {
       const kaprodiTTD = ba.kaprodi?.ttd || null;
 
       const ttdImgTag = kaprodiTTD
-        ? `<img src="${FILE_URL}/${kaprodiTTD}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;" />`
+        ? `<img src="${buildTtdUrl(kaprodiTTD)}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;" />`
         : `<div style="height:50px;"></div>`;
 
       let calcP1 = nilaiAkhir?.penilaian_1;
@@ -309,7 +321,7 @@ export default function PelaksanaanSidang() {
 
       const buildFormPenilaian = (p, peranLabel, dosenNamaDisplay, dosenNip, dosenTtd) => {
         const dosenTtdImgTag = dosenTtd
-          ? `<img src="${FILE_URL}/${dosenTtd}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;margin:0 auto;" />`
+          ? `<img src="${buildTtdUrl(dosenTtd)}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;" />`
           : `<div style="height:50px;"></div>`;
         let finalNilai = p.final_nilai;
         if (!finalNilai && p.penilaian_1) {
@@ -379,7 +391,13 @@ export default function PelaksanaanSidang() {
               </tbody>
             </table>
 
-            ${intervalNilai}
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;">
+              ${intervalNilai}
+              <div style="flex:1;margin-left:20px;">
+                <div style="margin-bottom:8px;font-weight:bold;font-size:11px;">KOMENTAR SINGKAT :</div>
+                <div style="border:1px solid black;padding:10px;min-height:120px;font-size:11px;">${p.komentar_singkat || ""}</div>
+              </div>
+            </div>
 
             <div style="text-align:right;margin-top:16px;">
               <div>Bogor, ${tanggalFormatted}</div>
@@ -399,7 +417,7 @@ export default function PelaksanaanSidang() {
         { roleKey: "penguji_2", label: "Penguji II", name: penguji2Nama, dbId: ba.penguji_2 },
       ].map(d => ({ ...d, nip: getDosenNip(d.dbId), ttd: getDosenTtd(d.dbId) }));
 
-      const formPages = expectedDosenList.map(dosen => {
+      const findPenilaianForDosen = (dosen) => {
         let p = penilaianList.find(x => String(x.dosen_id) === String(dosen.dbId));
         if (!p) {
           p = penilaianList.find(x => {
@@ -418,8 +436,11 @@ export default function PelaksanaanSidang() {
             );
           });
         }
-        if (!p) p = {};
+        return p || {};
+      };
 
+      const formPages = expectedDosenList.map(dosen => {
+        const p = findPenilaianForDosen(dosen);
         return buildFormPenilaian(p, dosen.label, dosen.name, dosen.nip, dosen.ttd);
       }).join("");
 
@@ -553,14 +574,14 @@ export default function PelaksanaanSidang() {
             <div style="text-align:left;min-width:200px;">
               <div>&nbsp;</div>
               <div>Ketua Sidang,</div>
-              <div style="margin:10px 0 4px;">${getDosenTtd(ba.ketua_penguji) ? `<img src="${FILE_URL}/${getDosenTtd(ba.ketua_penguji)}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;" />` : `<div style="height:50px;"></div>`}</div>
+              <div style="margin:10px 0 4px;">${buildTtdUrl(getDosenTtd(ba.ketua_penguji)) ? `<img src="${buildTtdUrl(getDosenTtd(ba.ketua_penguji))}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;" />` : `<div style="height:50px;"></div>`}</div>
               <div style="font-weight:bold;text-decoration:underline;">${ketuaPengujiNama && ketuaPengujiNama !== "-" ? ketuaPengujiNama : "............................................."}</div>
               <div>NIK: ${getDosenNip(ba.ketua_penguji) || "....................."}</div>
             </div>
             <div style="text-align:left;min-width:200px;">
               <div>Bogor, ${tanggalFormatted}</div>
               <div>Sekretaris sidang sebagai Notulis,</div>
-              <div style="margin:10px 0 4px;">${getDosenTtd(ba.sekertaris_sidang) ? `<img src="${FILE_URL}/${getDosenTtd(ba.sekertaris_sidang)}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;" />` : `<div style="height:50px;"></div>`}</div>
+              <div style="margin:10px 0 4px;">${buildTtdUrl(getDosenTtd(ba.sekertaris_sidang)) ? `<img src="${buildTtdUrl(getDosenTtd(ba.sekertaris_sidang))}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;" />` : `<div style="height:50px;"></div>`}</div>
               <div style="font-weight:bold;text-decoration:underline;">${sekretarisSidangNama && sekretarisSidangNama !== "-" ? sekretarisSidangNama : "............................................."}</div>
               <div>NIK: ${getDosenNip(ba.sekertaris_sidang) || "....................."}</div>
             </div>
@@ -571,7 +592,7 @@ export default function PelaksanaanSidang() {
         </div>
       `;
 
-      const buildLembarPerbaikan = (peranLabel, dosenNip, dosenNama) => `
+      const buildLembarPerbaikan = (peranLabel, dosenNip, dosenNama, komentarSingkat) => `
         <div style="font-family:'Times New Roman'; font-size:12px; max-width:700px; margin:0 auto; padding:30px; page-break-before:always;">
           <div style="text-align:center; margin-bottom:20px;">
             <img src="${FILE_URL_KOP}/kop_surat.png" alt="Kop Surat" style="width:100%;max-width:680px;" />
@@ -597,7 +618,7 @@ export default function PelaksanaanSidang() {
           </table>
 
           <div style="margin-bottom:8px;">Perbaikan:</div>
-          <div style="border:1px solid black;min-height:420px;"></div>
+          <div style="border:1px solid black;min-height:420px;padding:10px;">${komentarSingkat || ""}</div>
 
           <div style="text-align:right;margin-top:20px;">
             <div>Bogor, ${tanggalFormatted}</div>
@@ -613,7 +634,7 @@ export default function PelaksanaanSidang() {
 
       const perbaikanPages = expectedDosenList
         .filter(d => ["pembimbing_1", "pembimbing_2", "penguji_1", "penguji_2"].includes(d.roleKey))
-        .map(d => buildLembarPerbaikan(d.label, d.nip, d.name))
+        .map(d => buildLembarPerbaikan(d.label, d.nip, d.name, findPenilaianForDosen(d).komentar_singkat))
         .join("");
 
       const fullContent = `
@@ -1004,7 +1025,7 @@ export default function PelaksanaanSidang() {
                 >
                   {ttd && (
                     <img
-                      src={`${FILE_URL}/${ttd}`}
+                      src={buildTtdUrl(ttd)}
                       alt="TTD"
                       style={{
                         width: "100px",
@@ -1319,7 +1340,7 @@ export default function PelaksanaanSidang() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 text-center">
                       <img
-                        src={`${FILE_URL}/${ttd?.ketua_penguji}`}
+                        src={buildTtdUrl(ttd?.ketua_penguji)}
                         alt="TTD"
                         className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
@@ -1344,7 +1365,7 @@ export default function PelaksanaanSidang() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 text-center">
                       <img
-                        src={`${FILE_URL}/${ttd.pembimbing_1}`}
+                        src={buildTtdUrl(ttd.pembimbing_1)}
                         alt="TTD"
                         className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
@@ -1369,7 +1390,7 @@ export default function PelaksanaanSidang() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 text-center">
                       <img
-                        src={`${FILE_URL}/${ttd.pembimbing_2}`}
+                        src={buildTtdUrl(ttd.pembimbing_2)}
                         alt="TTD"
                         className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
@@ -1394,7 +1415,7 @@ export default function PelaksanaanSidang() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 text-center">
                       <img
-                        src={`${FILE_URL}/${ttd.penguji_1}`}
+                        src={buildTtdUrl(ttd.penguji_1)}
                         alt="TTD"
                         className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
@@ -1419,7 +1440,7 @@ export default function PelaksanaanSidang() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 text-center">
                       <img
-                        src={`${FILE_URL}/${ttd.penguji_2}`}
+                        src={buildTtdUrl(ttd.penguji_2)}
                         alt="TTD"
                         className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
@@ -1444,7 +1465,7 @@ export default function PelaksanaanSidang() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 text-center">
                       <img
-                        src={`${FILE_URL}/${ttd.sekertaris_sidang}`}
+                        src={buildTtdUrl(ttd.sekertaris_sidang)}
                         alt="TTD"
                         className="w-40 h-20 object-cover border-2 border-primary-600"
                       />
