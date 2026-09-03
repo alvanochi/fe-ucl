@@ -133,6 +133,15 @@ export default function PelaksanaanSidang() {
         return "";
       };
 
+      const getDosenTtd = (id) => {
+        if (!id || id === "0" || id === 0) return null;
+        if (listDosen) {
+          const found = listDosen.find((d) => String(d.user_id) === String(id));
+          if (found) return found.ttd || null;
+        }
+        return null;
+      };
+
       const pembimbing1Nama = ba.nama_pembimbing_1 || getDosenNama(ba.sidang_pembimbing_1);
       const pembimbing2Nama = ba.nama_pembimbing_2 || getDosenNama(ba.sidang_pembimbing_2);
       const pembimbing3Nama = ba.nama_pembimbing_3 || getDosenNama(ba.sidang_pembimbing_3);
@@ -298,7 +307,10 @@ export default function PelaksanaanSidang() {
         </div>
       `;
 
-      const buildFormPenilaian = (p, peranLabel, dosenNamaDisplay, dosenNip) => {
+      const buildFormPenilaian = (p, peranLabel, dosenNamaDisplay, dosenNip, dosenTtd) => {
+        const dosenTtdImgTag = dosenTtd
+          ? `<img src="${FILE_URL}/${dosenTtd}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;margin:0 auto;" />`
+          : `<div style="height:50px;"></div>`;
         let finalNilai = p.final_nilai;
         if (!finalNilai && p.penilaian_1) {
           finalNilai = (
@@ -372,7 +384,7 @@ export default function PelaksanaanSidang() {
             <div style="text-align:right;margin-top:16px;">
               <div>Bogor, ${tanggalFormatted}</div>
               <div>Dosen ${peranLabel},</div>
-              <div style="margin:50px 0 4px;">&nbsp;</div>
+              <div style="margin:10px 0 4px;display:flex;justify-content:flex-end;">${dosenTtdImgTag}</div>
               <div style="font-weight:bold;text-decoration:underline;">(${dosenNamaDisplay && dosenNamaDisplay !== "-" ? dosenNamaDisplay : "........................................................."})</div>
               <div>NIK/NID: ${dosenNip || "..........................."}</div>
             </div>
@@ -385,7 +397,7 @@ export default function PelaksanaanSidang() {
         { roleKey: "pembimbing_2", label: "Pembimbing Pendamping", name: pembimbing2Nama, dbId: ba.sidang_pembimbing_2 },
         { roleKey: "penguji_1", label: "Penguji I", name: penguji1Nama, dbId: ba.penguji_1 },
         { roleKey: "penguji_2", label: "Penguji II", name: penguji2Nama, dbId: ba.penguji_2 },
-      ].map(d => ({ ...d, nip: getDosenNip(d.dbId) }));
+      ].map(d => ({ ...d, nip: getDosenNip(d.dbId), ttd: getDosenTtd(d.dbId) }));
 
       const formPages = expectedDosenList.map(dosen => {
         let p = penilaianList.find(x => String(x.dosen_id) === String(dosen.dbId));
@@ -408,7 +420,7 @@ export default function PelaksanaanSidang() {
         }
         if (!p) p = {};
 
-        return buildFormPenilaian(p, dosen.label, dosen.name, dosen.nip);
+        return buildFormPenilaian(p, dosen.label, dosen.name, dosen.nip, dosen.ttd);
       }).join("");
 
       // Rekapitulasi Page
@@ -541,14 +553,14 @@ export default function PelaksanaanSidang() {
             <div style="text-align:left;min-width:200px;">
               <div>&nbsp;</div>
               <div>Ketua Sidang,</div>
-              <div style="margin:50px 0 4px;">&nbsp;</div>
+              <div style="margin:10px 0 4px;">${getDosenTtd(ba.ketua_penguji) ? `<img src="${FILE_URL}/${getDosenTtd(ba.ketua_penguji)}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;" />` : `<div style="height:50px;"></div>`}</div>
               <div style="font-weight:bold;text-decoration:underline;">${ketuaPengujiNama && ketuaPengujiNama !== "-" ? ketuaPengujiNama : "............................................."}</div>
               <div>NIK: ${getDosenNip(ba.ketua_penguji) || "....................."}</div>
             </div>
             <div style="text-align:left;min-width:200px;">
               <div>Bogor, ${tanggalFormatted}</div>
               <div>Sekretaris sidang sebagai Notulis,</div>
-              <div style="margin:50px 0 4px;">&nbsp;</div>
+              <div style="margin:10px 0 4px;">${getDosenTtd(ba.sekertaris_sidang) ? `<img src="${FILE_URL}/${getDosenTtd(ba.sekertaris_sidang)}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;" />` : `<div style="height:50px;"></div>`}</div>
               <div style="font-weight:bold;text-decoration:underline;">${sekretarisSidangNama && sekretarisSidangNama !== "-" ? sekretarisSidangNama : "............................................."}</div>
               <div>NIK: ${getDosenNip(ba.sekertaris_sidang) || "....................."}</div>
             </div>

@@ -752,6 +752,15 @@ export default function PelaksanaanKolo() {
         return "";
       };
 
+      const getDosenTtd = (id) => {
+        if (!id || id === "0" || id === 0) return null;
+        if (listDosen) {
+          const found = listDosen.find((d) => String(d.user_id) === String(id));
+          if (found) return found.ttd || null;
+        }
+        return null;
+      };
+
       const pembimbing1Nama = ba.nama_pembimbing_1 || getDosenNama(ba.kolo_pembimbing_1);
       const pembimbing2Nama = ba.nama_pembimbing_2 || getDosenNama(ba.kolo_pembimbing_2);
       const pembimbing3Nama = ba.nama_pembimbing_3 || getDosenNama(ba.kolo_pembimbing_3);
@@ -937,7 +946,10 @@ export default function PelaksanaanKolo() {
       `;
 
       // Page 2+: Form Penilaian per Dosen (one page per penilaian)
-      const buildFormPenilaian = (p, peranLabel, dosenNamaDisplay, dosenNip) => {
+      const buildFormPenilaian = (p, peranLabel, dosenNamaDisplay, dosenNip, dosenTtd) => {
+        const dosenTtdImgTag = dosenTtd
+          ? `<img src="${FILE_URL}/${dosenTtd}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;display:block;margin:0 auto;" />`
+          : `<div style="height:50px;"></div>`;
         let finalNilai = p.final_nilai;
         let hurufMutu = p.huruf_mutu;
         if (!finalNilai && p.penilaian_1) {
@@ -1054,7 +1066,7 @@ export default function PelaksanaanKolo() {
             <div style="text-align:right;">
               <div>Bogor, ${tanggalFormatted}</div>
               <div>${peranLabel},</div>
-              <div style="margin:50px 0 4px;">&nbsp;</div>
+              <div style="margin:10px 0 4px;display:flex;justify-content:flex-end;">${dosenTtdImgTag}</div>
               <div style="font-weight:bold;text-decoration:underline;">(${dosenNamaDisplay && dosenNamaDisplay !== "-" ? dosenNamaDisplay : "........................................................."})</div>
               <div>NIK : ${dosenNip || "-"}</div>
             </div>
@@ -1069,7 +1081,7 @@ export default function PelaksanaanKolo() {
         { roleKey: "pembimbing_2", label: "Pembimbing II", name: pembimbing2Nama, dbId: ba.kolo_pembimbing_2 },
         { roleKey: "evaluator_1", label: "Evaluator I", name: evaluator1Nama, dbId: ba.evaluator_1 },
         { roleKey: "evaluator_2", label: "Evaluator II", name: evaluator2Nama, dbId: ba.evaluator_2 },
-      ].map(d => ({ ...d, nip: getDosenNip(d.dbId) }));
+      ].map(d => ({ ...d, nip: getDosenNip(d.dbId), ttd: getDosenTtd(d.dbId) }));
 
       const formPages = expectedDosenList.map(dosen => {
         let p = penilaianList.find(x => String(x.dosen_id) === String(dosen.dbId));
@@ -1081,7 +1093,7 @@ export default function PelaksanaanKolo() {
         }
         if (!p) p = {};
 
-        return buildFormPenilaian(p, dosen.label, dosen.name, dosen.nip);
+        return buildFormPenilaian(p, dosen.label, dosen.name, dosen.nip, dosen.ttd);
       }).join("");
       const fullContent = `
         <!DOCTYPE html>
