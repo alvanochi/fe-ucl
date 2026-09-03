@@ -237,49 +237,49 @@ export default function PelaksanaanSidang() {
       const hariTanggal = tanggalFormatted || ".......................";
       
       const page1 = `
-        <div style="font-family:'Times New Roman'; font-size:12px; max-width:700px; margin:0 auto; padding:30px;">
-          <div style="text-align:center; margin-bottom:20px;">
+        <div style="font-family:'Times New Roman'; font-size:12px; max-width:700px; margin:0 auto; padding:22px 30px;">
+          <div style="text-align:center; margin-bottom:12px;">
             <img src="${FILE_URL_KOP}/kop_surat.png" alt="Kop Surat" style="width:100%;max-width:680px;" />
           </div>
-          <h2 style="text-align:center;font-weight:bold;font-size:14px;text-decoration:underline;margin:10px 0 20px;letter-spacing:1px;">
+          <h2 style="text-align:center;font-weight:bold;font-size:14px;text-decoration:underline;margin:6px 0 12px;letter-spacing:1px;">
             BERITA ACARA PELAKSANAAN UJIAN SKRIPSI
           </h2>
 
-          <p style="text-align:justify;line-height:1.8;margin-bottom:12px;">
+          <p style="text-align:justify;line-height:1.6;margin-bottom:8px;">
             Pada tanggal ${hariTanggal} pukul ${waktu} WIB sampai dengan selesai bertempat di ${tempat} telah berlangsung Ujian Skripsi (Tugas Akhir) pada Sidang Sarjana ${semesterTA} di Jurusan/PS Teknik Informatika, Fakultas Teknik dan Sains UIKA Bogor dengan kandidat:
           </p>
 
-          <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;line-height:1.8;">
+          <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:10px;line-height:1.5;">
             <tr>
-              <td style="width:190px;padding:2px 0;vertical-align:top;">Nama</td>
+              <td style="width:190px;padding:1px 0;vertical-align:top;">Nama</td>
               <td style="width:14px;vertical-align:top;">:</td>
-              <td style="padding:2px 0;font-weight:bold;">${ba.nama_lengkap || "-"}</td>
+              <td style="padding:1px 0;font-weight:bold;">${ba.nama_lengkap || "-"}</td>
             </tr>
             <tr>
-              <td style="padding:2px 0;">Tempat, tanggal lahir</td>
+              <td style="padding:1px 0;">Tempat, tanggal lahir</td>
               <td>:</td>
-              <td style="padding:2px 0;">${ba.tempat_lahir ? `${ba.tempat_lahir}, ${formatTanggalIndo(ba.tanggal_lahir)}` : "-"}</td>
+              <td style="padding:1px 0;">${ba.tempat_lahir ? `${ba.tempat_lahir}, ${formatTanggalIndo(ba.tanggal_lahir)}` : "-"}</td>
             </tr>
             <tr>
-              <td style="padding:2px 0;">NPM</td>
+              <td style="padding:1px 0;">NPM</td>
               <td>:</td>
-              <td style="padding:2px 0;">${ba.npm || "-"}</td>
+              <td style="padding:1px 0;">${ba.npm || "-"}</td>
             </tr>
             <tr>
-              <td style="padding:2px 0;vertical-align:top;">Judul Tugas Akhir</td>
+              <td style="padding:1px 0;vertical-align:top;">Judul Tugas Akhir</td>
               <td style="vertical-align:top;">:</td>
-              <td style="padding:2px 0;">${ba.judul_skripsi || "-"}</td>
+              <td style="padding:1px 0;">${ba.judul_skripsi || "-"}</td>
             </tr>
           </table>
 
-          <p style="margin-bottom:8px;font-size:12px;line-height:1.5;">Susunan Tim Penguji Ujian Skripsi (Tugas Akhir) pada Sidang Sarjana:</p>
+          <p style="margin-bottom:6px;font-size:12px;line-height:1.4;">Susunan Tim Penguji Ujian Skripsi (Tugas Akhir) pada Sidang Sarjana:</p>
 
-          <table style="width:100%;border-collapse:collapse;font-size:10px;margin-bottom:12px;">
+          <table style="width:100%;border-collapse:collapse;font-size:10px;margin-bottom:8px;">
             <thead>
               <tr style="background-color:#f0f0f0;">
-                <th style="border:1px solid black;padding:3px 6px;text-align:center;">NAMA</th>
-                <th style="border:1px solid black;padding:3px 6px;text-align:center;width:160px;">JABATAN</th>
-                <th style="border:1px solid black;padding:3px 6px;text-align:center;width:90px;">TANDA TANGAN</th>
+                <th style="border:1px solid black;padding:2px 6px;text-align:center;">NAMA</th>
+                <th style="border:1px solid black;padding:2px 6px;text-align:center;width:160px;">JABATAN</th>
+                <th style="border:1px solid black;padding:2px 6px;text-align:center;width:90px;">TANDA TANGAN</th>
               </tr>
             </thead>
             <tbody>
@@ -292,10 +292,10 @@ export default function PelaksanaanSidang() {
             </tbody>
           </table>
 
-          <p style="text-align:justify;line-height:1.6;font-size:12px;margin-bottom:16px;">
+          <p style="text-align:justify;line-height:1.4;font-size:12px;margin-bottom:8px;">
             Kandidat tersebut memperoleh angka mutu: <strong>${calcFinal || "..."}</strong> yang dikonversi ke huruf mutu: <strong>${calcMutu || "..."}</strong>, sehingga dinyatakan: <strong>${nilaiAkhir?.status_kelulusan || ba.status_kelulusan || "lulus / lulus bersyarat / tidak lulus"}</strong>*) dengan catatan:<br/>
             ${ba.komentar ? `<div style="padding-left:16px;">${ba.komentar}</div>` : `
-            <ol style="margin-top:4px; margin-bottom:16px; padding-left:20px;">
+            <ol style="margin-top:2px; margin-bottom:8px; padding-left:20px;">
               <li>.......................................................................................................................................................</li>
               <li>.......................................................................................................................................................</li>
               <li>.......................................................................................................................................................</li>
@@ -303,11 +303,11 @@ export default function PelaksanaanSidang() {
             `}
           </p>
 
-          <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:20px;margin-bottom:10px;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:10px;margin-bottom:4px;page-break-inside:avoid;">
             <div style="text-align:left;min-width:220px;">
               <div>Mengetahui:</div>
               <div>Dekan Fakultas Teknik dan Sains,</div>
-              <div style="height:50px;margin:4px 0;">&nbsp;</div>
+              <div style="height:36px;margin:2px 0;">&nbsp;</div>
               <div style="font-weight:bold;text-decoration:underline;">Dr. Feril Hariati, S.T., M.Eng</div>
               <div>NIK: 410 100 280</div>
               <div style="margin-top:4px;font-size:11px;">*) pilih salah satu</div>
@@ -315,7 +315,7 @@ export default function PelaksanaanSidang() {
             <div style="text-align:left;min-width:220px;">
               <div>Bogor, ${tanggalFormatted}</div>
               <div>Ketua Jurusan/PS Teknik Informatika,</div>
-              <div style="height:50px;margin:4px 0;display:flex;align-items:center;">${ttdImgTag}</div>
+              <div style="height:36px;margin:2px 0;display:flex;align-items:center;">${ttdImgTag}</div>
               <div style="font-weight:bold;text-decoration:underline;">${kaprodiNama}</div>
               <div>NIK: ${kaprodiNIK}</div>
             </div>
