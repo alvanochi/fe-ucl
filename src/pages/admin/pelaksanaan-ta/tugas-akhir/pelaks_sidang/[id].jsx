@@ -218,13 +218,17 @@ export default function PelaksanaanSidang() {
         </div>
       `;
 
-      const buildTimRow = (nama, jabatan) => {
+      const buildTimRow = (nama, jabatan, ttd) => {
         const displayName = (!nama || nama === "-") ? "" : nama;
+        const ttdUrl = buildTtdUrl(ttd);
+        const ttdCell = ttdUrl
+          ? `<img src="${ttdUrl}" alt="TTD" style="height:28px;max-width:85px;object-fit:contain;" />`
+          : "";
         return `
           <tr>
             <td style="border:1px solid black;padding:3px 6px;font-size:10px;">${displayName}</td>
             <td style="border:1px solid black;padding:3px 6px;text-align:center;font-size:10px;">${jabatan}</td>
-            <td style="border:1px solid black;padding:3px 6px;width:90px;height:28px;"></td>
+            <td style="border:1px solid black;padding:3px 6px;width:90px;height:28px;text-align:center;">${ttdCell}</td>
           </tr>
         `;
       };
@@ -279,12 +283,12 @@ export default function PelaksanaanSidang() {
               </tr>
             </thead>
             <tbody>
-              ${buildTimRow(ketuaPengujiNama, "Ketua Sidang")}
-              ${buildTimRow(pembimbing1Nama, "Pembimbing Utama")}
-              ${buildTimRow(pembimbing2Nama, "Pembimbing Pendamping")}
-              ${buildTimRow(penguji1Nama, "Penguji I")}
-              ${buildTimRow(penguji2Nama, "Penguji II")}
-              ${buildTimRow(sekretarisSidangNama, "Sekretaris sidang sebagai Notulis")}
+              ${buildTimRow(ketuaPengujiNama, "Ketua Sidang", getDosenTtd(ba.ketua_penguji))}
+              ${buildTimRow(pembimbing1Nama, "Pembimbing Utama", getDosenTtd(ba.sidang_pembimbing_1))}
+              ${buildTimRow(pembimbing2Nama, "Pembimbing Pendamping", getDosenTtd(ba.sidang_pembimbing_2))}
+              ${buildTimRow(penguji1Nama, "Penguji I", getDosenTtd(ba.penguji_1))}
+              ${buildTimRow(penguji2Nama, "Penguji II", getDosenTtd(ba.penguji_2))}
+              ${buildTimRow(sekretarisSidangNama, "Sekretaris sidang sebagai Notulis", getDosenTtd(ba.sekertaris_sidang))}
             </tbody>
           </table>
 
@@ -485,7 +489,7 @@ export default function PelaksanaanSidang() {
             <td style="border:1px solid black;padding:6px;font-size:11px;text-align:center;">${p3}</td>
             <td style="border:1px solid black;padding:6px;font-size:11px;text-align:center;">${p4}</td>
             <td style="border:1px solid black;padding:6px;font-size:11px;text-align:center;font-weight:bold;">${t || "-"}</td>
-            <td style="border:1px solid black;padding:6px;width:100px;"></td>
+            <td style="border:1px solid black;padding:6px;width:100px;text-align:center;">${buildTtdUrl(dosenInfo.ttd) ? `<img src="${buildTtdUrl(dosenInfo.ttd)}" alt="TTD" style="height:35px;max-width:95px;object-fit:contain;" />` : ""}</td>
           </tr>
         `;
       };
