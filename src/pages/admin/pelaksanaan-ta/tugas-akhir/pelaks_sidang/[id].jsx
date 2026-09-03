@@ -482,14 +482,14 @@ export default function PelaksanaanSidang() {
 
         return `
           <tr>
-            <td style="border:1px solid black;padding:6px;font-size:11px;">${dosenInfo.label}</td>
-            <td style="border:1px solid black;padding:6px;font-size:11px;text-align:center;">${dosenInfo.name && dosenInfo.name !== "-" ? dosenInfo.name : ""}</td>
-            <td style="border:1px solid black;padding:6px;font-size:11px;text-align:center;">${p1}</td>
-            <td style="border:1px solid black;padding:6px;font-size:11px;text-align:center;">${p2}</td>
-            <td style="border:1px solid black;padding:6px;font-size:11px;text-align:center;">${p3}</td>
-            <td style="border:1px solid black;padding:6px;font-size:11px;text-align:center;">${p4}</td>
-            <td style="border:1px solid black;padding:6px;font-size:11px;text-align:center;font-weight:bold;">${t || "-"}</td>
-            <td style="border:1px solid black;padding:6px;width:100px;text-align:center;">${buildTtdUrl(dosenInfo.ttd) ? `<img src="${buildTtdUrl(dosenInfo.ttd)}" alt="TTD" style="height:35px;max-width:95px;object-fit:contain;" />` : ""}</td>
+            <td style="border:1px solid black;padding:4px;font-size:11px;">${dosenInfo.label}</td>
+            <td style="border:1px solid black;padding:4px;font-size:11px;text-align:center;">${dosenInfo.name && dosenInfo.name !== "-" ? dosenInfo.name : ""}</td>
+            <td style="border:1px solid black;padding:4px;font-size:11px;text-align:center;">${p1}</td>
+            <td style="border:1px solid black;padding:4px;font-size:11px;text-align:center;">${p2}</td>
+            <td style="border:1px solid black;padding:4px;font-size:11px;text-align:center;">${p3}</td>
+            <td style="border:1px solid black;padding:4px;font-size:11px;text-align:center;">${p4}</td>
+            <td style="border:1px solid black;padding:4px;font-size:11px;text-align:center;font-weight:bold;">${t || "-"}</td>
+            <td style="border:1px solid black;padding:4px;width:100px;text-align:center;">${buildTtdUrl(dosenInfo.ttd) ? `<img src="${buildTtdUrl(dosenInfo.ttd)}" alt="TTD" style="height:30px;max-width:90px;object-fit:contain;" />` : ""}</td>
           </tr>
         `;
       };
@@ -497,61 +497,61 @@ export default function PelaksanaanSidang() {
       const rekapRows = expectedDosenList.map((d, i) => buildRekapitulasiRow(d, i + 1)).join("");
 
       const rekapPage = `
-        <div style="font-family:'Times New Roman'; font-size:12px; max-width:700px; margin:0 auto; padding:30px; page-break-before:always;">
-          <div style="text-align:center; margin-bottom:20px;">
+        <div style="font-family:'Times New Roman'; font-size:12px; max-width:700px; margin:0 auto; padding:20px 30px; page-break-before:always;">
+          <div style="text-align:center; margin-bottom:10px;">
             <img src="${FILE_URL_KOP}/kop_surat.png" alt="Kop Surat" style="width:100%;max-width:680px;" />
           </div>
-          <h2 style="text-align:center;font-weight:bold;font-size:13px;text-decoration:underline;margin:10px 0 20px;">
+          <h2 style="text-align:center;font-weight:bold;font-size:13px;text-decoration:underline;margin:6px 0 10px;">
             REKAPITULASI NILAI UJIAN SKRIPSI
           </h2>
 
-          <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:16px;">
+          <table style="width:100%;border-collapse:collapse;font-size:12px;margin-bottom:8px;">
             <tr>
-              <td style="width:200px;padding:3px 0;">N a m a</td>
+              <td style="width:200px;padding:1px 0;">N a m a</td>
               <td style="width:14px;">:</td>
-              <td style="padding:3px 0;">${ba.nama_lengkap || "-"}</td>
+              <td style="padding:1px 0;">${ba.nama_lengkap || "-"}</td>
             </tr>
             <tr>
-              <td style="padding:3px 0;">N P M</td>
+              <td style="padding:1px 0;">N P M</td>
               <td>:</td>
-              <td style="padding:3px 0;">${ba.npm || "-"}</td>
+              <td style="padding:1px 0;">${ba.npm || "-"}</td>
             </tr>
             <tr>
-              <td style="padding:3px 0;">Judul Tugas Akhir</td>
+              <td style="padding:1px 0;">Judul Tugas Akhir</td>
               <td>:</td>
-              <td style="padding:3px 0;">${ba.judul_skripsi || "-"}</td>
+              <td style="padding:1px 0;">${ba.judul_skripsi || "-"}</td>
             </tr>
             <tr>
-              <td style="padding:3px 0;">Dosen Pembimbing Utama</td>
+              <td style="padding:1px 0;">Dosen Pembimbing Utama</td>
               <td>:</td>
-              <td style="padding:3px 0;">${pembimbing1Nama || "-"}</td>
+              <td style="padding:1px 0;">${pembimbing1Nama || "-"}</td>
             </tr>
             <tr>
-              <td style="padding:3px 0;">Dosen Pembimbing Pendamping</td>
+              <td style="padding:1px 0;">Dosen Pembimbing Pendamping</td>
               <td>:</td>
-              <td style="padding:3px 0;">${pembimbing2Nama || "-"}</td>
+              <td style="padding:1px 0;">${pembimbing2Nama || "-"}</td>
             </tr>
             <tr>
-              <td style="padding:3px 0;">PERINCIAN NILAI</td>
+              <td style="padding:1px 0;">PERINCIAN NILAI</td>
               <td>:</td>
-              <td style="padding:3px 0;"></td>
+              <td style="padding:1px 0;"></td>
             </tr>
           </table>
 
-          <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:20px;">
+          <table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px;">
             <thead>
               <tr style="background-color:#f0f0f0;">
-                <th rowSpan="2" style="border:1px solid black;padding:6px;text-align:center;">Tim Sidang Sarjana</th>
-                <th rowSpan="2" style="border:1px solid black;padding:6px;text-align:center;width:140px;">Nama</th>
-                <th colSpan="4" style="border:1px solid black;padding:6px;text-align:center;">PERINCIAN NILAI SIDANG</th>
-                <th rowSpan="2" style="border:1px solid black;padding:6px;text-align:center;width:60px;">Total</th>
-                <th rowSpan="2" style="border:1px solid black;padding:6px;text-align:center;">Tanda Tangan</th>
+                <th rowSpan="2" style="border:1px solid black;padding:3px 6px;text-align:center;">Tim Sidang Sarjana</th>
+                <th rowSpan="2" style="border:1px solid black;padding:3px 6px;text-align:center;width:140px;">Nama</th>
+                <th colSpan="4" style="border:1px solid black;padding:3px 6px;text-align:center;">PERINCIAN NILAI SIDANG</th>
+                <th rowSpan="2" style="border:1px solid black;padding:3px 6px;text-align:center;width:60px;">Total</th>
+                <th rowSpan="2" style="border:1px solid black;padding:3px 6px;text-align:center;">Tanda Tangan</th>
               </tr>
               <tr style="background-color:#f0f0f0;">
-                <th style="border:1px solid black;padding:6px;text-align:center;width:50px;">Nilai Skripsi 40 %</th>
-                <th style="border:1px solid black;padding:6px;text-align:center;width:50px;">Presentasi 10 %</th>
-                <th style="border:1px solid black;padding:6px;text-align:center;width:50px;">Penguasaan Materi 40%</th>
-                <th style="border:1px solid black;padding:6px;text-align:center;width:50px;">Penampilan 10%</th>
+                <th style="border:1px solid black;padding:3px 6px;text-align:center;width:50px;">Nilai Skripsi 40 %</th>
+                <th style="border:1px solid black;padding:3px 6px;text-align:center;width:50px;">Presentasi 10 %</th>
+                <th style="border:1px solid black;padding:3px 6px;text-align:center;width:50px;">Penguasaan Materi 40%</th>
+                <th style="border:1px solid black;padding:3px 6px;text-align:center;width:50px;">Penampilan 10%</th>
               </tr>
             </thead>
             <tbody>
@@ -559,39 +559,39 @@ export default function PelaksanaanSidang() {
             </tbody>
           </table>
 
-          <div style="margin-top:16px;">
-            <table style="width:100%;font-size:12px;margin-bottom:16px;">
+          <div style="margin-top:8px;">
+            <table style="width:100%;font-size:12px;margin-bottom:8px;">
               <tr>
-                <td style="width:100px;padding:3px 0;">Hasil Nilai</td>
-                <td style="padding:3px 0;">: Dinyatakan : ${nilaiAkhir?.status_kelulusan || ba.status_kelulusan || "Lulus / Tidak Lulus"}</td>
+                <td style="width:100px;padding:1px 0;">Hasil Nilai</td>
+                <td style="padding:1px 0;">: Dinyatakan : ${nilaiAkhir?.status_kelulusan || ba.status_kelulusan || "Lulus / Tidak Lulus"}</td>
               </tr>
               <tr>
-                <td style="padding:3px 0;vertical-align:top;">Catatan</td>
-                <td style="padding:3px 0;">: ${ba.komentar ? ba.komentar : "Perlu Perbaikan dikumpulkan tanggal :<br/><br/>......................................................................................................................................................................................................."}</td>
+                <td style="padding:1px 0;vertical-align:top;">Catatan</td>
+                <td style="padding:1px 0;">: ${ba.komentar ? ba.komentar : "Perlu Perbaikan dikumpulkan tanggal :<br/><br/>......................................................................................................................................................................................................."}</td>
               </tr>
             </table>
           </div>
 
-          
 
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:16px;">
+
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-top:8px;">
             <div style="text-align:left;min-width:200px;">
               <div>&nbsp;</div>
               <div>Ketua Sidang,</div>
-              <div style="margin:10px 0 4px;">${buildTtdUrl(getDosenTtd(ba.ketua_penguji)) ? `<img src="${buildTtdUrl(getDosenTtd(ba.ketua_penguji))}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;" />` : `<div style="height:50px;"></div>`}</div>
+              <div style="margin:4px 0 2px;">${buildTtdUrl(getDosenTtd(ba.ketua_penguji)) ? `<img src="${buildTtdUrl(getDosenTtd(ba.ketua_penguji))}" alt="TTD" style="height:36px;max-width:100px;object-fit:contain;" />` : `<div style="height:36px;"></div>`}</div>
               <div style="font-weight:bold;text-decoration:underline;">${ketuaPengujiNama && ketuaPengujiNama !== "-" ? ketuaPengujiNama : "............................................."}</div>
               <div>NIK: ${getDosenNip(ba.ketua_penguji) || "....................."}</div>
             </div>
             <div style="text-align:left;min-width:200px;">
               <div>Bogor, ${tanggalFormatted}</div>
               <div>Sekretaris sidang sebagai Notulis,</div>
-              <div style="margin:10px 0 4px;">${buildTtdUrl(getDosenTtd(ba.sekertaris_sidang)) ? `<img src="${buildTtdUrl(getDosenTtd(ba.sekertaris_sidang))}" alt="TTD" style="height:50px;max-width:120px;object-fit:contain;" />` : `<div style="height:50px;"></div>`}</div>
+              <div style="margin:4px 0 2px;">${buildTtdUrl(getDosenTtd(ba.sekertaris_sidang)) ? `<img src="${buildTtdUrl(getDosenTtd(ba.sekertaris_sidang))}" alt="TTD" style="height:36px;max-width:100px;object-fit:contain;" />` : `<div style="height:36px;"></div>`}</div>
               <div style="font-weight:bold;text-decoration:underline;">${sekretarisSidangNama && sekretarisSidangNama !== "-" ? sekretarisSidangNama : "............................................."}</div>
               <div>NIK: ${getDosenNip(ba.sekertaris_sidang) || "....................."}</div>
             </div>
           </div>
 
-          ${intervalNilai}
+          <div style="margin-top:8px;">${intervalNilai}</div>
 
         </div>
       `;
