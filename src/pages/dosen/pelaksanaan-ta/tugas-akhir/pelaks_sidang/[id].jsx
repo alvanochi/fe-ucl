@@ -647,19 +647,6 @@ export default function PelaksanaanSidang() {
         </Card.Body>
       </Card>
 
-      {form.statusDosen !== '' && (
-        <div className="flex justify-end mt-4">
-          <Button
-            type="button"
-            variant="primary"
-            onClick={handleCetakBeritaAcara}
-            disabled={isPrinting}
-          >
-            {isPrinting ? 'Mencetak...' : 'Cetak Berita Acara'}
-          </Button>
-        </div>
-      )}
-
       {form.penilaian_sidang == null &&
         form.statusDosen !== '' &&
         form.statusDosen !== 'kepala_lab' && (
@@ -756,6 +743,15 @@ export default function PelaksanaanSidang() {
                   Konfirmasi
                 </Button>
               )}
+              <Button
+                type="button"
+                variant="primary"
+                className="w-full h-12"
+                onClick={handleCetakBeritaAcara}
+                disabled={isPrinting}
+              >
+                {isPrinting ? 'Mencetak...' : 'Cetak Berita Acara'}
+              </Button>
             </div>
           </Form>
         )}
@@ -906,6 +902,15 @@ export default function PelaksanaanSidang() {
           <div className="flex gap-4 mt-4">
             <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
               Kembali
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              className="w-full h-12"
+              onClick={handleCetakBeritaAcara}
+              disabled={isPrinting}
+            >
+              {isPrinting ? 'Mencetak...' : 'Cetak Berita Acara'}
             </Button>
           </div>
         </>
