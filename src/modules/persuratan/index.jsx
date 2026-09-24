@@ -18,7 +18,7 @@ import { toastAlert } from "../../lib/sweetalert";
 
 import PersuratanCreate from "./create";
 import PersuratanDetail from "./detail";
-import ShowQrSurat from "../../pages/persuratan/show-qr-surat";
+
 
 function PersuratanFilter({ filter, handler, defaultFilter, className, canSeeOutbox }) {
   const { form, inputHandler, setForm } = useForm(filter);
@@ -449,9 +449,6 @@ export default function PersuratanModule({ isPreview = false }) {
                               ? <Icon icon="mdi:loading" className="animate-spin text-primary-600" width={18} />
                               : <Icon icon="mdi:eye" width={18} />}
                           </button>
-
-                          {/* Tombol QR Code — mengikuti pola ShowQr di esign */}
-                          {s.status === "Selesai" && <ShowQrSurat data={{ id: s.id }} />}
                         </div>
                       </td>
                     </tr>
