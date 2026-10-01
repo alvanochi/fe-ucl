@@ -10,12 +10,7 @@ import { toastAlert } from "../../lib/sweetalert";
 import SignaturePad from "../../components/Persuratan/SignaturePad";
 
 const FIELD_CONFIG = {
-  "surat pengajuan cuti": [
-    { name: "semester_cuti", label: "Cuti Pada Semester", type: "select", options: [{label: "Ganjil", value: "Ganjil"}, {label: "Genap", value: "Genap"}] },
-    { name: "tahun_akademik_cuti", label: "Tahun Akademik Cuti", type: "text", placeholder: "Contoh: 2025/2026" },
-    { name: "semester_aktif", label: "Aktif Kembali Pada Semester", type: "select", options: [{label: "Ganjil", value: "Ganjil"}, {label: "Genap", value: "Genap"}] },
-    { name: "tahun_akademik_aktif", label: "Tahun Akademik Aktif", type: "text", placeholder: "Contoh: 2026/2027" },
-  ],
+  "surat pengajuan cuti": [],
   "surat pengunduran diri": [
     { name: "semester", label: "Semester Saat Ini", type: "text", placeholder: "Contoh: Semester 1 (Ganjil)" },
     { name: "tanggal_pengarahan", label: "Tanggal Pengarahan KIP Kuliah", type: "text", placeholder: "Contoh: Senin, 12 Januari 2026" },
@@ -27,7 +22,6 @@ const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
 const INITIAL_FORM = {
   jenis_surat: "", perihal: "", catatan_surat: "",
-  semester_cuti: "", tahun_akademik_cuti: "", semester_aktif: "", tahun_akademik_aktif: "",
   semester: "", tanggal_pengarahan: "",
 };
 
@@ -265,6 +259,22 @@ export default function PersuratanCreate({ onBack }) {
                       </Form.Group>
                     </div>
 
+                    {/* Info otomatis untuk surat cuti */}
+                    {form.jenis_surat === "surat pengajuan cuti" && (
+                      <div className="flex items-start gap-4 p-5 bg-emerald-50 border border-emerald-200 rounded-xl animate-in fade-in">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center text-white shrink-0">
+                          <Icon icon="mdi:calendar-check-outline" width={22} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-black text-emerald-800 text-sm mb-1">Semester & Tahun Akademik Diisi Otomatis</p>
+                          <p className="text-emerald-700 text-xs leading-relaxed">
+                            Sistem akan secara otomatis menentukan <strong>semester aktif</strong> dan <strong>semester cuti</strong> berdasarkan data akademik terkini. Anda tidak perlu mengisi data ini secara manual.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Field dinamis untuk surat pengunduran diri */}
                     {hasDynamicFields && (
                       <div className="p-5 bg-blue-50/50 border border-blue-100 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-5 animate-in fade-in">
                         {FIELD_CONFIG[form.jenis_surat].map((field, idx) => (
