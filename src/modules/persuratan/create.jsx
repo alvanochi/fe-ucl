@@ -17,6 +17,22 @@ const FIELD_CONFIG = {
   ],
 };
 
+const ATTACHMENT_HINTS = {
+  "surat pengajuan cuti": {
+    examples: [
+      "Surat keterangan dokter (untuk cuti sakit)",
+      "Surat keterangan rawat inap",
+      "Bukti keperluan mendesak lainnya",
+    ],
+  },
+  "surat pengunduran diri": {
+    examples: [
+      "Fotokopi KTP mahasiswa",
+      "Fotokopi KTM atau kartu identitas kampus",
+    ],
+  },
+};
+
 const MAX_FILES = 5;
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
@@ -323,7 +339,7 @@ export default function PersuratanCreate({ onBack }) {
 
                     <Form.Group className="space-y-4 border-t border-gray-100 pt-6">
                       <Form.Label className="font-black text-[11px] text-gray-500 uppercase tracking-widest flex items-center gap-2">
-                        <Icon icon="mdi:paperclip" width={16} /> Lampiran Dokumen Tambahan (Max 5 File)
+                        <Icon icon="mdi:paperclip" width={16} /> Lampiran Dokumen Pendukung (Max 5 File)
                       </Form.Label>
 
                       <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-primary-500 hover:bg-primary-50/30 bg-gray-50/50 text-center group transition-all">
@@ -332,6 +348,25 @@ export default function PersuratanCreate({ onBack }) {
                         <p className="mt-3 text-sm font-bold text-gray-600 group-hover:text-primary-700">Klik atau seret file dokumen ke sini</p>
                         <p className="mt-1 text-[11px] text-gray-400 font-medium">Mendukung PDF, JPG, PNG (Max 10MB/file)</p>
                       </div>
+
+                      {ATTACHMENT_HINTS[form.jenis_surat] && (
+                        <div className="mt-3 p-4 bg-blue-50/60 border border-blue-100 rounded-lg animate-in fade-in">
+                          <div className="flex items-start gap-2">
+                            <Icon icon="mdi:information-outline" width={16} className="text-blue-500 mt-0.5 shrink-0" />
+                            <div className="text-xs text-blue-700 space-y-1">
+                              <p className="font-semibold">Contoh dokumen yang dapat dilampirkan:</p>
+                              <ul className="list-disc list-inside space-y-0.5 text-blue-600">
+                                {ATTACHMENT_HINTS[form.jenis_surat].examples.map((hint, i) => (
+                                  <li key={i}>{hint}</li>
+                                ))}
+                              </ul>
+                              <p className="text-[10px] text-blue-400 mt-2 italic">
+                                Lampiran bersifat opsional sebagai dokumen pendukung pengajuan Anda.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       {selectedFiles.length > 0 && (
                         <div className="mt-5 space-y-2 animate-in fade-in">
