@@ -1,0 +1,239 @@
+import { Icon } from '@iconify-icon/react'
+import Button from '../../../../components/Button'
+import Pagination from '../../../../components/Pagination'
+import Filter from './filter'
+import useDatatable from '../../../../hooks/useDatatable'
+import SortIcon from '../../../../components/SortIcon'
+import Form from '../../../../components/Form'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { MySwal, toastAlert, warningAlert } from '../../../../lib/sweetalert'
+import useNewDataTableNew from '../../../../hooks/useNewDataTableNew'
+
+export default function DosenExtModule({ baseURL }) {
+  const DATA_URL = `${process.env.NEXT_PUBLIC_API_URL}/users/list-users`
+  const verifyUrl = `${process.env.NEXT_PUBLIC_API_URL}/auth/verify-dosen-ext`
+  const [searchValue, setSearchValue] = useState('')
+
+  const {
+    dataNew,
+    loadingNew,
+    pageNew,
+    pageCountNew,
+    setPageNew,
+    recordsTotalNew,
+    refreshNew,
+    sortByNew,
+    getSortByNew,
+  } = useNewDataTableNew(
+    DATA_URL,
+    {
+      filter: ['role'],
+      filterValue: ['Dosen_Ext'],
+    },
+    searchValue,
+    'user_id',
+  )
+
+  const verify = async (userId, isverified) => {
+    let text = isverified ? 'Akun akan di non aktifkan!' : 'Akun akan di verifikasi!'
+    return warningAlert(async () => {
+      try {
+        const request = await axios({
+          method: 'PATCH',
+          url: `${verifyUrl}/${userId}`,
+        })
+
+        const response = await request.data
+
+        MySwal.close()
+        refresh()
+        return toastAlert('success', response.message, 2000)
+      } catch (error) {
+        if (error.name == 'AxiosError' && error?.response)
+          toastAlert('error', error.response.data.message)
+        else toastAlert('error', 'Internal Server Error!')
+      }
+    }, text)
+  }
+
+  return (
+    <>
+      <div className="flex items-center justify-between my-4">
+        <div>
+          <span>
+            Total Data: <b>{recordsTotalNew}</b>
+          </span>
+        </div>
+        <div>
+          <Form.Input
+            type="text"
+            name="search"
+            placeholder="Search"
+            style={{ width: '400px' }}
+            value={searchValue}
+            onChange={e => setSearchValue(e.target.value)}
+          />
+        </div>
+      </div>
+      <table
+        className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto"
+        cellPadding={10}
+      >
+        <thead>
+          <tr>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div
+                className="flex items-center gap-2 cursor-pointer"
+                onClick={() => sortByNew('created_at')}
+              >
+                No
+                <SortIcon sort={getSortByNew('created_at')} />
+              </div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">NIP/NIK</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Nama</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Instansi</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200">
+              <div className="flex items-center gap-2 cursor-pointer">Verified</div>
+            </th>
+            <th className="text-sm border-2 border-white bg-gray-200"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {loadingNew && (
+            <tr>
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
+                Loading...
+              </td>
+            </tr>
+          )}
+          {!loadingNew && dataNew && dataNew.length < 1 && (
+            <tr>
+              <td colSpan="6" className="text-sm border-2 border-white bg-gray-50 text-center">
+                Tidak ada data
+              </td>
+            </tr>
+          )}
+          {!loadingNew &&
+            dataNew &&
+            dataNew.map((row, index) => {
+              return (
+                <tr key={`row-${index}`}>
+                  <td className="text-sm border-2 border-white bg-gray-50">{index + 1}</td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.personal_data?.nip}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.personal_data?.nama_lengkap}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {row.personal_data?.instansi_ext}
+                  </td>
+                  <td className="text-sm border-2 border-white bg-gray-50 ">
+                    {!row.isverified ? (
+                      <Icon
+                        icon="mingcute:close-fill"
+                        className="bg-danger-600 text-white"
+                        width={20}
+                        height={20}
+                      />
+                    ) : (
+                      <Icon
+                        icon="ph:check-bold"
+                        className="bg-success-600 text-white"
+                        width={20}
+                        height={20}
+                      />
+                    )}
+                  </td>
+
+                  <td className="text-sm border-2 border-white bg-gray-50">
+                    <div className="flex items-stretch gap-1">
+                      <Button.Icon
+                        onClick={() =>
+                          window.open(`${baseURL}/detail-dosen/${row.user_id}`, '_blank')
+                        }
+                        variant="info"
+                        icon={<Icon icon="fluent:info-24-filled" width={20} height={20} />}
+                      />
+                      <Button.Icon
+                        onClick={() =>
+                          window.open(`${baseURL}/change-password/${row.user_id}`, '_blank')
+                        }
+                        variant="secondary"
+                        icon={<Icon icon="bx:edit" width={20} height={20} />}
+                      />
+                      {!row.isverified && (
+                        <Button.Icon
+                          onClick={() => verify(row.user_id, row.isverified)}
+                          variant="success"
+                          icon={
+                            <Icon
+                              icon="material-symbols:domain-verification"
+                              width={20}
+                              height={20}
+                            />
+                          }
+                        />
+                      )}
+                      {row.isverified && (
+                        <Button.Icon
+                          onClick={() => verify(row.user_id, row.isverified)}
+                          variant="danger"
+                          icon={<Icon icon="flowbite:close-circle-solid" width={20} height={20} />}
+                        />
+                      )}
+                    </div>
+                  </td>
+                </tr>
+              )
+            })}
+        </tbody>
+      </table>
+      <div className="flex mt-8">
+        <div className="flex gap-1 ml-auto">
+          <Button.Icon
+            type="button"
+            variant="outline-primary"
+            icon={<Icon icon="material-symbols:chevron-left" width={20} height={20} />}
+            onClick={() => setPageNew(pageNew - 1)}
+            disabled={pageNew <= 1}
+            pill
+          />
+          <Button
+            type="button"
+            variant="primary"
+            icon={<Icon icon="material-symbols:chevron-right" width={20} height={20} />}
+            iconPosition="right"
+            onClick={() => setPageNew(pageNew + 1)}
+            disabled={pageNew >= pageCountNew}
+            pill
+          >
+            Next Page
+          </Button>
+        </div>
+        <div className="ml-auto whitespace-nowrap flex items-center gap-2">
+          <p className="">Page</p>
+          <Form.Input
+            type="number"
+            min="1"
+            max={pageCountNew || 1}
+            className="w-20"
+            value={pageNew}
+            onChange={event =>
+              setPageNew(Math.max(1, Math.min(event.target.valueAsNumber, pageCountNew || 1)))
+            }
+          />
+          of {pageCountNew || 1}
+        </div>
+      </div>
+    </>
+  )
+}

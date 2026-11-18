@@ -1,0 +1,545 @@
+import { useRouter } from 'next/router'
+import Button from '../../../../components/Button'
+import Card from '../../../../components/Card'
+import Form from '../../../../components/Form'
+import Layout from '../../../../components/Layout'
+import PageHeader from '../../../../components/PageHeader'
+import useMenu from '../../../../hooks/useMenu'
+import useUser from '../../../../hooks/useUser'
+import useCRUD from '../../../../hooks/useCRUD'
+import { useEffect, useState, useCallback } from 'react'
+import date from '../../../../utils/date'
+import { Icon } from '@iconify-icon/react'
+import { Loading } from '../../../../components/Loading'
+import axios from 'axios'
+import { MySwal, toastAlert, warningAlert, loadingAlert } from '../../../../lib/sweetalert'
+
+export default function DetailMhs() {
+  const router = useRouter()
+  const { user } = useUser({ redirectTo: '/login' })
+  const { prefix, menu, setActive } = useMenu()
+
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/users/detail-user`
+
+  const INITIAL_FORM = {
+    nama_lengkap: '',
+    npm: '',
+    email: '',
+    jenkel: '',
+    tanggal_lahir: '',
+    tempat_lahir: '',
+    ibu_kandung: '',
+    nik: '',
+    agama: '',
+    warga_negara: '',
+    alamat: '',
+    rt: '',
+    rw: '',
+    desa_kelurahan: '',
+    kota_kabupaten: '',
+    provinsi: '',
+    no_hp: '',
+    status_kawin: 0,
+    nama_pasangan: '',
+    nip_pasangan: '',
+    point_kompetensi: '',
+    point_pengabdian: '',
+    point_pendidikan: '',
+    point_penelitian: '',
+    point_penunjang: '',
+    point_rekomendasi: '',
+    total_point: '',
+  }
+
+  const { formdata, show } = useCRUD(API_URL, INITIAL_FORM, {
+    rules: [
+      { field: 'nik', label: 'NIK' },
+      { field: 'npm', label: 'NPM' },
+      { field: 'jenkel', label: 'Jenis Kelamin' },
+      { field: 'nama_lengkap', label: 'Nama Lengkap' },
+      { field: 'tempat_lahir', label: 'Tempat Lahir' },
+      { field: 'tanggal_lahir', label: 'Tanggal Lahir' },
+      { field: 'ibu_kandung', label: 'Nama Ibu Kandung' },
+      { field: 'agama', label: 'Agama' },
+      { field: 'warga_negara', label: 'Kewarganegaraan' },
+      { field: 'nama_pasangan', label: 'Nama Suami/Istri' },
+      { field: 'nip_pasangan', label: 'NIP Suami/Istri' },
+      { field: 'pekerjaan_pasangan', label: 'Pekerjaan Suami/Istri' },
+      {
+        field: 'tanggal_pns_pasangan',
+        label: 'Terhitung Mulai Tanggal PNS Suami/Istri ',
+      },
+      { field: 'email', label: 'Email' },
+      { field: 'alamat', label: 'Alamat' },
+      { field: 'rt', label: 'Rt' },
+      { field: 'rw', label: 'Rw' },
+      { field: 'desa_kelurahan', label: 'Desa/Kelurahan' },
+      { field: 'kota_kabupaten', label: 'Kota/Kabupaten' },
+      { field: 'provinsi', label: 'Provinsi' },
+      { field: 'kode_pos', label: 'Kode POS' },
+      { field: 'no_hp', label: 'No. HP' },
+      { field: 'point_kompetensi', label: 'Point Kompetensi' },
+      { field: 'point_pengabdian', label: 'Point Pengabdian' },
+      { field: 'point_pendidikan', label: 'Point Pendidikan' },
+      { field: 'point_penelitian', label: 'Point Penelitian' },
+      { field: 'point_penunjang', label: 'Point Penunjang' },
+      { field: 'point_rekomendasi', label: 'Point Rekomendasi' },
+      { field: 'total_point', label: 'Total Point' },
+    ],
+    success: () => router.push(prefix + menu.url),
+  })
+
+  const { form } = formdata
+
+  const [faceData, setFaceData] = useState(null)
+  const [faceLoading, setFaceLoading] = useState(false)
+  const [faceError, setFaceError] = useState(null)
+
+  const fetchFaceData = useCallback(async (npm) => {
+    setFaceLoading(true)
+    setFaceError(null)
+    try {
+      const res = await axios.get(
+        `${process.env.NEXT_PUBLIC_FACE_API_URL}/v1/faces/subjects/${npm}`,
+        { headers: { 'X-API-Key': process.env.NEXT_PUBLIC_FACE_API_KEY } }
+      )
+      setFaceData(res.data)
+    } catch (err) {
+      if (err.response && err.response.status === 404) {
+        setFaceData(null)
+      } else {
+        setFaceError('Gagal memuat data wajah')
+      }
+    } finally {
+      setFaceLoading(false)
+    }
+  }, [])
+
+  const handleDeleteFace = async () => {
+    if (!form.npm) return
+    warningAlert(
+      async () => {
+        try {
+          await axios.delete(
+            `${process.env.NEXT_PUBLIC_FACE_API_URL}/v1/faces/subjects/${form.npm}`,
+            { headers: { 'X-API-Key': process.env.NEXT_PUBLIC_FACE_API_KEY } }
+          )
+          MySwal.close()
+          toastAlert('success', 'Data wajah berhasil dihapus', 2000)
+          setFaceData(null)
+        } catch (err) {
+          MySwal.close()
+          toastAlert('error', err?.response?.data?.message || 'Gagal menghapus data wajah')
+        }
+      },
+      'Data wajah mahasiswa ini akan dihapus secara permanen!',
+      'Hapus Data Wajah?',
+      'Menghapus data wajah...'
+    )
+  }
+
+  useEffect(() => {
+    if (router.isReady === false || !user) return
+    show(router.query.id, {
+      transformData: data => ({
+        ...data,
+        tanggal_lahir: data.tanggal_lahir ? date.formatToInput(data.tanggal_lahir) : '',
+      }),
+    })
+  }, [router, user])
+
+  useEffect(() => {
+    if (!form.npm) return
+    fetchFaceData(form.npm)
+  }, [form.npm, fetchFaceData])
+
+  if ([user, menu].some(item => item == null)) return <Loading />
+  return (
+    <Layout>
+      <PageHeader title={`Detail ${menu.label}`} icon={menu.icon} handler={setActive} />
+      <Form>
+        <Card className="mt-4">
+          <Card.Header className="text-center">Detail Mahasiswa</Card.Header>
+          <Card.Body className="space-y-4">
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nama Lengkap<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nama_lengkap"
+                value={form.nama_lengkap}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                NPM<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input type="text" className="flex-1" name="npm" value={form.npm} disabled />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                email<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="email"
+                className="flex-1"
+                name="email"
+                value={form.email}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Jenis Kelamin <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <div className="flex gap-4">
+                <Form.Label>
+                  <Form.Radio name="jenkel" value="L" checked={form.jenkel == 'L'} />
+                  Laki-Laki
+                </Form.Label>
+                <Form.Label>
+                  <Form.Radio name="jenkel" value="P" checked={form.jenkel == 'P'} />
+                  Perempuan
+                </Form.Label>
+              </div>
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Tanggal Lahir <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="date"
+                className="flex-1"
+                name="tanggal_lahir"
+                value={form.tanggal_lahir}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Tempat Lahir<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="tempat_lahir"
+                value={form.tempat_lahir}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nama Ibu Kandung<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="ibu_kandung"
+                value={form.ibu_kandung}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                NIK<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input type="text" className="flex-1" name="nik" value={form.nik} disabled />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Agama<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input type="text" className="flex-1" name="agama" value={form.agama} disabled />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Warga Negara<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="warga_negara"
+                value={form.warga_negara}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Alamat <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Textarea rows="2" name="alamat" value={form.alamat} disabled></Form.Textarea>
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                RT<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input type="number" className="flex-1" name="rt" value={form.rt} disabled />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                RW<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input type="number" className="flex-1" name="rw" value={form.rw} disabled />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Desa/Kelurahan<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="desa_kelurahan"
+                value={form.desa_kelurahan}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Kota/Kabupaten<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="kota_kabupaten"
+                value={form.kota_kabupaten}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Provinsi<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="provinsi"
+                value={form.provinsi}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                No. Telp<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="number"
+                className="flex-1"
+                name="no_hp"
+                value={form.no_hp}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">Status Perkawinan</Form.Label>
+              <span>:</span>
+              {form.status_kawin == 1 ? <p>Sudah Menikah</p> : <p>Belum Menikah</p>}
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Nama Pasangan<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="text"
+                className="flex-1"
+                name="nama_pasangan"
+                value={form.nama_pasangan}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                NIP Pasangan<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="Number"
+                className="flex-1"
+                name="nip_pasangan"
+                value={form.nip_pasangan}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point Kompetensi<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="Number"
+                className="flex-1"
+                name="point_kompetensi"
+                value={form.point_kompetensi}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point Pengabdian<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="Number"
+                className="flex-1"
+                name="point_pengabdian"
+                value={form.point_pengabdian}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point Pendidikan<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="Number"
+                className="flex-1"
+                name="point_pendidikan"
+                value={form.point_pendidikan}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point Penelitian<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="Number"
+                className="flex-1"
+                name="point_penelitian"
+                value={form.point_penelitian}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point Penunjang<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="Number"
+                className="flex-1"
+                name="point_penunjang"
+                value={form.point_penunjang}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Point Rekomendasi<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="Number"
+                className="flex-1"
+                name="point_rekomendasi"
+                value={form.point_rekomendasi}
+                disabled
+              />
+            </Form.Group>
+            <Form.Group className="flex items-baseline gap-3">
+              <Form.Label className="min-w-[18rem]">
+                Total Point<span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <Form.Input
+                type="Number"
+                className="flex-1"
+                name="total_point"
+                value={form.total_point}
+                disabled
+              />
+            </Form.Group>
+          </Card.Body>
+        </Card>
+
+        {/* Face Recognition Status */}
+        <Card className="mt-4">
+          <Card.Header className="text-center">Data Wajah (Face Recognition)</Card.Header>
+          <Card.Body>
+            {faceLoading ? (
+              <div className="flex items-center justify-center py-6">
+                <svg className="animate-spin h-6 w-6 text-primary-600 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                <span className="text-gray-500">Memuat data wajah...</span>
+              </div>
+            ) : faceError ? (
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-danger-50 border border-danger-200">
+                <Icon icon="bx:error-circle" width={24} height={24} className="text-danger-500 flex-shrink-0" />
+                <div>
+                  <p className="text-sm font-semibold text-danger-700">{faceError}</p>
+                  <button
+                    type="button"
+                    onClick={() => fetchFaceData(form.npm)}
+                    className="text-xs text-danger-600 underline mt-1 hover:text-danger-800"
+                  >
+                    Coba lagi
+                  </button>
+                </div>
+              </div>
+            ) : faceData ? (
+              <div className="flex items-center justify-between p-4 rounded-xl bg-success-50 border border-success-200">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-success-100">
+                    <Icon icon="bx:check-circle" width={24} height={24} className="text-success-600" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-success-800">Data Wajah Terdaftar</p>
+                  </div>
+                </div>
+                <Button
+                  variant="danger"
+                  icon={<Icon icon="bx:trash" width={18} height={18} />}
+                  pill
+                  onClick={handleDeleteFace}
+                  type="button"
+                >
+                  Hapus Data Wajah
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-3 p-4 rounded-xl bg-gray-50 border border-gray-200">
+                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100">
+                  <Icon icon="bx:user-x" width={24} height={24} className="text-gray-400" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-600">Belum Ada Data Wajah</p>
+                  <p className="text-xs text-gray-400 mt-0.5">Mahasiswa ini belum mendaftarkan data wajah untuk face recognition.</p>
+                </div>
+              </div>
+            )}
+          </Card.Body>
+        </Card>
+
+        <div className="flex gap-4 mt-4">
+          <Button as="a" href={prefix + menu.url} variant="secondary" className="w-full h-12">
+            Kembali
+          </Button>
+        </div>
+      </Form>
+    </Layout>
+  )
+}

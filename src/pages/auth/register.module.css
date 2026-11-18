@@ -1,0 +1,9 @@
+.slick-dots {
+	display: flex !important;
+	margin-top: 6rem !important;
+	gap: 1.25rem;
+}
+
+.slick-dots li {
+	width: 100%;
+}

@@ -1,0 +1,233 @@
+import { useEffect, useState } from "react";
+import { Icon } from "@iconify-icon/react";
+import { bootstrapCbtToken } from "../../../../lib/cbtAuth";
+import axiosCbt from "../../../../lib/axiosCbt";
+import ExamGradingPanel from "./ExamGradingPanel";
+
+/**
+ * Renderer tipe "exam" — integrasi LMS-CBT (native, lihat lmsRoutes/CbtAuthController di
+ * tias-backend). Pengerjaan ujian TIDAK dilakukan di fe-ucl — mahasiswa diarahkan ke
+ * cbt-frontend (SSO via /sso?token=) untuk mengerjakan ujian. Token ujian ditampilkan
+ * otomatis di sini begitu jendela waktu ujian buka (`GET /api/student/exams/:id/token`,
+ * cbt-api yang menahan token di luar jendela waktu) — dosen tak perlu umumkan manual.
+ * Status/nilai ditarik dengan polling `GET /api/student/history` langsung ke cbt-api,
+ * difilter ke exam_id yang tertaut pada item ini.
+ */
+
+function formatWaktu(iso) {
+  return new Date(iso).toLocaleString("id-ID", { dateStyle: "medium", timeStyle: "short" });
+}
+
+function TokenPanel({ state, access, onCopy }) {
+  if (state === "loading") {
+    return <p className="text-sm text-gray-500">Memuat info token…</p>;
+  }
+  if (state === "error" || !access) {
+    return (
+      <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+        Gagal memuat info token ujian. Coba refresh.
+      </p>
+    );
+  }
+  if (!access.is_open) {
+    return (
+      <p className="rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-500">
+        Ujian belum dibuka. Sesi dimulai {formatWaktu(access.waktu_mulai)} WIB.
+      </p>
+    );
+  }
+  return (
+    <div className="flex items-center gap-2 rounded-lg bg-purple-50 px-3 py-2 text-sm text-purple-700">
+      <span>
+        Token ujian: <strong className="font-mono">{access.token_ujian}</strong>
+      </span>
+      <button type="button" onClick={onCopy} className="ml-auto shrink-0 font-semibold underline">
+        Salin
+      </button>
+    </div>
+  );
+}
+
+function StatusPanel({ state, entry }) {
+  if (state === "loading") {
+    return <p className="text-sm text-gray-500">Memuat status…</p>;
+  }
+  if (state === "error") {
+    return (
+      <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-600">
+        Gagal memuat status dari Sistem CBT. Coba refresh.
+      </p>
+    );
+  }
+  if (!entry) {
+    return <p className="rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-500">Belum dikerjakan.</p>;
+  }
+
+  // cbt-api (getHistory) sengaja menahan final_score sampai status SELESAI
+  // (terverifikasi dosen), tapi skor pecahan (pilgan/esai/upload) — pilgan
+  // sudah terkoreksi otomatis saat submit — selalu ikut dikirim, tidak ditahan.
+  const pending = entry.status === "MENUNGGU_VERIFIKASI";
+
+  return (
+    <div className={`space-y-1 rounded-lg px-3 py-2 text-sm ${pending ? "bg-amber-50 text-amber-800" : "bg-emerald-50 text-emerald-800"}`}>
+      <p className="font-semibold">
+        {pending ? "Menunggu verifikasi dosen — nilai akhir belum final" : `Nilai akhir: ${entry.final_score ?? "-"}`}
+      </p>
+      <p className={`text-xs ${pending ? "text-amber-700" : "text-emerald-700"}`}>
+        Pilgan: {entry.skor_pilgan_100} · Esai: {entry.skor_esai_100} · Upload: {entry.skor_file_100}
+      </p>
+    </div>
+  );
+}
+
+export default function ExamRenderer({ item, manage = false }) {
+  const { cbt_exam_id, cbt_nama_ujian } = item.payload || {};
+  const [status, setStatus] = useState("loading"); // loading | ready | error
+  const [entry, setEntry] = useState(null);
+  const [accessState, setAccessState] = useState("loading"); // loading | ready | error
+  const [access, setAccess] = useState(null);
+  const [opening, setOpening] = useState(false);
+  const [openingRekap, setOpeningRekap] = useState(false);
+  const [showGrading, setShowGrading] = useState(false);
+
+  const loadHistory = async () => {
+    setStatus("loading");
+    try {
+      await bootstrapCbtToken();
+      const res = await axiosCbt.get("/api/student/history");
+      const rows = res.data?.data || [];
+      setEntry(rows.find((x) => x.exam_id === cbt_exam_id) || null);
+      setStatus("ready");
+    } catch (_) {
+      setStatus("error");
+    }
+  };
+
+  const loadAccess = async () => {
+    setAccessState("loading");
+    try {
+      await bootstrapCbtToken();
+      const res = await axiosCbt.get(`/api/student/exams/${cbt_exam_id}/token`);
+      setAccess(res.data?.data || null);
+      setAccessState("ready");
+    } catch (_) {
+      setAccessState("error");
+    }
+  };
+
+  const refreshAll = () => {
+    loadHistory();
+    loadAccess();
+  };
+
+  useEffect(() => {
+    if (cbt_exam_id) refreshAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cbt_exam_id]);
+
+  // Mahasiswa — bridge SSO langsung ke halaman input token CBT (bukan dashboard umum).
+  // Token-nya sendiri sudah tampil di TokenPanel di atas begitu sesi ujian dibuka, jadi
+  // mahasiswa tinggal salin dari sini lalu tempel di sana, tanpa perlu cari-cari menu lagi.
+  const handleOpenExam = async () => {
+    setOpening(true);
+    try {
+      const cbtToken = await bootstrapCbtToken();
+      const returnTo = encodeURIComponent(window.location.href);
+      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}&target=take-exam&returnTo=${returnTo}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (_) {
+      // biarkan tombol tetap bisa dicoba ulang; kegagalan sudah cukup jelas dari tidak terbukanya tab baru
+    } finally {
+      setOpening(false);
+    }
+  };
+
+  // Dosen — fallback bridge SSO ke halaman "Rekap Nilai" penuh di cbt-frontend, untuk aksi
+  // yang belum dibangun ulang inline di sini (export Excel, dashboard AI-proctoring, editor
+  // soal/bobot). Alur koreksi/verifikasi/push SIAKAD rutin sekarang jalan inline lewat
+  // ExamGradingPanel di bawah (lihat toggle showGrading) — dosen tidak perlu keluar dari LMS.
+  const handleOpenRekap = async () => {
+    setOpeningRekap(true);
+    try {
+      const cbtToken = await bootstrapCbtToken();
+      const returnTo = encodeURIComponent(window.location.href);
+      const url = `${process.env.NEXT_PUBLIC_CBT_WEB_URL}/sso?token=${encodeURIComponent(cbtToken)}&target=rekap-nilai&exam_id=${encodeURIComponent(cbt_exam_id)}&returnTo=${returnTo}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    } catch (_) {
+      // sama seperti handleOpenExam — tombol tetap bisa dicoba ulang
+    } finally {
+      setOpeningRekap(false);
+    }
+  };
+
+  if (!cbt_exam_id) {
+    return <p className="text-sm text-gray-400">Ujian belum ditautkan.</p>;
+  }
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-center gap-3 rounded-xl border border-gray-100 bg-gray-50 px-4 py-3">
+        <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-600">
+          <Icon icon="mdi:clipboard-check-outline" width={24} height={24} />
+        </span>
+        <div className="min-w-0">
+          <p className="truncate font-medium text-gray-800">{cbt_nama_ujian || "Ujian CBT"}</p>
+          <p className="text-xs text-gray-400">Dikerjakan di Sistem CBT — masukkan token di bawah begitu sesi dibuka.</p>
+        </div>
+      </div>
+
+      <TokenPanel
+        state={accessState}
+        access={access}
+        onCopy={() => {
+          navigator.clipboard.writeText(access.token_ujian);
+        }}
+      />
+
+      <div className="flex flex-wrap gap-2">
+        {manage ? (
+          <button
+            type="button"
+            onClick={() => setShowGrading((v) => !v)}
+            className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700"
+          >
+            <Icon icon="mdi:clipboard-check-outline" width={18} height={18} />
+            {showGrading ? "Tutup Koreksi & Rekap Nilai" : "Koreksi & Rekap Nilai"}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleOpenExam}
+            disabled={opening}
+            className="inline-flex items-center gap-2 rounded-xl bg-primary-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-primary-700 disabled:opacity-60"
+          >
+            <Icon icon="mdi:open-in-new" width={18} height={18} />
+            Ikuti Ujian di Sistem CBT
+          </button>
+        )}
+        {manage && (
+          <button
+            type="button"
+            onClick={handleOpenRekap}
+            disabled={openingRekap}
+            className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:opacity-60"
+          >
+            <Icon icon="mdi:open-in-new" width={16} height={16} />
+            Buka Rekap Lengkap di CBT
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={refreshAll}
+          className="inline-flex items-center gap-2 rounded-xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-600 hover:bg-gray-50"
+        >
+          <Icon icon="mdi:refresh" width={18} height={18} />
+          Refresh
+        </button>
+      </div>
+
+      {manage && showGrading && <ExamGradingPanel examId={cbt_exam_id} />}
+      {!manage && <StatusPanel state={status} entry={entry} />}
+    </div>
+  );
+}

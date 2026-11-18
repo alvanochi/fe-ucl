@@ -1,0 +1,72 @@
+import { useEffect, useState } from 'react'
+import Router from 'next/router'
+import useSWR from 'swr'
+import axios from 'axios'
+import { BASE_PATH } from '../lib/basePath'
+
+export default function useUser({ redirectTo = '', redirectIfFound = false } = {}) {
+  const { data: user, mutate: mutateUser } = useSWR(`${BASE_PATH}/api/user`)
+  if (user && user.is_logged_in) axios.defaults.headers.common['token'] = user.token
+
+  // const [profile, setProfile] = useState({});
+  const [profile, setProfile] = useState({
+    tes: 0,
+    sertifikasi: 0,
+    pembicara: 0,
+    pengabdian: 0,
+    penghargaan: 0,
+    penelitian: 0,
+    publikasi: 0,
+    hki: 0,
+    userData: {},
+  })
+
+  // async function logout() {
+  //   return mutateUser(axios.post(`${BASE_PATH}/api/logout`).then(() => Router.reload()))
+  // }
+
+  async function logout() {
+  await axios.post(`${BASE_PATH}/api/logout`);
+  // Redirect ke eportal login setelah logout
+  window.location.href = process.env.NEXT_PUBLIC_EPORTAL_URL + '/login';
+}
+
+  async function getProfile() {
+    return axios({ url: `${process.env.NEXT_PUBLIC_API_URL}/dashboard` })
+      .then(response => {
+        const data = response.data.data
+        setProfile(state => ({ ...state, ...data }))
+      })
+      .catch(error => console.error(error))
+  }
+
+  async function getEducations() {
+    return axios({
+      url: `${process.env.NEXT_PUBLIC_API_URL}/kualifikasi/getDataPend`,
+      params: { page: 1, limit: 1000 },
+    })
+      .then(response => {
+        const data = response.data.data
+        const sorted = data.sort((a, b) => b.tahun_lulus - a.tahun_lulus)
+        setProfile(state => ({ ...state, educations: sorted }))
+      })
+      .catch(error => console.error(error))
+  }
+
+  useEffect(() => {
+    if (!redirectTo || !user) return
+    if (
+      (redirectTo && !redirectIfFound && !user?.is_logged_in) ||
+      (redirectIfFound && user?.is_logged_in)
+    ) {
+      Router.push(redirectTo)
+    }
+  }, [user, redirectIfFound, redirectTo])
+
+  // useEffect(() => {
+  // 	if (!redirectTo || !user) return;
+  // 	getProfile();
+  // }, [user]);
+
+  return { user, profile, mutateUser, logout }
+}

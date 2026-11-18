@@ -1,0 +1,427 @@
+import { useState, useRef, useEffect } from "react";
+import Head from "next/head";
+import { Icon } from "@iconify-icon/react";
+import Card from "../../components/Card";
+import Form from "../../components/Form";
+import Layout from "../../components/Layout";
+import axios from "axios";
+import useUser from "../../hooks/useUser";
+import { toastAlert } from "../../lib/sweetalert";
+import SignaturePad from "../../components/Persuratan/SignaturePad";
+
+const FIELD_CONFIG = {
+  "surat pengajuan cuti": [],
+  "surat pengunduran diri": [
+    { name: "semester", label: "Semester Saat Ini", type: "text", placeholder: "Contoh: Semester 1 (Ganjil)" },
+    { name: "tanggal_pengarahan", label: "Tanggal Pengarahan KIP Kuliah", type: "text", placeholder: "Contoh: Senin, 12 Januari 2026" },
+  ],
+};
+
+const ATTACHMENT_HINTS = {
+  "surat pengajuan cuti": {
+    examples: [
+      "Surat keterangan dokter (untuk cuti sakit)",
+      "Surat keterangan rawat inap",
+      "Bukti keperluan mendesak lainnya",
+    ],
+  },
+  "surat pengunduran diri": {
+    examples: [
+      "Fotokopi KTP mahasiswa",
+      "Fotokopi KTM atau kartu identitas kampus",
+    ],
+  },
+};
+
+const MAX_FILES = 5;
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
+
+const INITIAL_FORM = {
+  jenis_surat: "", perihal: "", catatan_surat: "",
+  semester: "", tanggal_pengarahan: "",
+};
+
+export default function PersuratanCreate({ onBack }) {
+  const { user } = useUser({ redirectTo: "/login" });
+  const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/surat`;
+
+  const [form, setForm] = useState(INITIAL_FORM);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [isSubmit, setIsSubmit] = useState(false);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [isTtdError, setIsTtdError] = useState(false);
+  const [ttdMhs, setTtdMhs] = useState(null);
+  const errorRef = useRef(null);
+
+  useEffect(() => {
+    if ((isTtdError || errorMessage) && errorRef.current) {
+      errorRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, [isTtdError, errorMessage]);
+
+  const inputHandler = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => {
+      const newForm = { ...prev, [name]: value };
+      if (name === "jenis_surat" && value) {
+        const formattedJenis = value.split(" ").map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(" ");
+        newForm.perihal = `Permohonan ${formattedJenis}`;
+      }
+      return newForm;
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.jenis_surat) { toastAlert("warning", "Pilih jenis surat terlebih dahulu."); return; }
+    if (!form.perihal) { toastAlert("warning", "Perihal surat wajib diisi."); return; }
+    if (form.jenis_surat === "surat pengunduran diri" && !ttdMhs) {
+      toastAlert("warning", "Silakan gambar tanda tangan Anda pada form yang disediakan.");
+      return;
+    }
+
+    setIsSubmit(true);
+    setErrorMessage(null);
+    setIsTtdError(false);
+
+    try {
+      const fd = new FormData();
+      fd.append("jenis_surat", form.jenis_surat);
+
+      const actorName = user?.personal_data?.nama_lengkap || user?.personalData?.nama_lengkap || user?.nama_lengkap || "Mahasiswa";
+      fd.append("nama_aktor", `${actorName} (MAHASISWA)`);
+
+      const { jenis_surat, perihal, catatan_surat, ...dynamicFields } = form;
+      const jsonPayload = {
+        perihal: perihal || `Pengajuan ${jenis_surat}`,
+        catatan_surat,
+        ...Object.fromEntries(Object.entries(dynamicFields).filter(([, v]) => v !== "")),
+        nama_lengkap: user?.personal_data?.nama_lengkap || user?.personalData?.nama_lengkap || user?.nama_lengkap,
+        npm: user?.npm,
+        alamat: user?.personal_data?.alamat || user?.personalData?.alamat,
+        no_hp: user?.personal_data?.no_hp || user?.personalData?.no_hp,
+      };
+      
+      if (form.jenis_surat === "surat pengunduran diri" && ttdMhs) {
+        jsonPayload.ttd_mhs = ttdMhs;
+      }
+      
+      fd.append("form_data", JSON.stringify(jsonPayload));
+      selectedFiles.forEach((file) => fd.append("lampiran", file));
+
+      const token = localStorage.getItem("token");
+      const res = await axios.post(API_URL, fd, {
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
+      });
+
+      if (res.data.isSuccess || res.status === 200 || res.status === 201) {
+        const userDept = user?.department_code || "Informatika";
+        const formattedDept = userDept.charAt(0).toUpperCase() + userDept.slice(1);
+        toastAlert("success", `Pengajuan surat berhasil dikirim ke Staf Tata Usaha Prodi ${formattedDept}!`);
+        onBack();
+      }
+    } catch (err) {
+      const msg =
+        err?.response?.data?.responseMessage ||
+        err?.response?.data?.message ||
+        "Terjadi kesalahan. Silakan coba lagi.";
+        
+      const isTtd = msg?.toLowerCase().includes("tanda tangan digital");
+      setIsTtdError(isTtd);
+      setErrorMessage(isTtd ? null : msg);
+      
+      if (!isTtd) {
+        toastAlert("error", msg);
+      }
+    } finally {
+      setIsSubmit(false);
+    }
+  };
+
+  const handleFileChange = (e) => {
+    if (!e.target.files?.length) return;
+    const newFiles = Array.from(e.target.files);
+    if (selectedFiles.length + newFiles.length > MAX_FILES) {
+      toastAlert("warning", `Maksimal mengunggah ${MAX_FILES} lampiran.`);
+      e.target.value = null;
+      return;
+    }
+    const oversizedFiles = newFiles.filter((f) => f.size > MAX_FILE_SIZE);
+    if (oversizedFiles.length > 0) {
+      toastAlert("warning", `File "${oversizedFiles[0].name}" melebihi batas 10MB.`);
+      e.target.value = null;
+      return;
+    }
+    const existingNames = selectedFiles.map((f) => f.name);
+    const uniqueNew = newFiles.filter((f) => !existingNames.includes(f.name));
+    setSelectedFiles((prev) => [...prev, ...uniqueNew]);
+    e.target.value = null;
+  };
+
+  const removeFile = (indexToRemove) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== indexToRemove));
+  };
+
+  if (!user) return null;
+  const hasDynamicFields = FIELD_CONFIG[form.jenis_surat]?.length > 0;
+
+  return (
+    <Layout>
+      <>
+        <Head>
+          <title>Buat Pengajuan | UCL</title>
+        </Head>
+
+        <div className="flex items-center gap-4 mb-6">
+          <button onClick={onBack} className="p-2.5 hover:bg-gray-100 rounded-full border border-gray-200 bg-white shadow-sm transition-all active:scale-95 text-gray-600 outline-none focus:ring-2 focus:ring-primary-500">
+            <Icon icon="mdi:arrow-left" width={24} />
+          </button>
+          <h1 className="text-2xl lg:text-3xl font-black text-gray-800 tracking-tight">Pengajuan Baru</h1>
+        </div>
+
+        {/* ── Error Area (auto-scroll target) ── */}
+        {(isTtdError || errorMessage) && (
+          <div ref={errorRef} className="mb-6 scroll-mt-6">
+
+            {/* TTD Error: compact card */}
+            {isTtdError && (
+              <div className="flex gap-4 items-start bg-amber-50 border border-amber-300 rounded-2xl p-4 shadow-sm animate-in fade-in slide-in-from-top-2">
+                <div className="w-9 h-9 rounded-xl bg-amber-400 flex items-center justify-center text-white shrink-0">
+                  <Icon icon="mdi:draw-pen" width={20} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-black text-amber-900 text-sm mb-1">Tanda Tangan Digital Belum Dibuat</p>
+                  <p className="text-amber-700 text-xs leading-relaxed">
+                    Buka <strong>TIAS Mobile</strong> → <strong>Profil</strong> → <strong>Tanda Tangan Digital</strong>, buat TTD kamu, lalu coba ajukan lagi.
+                  </p>
+                </div>
+                <button type="button" onClick={() => setIsTtdError(false)} className="shrink-0 text-amber-400 hover:text-amber-700 outline-none">
+                  <Icon icon="mdi:close" width={18} />
+                </button>
+              </div>
+            )}
+
+            {/* Generic Error */}
+            {errorMessage && (
+              <div className="flex items-start gap-3 bg-red-50 border border-red-200 text-red-700 rounded-xl px-4 py-3 animate-in fade-in slide-in-from-top-2">
+                <Icon icon="mdi:alert-circle-outline" width={20} className="shrink-0 mt-0.5" />
+                <p className="flex-1 text-sm font-medium">{errorMessage}</p>
+                <button type="button" onClick={() => setErrorMessage(null)} className="shrink-0 text-red-400 hover:text-red-600 outline-none">
+                  <Icon icon="mdi:close" width={16} />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        <Form onSubmit={handleSubmit}>
+
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            <div className="xl:col-span-1">
+              <Card className="border border-gray-200 shadow-sm rounded-2xl overflow-hidden h-full">
+                <Card.Header className="bg-primary-600 text-white text-[11px] font-black uppercase py-3.5 text-center tracking-widest border-none">Langkah 1: Kategori</Card.Header>
+                <Card.Body className="p-6">
+                  <Form.Group className="space-y-3">
+                    <Form.Label className="font-bold text-gray-700">Pilih Jenis Surat</Form.Label>
+                    <Form.Select
+                      name="jenis_surat"
+                      value={form.jenis_surat}
+                      onChange={inputHandler}
+                      emptyStateLabel="-- Pilih Jenis Surat --"
+                      options={[
+                        { label: "Surat Pengajuan Cuti", value: "surat pengajuan cuti" },
+                        { label: "Surat Pengunduran Diri", value: "surat pengunduran diri" },
+                      ]}
+                      required
+                    />
+                  </Form.Group>
+                </Card.Body>
+              </Card>
+            </div>
+
+            <div className="xl:col-span-2">
+              {!form.jenis_surat ? (
+                <div className="h-full min-h-[350px] border-2 border-dashed border-gray-200 rounded-2xl flex flex-col items-center justify-center text-gray-400 bg-gray-50/50 p-6 text-center animate-in fade-in">
+                  <Icon icon="mdi:file-document-edit-outline" width={64} className="mb-4 opacity-30 text-primary-500" />
+                  <p className="font-bold text-base text-gray-600">Formulir Belum Tersedia</p>
+                  <p className="text-sm mt-1">Silakan pilih jenis surat di sebelah kiri terlebih dahulu.</p>
+                </div>
+              ) : (
+                <Card className="animate-in fade-in slide-in-from-right-4 shadow-md border border-gray-200 rounded-2xl overflow-hidden">
+                  <Card.Header className="bg-primary-600 text-white text-[11px] font-black uppercase py-3.5 text-center tracking-widest border-none">Langkah 2: Lengkapi Data</Card.Header>
+                  <Card.Body className="space-y-6 p-6 lg:p-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                      <Form.Group className="space-y-2">
+                        <Form.Label className="font-bold text-gray-700">Penerima Tujuan</Form.Label>
+                        <div className="w-full h-11 px-4 bg-gray-100 border border-gray-200 rounded-lg text-gray-500 font-medium flex items-center gap-2 cursor-not-allowed">
+                          <Icon icon="mdi:lock-outline" width={18} />
+                          {`Staf Tata Usaha Prodi ${
+                            user?.department_code 
+                              ? user.department_code.charAt(0).toUpperCase() + user.department_code.slice(1) 
+                              : "Informatika"
+                          } (Otomatis)`}
+                        </div>
+                      </Form.Group>
+
+                      <Form.Group className="space-y-2">
+                        <Form.Label className="font-bold text-gray-700">Perihal / Topik Surat</Form.Label>
+                        <Form.Input 
+                          name="perihal" 
+                          value={form.perihal || ""} 
+                          onChange={inputHandler} 
+                          placeholder={form.jenis_surat === "surat pengajuan cuti" ? "Contoh: Permohonan Surat Pengajuan Cuti" : "Contoh: Permohonan Surat Pengunduran Diri"} 
+                          required 
+                        />
+                      </Form.Group>
+                    </div>
+
+                    {/* Info otomatis untuk surat cuti */}
+                    {form.jenis_surat === "surat pengajuan cuti" && (
+                      <div className="flex items-start gap-4 p-5 bg-emerald-50 border border-emerald-200 rounded-xl animate-in fade-in">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500 flex items-center justify-center text-white shrink-0">
+                          <Icon icon="mdi:calendar-check-outline" width={22} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-black text-emerald-800 text-sm mb-1">Semester & Tahun Akademik Diisi Otomatis</p>
+                          <p className="text-emerald-700 text-xs leading-relaxed">
+                            Sistem akan secara otomatis menentukan <strong>semester aktif</strong> dan <strong>semester cuti</strong> berdasarkan data akademik terkini. Anda tidak perlu mengisi data ini secara manual.
+                          </p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Field dinamis untuk surat pengunduran diri */}
+                    {hasDynamicFields && (
+                      <div className="p-5 bg-blue-50/50 border border-blue-100 rounded-xl grid grid-cols-1 md:grid-cols-2 gap-5 animate-in fade-in">
+                        {FIELD_CONFIG[form.jenis_surat].map((field, idx) => (
+                          <Form.Group key={idx} className="space-y-2">
+                            <Form.Label className="font-bold text-gray-700">{field.label}</Form.Label>
+                            {field.type === "select" ? (
+                              <Form.Select
+                                name={field.name}
+                                value={form[field.name] || ""}
+                                onChange={inputHandler}
+                                options={field.options}
+                                emptyStateLabel={`-- Pilih ${field.label.split(" ").pop()} --`}
+                                required
+                              />
+                            ) : (
+                              <Form.Input name={field.name} value={form[field.name] || ""} onChange={inputHandler} placeholder={field.placeholder} required />
+                            )}
+                          </Form.Group>
+                        ))}
+                      </div>
+                    )}
+
+                    {form.jenis_surat === "surat pengunduran diri" && (
+                      <div className="space-y-4 animate-in fade-in">
+                        <div className="flex items-start gap-3 bg-amber-50/80 border border-amber-200 text-amber-800 rounded-xl px-5 py-4">
+                          <Icon icon="mdi:information-outline" width={24} className="shrink-0 mt-0.5 text-amber-600" />
+                          <div className="text-sm">
+                            <p className="font-bold mb-1">Perhatian Penting!</p>
+                            <p className="leading-relaxed text-amber-700">Pengajuan ini memerlukan <strong>Persetujuan Orang Tua</strong>. Setelah dikirim, harap beri tahu Orang Tua/Wali Anda untuk membuka aplikasi <strong>TIAS Mobile</strong> dan melakukan <strong>approval</strong> agar dokumen dapat diproses lebih lanjut.</p>
+                          </div>
+                        </div>
+                        <div className="p-5 bg-amber-50/50 border border-amber-100 rounded-xl">
+                          <SignaturePad
+                            label="Tanda Tangan Pemohon (Mahasiswa)"
+                            onEnd={(dataUrl) => setTtdMhs(dataUrl)}
+                            onClear={() => setTtdMhs(null)}
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    <Form.Group className="space-y-2">
+                      <Form.Label className="font-bold text-gray-700">Catatan Surat (Opsional)</Form.Label>
+                      <Form.Textarea name="catatan_surat" value={form.catatan_surat || ""} onChange={inputHandler} placeholder="Tambahkan catatan khusus terkait surat ini jika ada..." rows={3} />
+                    </Form.Group>
+
+                    <Form.Group className="space-y-4 border-t border-gray-100 pt-6">
+                      <Form.Label className="font-black text-[11px] text-gray-500 uppercase tracking-widest flex items-center gap-2">
+                        <Icon icon="mdi:paperclip" width={16} /> Lampiran Dokumen Pendukung (Max 5 File)
+                      </Form.Label>
+
+                      <div className="relative border-2 border-dashed border-gray-300 rounded-xl p-8 hover:border-primary-500 hover:bg-primary-50/30 bg-gray-50/50 text-center group transition-all">
+                        <input type="file" onChange={handleFileChange} accept=".pdf, .jpg, .jpeg, .png" multiple className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" title="" />
+                        <Icon icon="mdi:cloud-upload-outline" width={48} className="mx-auto text-gray-400 group-hover:text-primary-600 transition-colors" />
+                        <p className="mt-3 text-sm font-bold text-gray-600 group-hover:text-primary-700">Klik atau seret file dokumen ke sini</p>
+                        <p className="mt-1 text-[11px] text-gray-400 font-medium">Mendukung PDF, JPG, PNG (Max 10MB/file)</p>
+                      </div>
+
+                      {ATTACHMENT_HINTS[form.jenis_surat] && (
+                        <div className="mt-3 p-4 bg-blue-50/60 border border-blue-100 rounded-lg animate-in fade-in">
+                          <div className="flex items-start gap-2">
+                            <Icon icon="mdi:information-outline" width={16} className="text-blue-500 mt-0.5 shrink-0" />
+                            <div className="text-xs text-blue-700 space-y-1">
+                              <p className="font-semibold">Contoh dokumen yang dapat dilampirkan:</p>
+                              <ul className="list-disc list-inside space-y-0.5 text-blue-600">
+                                {ATTACHMENT_HINTS[form.jenis_surat].examples.map((hint, i) => (
+                                  <li key={i}>{hint}</li>
+                                ))}
+                              </ul>
+                              <p className="text-[10px] text-blue-400 mt-2 italic">
+                                Lampiran bersifat opsional sebagai dokumen pendukung pengajuan Anda.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      )}
+
+                      {selectedFiles.length > 0 && (
+                        <div className="mt-5 space-y-2 animate-in fade-in">
+                          <div className="flex justify-between items-center border-b border-gray-100 pb-2">
+                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Daftar File</p>
+                            <p className="text-[10px] font-black text-primary-600 bg-primary-50 px-2 py-0.5 rounded-md">
+                              {selectedFiles.length} / {MAX_FILES}
+                            </p>
+                          </div>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {selectedFiles.map((file, index) => (
+                              <div key={index} className="flex items-center justify-between bg-white border border-gray-200 p-3 rounded-lg shadow-sm hover:border-primary-300 transition-colors">
+                                <div className="flex items-center gap-3 overflow-hidden">
+                                  <Icon icon={file.type === "application/pdf" ? "mdi:file-pdf-box" : "mdi:image"} className={file.type === "application/pdf" ? "text-red-500 shrink-0" : "text-blue-500 shrink-0"} width={28} />
+                                  <div className="truncate text-xs">
+                                    <p className="font-bold text-gray-700 truncate max-w-[150px]">{file.name}</p>
+                                    <p className="text-gray-400 font-mono mt-0.5">{(file.size / 1024).toFixed(1)} KB</p>
+                                  </div>
+                                </div>
+                                <button type="button" onClick={() => removeFile(index)} className="text-gray-300 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-md transition-colors">
+                                  <Icon icon="mdi:close" width={18} />
+                                </button>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </Form.Group>
+
+                    <div className="pt-6 border-t border-gray-100">
+                      <button
+                        type="submit"
+                        disabled={isSubmit}
+                        className="w-full h-12 bg-primary-600 hover:bg-primary-700 disabled:opacity-70 disabled:cursor-not-allowed text-white rounded-xl font-bold uppercase text-xs tracking-widest shadow-md hover:shadow-lg transition-all active:scale-[0.98] flex items-center justify-center gap-2"
+                      >
+                        {isSubmit ? (
+                          <>
+                            <Icon icon="mdi:loading" className="animate-spin" width={20} />
+                            <span>Memproses Data...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Icon icon="mdi:send-outline" width={18} />
+                            <span>Kirim Pengajuan Surat</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </Card.Body>
+                </Card>
+              )}
+            </div>
+          </div>
+        </Form>
+      </>
+    </Layout>
+  );
+}

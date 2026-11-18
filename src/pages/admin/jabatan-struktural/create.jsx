@@ -1,0 +1,169 @@
+import { useState } from 'react'
+import axios from 'axios'
+import Button from '../../../components/Button'
+import Modal from '../../../components/Modal'
+import Form from '../../../components/Form'
+import useModal from '../../../hooks/useModal'
+import { Icon } from '@iconify-icon/react'
+import useForm from '../../../hooks/useForm'
+import useAllPegawai from '../../../repo/all-pegawai'
+import { MySwal, loadingAlert, toastAlert } from '../../../lib/sweetalert'
+import useJabatan from '../../../repo/jabatan'
+import useUnit from '../../../repo/unit'
+
+const CreateStruktural = ({ onAction }) => {
+  const { show, toggle, close } = useModal()
+
+  const { data: listPegawai, isLoading: isPegawaiLoading } = useAllPegawai()
+  const { data: listDepartemen, isLoading: isDepartemenLoading } = useUnit()
+  const { data: listJabatan, isLoading: isJabatanLoading } = useJabatan()
+
+  const [selectedDosen, setSelectedDosen] = useState('')
+  const [selectedDepartemen, setSelectedDepartemen] = useState('')
+  const [selectedJabatan, setSelectedJabatan] = useState('')
+  const [keterangan, setKeterangan] = useState(null)
+
+  const handleDosenChange = selected => {
+    setSelectedDosen(selected?.value)
+  }
+  const handleDepartemenChange = selected => {
+    setSelectedDepartemen(selected?.value)
+  }
+  const handleJabatanChange = selected => {
+    setSelectedJabatan(selected?.value)
+  }
+
+  const handleInputChangeKeterangan = e => {
+    const { name, value } = e.target
+    setKeterangan(value)
+  }
+
+  async function submitHandler(event) {
+    event.preventDefault()
+    try {
+      const requestData = {
+        user_id: selectedDosen,
+        unit_id: selectedDepartemen,
+        jabatan_id: selectedJabatan,
+        keterangan: keterangan,
+      }
+
+      if (!requestData.user_id || !requestData.unit_id || !requestData.jabatan_id) {
+        toastAlert('error', 'Pleas fill in all the required fields.')
+
+        return
+      }
+
+      const request = await axios({
+        url: `${process.env.NEXT_PUBLIC_API_URL}/users/jabatan-struktural`,
+        method: 'POST',
+        data: requestData,
+      })
+      const response = await request.data
+
+      setSelectedDepartemen('')
+      setSelectedDosen('')
+      setSelectedJabatan('')
+      setKeterangan(null)
+
+      toastAlert('success', 'Successfully')
+      close()
+      onAction()
+    } catch (error) {
+      if (error.name === 'AxiosError') {
+        toastAlert('error', error.response.data.responseMessage)
+
+        return
+      }
+      loadingAlert()
+      MySwal.close()
+
+      toastAlert('error', error.response.data.responseMessage)
+    }
+  }
+
+  return (
+    <>
+      <Button
+        variant="primary"
+        icon={<Icon icon="ic:baseline-plus" width={20} height={20} />}
+        onClick={toggle}
+        pill
+      >
+        Tambah Jabatan Struktural
+      </Button>
+      <Modal title="Tambah Jabatan Struktural" show={show} handler={toggle} size="lg">
+        <Form className="space-y-4" onSubmit={submitHandler}>
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[10rem]">
+              Unit <span className="text-danger-600">*</span>
+            </Form.Label>
+            <span>:</span>
+            <Form.Combobox
+              name="unit_id"
+              onChange={handleDepartemenChange}
+              value={selectedDepartemen}
+              options={listDepartemen?.map(item => ({
+                label: `${item.code} - ${item.nama_unit}`,
+                value: item.id,
+              }))}
+            />
+          </Form.Group>
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[10rem]">
+              Jabatan <span className="text-danger-600">*</span>
+            </Form.Label>
+            <span>:</span>
+            <Form.Combobox
+              name="jabatan_id"
+              onChange={handleJabatanChange}
+              value={selectedJabatan}
+              options={listJabatan?.map(item => ({
+                label: item.nama_jabatan,
+                value: item.id,
+              }))}
+            />
+          </Form.Group>
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[10rem]">
+              Pegawai <span className="text-danger-600">*</span>
+            </Form.Label>
+            <span>:</span>
+            <Form.Combobox
+              name="user_id"
+              onChange={handleDosenChange}
+              value={selectedDosen}
+              options={listPegawai
+                ?.map(user => ({
+                  label: `${user.personal_data?.nama_lengkap} - ${user.personal_data?.nip?.trim()}`,
+                  value: user.user_id,
+                  nip: user.personal_data?.nip?.trim(),
+                }))}
+            />
+          </Form.Group>
+          <Form.Group className="flex items-baseline gap-3">
+            <Form.Label className="min-w-[10rem]">Keterangan</Form.Label>
+            <span>:</span>
+            <Form.Textarea
+              className="flex-1"
+              rows="5"
+              name="keterangan"
+              value={keterangan}
+              onChange={handleInputChangeKeterangan}
+            />
+          </Form.Group>
+          <div className="flex gap-4 mt-12">
+            <Button type="button" variant="secondary" onClick={close}>
+              Tutup
+            </Button>
+            <Button type="submit" variant="primary" className="w-full h-12">
+              Simpan
+            </Button>
+          </div>
+        </Form>
+      </Modal>
+    </>
+  )
+}
+
+export default CreateStruktural

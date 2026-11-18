@@ -1,0 +1,67 @@
+import { useEffect, useState } from "react";
+import useUser from "./useUser";
+import utils from "../utils/menu";
+import Router from "next/router";
+
+export const useMenu = () => {
+  const { user } = useUser();
+
+  const [allowed, setAllowed] = useState([]);
+  const [menu, setMenu] = useState(null);
+  const [active, setActive] = useState(null);
+  const [prefix, setPrefix] = useState(null);
+
+  useEffect(() => {
+    if (user == null) return;
+
+    const fixedUrl =
+      ["/admin", "/dosen", "/mahasiswa", "/dosen_ext", "/pegawai", "/parent"].includes(
+        Router.pathname
+      ) === false
+        ? `/${Router.pathname.split("/").at(2)}`
+        : "/";
+    let menuPrefix;
+
+    switch (user.role) {
+      case "Dosen":
+        menuPrefix = "/dosen";
+        break;
+      case "Mahasiswa":
+        menuPrefix = "/mahasiswa";
+        break;
+      case "Admin":
+        menuPrefix = "/admin";
+        break;
+      case "Pegawai":
+        menuPrefix = "/pegawai";
+        break;
+      case "Dosen_Ext":
+        menuPrefix = "/dosen_ext";
+        break;
+      case "Parent":
+      case "Orang Tua":
+        menuPrefix = "/parent";
+        break;
+    }
+
+    const findMenu = utils.getAppMenuByUrl(fixedUrl, user.role);
+    setMenu(() => findMenu);
+
+    const allowedMenu = utils.getAppMenuByRole(user.role, menuPrefix);
+    setAllowed(() => allowedMenu);
+
+    setPrefix(menuPrefix);
+
+    if (findMenu?.type === "menu-group" && findMenu?.children?.length > 0) {
+      setActive(() => findMenu.children.at(0));
+    } else if (findMenu?.type === "menu" || findMenu?.submenus?.length > 0) {
+      setActive(() => findMenu.submenus?.at(0) || findMenu);
+    } else {
+      setActive(() => findMenu);
+    }
+  }, [user, Router]);
+
+  return { menu, allowed, active, prefix, setActive };
+};
+
+export default useMenu;
