@@ -618,6 +618,34 @@ export const APP_MENU = [
       },
     ],
   },
+  // Master Penelitian (Admin)
+  {
+    type: "menu-group",
+    label: "Master Penelitian",
+    icon: "material-symbols:edit-document-outline-rounded",
+    children: [
+      {
+        label: "Kelompok Bidang",
+        url: "/master-penelitian/kelompok-bidang",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Skim Kegiatan",
+        url: "/master-penelitian/skim-kegiatan",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Jenis Dokumen",
+        url: "/master-penelitian/jenis-dokumen",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+      {
+        label: "Kolaborator Eksternal",
+        url: "/master-penelitian/kolaborator-eksternal",
+        allowedRoles: [ROLE_ID_ADMIN],
+      },
+    ],
+  },
   {
     type: "menu",
     label: "Pembelajaran",

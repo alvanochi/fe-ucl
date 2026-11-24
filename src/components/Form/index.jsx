@@ -114,11 +114,68 @@ const Combobox = ({
     }
   };
 
+  const defaultStyles = {
+    control: (base, state) => ({
+      ...base,
+      backgroundColor: "rgba(224, 242, 241, 0.25)",
+      borderColor: state.isFocused
+        ? colors?.primary?.[500] || "#126e63"
+        : colors?.primary?.[400] || "#4db6ac",
+      borderRadius: "0.5rem",
+      minHeight: "42px",
+      boxShadow: state.isFocused
+        ? `0 0 0 1px ${colors?.primary?.[500] || "#126e63"}`
+        : "none",
+      "&:hover": {
+        borderColor: colors?.primary?.[500] || "#126e63",
+      },
+      ...(styles.control ? styles.control(base, state) : {}),
+    }),
+    placeholder: (base, state) => ({
+      ...base,
+      color: "#9ca3af",
+      fontSize: "0.875rem",
+      ...(styles.placeholder ? styles.placeholder(base, state) : {}),
+    }),
+    singleValue: (base, state) => ({
+      ...base,
+      color: "#111827",
+      fontSize: "0.875rem",
+      ...(styles.singleValue ? styles.singleValue(base, state) : {}),
+    }),
+    menu: (base, state) => ({
+      ...base,
+      borderRadius: "0.5rem",
+      zIndex: 9999,
+      ...(styles.menu ? styles.menu(base, state) : {}),
+    }),
+    menuPortal: (base, state) => ({
+      ...base,
+      zIndex: 9999,
+      ...(styles.menuPortal ? styles.menuPortal(base, state) : {}),
+    }),
+    option: (base, state) => ({
+      ...base,
+      backgroundColor: state.isSelected
+        ? colors?.primary?.[500] || "#126e63"
+        : state.isFocused
+        ? colors?.primary?.[100] || "#e0f2f1"
+        : "transparent",
+      color: state.isSelected ? "#ffffff" : "#111827",
+      fontSize: "0.875rem",
+      "&:active": {
+        backgroundColor: colors?.primary?.[200] || "#b2dfdb",
+      },
+      ...(styles.option ? styles.option(base, state) : {}),
+    }),
+    ...styles,
+  };
+
   return (
     <div className="relative w-full max-w-full">
       <Select
         className={className}
-        styles={styles}
+        styles={defaultStyles}
         value={selected}
         options={options || []}
         onChange={handleChange}

@@ -82,6 +82,32 @@ export default function PublikasiKaryaCreate() {
       [key]: state[key].filter((item, idx) => item.role == role && idx != index),
     }))
 
+  const kategoriPublikasiOptions = (kategoriPublikasi || []).map(item => ({
+    label: `${item.nama_kategori} - ${item.tingkatan}`,
+    value: item.id,
+  }))
+
+  const jenisOptions = [
+    { label: 'Jurnal internasional', value: 'Jurnal internasional' },
+    { label: 'Jurnal internasional bereputasi', value: 'Jurnal internasional bereputasi' },
+    { label: 'Makalah ilmiah', value: 'Makalah ilmiah' },
+    { label: 'Tulisan ilmiah', value: 'Tulisan ilmiah' },
+    { label: 'Prosiding seminar internasional', value: 'Prosiding seminar internasional' },
+    { label: 'Artikel ilmiah', value: 'Artikel ilmiah' },
+    { label: 'Buku referensi', value: 'Buku referensi' },
+    { label: 'Buku lainnya', value: 'Buku lainnya' },
+  ]
+
+  const kategoriCapainOptions = [
+    { label: 'Pembicara', value: 'Pembicara' },
+    { label: 'Visiting Scientist', value: 'Visiting Scientist' },
+    { label: 'Produk Teknologi Tepat Guna', value: 'Produk Teknologi Tepat Guna' },
+    { label: 'Jenis Luaran Lainnya', value: 'Jenis Luaran Lainnya' },
+    { label: 'Publikasi', value: 'Publikasi' },
+    { label: 'HKI', value: 'HKI' },
+    { label: 'Buku', value: 'Buku' },
+  ]
+
   useEffect(() => {
     if (!user) return
     setForm(state => ({
@@ -110,20 +136,21 @@ export default function PublikasiKaryaCreate() {
                 Kategori Publikasi <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="kategori_id"
-                value={form.kategori_id}
-                onChange={inputHandler}
-                options={
-                  kategoriPublikasi &&
-                  kategoriPublikasi.map(item => ({
-                    label: `${item.nama_kategori} - ${item.tingkatan}`,
-                    value: item.id,
-                  }))
-                }
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="kategori_id"
+                  value={form.kategori_id}
+                  options={kategoriPublikasiOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      kategori_id: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Kategori Publikasi --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -143,90 +170,42 @@ export default function PublikasiKaryaCreate() {
                 Jenis <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="jenis"
-                value={form.jenis}
-                onChange={inputHandler}
-                options={[
-                  {
-                    label: 'Jurnal internasional',
-                    value: 'Jurnal internasional',
-                  },
-                  {
-                    label: 'Jurnal internasional bereputasi',
-                    value: 'Jurnal internasional bereputasi',
-                  },
-                  {
-                    label: 'Makalah ilmiah',
-                    value: 'Makalah ilmiah',
-                  },
-                  {
-                    label: 'Tulisan ilmiah',
-                    value: 'Tulisan ilmiah',
-                  },
-                  {
-                    label: 'Prosiding seminar internasional',
-                    value: 'Prosiding seminar internasional',
-                  },
-                  {
-                    label: 'Artikel ilmiah',
-                    value: 'Artikel ilmiah',
-                  },
-                  {
-                    label: 'Buku referensi',
-                    value: 'Buku referensi',
-                  },
-                  {
-                    label: 'Buku lainnya',
-                    value: 'Buku lainnya',
-                  },
-                ]}
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="jenis"
+                  value={form.jenis}
+                  options={jenisOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      jenis: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Jenis Publikasi --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Kategori Capain <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="kategori_capain"
-                value={form.kategori_capain}
-                onChange={inputHandler}
-                options={[
-                  {
-                    label: 'Pembicara',
-                    value: 'Pembicara',
-                  },
-                  {
-                    label: 'Visiting Scientist',
-                    value: 'Visiting Scientist',
-                  },
-                  {
-                    label: 'Produk Teknologi Tepat Guna',
-                    value: 'Produk Teknologi Tepat Guna',
-                  },
-                  {
-                    label: 'Jenis Luaran Lainnya',
-                    value: 'Jenis Luaran Lainnya',
-                  },
-                  {
-                    label: 'Publikasi',
-                    value: 'Publikasi',
-                  },
-                  {
-                    label: 'HKI',
-                    value: 'HKI',
-                  },
-                  {
-                    label: 'Buku',
-                    value: 'Buku',
-                  },
-                ]}
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="kategori_capain"
+                  value={form.kategori_capain}
+                  options={kategoriCapainOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      kategori_capain: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Kategori Capaian --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">

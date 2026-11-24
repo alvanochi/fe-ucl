@@ -17,6 +17,7 @@ import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../config/role'
 import _ from 'underscore'
 import useKategoriPublikasi from '../../../../repo/kategori-publikasi'
 import { Loading } from '../../../../components/Loading'
+import { useKelompokBidang, useSkimKegiatan } from '../../../../repo/master-penelitian'
 
 export default function PenelitianCreate() {
   const router = useRouter()
@@ -28,7 +29,7 @@ export default function PenelitianCreate() {
   const INITIAL_ANGGOTA = {
     user_id: '',
     peran: '',
-    status: false,
+    status: true,
     role: '',
   }
 
@@ -116,6 +117,30 @@ export default function PenelitianCreate() {
 
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
+  const { data: listKelompokBidang } = useKelompokBidang([user])
+  const { data: listSkimKegiatan } = useSkimKegiatan([user])
+
+  const kelompokBidangOptions = (listKelompokBidang || []).map(item => ({
+    label: item.nama,
+    value: item.id,
+  }))
+
+  const skimKegiatanOptions = (listSkimKegiatan || []).map(item => ({
+    label: item.nama,
+    value: item.id,
+  }))
+
+  const tahunOptions = Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
+    item => ({
+      label: String(item),
+      value: String(item),
+    }),
+  )
+
+  const kategoriPublikasiOptions = (kategoriPublikasi || []).map(item => ({
+    label: `${item.nama_kategori} - ${item.tingkatan}`,
+    value: item.id,
+  }))
 
   const findInUser = (lists, id) => lists.find(item => item.user_id == id) ?? null
   const removeFromUser = (key, index, role) =>
@@ -152,20 +177,21 @@ export default function PenelitianCreate() {
                 Kategori Publikasi <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="kategori_id"
-                value={form.kategori_id}
-                onChange={inputHandler}
-                options={
-                  kategoriPublikasi &&
-                  kategoriPublikasi.map(item => ({
-                    label: `${item.nama_kategori} - ${item.tingkatan}`,
-                    value: item.id,
-                  }))
-                }
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="kategori_id"
+                  value={form.kategori_id}
+                  options={kategoriPublikasiOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      kategori_id: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Kategori Publikasi --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -186,38 +212,44 @@ export default function PenelitianCreate() {
                 Kelompok Bidang <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="kelompok_bidang"
-                onChange={inputHandler}
-                value={form.kelompok_bidang}
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="kelompok_bidang"
+                  value={form.kelompok_bidang_id || form.kelompok_bidang}
+                  options={kelompokBidangOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      kelompok_bidang: selected?.label || '',
+                      kelompok_bidang_id: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Kelompok Bidang --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Jenis Skim <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="jenis_skim"
-                onChange={inputHandler}
-                value={form.jenis_skim}
-                options={[
-                  { label: 'Hibah Nasional', value: 'Hibah Nasional' },
-                  {
-                    label: 'Sumber Pendanaan & Pengelolaan',
-                    value: 'Sumber Pendanaan & Pengelolaan',
-                  },
-                  {
-                    label: 'Sasaran & Jenjang Peneliti',
-                    value: 'Sasaran & Jenjang Peneliti',
-                  },
-                ]}
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="jenis_skim"
+                  value={form.skim_id || form.jenis_skim}
+                  options={skimKegiatanOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      jenis_skim: selected?.label || '',
+                      skim_id: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Jenis Skim --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -237,94 +269,108 @@ export default function PenelitianCreate() {
                 Tahun Usulan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="tahun_usulan"
-                onChange={inputHandler}
-                value={form.tahun_usulan}
-                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
-                  item => ({
-                    label: item,
-                    value: item,
-                  }),
-                )}
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="tahun_usulan"
+                  value={form.tahun_usulan}
+                  options={tahunOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      tahun_usulan: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Tahun Usulan --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Tahun Kegiatan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="tahun_kegiatan"
-                onChange={inputHandler}
-                value={form.tahun_kegiatan}
-                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
-                  item => ({
-                    label: item,
-                    value: item,
-                  }),
-                )}
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="tahun_kegiatan"
+                  value={form.tahun_kegiatan}
+                  options={tahunOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      tahun_kegiatan: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Tahun Kegiatan --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Tahun Pelaksanaan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="tahun_pelaksanaan"
-                onChange={inputHandler}
-                value={form.tahun_pelaksanaan}
-                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
-                  item => ({
-                    label: item,
-                    value: item,
-                  }),
-                )}
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="tahun_pelaksanaan"
+                  value={form.tahun_pelaksanaan}
+                  options={tahunOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      tahun_pelaksanaan: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Tahun Pelaksanaan --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">Dana Dikti</Form.Label>
               <span>:</span>
-              <Form.Input
-                type="number"
-                min="0"
-                className="flex-1"
-                name="dana_dikti"
-                onChange={inputHandler}
-                value={form.dana_dikti}
-                placeholder="0"
-              />
+              <div className="flex-1">
+                <Form.Input
+                  type="number"
+                  min="0"
+                  className="w-full"
+                  name="dana_dikti"
+                  onChange={inputHandler}
+                  value={form.dana_dikti}
+                  placeholder="0"
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">Dana Perguruan Tinggi</Form.Label>
               <span>:</span>
-              <Form.Input
-                type="number"
-                min="0"
-                className="flex-1"
-                name="dana_perguruan_tinggi"
-                onChange={inputHandler}
-                value={form.dana_perguruan_tinggi}
-                placeholder="0"
-              />
+              <div className="flex-1">
+                <Form.Input
+                  type="number"
+                  min="0"
+                  className="w-full"
+                  name="dana_perguruan_tinggi"
+                  onChange={inputHandler}
+                  value={form.dana_perguruan_tinggi}
+                  placeholder="0"
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">Dana Institusi Lainnya</Form.Label>
               <span>:</span>
-              <Form.Input
-                type="number"
-                min="0"
-                className="flex-1"
-                name="dana_institusi_lainnya"
-                onChange={inputHandler}
-                value={form.dana_institusi_lainnya}
-                placeholder="0"
-              />
+              <div className="flex-1">
+                <Form.Input
+                  type="number"
+                  min="0"
+                  className="w-full"
+                  name="dana_institusi_lainnya"
+                  onChange={inputHandler}
+                  value={form.dana_institusi_lainnya}
+                  placeholder="0"
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
@@ -447,10 +493,15 @@ export default function PenelitianCreate() {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Form.Label>
                     <Form.Checkbox
-                      index={index}
-                      name="anggota_penelitian_dosen.status"
-                      onChange={inputHandler}
-                      checked={form.anggota_penelitian_dosen[index].status}
+                      checked={Boolean(form.anggota_penelitian_dosen[index]?.status)}
+                      onChange={e => {
+                        const val = e.target.checked
+                        setForm(state => {
+                          const updated = [...state.anggota_penelitian_dosen]
+                          updated[index] = { ...updated[index], status: val }
+                          return { ...state, anggota_penelitian_dosen: updated }
+                        })
+                      }}
                     />{' '}
                     Aktif
                   </Form.Label>
@@ -558,11 +609,15 @@ export default function PenelitianCreate() {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Form.Label>
                     <Form.Checkbox
-                      index={index}
-                      name="anggota_penelitian_mahasiswa.status"
-                      onChange={inputHandler}
-                      checked={form.anggota_penelitian_mahasiswa[index].status}
-                      required
+                      checked={Boolean(form.anggota_penelitian_mahasiswa[index]?.status)}
+                      onChange={e => {
+                        const val = e.target.checked
+                        setForm(state => {
+                          const updated = [...state.anggota_penelitian_mahasiswa]
+                          updated[index] = { ...updated[index], status: val }
+                          return { ...state, anggota_penelitian_mahasiswa: updated }
+                        })
+                      }}
                     />{' '}
                     Aktif
                   </Form.Label>

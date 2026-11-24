@@ -23,8 +23,6 @@ export default function UploadDokumen({ form, inputHandler, setForm, listJenisDo
       setForm(prev => ({
         ...prev,
         file: selectedFile,
-        nama_dok:
-          prev.nama_dok && prev.nama_dok.trim() !== '' ? prev.nama_dok : selectedFile.name,
       }))
     } else {
       inputHandler(e)
@@ -55,6 +53,16 @@ export default function UploadDokumen({ form, inputHandler, setForm, listJenisDo
         <div className="space-y-4">
           <Form.Group>
             <Form.Label>
+              File <span className="text-danger-600">*</span>
+            </Form.Label>
+            <small className="text-gray-500 block mb-1">
+              (Jenis file: pdf, jpg, jpeg, png, doc, docx, xls, xlsx, txt)
+            </small>
+            <Form.Input type="file" name="file" onChange={handleFileChange} />
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>
               Jenis Dokumen <span className="text-danger-600">*</span>
             </Form.Label>
             <Form.Combobox
@@ -74,39 +82,6 @@ export default function UploadDokumen({ form, inputHandler, setForm, listJenisDo
               }
               isClearable
             />
-          </Form.Group>
-
-          <Form.Group>
-            <Form.Label>
-              File <span className="text-danger-600">*</span>
-            </Form.Label>
-            <small className="text-gray-500 block mb-1">
-              (Jenis file: pdf, jpg, jpeg, png, doc, docx, xls, xlsx, txt)
-            </small>
-            <Form.Input type="file" name="file" onChange={handleFileChange} />
-            {form?.file && (
-              <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg flex items-center gap-2 text-xs text-emerald-800">
-                <Icon
-                  icon="material-symbols:check-circle"
-                  className="text-emerald-600 text-base shrink-0"
-                />
-                <div className="overflow-hidden">
-                  <span className="font-semibold block truncate">
-                    Berkas saat ini:{' '}
-                    {form.file?.name ||
-                      (typeof form.file === 'string' ? form.file : 'File telah dipilih')}
-                  </span>
-                  {form.file?.size ? (
-                    <span className="text-gray-500 text-[11px]">
-                      Ukuran: {(form.file.size / 1024).toFixed(1)} KB •{' '}
-                    </span>
-                  ) : null}
-                  <span className="text-gray-500 text-[11px]">
-                    Pilih file baru hanya jika ingin mengganti.
-                  </span>
-                </div>
-              </div>
-            )}
           </Form.Group>
 
           <Form.Group>

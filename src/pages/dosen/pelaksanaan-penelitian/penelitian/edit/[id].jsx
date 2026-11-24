@@ -36,12 +36,12 @@ export default function PenelitianEdit() {
   const INITIAL_ANGGOTA = {
     user_id: '',
     peran: '',
-    status: false,
+    status: true,
     role: '',
   }
 
   const INITIAL_EXTERNAL = {
-    ext_id: '',
+    nama: '',
     peran: 'anggota',
     status: true,
     role: 'External',
@@ -158,12 +158,19 @@ export default function PenelitianEdit() {
             status: toBoolean(item.status),
           }))
 
-        // Filter Kolaborator External berdasarkan keberadaan ext_id
+        // Filter Kolaborator External
         const externalList = allAnggota
-          .filter(item => item.ext_id != null && String(item.ext_id).trim() !== '')
+          .filter(
+            item =>
+              (item.ext_id != null && String(item.ext_id).trim() !== '') ||
+              String(item.role || '').toLowerCase() === 'external' ||
+              String(item.role || '').toLowerCase() === 'mitra' ||
+              String(item.role || '').toLowerCase() === 'lainnya' ||
+              (!item.user_id && item.nama),
+          )
           .map(item => ({
             ext_id: item.ext_id,
-            nama: item.nama_external || item.nama_lengkap || '',
+            nama: item.nama || item.nama_external || item.nama_lengkap || '',
             peran: item.peran || 'anggota',
             status: toBoolean(item.status),
             role: 'External',
@@ -218,7 +225,9 @@ export default function PenelitianEdit() {
       item => item.user_id && String(item.user_id).trim() !== '',
     )
     const validExternal = (form.anggota_penelitian_external || []).filter(
-      item => item.ext_id && String(item.ext_id).trim() !== '',
+      item =>
+        (item.nama && item.nama.trim() !== '') ||
+        (item.ext_id && String(item.ext_id).trim() !== ''),
     )
 
     if (validDosen.length + validMahasiswa.length + validExternal.length === 0) {
@@ -229,7 +238,7 @@ export default function PenelitianEdit() {
       return
     }
 
-    // 3. Gabungkan semua anggota (user_id & ext_id) ke satu array anggota_penelitian sesuai backend
+    // 3. Gabungkan semua anggota (user_id & external) ke satu array anggota_penelitian sesuai backend
     const daftarAnggotaDipilih = [
       ...validDosen.map(item => ({
         user_id: String(item.user_id),
@@ -242,9 +251,11 @@ export default function PenelitianEdit() {
         status: toBoolean(item.status),
       })),
       ...validExternal.map(item => ({
-        ext_id: String(item.ext_id),
+        nama: String(item.nama || item.ext_id || ''),
+        ext_id: item.ext_id ? String(item.ext_id) : undefined,
         peran: String(item.peran || 'anggota'),
         status: toBoolean(item.status),
+        role: 'External',
       })),
     ]
 
@@ -311,6 +322,13 @@ export default function PenelitianEdit() {
     label: item.nama,
     value: item.id,
   }))
+
+  const tahunOptions = Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
+    item => ({
+      label: String(item),
+      value: String(item),
+    }),
+  )
 
   const kolabExternalOptions = (listKolabExternal || []).map(item => ({
     label: `${item.nama}${item.email ? ` (${item.email})` : ''}`,
@@ -426,19 +444,21 @@ export default function PenelitianEdit() {
                 Tahun Usulan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="tahun_usulan"
-                onChange={inputHandler}
-                value={form.tahun_usulan}
-                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
-                  item => ({
-                    label: item,
-                    value: item,
-                  }),
-                )}
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="tahun_usulan"
+                  value={form.tahun_usulan}
+                  options={tahunOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      tahun_usulan: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Tahun Usulan --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
 
             <Form.Group className="flex items-baseline gap-3">
@@ -446,19 +466,21 @@ export default function PenelitianEdit() {
                 Tahun Kegiatan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="tahun_kegiatan"
-                onChange={inputHandler}
-                value={form.tahun_kegiatan}
-                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
-                  item => ({
-                    label: item,
-                    value: item,
-                  }),
-                )}
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="tahun_kegiatan"
+                  value={form.tahun_kegiatan}
+                  options={tahunOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      tahun_kegiatan: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Tahun Kegiatan --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
 
             <Form.Group className="flex items-baseline gap-3">
@@ -466,61 +488,69 @@ export default function PenelitianEdit() {
                 Tahun Pelaksanaan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="tahun_pelaksanaan"
-                onChange={inputHandler}
-                value={form.tahun_pelaksanaan}
-                options={Array.from({ length: 6 }, (_, i) => new Date().getFullYear() - i).map(
-                  item => ({
-                    label: item,
-                    value: item,
-                  }),
-                )}
-                required
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="tahun_pelaksanaan"
+                  value={form.tahun_pelaksanaan}
+                  options={tahunOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      tahun_pelaksanaan: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Tahun Pelaksanaan --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
 
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">Dana Dikti</Form.Label>
               <span>:</span>
-              <Form.Input
-                type="number"
-                min="0"
-                className="flex-1"
-                name="dana_dikti"
-                onChange={inputHandler}
-                value={form.dana_dikti}
-                placeholder="0"
-              />
+              <div className="flex-1">
+                <Form.Input
+                  type="number"
+                  min="0"
+                  className="w-full"
+                  name="dana_dikti"
+                  onChange={inputHandler}
+                  value={form.dana_dikti}
+                  placeholder="0"
+                />
+              </div>
             </Form.Group>
 
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">Dana Perguruan Tinggi</Form.Label>
               <span>:</span>
-              <Form.Input
-                type="number"
-                min="0"
-                className="flex-1"
-                name="dana_perguruan_tinggi"
-                onChange={inputHandler}
-                value={form.dana_perguruan_tinggi}
-                placeholder="0"
-              />
+              <div className="flex-1">
+                <Form.Input
+                  type="number"
+                  min="0"
+                  className="w-full"
+                  name="dana_perguruan_tinggi"
+                  onChange={inputHandler}
+                  value={form.dana_perguruan_tinggi}
+                  placeholder="0"
+                />
+              </div>
             </Form.Group>
 
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">Dana Institusi Lain</Form.Label>
               <span>:</span>
-              <Form.Input
-                type="number"
-                min="0"
-                className="flex-1"
-                name="dana_institusi_lain"
-                onChange={inputHandler}
-                value={form.dana_institusi_lain}
-                placeholder="0"
-              />
+              <div className="flex-1">
+                <Form.Input
+                  type="number"
+                  min="0"
+                  className="w-full"
+                  name="dana_institusi_lain"
+                  onChange={inputHandler}
+                  value={form.dana_institusi_lain}
+                  placeholder="0"
+                />
+              </div>
             </Form.Group>
 
             <Form.Group className="flex items-baseline gap-3">
@@ -700,10 +730,15 @@ export default function PenelitianEdit() {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Form.Label>
                     <Form.Checkbox
-                      index={index}
-                      name="anggota_penelitian_dosen.status"
-                      onChange={inputHandler}
-                      checked={form.anggota_penelitian_dosen[index].status}
+                      checked={Boolean(form.anggota_penelitian_dosen[index]?.status)}
+                      onChange={e => {
+                        const val = e.target.checked
+                        setForm(state => {
+                          const updated = [...state.anggota_penelitian_dosen]
+                          updated[index] = { ...updated[index], status: val }
+                          return { ...state, anggota_penelitian_dosen: updated }
+                        })
+                      }}
                     />{' '}
                     Aktif
                   </Form.Label>
@@ -808,10 +843,15 @@ export default function PenelitianEdit() {
                 <td className="text-sm border-2 border-white bg-gray-50">
                   <Form.Label>
                     <Form.Checkbox
-                      index={index}
-                      name="anggota_penelitian_mahasiswa.status"
-                      onChange={inputHandler}
-                      checked={form.anggota_penelitian_mahasiswa[index].status}
+                      checked={Boolean(form.anggota_penelitian_mahasiswa[index]?.status)}
+                      onChange={e => {
+                        const val = e.target.checked
+                        setForm(state => {
+                          const updated = [...state.anggota_penelitian_mahasiswa]
+                          updated[index] = { ...updated[index], status: val }
+                          return { ...state, anggota_penelitian_mahasiswa: updated }
+                        })
+                      }}
                     />{' '}
                     Aktif
                   </Form.Label>
@@ -879,26 +919,19 @@ export default function PenelitianEdit() {
             {(form.anggota_penelitian_external || []).map((item, index) => (
               <tr key={`anggota-external-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Combobox
-                    name={`anggota_penelitian_external.${index}.ext_id`}
-                    value={item.ext_id}
-                    options={kolabExternalOptions}
-                    onChange={selected => {
+                  <Form.Input
+                    type="text"
+                    className="w-full"
+                    placeholder="Nama Kolaborator External"
+                    value={item.nama || ''}
+                    onChange={e => {
+                      const val = e.target.value
                       setForm(state => {
                         const updated = [...(state.anggota_penelitian_external || [])]
-                        updated[index] = {
-                          ...updated[index],
-                          ext_id: selected?.value || '',
-                        }
+                        updated[index] = { ...updated[index], nama: val }
                         return { ...state, anggota_penelitian_external: updated }
                       })
                     }}
-                    placeholder={
-                      isLoadingKolabExternal
-                        ? 'Memuat kolaborator external...'
-                        : '-- Cari / Pilih Kolaborator External --'
-                    }
-                    isClearable
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">

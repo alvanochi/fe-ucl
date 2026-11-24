@@ -127,12 +127,19 @@ export default function PenelitianDetail() {
             status: toBoolean(item.status),
           }))
 
-        // Filter Kolaborator External berdasarkan ext_id
+        // Filter Kolaborator External
         const externalList = allAnggota
-          .filter(item => item.ext_id != null && String(item.ext_id).trim() !== '')
+          .filter(
+            item =>
+              (item.ext_id != null && String(item.ext_id).trim() !== '') ||
+              String(item.role || '').toLowerCase() === 'external' ||
+              String(item.role || '').toLowerCase() === 'mitra' ||
+              String(item.role || '').toLowerCase() === 'lainnya' ||
+              (!item.user_id && item.nama),
+          )
           .map(item => ({
             ext_id: item.ext_id,
-            nama: item.nama_external || item.nama_lengkap || '',
+            nama: item.nama || item.nama_external || item.nama_lengkap || '',
             negara: item.negara_external || '',
             email: item.email_external || '',
             peran: item.peran || 'anggota',

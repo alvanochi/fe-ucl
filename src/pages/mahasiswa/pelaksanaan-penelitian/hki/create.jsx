@@ -75,6 +75,26 @@ export default function HkiCreate() {
       [key]: state[key].filter((item, idx) => item.role == role && idx != index),
     }))
 
+  const kategoriHkiOptions = (kategoriHki || []).map(item => ({
+    label: item.nama_kategori,
+    value: item.id,
+  }))
+
+  const jenisHkiOptions = [
+    { value: 'Paten nasional', label: 'Paten nasional' },
+    { value: 'Paten internasional', label: 'Paten internasional' },
+    { value: 'Hak cipta nasional', label: 'Hak cipta nasional' },
+    { value: 'Hak cipta internasional', label: 'Hak cipta internasional' },
+    { value: 'Rancangan dan karya seni monumental', label: 'Rancangan dan karya seni monumental' },
+    { value: 'Rancangan dan karya seni rupa', label: 'Rancangan dan karya seni rupa' },
+    { value: 'Rancangan dan karya seni kriya', label: 'Rancangan dan karya seni kriya' },
+    { value: 'Rancangan dan karya seni pertunjukan', label: 'Rancangan dan karya seni pertunjukan' },
+    { value: 'Karya desain', label: 'Karya desain' },
+    { value: 'Karya sastra', label: 'Karya sastra' },
+    { value: 'Hasil penelitian/pemikiran yang tidak dipublikasikan', label: 'Hasil penelitian/pemikiran yang tidak dipublikasikan' },
+    { value: 'Hasil kerjasama industri yang tidak dipublikasikan', label: 'Hasil kerjasama industri yang tidak dipublikasikan' },
+  ]
+
   useEffect(() => {
     if (!user) return
     setForm(state => ({
@@ -103,69 +123,42 @@ export default function HkiCreate() {
                 Kategori HKI <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="kategori_id"
-                value={form.kategori_id}
-                onChange={inputHandler}
-                options={
-                  kategoriHki &&
-                  kategoriHki.map(item => ({
-                    label: item.nama_kategori,
-                    value: item.id,
-                  }))
-                }
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="kategori_id"
+                  value={form.kategori_id}
+                  options={kategoriHkiOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      kategori_id: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Kategori HKI --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
                 Jenis <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
-              <Form.Select
-                className="flex-1"
-                name="jenis_hki"
-                value={form.jenis_hki}
-                onChange={inputHandler}
-                options={[
-                  { value: 'Paten nasional', label: 'Paten nasional' },
-                  {
-                    value: 'Paten internasional',
-                    label: 'Paten internasional',
-                  },
-                  { value: 'Hak cipta nasional', label: 'Hak cipta nasional' },
-                  {
-                    value: 'Hak cipta internasional',
-                    label: 'Hak cipta internasional',
-                  },
-                  {
-                    value: 'Rancangan dan karya seni monumental',
-                    label: 'Rancangan dan karya seni monumental',
-                  },
-                  {
-                    value: 'Rancangan dan karya seni rupa',
-                    label: 'Rancangan dan karya seni rupa',
-                  },
-                  {
-                    value: 'Rancangan dan karya seni kriya',
-                    label: 'Rancangan dan karya seni kriya',
-                  },
-                  {
-                    value: 'Rancangan dan karya seni pertunjukan',
-                    label: 'Rancangan dan karya seni pertunjukan',
-                  },
-                  { value: 'Karya desain', label: 'Karya desain' },
-                  { value: 'Karya sastra', label: 'Karya sastra' },
-                  {
-                    value: 'Hasil penelitian/pemikiran yang tidak dipublikasikan',
-                    label: 'Hasil penelitian/pemikiran yang tidak dipublikasikan',
-                  },
-                  {
-                    value: 'Hasil kerjasama industri yang tidak dipublikasikan',
-                    label: 'Hasil kerjasama industri yang tidak dipublikasikan',
-                  },
-                ]}
-              />
+              <div className="flex-1">
+                <Form.Combobox
+                  name="jenis_hki"
+                  value={form.jenis_hki}
+                  options={jenisHkiOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      jenis_hki: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Jenis HKI --"
+                  isClearable
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
