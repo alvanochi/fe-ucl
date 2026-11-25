@@ -72,6 +72,9 @@ const Combobox = ({
   required,
   options,
   menuTarget,
+  menuPortalTarget,
+  menuPosition = "fixed",
+  menuPlacement = "auto",
   styles = {},
   onSearch,
   ...props
@@ -79,7 +82,12 @@ const Combobox = ({
   const config = resolveConfig(twConfig);
   const { theme: { colors } } = config;
 
+  const [mounted, setMounted] = useState(false);
   const [selected, setSelected] = useState(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     // value bisa berupa string UUID atau object {label, value} — handle keduanya
@@ -146,12 +154,16 @@ const Combobox = ({
     menu: (base, state) => ({
       ...base,
       borderRadius: "0.5rem",
-      zIndex: 9999,
+      zIndex: 99999,
+      boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+      border: "1px solid #e5e7eb",
+      overflow: "hidden",
       ...(styles.menu ? styles.menu(base, state) : {}),
     }),
     menuPortal: (base, state) => ({
       ...base,
-      zIndex: 9999,
+      zIndex: 99999,
+      pointerEvents: "auto",
       ...(styles.menuPortal ? styles.menuPortal(base, state) : {}),
     }),
     option: (base, state) => ({
@@ -163,8 +175,16 @@ const Combobox = ({
         : "transparent",
       color: state.isSelected ? "#ffffff" : "#111827",
       fontSize: "0.875rem",
+      cursor: "pointer",
+      "&:hover": {
+        backgroundColor: state.isSelected
+          ? colors?.primary?.[500] || "#126e63"
+          : colors?.primary?.[100] || "#e0f2f1",
+        color: state.isSelected ? "#ffffff" : "#111827",
+      },
       "&:active": {
-        backgroundColor: colors?.primary?.[200] || "#b2dfdb",
+        backgroundColor: colors?.primary?.[500] || "#126e63",
+        color: "#ffffff",
       },
       ...(styles.option ? styles.option(base, state) : {}),
     }),
@@ -184,7 +204,13 @@ const Combobox = ({
             onSearch(newValue);
           }
         }}
-        menuPortalTarget={menuTarget || ""}
+        menuPortalTarget={
+          menuPortalTarget ||
+          menuTarget ||
+          (mounted && typeof document !== "undefined" ? document.body : null)
+        }
+        menuPosition={menuPosition}
+        menuPlacement={menuPlacement}
         {...props}
       />
       {/* Hidden input untuk browser required validation

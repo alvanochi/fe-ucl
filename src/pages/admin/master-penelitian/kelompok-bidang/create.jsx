@@ -71,7 +71,7 @@ export default function CreateKelompokBidang({ onAction }) {
         Tambah Kelompok Bidang
       </Button>
 
-      <Modal title="Tambah Kelompok Bidang" show={show} handler={toggle} size="md">
+      <Modal title="Tambah Kelompok Bidang" show={show} handler={toggle} size="base">
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">

@@ -58,14 +58,45 @@ export const useNewDataTableNew = (
       const response = await axios.get(url, { params: query });
       setLoading(false);
 
-      const { limit, page, total, total_page, rows } = response.data.data;
+      const res = response?.data;
+      let finalRows = [];
+      let finalTotal = 0;
+      let finalTotalPage = 1;
 
-      setRecordsTotal(total);
-      setPageCount(total_page);
-      setData(rows);
+      if (res) {
+        if (Array.isArray(res.data)) {
+          // Format standard backend: { status: 'success', data: [...], totalData: 10, totalPages: 1 }
+          finalRows = res.data;
+          finalTotal = res.totalData ?? res.total ?? finalRows.length;
+          finalTotalPage = res.totalPages ?? res.total_page ?? Math.ceil(finalTotal / pageSize) ?? 1;
+        } else if (res.data && Array.isArray(res.data.rows)) {
+          // Format legacy UCL: { data: { rows: [...], total: 10, total_page: 1 } }
+          finalRows = res.data.rows;
+          finalTotal = res.data.total ?? finalRows.length;
+          finalTotalPage = res.data.total_page ?? Math.ceil(finalTotal / pageSize) ?? 1;
+        } else if (Array.isArray(res.rows)) {
+          // Format direct rows: { rows: [...], total: 10 }
+          finalRows = res.rows;
+          finalTotal = res.total ?? res.recordsTotal ?? finalRows.length;
+          finalTotalPage = res.total_page ?? res.pageCount ?? Math.ceil(finalTotal / pageSize) ?? 1;
+        } else if (Array.isArray(res)) {
+          // Direct array: [...]
+          finalRows = res;
+          finalTotal = finalRows.length;
+          finalTotalPage = Math.ceil(finalTotal / pageSize) ?? 1;
+        } else if (res.data && typeof res.data === "object") {
+          finalRows = res.data.rows || [];
+          finalTotal = res.data.total || finalRows.length;
+          finalTotalPage = res.data.total_page || 1;
+        }
+      }
+
+      setRecordsTotal(finalTotal || 0);
+      setPageCount(finalTotalPage || 1);
+      setData(finalRows || []);
 
       if (options.onLoad && typeof options.onLoad === "function") {
-        options.onLoad(rows);
+        options.onLoad(finalRows || []);
       }
     } catch (error) {
       setLoading(false);

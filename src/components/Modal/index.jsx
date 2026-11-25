@@ -38,15 +38,41 @@ export const Modal = ({ children, title, show, handler, size = "base" }) => {
 							className={classnames(
 								"relative inline-block w-full transform rounded-2xl bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:align-middle",
 								{
-									"sm:max-w-4xl": size == "lg",
 									"sm:max-w-7xl": size == "xl",
-									"sm:max-w-lg": size == "base",
+									"sm:max-w-4xl": size == "lg",
+									"sm:max-w-3xl": size == "3xl",
+									"sm:max-w-2xl": size == "md",
+									"sm:max-w-md": size == "sm",
+									"sm:max-w-lg": size == "base" || !["xl", "lg", "3xl", "md", "sm"].includes(size),
 								}
 							)}
 						>
-							<div className="rounded-2xl bg-white p-4 sm:p-6">
+							<div className="relative rounded-2xl bg-white p-4 sm:p-6">
+								{typeof handler === "function" && (
+									<button
+										type="button"
+										onClick={handler}
+										className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 focus:outline-none p-1.5 rounded-lg hover:bg-gray-100 transition-colors z-10 cursor-pointer"
+										aria-label="Tutup"
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="h-5 w-5"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth={2}
+												d="M6 18L18 6M6 6l12 12"
+											/>
+										</svg>
+									</button>
+								)}
 								<div className="mt-2 sm:mt-0">
-									<Dialog.Title as="h3" className="text-xl font-bold leading-6 text-primary-600 text-center">
+									<Dialog.Title as="h3" className="text-xl font-bold leading-6 text-primary-600 text-center px-8">
 										{title}
 									</Dialog.Title>
 								</div>

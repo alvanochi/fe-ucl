@@ -414,7 +414,7 @@ export default function PenelitianDetail() {
                       <Accordion
                         key={`doc-${index}`}
                         title={`Dokumen ${index + 1}: ${doc.nama_dok || 'Dokumen Pendukung'}`}
-                        show={true}
+                        show={false}
                       >
                         <Form.Group className="mb-4">
                           <Form.Label>Jenis Dokumen</Form.Label>
@@ -614,22 +614,20 @@ export default function PenelitianDetail() {
           </tbody>
         </table>
 
-        {/* Tabel Kolaborator External (Dari relasi ext_id -> kolab_external) */}
+        {/* Tabel Kolaborator External */}
         <table
           className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
           cellPadding={10}
         >
           <thead>
             <tr>
-              <th colSpan={5} className="text-sm border-2 border-white bg-gray-50">
+              <th colSpan={3} className="text-sm border-2 border-white bg-gray-50">
                 Kolaborator External
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
-              <th className="text-sm border-2 border-white bg-gray-200">Negara</th>
-              <th className="text-sm border-2 border-white bg-gray-200">Email</th>
-              <th className="text-sm border-2 border-white bg-gray-200">Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Kolaborator</th>
+              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
               <th className="text-sm border-2 border-white bg-gray-200">Status</th>
             </tr>
           </thead>
@@ -637,7 +635,7 @@ export default function PenelitianDetail() {
             {(form.anggota_penelitian_external || []).length === 0 ? (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={3}
                   className="text-sm text-center text-gray-500 italic border-2 border-white bg-gray-50"
                 >
                   Tidak ada kolaborator external.
@@ -649,8 +647,6 @@ export default function PenelitianDetail() {
                   ext => ext.ext_id == item.ext_id,
                 )
                 const namaExt = item.nama || matchedExt?.nama || item.ext_id || '-'
-                const negaraExt = item.negara || matchedExt?.negara || '-'
-                const emailExt = item.email || matchedExt?.email || '-'
                 const peranText = item.peran
                   ? item.peran.charAt(0).toUpperCase() + item.peran.slice(1)
                   : 'Anggota'
@@ -659,12 +655,6 @@ export default function PenelitianDetail() {
                   <tr key={`anggota-external-${index}`}>
                     <td className="text-sm border-2 border-white bg-gray-50">
                       <Form.Input type="text" className="w-full" value={namaExt} disabled />
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      <Form.Input type="text" className="w-full" value={negaraExt} disabled />
-                    </td>
-                    <td className="text-sm border-2 border-white bg-gray-50">
-                      <Form.Input type="text" className="w-full" value={emailExt} disabled />
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50">
                       <Form.Input

@@ -71,7 +71,7 @@ export default function CreateJenisDokumen({ onAction }) {
         Tambah Jenis Dokumen
       </Button>
 
-      <Modal title="Tambah Jenis Dokumen" show={show} handler={toggle} size="md">
+      <Modal title="Tambah Jenis Dokumen" show={show} handler={toggle} size="base">
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">

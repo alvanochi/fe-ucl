@@ -23,6 +23,7 @@ export default function UploadDokumen({ form, inputHandler, setForm, listJenisDo
       setForm(prev => ({
         ...prev,
         file: selectedFile,
+        nama_dok: selectedFile.name,
       }))
     } else {
       inputHandler(e)

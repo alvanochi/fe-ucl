@@ -41,8 +41,9 @@ export default function PenelitianEdit() {
   }
 
   const INITIAL_EXTERNAL = {
+    ext_id: '',
     nama: '',
-    peran: 'anggota',
+    peran: '',
     status: true,
     role: 'External',
   }
@@ -330,10 +331,21 @@ export default function PenelitianEdit() {
     }),
   )
 
-  const kolabExternalOptions = (listKolabExternal || []).map(item => ({
+  const kolabItems = Array.isArray(listKolabExternal)
+    ? listKolabExternal
+    : Array.isArray(listKolabExternal?.data)
+    ? listKolabExternal.data
+    : []
+
+  const kolabExternalOptions = kolabItems.map(item => ({
     label: `${item.nama}${item.email ? ` (${item.email})` : ''}`,
     value: item.ext_id,
   }))
+
+  const peranOptions = [
+    { label: 'Ketua', value: 'ketua' },
+    { label: 'Anggota', value: 'anggota' },
+  ]
 
   return (
     <Layout>
@@ -608,11 +620,6 @@ export default function PenelitianEdit() {
                   setForm={setForm}
                   listJenisDokumen={listJenisDokumen}
                 />
-                {form?.file && (
-                  <span className="text-xs text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
-                    Berkas baru siap: <strong>{form.file.name || form.nama_dok}</strong>
-                  </span>
-                )}
               </div>
             </Form.Group>
           </Card.Body>
@@ -671,7 +678,7 @@ export default function PenelitianEdit() {
 
         {/* Tabel Anggota Dosen */}
         <table
-          className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+          className="w-full border-collapse rounded-2xl overflow-visible shadow table-auto mt-4"
           cellPadding={10}
         >
           <thead>
@@ -681,10 +688,10 @@ export default function PenelitianEdit() {
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
-              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
-              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
-              <th className="text-sm border-2 border-white bg-gray-200"></th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-left">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-left w-64">Nama Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-center w-28">Status</th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-center w-16"></th>
             </tr>
           </thead>
           <tbody>
@@ -716,15 +723,22 @@ export default function PenelitianEdit() {
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
-                    index={index}
-                    name="anggota_penelitian_dosen.peran"
-                    onChange={inputHandler}
+                  <Form.Combobox
+                    name={`anggota_penelitian_dosen.${index}.peran`}
                     value={form.anggota_penelitian_dosen[index].peran}
-                    options={[
-                      { label: 'Ketua', value: 'ketua' },
-                      { label: 'Anggota', value: 'anggota' },
-                    ]}
+                    options={peranOptions}
+                    onChange={selected => {
+                      setForm(state => {
+                        const updated = [...state.anggota_penelitian_dosen]
+                        updated[index] = {
+                          ...updated[index],
+                          peran: selected?.value || '',
+                        }
+                        return { ...state, anggota_penelitian_dosen: updated }
+                      })
+                    }}
+                    placeholder="-- Pilih Peran --"
+                    isClearable
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
@@ -784,7 +798,7 @@ export default function PenelitianEdit() {
 
         {/* Tabel Anggota Mahasiswa */}
         <table
-          className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+          className="w-full border-collapse rounded-2xl overflow-visible shadow table-auto mt-4"
           cellPadding={10}
         >
           <thead>
@@ -794,10 +808,10 @@ export default function PenelitianEdit() {
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">Nama</th>
-              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
-              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
-              <th className="text-sm border-2 border-white bg-gray-200"></th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-left">Nama</th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-left w-64">Nama Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-center w-28">Status</th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-center w-16"></th>
             </tr>
           </thead>
           <tbody>
@@ -829,15 +843,22 @@ export default function PenelitianEdit() {
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
-                    index={index}
-                    name="anggota_penelitian_mahasiswa.peran"
-                    onChange={inputHandler}
+                  <Form.Combobox
+                    name={`anggota_penelitian_mahasiswa.${index}.peran`}
                     value={form.anggota_penelitian_mahasiswa[index].peran}
-                    options={[
-                      { label: 'Ketua', value: 'ketua' },
-                      { label: 'Anggota', value: 'anggota' },
-                    ]}
+                    options={peranOptions}
+                    onChange={selected => {
+                      setForm(state => {
+                        const updated = [...state.anggota_penelitian_mahasiswa]
+                        updated[index] = {
+                          ...updated[index],
+                          peran: selected?.value || '',
+                        }
+                        return { ...state, anggota_penelitian_mahasiswa: updated }
+                      })
+                    }}
+                    placeholder="-- Pilih Peran --"
+                    isClearable
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
@@ -899,7 +920,7 @@ export default function PenelitianEdit() {
 
         {/* Tabel Kolaborator External (Pilih dari Master kolab_external) */}
         <table
-          className="w-full border-collapse rounded-2xl overflow-hidden shadow table-auto mt-4"
+          className="w-full border-collapse rounded-2xl overflow-visible shadow table-auto mt-4"
           cellPadding={10}
         >
           <thead>
@@ -909,48 +930,57 @@ export default function PenelitianEdit() {
               </th>
             </tr>
             <tr>
-              <th className="text-sm border-2 border-white bg-gray-200">Nama Kolaborator</th>
-              <th className="text-sm border-2 border-white bg-gray-200">Nama Peran</th>
-              <th className="text-sm border-2 border-white bg-gray-200">Status</th>
-              <th className="text-sm border-2 border-white bg-gray-200 w-16"></th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-left">Nama Kolaborator</th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-left w-64">Nama Peran</th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-center w-28">Status</th>
+              <th className="text-sm border-2 border-white bg-gray-200 text-center w-16"></th>
             </tr>
           </thead>
           <tbody>
             {(form.anggota_penelitian_external || []).map((item, index) => (
               <tr key={`anggota-external-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Input
-                    type="text"
-                    className="w-full"
-                    placeholder="Nama Kolaborator External"
-                    value={item.nama || ''}
-                    onChange={e => {
-                      const val = e.target.value
+                  <Form.Combobox
+                    name={`anggota_penelitian_external.${index}.ext_id`}
+                    value={item.ext_id}
+                    options={kolabExternalOptions}
+                    onChange={selected => {
                       setForm(state => {
                         const updated = [...(state.anggota_penelitian_external || [])]
-                        updated[index] = { ...updated[index], nama: val }
+                        const matched = kolabItems.find(ext => ext.ext_id === selected?.value)
+                        updated[index] = {
+                          ...updated[index],
+                          ext_id: selected?.value || '',
+                          nama: matched?.nama || selected?.label || '',
+                        }
                         return { ...state, anggota_penelitian_external: updated }
                       })
                     }}
+                    placeholder={
+                      isLoadingKolabExternal
+                        ? 'Memuat kolaborator...'
+                        : '-- Cari / Pilih Kolaborator External --'
+                    }
+                    isClearable
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Select
-                    index={index}
-                    name="peran"
-                    value={item.peran || 'anggota'}
-                    onChange={e => {
-                      const val = e.target.value
+                  <Form.Combobox
+                    name={`anggota_penelitian_external.${index}.peran`}
+                    value={item.peran || ''}
+                    options={peranOptions}
+                    onChange={selected => {
                       setForm(state => {
                         const updated = [...(state.anggota_penelitian_external || [])]
-                        updated[index] = { ...updated[index], peran: val }
+                        updated[index] = {
+                          ...updated[index],
+                          peran: selected?.value || '',
+                        }
                         return { ...state, anggota_penelitian_external: updated }
                       })
                     }}
-                    options={[
-                      { label: 'Ketua', value: 'ketua' },
-                      { label: 'Anggota', value: 'anggota' },
-                    ]}
+                    placeholder="-- Pilih Peran --"
+                    isClearable
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">

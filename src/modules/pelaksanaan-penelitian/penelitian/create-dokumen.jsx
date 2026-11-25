@@ -42,6 +42,7 @@ export default function CreateDokumen({ id }) {
     setForm(prev => ({
       ...prev,
       file: selectedFile,
+      nama_dok: selectedFile.name,
     }))
   }
 

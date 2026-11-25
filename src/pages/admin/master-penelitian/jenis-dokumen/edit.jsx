@@ -77,7 +77,7 @@ export default function EditJenisDokumen({ item, onAction }) {
         onClick={toggle}
       />
 
-      <Modal title="Edit Jenis Dokumen" show={show} handler={toggle} size="md">
+      <Modal title="Edit Jenis Dokumen" show={show} handler={toggle} size="base">
         <Form className="space-y-4" onSubmit={submitHandler}>
           <Form.Group className="flex items-baseline gap-3">
             <Form.Label className="min-w-[10rem]">

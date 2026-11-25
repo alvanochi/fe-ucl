@@ -25,7 +25,7 @@ export default function KolaboratorEksternalPage() {
     pageCountNew,
     setPageNew,
     refreshNew,
-  } = useNewDataTableNew(DATA_URL, {}, searchValue)
+  } = useNewDataTableNew(DATA_URL, {}, searchValue, 'nama')
 
   const { destroy } = useCRUD(DATA_URL)
 
@@ -75,7 +75,8 @@ export default function KolaboratorEksternalPage() {
               </tr>
             ) : dataNew && dataNew.length > 0 ? (
               dataNew.map((item, index) => {
-                const extId = item.id || item.ext_id || item.kolab_id
+                const extId = item.ext_id || item.id || item.kolab_id
+                const jenkelDisplay = item.jenkel === 'L' ? 'Laki-Laki' : item.jenkel === 'P' ? 'Perempuan' : item.jenkel || item.jenis_kelamin || '-'
                 return (
                   <tr key={extId || index} className="hover:bg-gray-50">
                     <td className="text-sm border-2 border-white bg-gray-50 text-center">
@@ -91,7 +92,7 @@ export default function KolaboratorEksternalPage() {
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 text-center">
                       <span className="font-semibold text-gray-700">{item.negara || '-'}</span>
-                      <div className="text-xs text-gray-500">{item.jenkel || item.jenis_kelamin || '-'}</div>
+                      <div className="text-xs text-gray-500">{jenkelDisplay}</div>
                     </td>
                     <td className="text-sm border-2 border-white bg-gray-50 text-center font-mono text-gray-700">
                       {item.nik || '-'}

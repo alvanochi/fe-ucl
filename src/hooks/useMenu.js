@@ -14,12 +14,26 @@ export const useMenu = () => {
   useEffect(() => {
     if (user == null) return;
 
-    const fixedUrl =
-      ["/admin", "/dosen", "/mahasiswa", "/dosen_ext", "/pegawai", "/parent"].includes(
-        Router.pathname
-      ) === false
-        ? `/${Router.pathname.split("/").at(2)}`
-        : "/";
+    const isRootRole = [
+      "/admin",
+      "/dosen",
+      "/mahasiswa",
+      "/dosen_ext",
+      "/pegawai",
+      "/parent",
+    ].includes(Router.pathname);
+
+    const pathWithoutRole = isRootRole
+      ? "/"
+      : Router.pathname.replace(
+          /^\/(admin|dosen|mahasiswa|dosen_ext|pegawai|parent)/,
+          ""
+        ) || "/";
+
+    const topSegment = isRootRole
+      ? "/"
+      : `/${Router.pathname.split("/").at(2) || ""}`;
+
     let menuPrefix;
 
     switch (user.role) {
@@ -44,7 +58,12 @@ export const useMenu = () => {
         break;
     }
 
-    const findMenu = utils.getAppMenuByUrl(fixedUrl, user.role);
+    let findMenu = utils.getAppMenuByUrl(pathWithoutRole, user.role);
+
+    if (!findMenu && topSegment !== pathWithoutRole) {
+      findMenu = utils.getAppMenuByUrl(topSegment, user.role);
+    }
+
     setMenu(() => findMenu);
 
     const allowedMenu = utils.getAppMenuByRole(user.role, menuPrefix);

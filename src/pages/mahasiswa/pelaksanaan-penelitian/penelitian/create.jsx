@@ -420,11 +420,6 @@ export default function PenelitianCreate() {
               <span>:</span>
               <div className="flex-1 flex items-center gap-3">
                 <UploadDokumen form={form} inputHandler={inputHandler} setForm={setForm} />
-                {form?.file && (
-                  <span className="text-xs text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">
-                    Berkas siap: <strong>{form.file.name || form.nama_dok}</strong>
-                  </span>
-                )}
               </div>
             </Form.Group>
           </Card.Body>

@@ -65,11 +65,11 @@ export default {
             ...menu.children.flatMap((child) => {
               return [
                 child,
-                ...child.submenus.map((submenu) => ({
+                ...(child.submenus || []).map((submenu) => ({
                   ...submenu,
                   parent: child,
                 })),
-                ...child.submenus.flatMap((submenu) =>
+                ...(child.submenus || []).flatMap((submenu) =>
                   Array.isArray(submenu.submenus) && submenu.submenus.length > 0
                     ? [submenu, ...submenu.submenus]
                     : [submenu]
