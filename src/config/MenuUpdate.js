@@ -642,12 +642,6 @@ export const APP_MENU = [
         allowedRoles: [ROLE_ID_ADMIN],
         submenus: [],
       },
-      {
-        label: "Kolaborator Eksternal",
-        url: "/master-penelitian/kolaborator-eksternal",
-        allowedRoles: [ROLE_ID_ADMIN],
-        submenus: [],
-      },
     ],
   },
   {

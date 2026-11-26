@@ -7,9 +7,11 @@ import PageHeader from '../../../../components/PageHeader'
 import useMenu from '../../../../hooks/useMenu'
 import useUser from '../../../../hooks/useUser'
 import UploadDokumen from '../../../../modules/pelaksanaan-penelitian/penelitian/upload-dokumen'
+import ModalKolaboratorEksternal from '../../../../modules/pelaksanaan-penelitian/penelitian/kolaborator-eksternal'
+import KolaboratorExternalAutocomplete from '../../../../modules/pelaksanaan-penelitian/penelitian/kolaborator-autocomplete'
 import { useRouter } from 'next/router'
 import useCRUD from '../../../../hooks/useCRUD'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import useDosen from '../../../../repo/dosen'
 import useMahasiswa from '../../../../repo/mahasiswa'
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../config/role'
@@ -83,7 +85,15 @@ export default function PenelitianCreate() {
   const { data: listKelompokBidang, isLoading: isLoadingKelompokBidang } = useKelompokBidang([user])
   const { data: listSkimKegiatan, isLoading: isLoadingSkimKegiatan } = useSkimKegiatan([user])
   const { data: listJenisDokumen } = useJenisDokumen([user])
-  const { data: listKolabExternal, isLoading: isLoadingKolabExternal } = useKolaboratorExternal([user])
+  const {
+    data: listKolabExternal,
+    isLoading: isLoadingKolabExternal,
+    mutate: mutateKolabExternal,
+  } = useKolaboratorExternal([user])
+
+  const [showModalKolab, setShowModalKolab] = useState(false)
+  const [activeRowKolabIndex, setActiveRowKolabIndex] = useState(null)
+  const [modalInitialNama, setModalInitialNama] = useState('')
 
   const removeFromUser = (key, index, role) =>
     setForm(state => ({
@@ -251,10 +261,41 @@ export default function PenelitianCreate() {
     ? listKolabExternal.data
     : []
 
-  const kolabExternalOptions = kolabItems.map(item => ({
-    label: `${item.nama}${item.email ? ` (${item.email})` : ''}`,
-    value: item.ext_id,
-  }))
+  const handleOpenModalKolab = (searchQuery = '', rowIndex = null) => {
+    setModalInitialNama(searchQuery || '')
+    setActiveRowKolabIndex(rowIndex)
+    setShowModalKolab(true)
+  }
+
+  const handleKolabCreated = kolabData => {
+    if (mutateKolabExternal) mutateKolabExternal()
+    if (activeRowKolabIndex !== null && activeRowKolabIndex !== undefined) {
+      setForm(state => {
+        const updated = [...(state.anggota_penelitian_external || [])]
+        if (updated[activeRowKolabIndex]) {
+          updated[activeRowKolabIndex] = {
+            ...updated[activeRowKolabIndex],
+            ext_id: kolabData.ext_id || '',
+            nama: kolabData.nama || '',
+          }
+        }
+        return { ...state, anggota_penelitian_external: updated }
+      })
+    } else {
+      setForm(state => ({
+        ...state,
+        anggota_penelitian_external: [
+          ...(state.anggota_penelitian_external || []),
+          {
+            ...INITIAL_EXTERNAL,
+            ext_id: kolabData.ext_id || '',
+            nama: kolabData.nama || '',
+            peran: '',
+          },
+        ],
+      }))
+    }
+  }
 
   const peranOptions = [
     { label: 'Ketua', value: 'ketua' },
@@ -822,28 +863,21 @@ export default function PenelitianCreate() {
             {(form.anggota_penelitian_external || []).map((item, index) => (
               <tr key={`anggota-external-${index}`}>
                 <td className="text-sm border-2 border-white bg-gray-50">
-                  <Form.Combobox
-                    name={`anggota_penelitian_external.${index}.ext_id`}
+                  <KolaboratorExternalAutocomplete
                     value={item.ext_id}
-                    options={kolabExternalOptions}
+                    defaultList={kolabItems}
                     onChange={selected => {
                       setForm(state => {
                         const updated = [...(state.anggota_penelitian_external || [])]
-                        const matched = kolabItems.find(ext => ext.ext_id === selected?.value)
                         updated[index] = {
                           ...updated[index],
                           ext_id: selected?.value || '',
-                          nama: matched?.nama || selected?.label || '',
+                          nama: selected?.item?.nama || selected?.label || '',
                         }
                         return { ...state, anggota_penelitian_external: updated }
                       })
                     }}
-                    placeholder={
-                      isLoadingKolabExternal
-                        ? 'Memuat kolaborator...'
-                        : '-- Cari / Pilih Kolaborator External --'
-                    }
-                    isClearable
+                    onAddNew={typedText => handleOpenModalKolab(typedText, index)}
                   />
                 </td>
                 <td className="text-sm border-2 border-white bg-gray-50">
@@ -918,7 +952,7 @@ export default function PenelitianCreate() {
                     }))
                   }
                 >
-                  Tambah Kolaborator External
+                  + Tambah Kolaborator External
                 </Button>
               </td>
             </tr>
@@ -934,6 +968,13 @@ export default function PenelitianCreate() {
           </Button>
         </div>
       </Form>
+
+      <ModalKolaboratorEksternal
+        show={showModalKolab}
+        initialNama={modalInitialNama}
+        onClose={() => setShowModalKolab(false)}
+        onSuccess={handleKolabCreated}
+      />
     </Layout>
   )
 }

@@ -11,6 +11,8 @@ export const NavLinkShrinkDropdown = ({
   submenus,
   className,
   toggle,
+  isOpen: _isOpen,
+  onToggle: _onToggle,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(false); // State to control dropdown visibility
@@ -28,7 +30,6 @@ export const NavLinkShrinkDropdown = ({
           className
         )}
         style={{ direction: "ltr" }}
-        href={url}
         {...props}
       >
         <button

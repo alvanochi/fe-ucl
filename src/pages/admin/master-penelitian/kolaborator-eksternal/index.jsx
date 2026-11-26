@@ -43,8 +43,7 @@ export default function KolaboratorEksternalPage() {
         handler={setActive}
       />
       <div className="my-8">
-        <div className="flex mb-8 justify-between items-center">
-          <CreateKolaboratorEksternal onAction={handleAction} />
+        <div className="flex mb-8 justify-end items-center">
           <div className="flex-shrink">
             <Form.Input
               type="text"

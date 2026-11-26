@@ -75,6 +75,7 @@ const Combobox = ({
   menuPortalTarget,
   menuPosition = "fixed",
   menuPlacement = "auto",
+  maxMenuHeight = 380,
   styles = {},
   onSearch,
   ...props
@@ -188,6 +189,11 @@ const Combobox = ({
       },
       ...(styles.option ? styles.option(base, state) : {}),
     }),
+    menuList: (base, state) => ({
+      ...base,
+      maxHeight: `${maxMenuHeight}px`,
+      ...(styles.menuList ? styles.menuList(base, state) : {}),
+    }),
     ...styles,
   };
 
@@ -196,6 +202,7 @@ const Combobox = ({
       <Select
         className={className}
         styles={defaultStyles}
+        maxMenuHeight={maxMenuHeight}
         value={selected}
         options={options || []}
         onChange={handleChange}
