@@ -16,6 +16,7 @@ import { useRouter } from 'next/router'
 import { ROLE_ID_DOSEN, ROLE_ID_MAHASISWA } from '../../../../config/role'
 import _ from 'underscore'
 import { Loading } from '../../../../components/Loading'
+import useKategoriPublikasi from '../../../../repo/kategori-publikasi'
 
 export default function PublikasiKaryaCreate() {
   const router = useRouter()
@@ -34,7 +35,7 @@ export default function PublikasiKaryaCreate() {
   }
 
   const INITIAL_FORM = {
-    kategori_id: '7d72e996-05de-4c76-99d1-8aa174e8c2e6',
+    kategori_id: '',
     judul_artikel: '',
     jenis: '',
     kategori_capain: '',
@@ -68,6 +69,9 @@ export default function PublikasiKaryaCreate() {
 
   const { form, inputHandler, setForm } = formdata
 
+  const { data: kategoriPublikasi, isLoading: isLoadingKategoriPublikasi } = useKategoriPublikasi([
+    user,
+  ])
   const { data: listDosen, isLoading: isDosenLoading } = useDosen([user])
   const { data: listMahasiswa, isLoading: isMahasiswaLoading } = useMahasiswa([user])
 
@@ -77,6 +81,11 @@ export default function PublikasiKaryaCreate() {
       ...state,
       [key]: state[key].filter((item, idx) => item.role == role && idx != index),
     }))
+
+  const kategoriPublikasiOptions = (kategoriPublikasi || []).map(item => ({
+    label: `${item.nama_kategori} - ${item.tingkatan}`,
+    value: item.id,
+  }))
 
   const jenisOptions = [
     { label: 'Jurnal internasional', value: 'Jurnal internasional' },
@@ -109,7 +118,11 @@ export default function PublikasiKaryaCreate() {
     }))
   }, [user])
 
-  if ([user, menu, isDosenLoading, isMahasiswaLoading].some(item => item == null))
+  if (
+    [user, menu, isDosenLoading, isMahasiswaLoading, isLoadingKategoriPublikasi].some(
+      item => item == null,
+    )
+  )
     return <Loading />
   return (
     <Layout>
@@ -119,12 +132,26 @@ export default function PublikasiKaryaCreate() {
           <Card.Header className="text-center">Publikasi Karya</Card.Header>
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
-              <Form.Input
-                type="hidden"
-                className="flex-1"
-                name="kategori_id"
-                value={form.kategori_id}
-              />
+              <Form.Label className="min-w-[18rem]">
+                Kategori Publikasi <span className="text-danger-600">*</span>
+              </Form.Label>
+              <span>:</span>
+              <div className="flex-1">
+                <Form.Combobox
+                  name="kategori_id"
+                  value={form.kategori_id}
+                  options={kategoriPublikasiOptions}
+                  onChange={selected => {
+                    setForm(state => ({
+                      ...state,
+                      kategori_id: selected?.value || '',
+                    }))
+                  }}
+                  placeholder="-- Pilih Kategori Publikasi --"
+                  isClearable
+                  required
+                />
+              </div>
             </Form.Group>
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">

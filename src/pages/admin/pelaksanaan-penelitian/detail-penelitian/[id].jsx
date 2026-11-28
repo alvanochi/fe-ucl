@@ -197,38 +197,6 @@ export default function DetailPenelitianAdmin() {
           <Card.Body className="space-y-4">
             <Form.Group className="flex items-baseline gap-3">
               <Form.Label className="min-w-[18rem]">
-                Kategori <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="nama_kategori"
-                value={
-                  form.nama_kategori || form.tingkatan
-                    ? `${form.nama_kategori || ''} - ${form.tingkatan || ''}`
-                    : '-'
-                }
-                disabled
-              />
-            </Form.Group>
-
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
-                Point <span className="text-danger-600">*</span>
-              </Form.Label>
-              <span>:</span>
-              <Form.Input
-                type="text"
-                className="flex-1"
-                name="point"
-                value={form.point !== undefined && form.point !== null ? form.point : ''}
-                disabled
-              />
-            </Form.Group>
-
-            <Form.Group className="flex items-baseline gap-3">
-              <Form.Label className="min-w-[18rem]">
                 Judul Kegiatan <span className="text-danger-600">*</span>
               </Form.Label>
               <span>:</span>
